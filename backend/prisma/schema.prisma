@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -9,3 +7,202 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model administrador {
+  idadministrador  Int                @id
+  nombre           String?            @db.VarChar
+  nombreusuario    String?            @db.VarChar
+  apellido         String?            @db.VarChar
+  correo           String?            @db.VarChar
+  telefono         String?            @db.VarChar
+  clave            String?            @db.VarChar
+  idsuscripcion    Int?
+  idtarjeta        Int?
+  suscripcion      suscripcion?       @relation(fields: [idsuscripcion], references: [idsuscripcion], onDelete: NoAction, onUpdate: NoAction, map: "suscripcionid")
+  tarjeta          tarjeta?           @relation(fields: [idtarjeta], references: [idtarjeta], onDelete: NoAction, onUpdate: NoAction, map: "tarjetaid")
+  establecimiento  establecimiento[]
+  pago_suscripcion pago_suscripcion[]
+}
+
+model cancha {
+  idcancha                Int                       @id
+  nombre                  String?                   @db.VarChar
+  descripcion             String?                   @db.VarChar
+  estahabilitada          Boolean?
+  urlimagen               String?                   @db.VarChar
+  idestablecimiento       Int?
+  establecimiento         establecimiento?          @relation(fields: [idestablecimiento], references: [idestablecimiento], onDelete: NoAction, onUpdate: NoAction, map: "establecimientoid")
+  canchapordisciplina     canchapordisciplina[]
+  canchapordisponibilidad canchapordisponibilidad[]
+  disponibilidad          disponibilidad[]
+  reserva                 reserva[]
+}
+
+model canchapordisciplina {
+  idcancha                                              Int
+  disciplina                                            String     @db.VarChar
+  disciplina_canchapordisciplina_disciplinaTodisciplina disciplina @relation("canchapordisciplina_disciplinaTodisciplina", fields: [disciplina], references: [nombredisciplina], onDelete: NoAction, onUpdate: NoAction, map: "disciplinaid")
+  cancha                                                cancha     @relation(fields: [idcancha], references: [idcancha], onDelete: NoAction, onUpdate: NoAction, map: "idcancha")
+
+  @@id([idcancha, disciplina])
+}
+
+model canchapordisponibilidad {
+  idcancha         Int
+  iddisponibilidad Int
+  cancha           cancha         @relation(fields: [idcancha], references: [idcancha], onDelete: NoAction, onUpdate: NoAction, map: "idcancha")
+  disponibilidad   disponibilidad @relation(fields: [iddisponibilidad], references: [iddisponibilidad], onDelete: NoAction, onUpdate: NoAction, map: "iddisponibilidad")
+
+  @@id([idcancha, iddisponibilidad])
+}
+
+model diasdesemana {
+  diasemana                    String                         @id @db.VarChar
+  disponibilidadpordiadesemana disponibilidadpordiadesemana[]
+  horariosdeatencion           horariosdeatencion[]
+}
+
+model disciplina {
+  nombredisciplina                                               String                @id @db.VarChar
+  canchapordisciplina_canchapordisciplina_disciplinaTodisciplina canchapordisciplina[] @relation("canchapordisciplina_disciplinaTodisciplina")
+  disponibilidad_disponibilidad_disciplinaTodisciplina           disponibilidad[]      @relation("disponibilidad_disciplinaTodisciplina")
+  reserva_reserva_disciplinaTodisciplina                         reserva[]             @relation("reserva_disciplinaTodisciplina")
+}
+
+model disponibilidad {
+  iddisponibilidad                                 Int                            @id
+  horainicio                                       DateTime?                      @db.Time(6)
+  horafin                                          DateTime?                      @db.Time(6)
+  duracionreservaminutos                           Int?
+  precioreserva                                    Decimal?                       @db.Decimal
+  preciose_a                                       Decimal?                       @map("preciose¤a") @db.Decimal
+  idcancha                                         Int?
+  disciplina                                       String?                        @db.VarChar
+  canchapordisponibilidad                          canchapordisponibilidad[]
+  disciplina_disponibilidad_disciplinaTodisciplina disciplina?                    @relation("disponibilidad_disciplinaTodisciplina", fields: [disciplina], references: [nombredisciplina], onDelete: NoAction, onUpdate: NoAction, map: "disciplina")
+  cancha                                           cancha?                        @relation(fields: [idcancha], references: [idcancha], onDelete: NoAction, onUpdate: NoAction, map: "idcancha")
+  disponibilidadpordiadesemana                     disponibilidadpordiadesemana[]
+}
+
+model disponibilidadpordiadesemana {
+  iddisponibilidad Int
+  diadesemana      String         @db.VarChar
+  diasdesemana     diasdesemana   @relation(fields: [diadesemana], references: [diasemana], onDelete: NoAction, onUpdate: NoAction, map: "diasdesemana")
+  disponibilidad   disponibilidad @relation(fields: [iddisponibilidad], references: [iddisponibilidad], onDelete: NoAction, onUpdate: NoAction, map: "iddisponibilidad")
+
+  @@id([iddisponibilidad, diadesemana])
+}
+
+model establecimiento {
+  idestablecimiento            Int                            @id
+  nombre                       String?                        @db.VarChar
+  telefono                     Int?
+  direccion                    String?                        @db.VarChar
+  urlimagen                    String?                        @db.VarChar
+  email                        String?                        @db.VarChar
+  idadministrador              Int?
+  idhorariosdeatencion         Int?
+  cancha                       cancha[]
+  administrador                administrador?                 @relation(fields: [idadministrador], references: [idadministrador], onDelete: NoAction, onUpdate: NoAction, map: "administradorid")
+  horariosdeatencion           horariosdeatencion?            @relation(fields: [idhorariosdeatencion], references: [idhorariosatencion], onDelete: NoAction, onUpdate: NoAction, map: "horariosdeatencionid")
+  establecimientopormetodopago establecimientopormetodopago[]
+}
+
+model establecimientopormetodopago {
+  idestablecimiento                                                    Int
+  metododepago                                                         String          @db.VarChar
+  establecimiento                                                      establecimiento @relation(fields: [idestablecimiento], references: [idestablecimiento], onDelete: NoAction, onUpdate: NoAction, map: "establecimientoid")
+  metododepago_establecimientopormetodopago_metododepagoTometododepago metododepago    @relation("establecimientopormetodopago_metododepagoTometododepago", fields: [metododepago], references: [metodopago], onDelete: NoAction, onUpdate: NoAction, map: "metododepagoid")
+
+  @@id([idestablecimiento, metododepago])
+}
+
+model horariosdeatencion {
+  idhorariosatencion Int               @id
+  horaapertura       DateTime?         @db.Time(6)
+  horacierre         DateTime?         @db.Time(6)
+  diasemana          String?           @db.VarChar
+  establecimiento    establecimiento[]
+  diasdesemana       diasdesemana?     @relation(fields: [diasemana], references: [diasemana], onDelete: NoAction, onUpdate: NoAction, map: "diasdesemana")
+}
+
+model jugador {
+  idjugador     Int       @id
+  nombre        String?   @db.VarChar
+  nombreusuario String?   @db.VarChar
+  apellido      String?   @db.VarChar
+  telefono      Int?
+  email         String?   @db.VarChar
+  clave         String?   @db.VarChar
+  reserva       reserva[]
+}
+
+model metododepago {
+  metodopago                                                                           String                         @id @db.VarChar
+  establecimientopormetodopago_establecimientopormetodopago_metododepagoTometododepago establecimientopormetodopago[] @relation("establecimientopormetodopago_metododepagoTometododepago")
+  pago                                                                                 pago[]
+}
+
+model pago {
+  idpago                              Int           @id
+  monto                               Decimal?      @db.Decimal
+  fechapago                           DateTime?     @db.Timestamp(6)
+  metodopago                          String?       @db.VarChar
+  metododepago                        metododepago? @relation(fields: [metodopago], references: [metodopago], onDelete: NoAction, onUpdate: NoAction, map: "metodopago")
+  reserva_reserva_idpagose_aTopago    reserva[]     @relation("reserva_idpagose_aTopago")
+  reserva_reserva_idpagoreservaTopago reserva[]     @relation("reserva_idpagoreservaTopago")
+}
+
+model pago_suscripcion {
+  idpago           Int            @id
+  adminid          Int?
+  monto            Decimal?       @db.Decimal
+  fechapago        DateTime?      @db.Timestamp(6)
+  fechavencimiento DateTime?      @db.Timestamp(6)
+  administrador    administrador? @relation(fields: [adminid], references: [idadministrador], onDelete: NoAction, onUpdate: NoAction, map: "adminid")
+}
+
+model reserva {
+  idreserva                                 Int         @id(map: "rserva_pkey")
+  fechareserva                              DateTime?   @db.Date
+  horainicio                                DateTime?   @db.Time(6)
+  horafin                                   DateTime?   @db.Time(6)
+  estado                                    String?     @db.VarChar
+  idcancha                                  Int?
+  disciplina                                String?     @db.VarChar
+  idpagoreserva                             Int?
+  idpagose_a                                Int?        @map("idpagose¤a")
+  idjugador                                 Int?
+  disciplina_reserva_disciplinaTodisciplina disciplina? @relation("reserva_disciplinaTodisciplina", fields: [disciplina], references: [nombredisciplina], onDelete: NoAction, onUpdate: NoAction, map: "disciplina")
+  cancha                                    cancha?     @relation(fields: [idcancha], references: [idcancha], onDelete: NoAction, onUpdate: NoAction, map: "idcancha")
+  jugador                                   jugador?    @relation(fields: [idjugador], references: [idjugador], onDelete: NoAction, onUpdate: NoAction, map: "idjugador")
+  pago_reserva_idpagose_aTopago             pago?       @relation("reserva_idpagose_aTopago", fields: [idpagose_a], references: [idpago], onDelete: NoAction, onUpdate: NoAction, map: "idpagose¤a")
+  pago_reserva_idpagoreservaTopago          pago?       @relation("reserva_idpagoreservaTopago", fields: [idpagoreserva], references: [idpago], onDelete: NoAction, onUpdate: NoAction, map: "pagoreserva")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+model suscripcion {
+  idsuscripcion         Int             @id
+  nombre                String?         @db.VarChar
+  limiteestablecimiento Int?
+  costomensual          Int?
+  administrador         administrador[]
+}
+
+model tarjeta {
+  idtarjeta        Int             @id
+  nombre           String?         @db.VarChar
+  numero           Int?
+  cvv              Int?
+  fechavencimiento DateTime?       @db.Timestamp(6)
+  administrador    administrador[]
+}
+
