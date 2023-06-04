@@ -9,8 +9,6 @@ export default function InputMail() {
         email: { value: string };
         password: { value: string };
         };
-        const email = target.email.value;
-        const password = target.password.value;
     }}
     >
   <div>
