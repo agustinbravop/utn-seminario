@@ -1,0 +1,36 @@
+
+.header{
+    height: 3.5rem !important;
+    margin-top: 30px !important;
+}
+
+.content{
+    margin-top: 2.5rem
+}
+
+#figuras{
+    display: flex;
+    margin-left: 3.5rem;
+}
+
+#fig1{
+    margin-left: 5rem;
+    margin-top: 4rem;
+    background-color: #47A992;
+    height: 10px;
+    width: 23rem !important;
+    border-radius: 5px;
+}
+#fig2{
+    margin-left: 7rem;
+    margin-top: 4rem;
+    background-color: #47A992;
+    height: 10px;
+    width: 23rem !important;
+    border-radius: 5px;
+}
+
+.footerContent{
+    text-align: center;
+    margin-bottom: 2rem ;
+}
