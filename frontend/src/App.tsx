@@ -1,16 +1,31 @@
-import React, { Fragment } from 'react'
-import InputMail from './components/Input'
-import Title from './components/Title'
 import TopMenu from './components/TopMenu';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import LogIn from './pages/LogInPage/LogIn';
+import NotFound from './pages/NotFoundPage/NotFound';
+import HomePage from './pages/HomePage/HomePage';
+
+const routes = [
+  {
+    path: "/home",
+    element: <HomePage/>
+  },
+  {
+    path: "/login",
+    element: <LogIn />
+  },
+  {
+    path : '*',
+    element: <NotFound />
+  }
+];
+
+const router = createBrowserRouter(routes);
 
 function App() {
   return (
     <div>
       <TopMenu />
-        <Fragment>
-          <Title>Iniciar Sesion</Title>
-          <InputMail></InputMail>
-        </Fragment>
+      <RouterProvider router={router} />
     </div>
   )
 }
