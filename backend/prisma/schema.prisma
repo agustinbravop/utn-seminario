@@ -1,15 +1,16 @@
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model administrador {
-  idadministrador  Int                @id
+  idadministrador  Int                @id @default(autoincrement())
   nombre           String?            @db.VarChar
   nombreusuario    String?            @db.VarChar
   apellido         String?            @db.VarChar
@@ -25,7 +26,7 @@ model administrador {
 }
 
 model cancha {
-  idcancha                Int                       @id
+  idcancha                Int                       @id @default(autoincrement())
   nombre                  String?                   @db.VarChar
   descripcion             String?                   @db.VarChar
   estahabilitada          Boolean?
@@ -70,7 +71,7 @@ model disciplina {
 }
 
 model disponibilidad {
-  iddisponibilidad                                 Int                            @id
+  iddisponibilidad                                 Int                            @id @default(autoincrement())
   horainicio                                       DateTime?                      @db.Time(6)
   horafin                                          DateTime?                      @db.Time(6)
   duracionreservaminutos                           Int?
@@ -94,7 +95,7 @@ model disponibilidadpordiadesemana {
 }
 
 model establecimiento {
-  idestablecimiento            Int                            @id
+  idestablecimiento            Int                            @id @default(autoincrement())
   nombre                       String?                        @db.VarChar
   telefono                     Int?
   direccion                    String?                        @db.VarChar
@@ -118,7 +119,7 @@ model establecimientopormetodopago {
 }
 
 model horariosdeatencion {
-  idhorariosatencion Int               @id
+  idhorariosatencion Int               @id @default(autoincrement())
   horaapertura       DateTime?         @db.Time(6)
   horacierre         DateTime?         @db.Time(6)
   diasemana          String?           @db.VarChar
@@ -127,7 +128,7 @@ model horariosdeatencion {
 }
 
 model jugador {
-  idjugador     Int       @id
+  idjugador     Int       @id @default(autoincrement())
   nombre        String?   @db.VarChar
   nombreusuario String?   @db.VarChar
   apellido      String?   @db.VarChar
@@ -144,7 +145,7 @@ model metododepago {
 }
 
 model pago {
-  idpago                              Int           @id
+  idpago                              Int           @id @default(autoincrement())
   monto                               Decimal?      @db.Decimal
   fechapago                           DateTime?     @db.Timestamp(6)
   metodopago                          String?       @db.VarChar
@@ -163,7 +164,7 @@ model pago_suscripcion {
 }
 
 model reserva {
-  idreserva                                 Int         @id(map: "rserva_pkey")
+  idreserva                                 Int         @id(map: "rserva_pkey") @default(autoincrement())
   fechareserva                              DateTime?   @db.Date
   horainicio                                DateTime?   @db.Time(6)
   horafin                                   DateTime?   @db.Time(6)
@@ -190,7 +191,7 @@ model spatial_ref_sys {
 }
 
 model suscripcion {
-  idsuscripcion         Int             @id
+  idsuscripcion         Int              @default(autoincrement()) @id 
   nombre                String?         @db.VarChar
   limiteestablecimiento Int?
   costomensual          Int?
@@ -198,11 +199,10 @@ model suscripcion {
 }
 
 model tarjeta {
-  idtarjeta        Int             @id
+  idtarjeta        Int             @id @default(autoincrement())
   nombre           String?         @db.VarChar
   numero           Int?
   cvv              Int?
   fechavencimiento DateTime?       @db.Timestamp(6)
   administrador    administrador[]
 }
-

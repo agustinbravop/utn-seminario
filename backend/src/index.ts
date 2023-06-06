@@ -1,5 +1,4 @@
-import app from './app'
 import {PrismaClient} from '@prisma/client'
-const prisma=new PrismaClient()
-
+import app from './app'
 app.listen(3000) 
+console.log("Server funcionando en el puerto 3000")
