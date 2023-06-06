@@ -1,0 +1,19 @@
+.centrado{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.formulario {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+}
+.page{
+    margin-top: 15px;
+    padding-bottom: 20px;
+}

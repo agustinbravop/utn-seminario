@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LogIn from "./pages/LogInPage/LogIn";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import HomePage from "./pages/HomePage/HomePage";
+import NewEstab from "./pages/NewEstab/NewEstab";
 
 const routes = [
   {
@@ -12,6 +13,10 @@ const routes = [
   {
     path: "/login",
     element: <LogIn />,
+  },
+  {
+    path: "/new-estab",
+    element: <NewEstab />
   },
   {
     path: "*",
