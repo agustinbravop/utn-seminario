@@ -22,25 +22,35 @@ function AdmPage() {
     <br />
     <br />
 
-    <div className="formulario">
+    <div className="formulario" >
       <Form style={{ width: '50%' }}>
 
         <Form.Group >
+
+
+
+
           <Container>
-      
-              <Row>  <Col><Form.Control type="text" placeholder="Número de tarjeta" required /> </Col> </Row>
-              <br />
-                  <Row>  <Col><Form.Control type="text" placeholder="Nombre" required /> </Col>    </Row>
-              <br />
               <Row>
-                  <Col> <Form.Control type="date" placeholder="Valida hasta" required /> </Col>
-                  <Col> <Form.Control type="text" placeholder="CVV" required /> </Col>
-              </Row>
-              <br />
-                     
+                <Col>
+                    <Row>  <Col><Form.Control type="text" placeholder="Número de tarjeta" required /> </Col> </Row>
+                        <br />
+                            <Row>  <Col><Form.Control type="text" placeholder="Nombre" required /> </Col>    </Row>
+                        <br />
+                        <Row>
+                            <Col> <Form.Control type="date" placeholder="Valida hasta" required /> </Col>
+                            <Col> <Form.Control type="text" placeholder="CVV" required /> </Col>
+                        </Row>
+                        <br />  
+                </Col>
+                   
+
+                   <Col> <PaymentForm/> </Col>
+
+                </Row>       
           </Container>
 
-
+            
 
 
         </Form.Group>
@@ -49,7 +59,7 @@ function AdmPage() {
 </div>
 
 
-        <br /><br />
+        <br />
 
 
 
@@ -64,9 +74,10 @@ function AdmPage() {
 
 
             <div className="formulario">
-            <Form style={{ width: '40%' }}>
+            <Form style={{ width: '34%' }}>
 
               <Form.Group >
+                
                 <Container>
                     <Row>
                         <Col> <Form.Control type="text" placeholder="Nombre" required /> </Col>
@@ -76,7 +87,7 @@ function AdmPage() {
                     <Row>  <Col><Form.Control type="text" placeholder="Teléfono" required /> </Col> </Row>
                     <br />
                    
-                    <Row>  <Col><Form.Control type="text" placeholder="Correo electronico" required /> </Col> </Row>
+                    <Row>  <Col><Form.Control type="email" placeholder="Correo electrónico" required /> </Col> </Row>
                     <br />
                         <Row>  <Col><Form.Control type="text" placeholder="Contraseña" required /> </Col>    </Row>
                     <br />
