@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import TopMenu from "../../components/TopMenu";
 
 function LogIn() {
   return (
-    <div>Soy el LogIn</div>
-  )
+    <div>
+      <TopMenu />
+    </div>
+  );
 }
 
-export default LogIn
+export default LogIn;

@@ -1,8 +1,8 @@
 import React from 'react';
-import {Container, Navbar, Nav} from 'react-bootstrap';
+import {Container, Navbar, Nav, Button} from 'react-bootstrap';
 import { ReactComponent as Logo } from '../../assets/svg/tennis-icon.svg';
-
 import "./TopMenu.scss";
+import { Link } from 'react-router-dom';
 
 export default function TopMenu() {
     return (
@@ -18,7 +18,9 @@ export default function TopMenu() {
 function BrandNav() {
     return (<Navbar.Brand>
         <Logo />
-        <div>Cancha Club</div>
+        <div>
+            <Link to={'/home'}><Button>Cancha Club</Button></Link>
+        </div>
     </Navbar.Brand>)
 };
 

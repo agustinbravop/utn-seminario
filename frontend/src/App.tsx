@@ -1,4 +1,3 @@
-import TopMenu from "./components/TopMenu";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LogIn from "./pages/LogInPage/LogIn";
 import NotFound from "./pages/NotFoundPage/NotFound";
@@ -16,7 +15,7 @@ const routes = [
   },
   {
     path: "/new-estab",
-    element: <NewEstab />
+    element: <NewEstab />,
   },
   {
     path: "*",
@@ -30,7 +29,6 @@ const router = createBrowserRouter(routes);
 function App() {
   return (
     <div>
-      <TopMenu />
       <RouterProvider router={router} />
     </div>
   );
