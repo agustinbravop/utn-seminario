@@ -85,6 +85,8 @@ function AdmPage() {
                     <br />
                     <Row>  <Col><Form.Control type="text" placeholder="Teléfono" required /> </Col> </Row>
                     <br />
+                    <Row>  <Col><Form.Control type="text" placeholder="Nombre de usuario" required /> </Col> </Row>
+                    <br />
                    
                     <Row>  <Col><Form.Control type="email" placeholder="Correo electrónico" required /> </Col> </Row>
                     <br />
