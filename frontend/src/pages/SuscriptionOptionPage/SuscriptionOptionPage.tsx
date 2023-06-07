@@ -1,12 +1,14 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import TopMenu from "../../components/TopMenu";
-import "react-icons/bi";
+import {Rocket} from 'react-bootstrap-icons';
+import {Shop} from 'react-bootstrap-icons';
+import {Buildings} from 'react-bootstrap-icons';
 //revisar iconos
 
 function SuscriptionOptionPage() {
   type local = {
-    icon: string;
+    icon: React.ReactNode;
     tipo: string;
     price: number;
     countEst: number;
@@ -15,21 +17,21 @@ function SuscriptionOptionPage() {
 
   const opc: local[] = [
     {
-      icon: "bi bi-shop-window",
+      icon: <Shop fill="#47A992" size={90} />,
       tipo: "Startup",
-      price: 1999,
+      price: 1999.00,
       countEst: 1,
       countEmp: 0,
     },
     {
-      icon: "bi bi-buildings",
+      icon: <Buildings fill="#47A992" size={90}/>,
       tipo: "Premium",
-      price: 3999,
+      price: 3999.00,
       countEst: 5,
       countEmp: 10,
     },
     {
-      icon: "bi bi-rocket",
+      icon: <Rocket fill="#47A992" size={90}/>,
       tipo: "Enterprise",
       price: 8999,
       countEst: 15,
@@ -44,16 +46,16 @@ function SuscriptionOptionPage() {
         bg="light"
         key="light"
         text="dark"
-        style={{ width: "18rem" }}
-        className="mb-2"
+        style={{ width: "14rem" }}
+        className="mb-2 mt-4 pt-2"
       >
-        <Card.Header>
-          <i className={o.icon}></i>
+        <Card.Header style={{textAlign:"center"}}>
+          {o.icon}
         </Card.Header>
-        <Card.Body>
+        <Card.Body style={{textAlign:"center"}}>
           <Card.Title>{o.tipo}</Card.Title>
           <Card.Text>
-            <b>{o.price}</b>
+            <b style={{fontSize:"30px"}}>${o.price}</b>
             <br />
             por mes <br />
             {o.countEst} establecimientos
