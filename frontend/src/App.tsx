@@ -3,11 +3,16 @@ import LogIn from "./pages/LogInPage/LogIn";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import HomePage from "./pages/HomePage/HomePage";
 import NewEstab from "./pages/NewEstab/NewEstab";
+import SuscriptionOptionPage from "./pages/SuscriptionOptionPage/SuscriptionOptionPage";
 
 const routes = [
   {
     path: "/home",
     element: <HomePage />,
+  },
+  {
+    path: "/suscription",
+    element: <SuscriptionOptionPage />,
   },
   {
     path: "/login",
