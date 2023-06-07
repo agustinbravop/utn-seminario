@@ -1,50 +1,36 @@
-.prueba {
-    /* Tarjeta de Crédito */
 
 
-position: absolute;
-height: 44.54px;
-left: 18.17%;
-right: 60.99%;
-top: 192.03px;
 
-font-family: 'Inter';
-font-style: normal;
-font-weight: 700;
-font-size: 32px;
-line-height: 39px;
 
-/* Black */
 
-color: #161615;
+.centrado{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
 
+.margen{
+    width: 100%;
+    align-items: first baseline;
+    justify-content: left;
+    padding-left: 16.3% ;
+    padding-top: 2% ;
 }
 
 
-.tarjeta{
-
-position: absolute;
-width: 383px;
-height: 245px;
-left: 728px;
-top: 372px;
+.formulario {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+}
+.page{
+    margin-top: 15px;
+    padding-bottom: 20px;
 }
 
 
-.subtexto{
-    position: absolute;
-height: 83.15px;
-left: 18.17%;
-right: 32.89%;
-top: 248.35px;
-
-/* alt-font-sm */
-
-font-family: 'Inter';
-font-style: normal;
-font-weight: 400;
-font-size: 18px;
-line-height: 22px;
-
-color: rgba(0, 0, 0, 0.7);
-}
