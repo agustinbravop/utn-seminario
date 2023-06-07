@@ -12,10 +12,6 @@ font-family: 'Inter';
 font-style: normal;
 font-weight: 700;
 font-size: 32px;
-line-height: 39px;
-
-/* Black */
-
 color: #161615;
 
 }
@@ -47,4 +43,64 @@ font-size: 18px;
 line-height: 22px;
 
 color: rgba(0, 0, 0, 0.7);
+}
+
+
+
+.centrado{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.margen{
+    width: 100%;
+    align-items: first baseline;
+    justify-content: left;
+    padding-left: 15% ;
+    padding-top: 2% ;
+}
+
+
+.formulario {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+}
+.page{
+    margin-top: 15px;
+    padding-bottom: 20px;
+}
+
+.form1{
+    display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+position: absolute;
+width: 403px;
+height: 47px;
+left: 308px;
+top: 395px;
+}
+
+.form2{
+    display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+position: absolute;
+width: 403px;
+height: 47px;
+left: 308px;
+top: 471px;
 }
