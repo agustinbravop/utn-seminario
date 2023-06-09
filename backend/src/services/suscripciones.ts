@@ -1,8 +1,7 @@
-import bcrypt from "bcrypt";
-import { SuscripcionRepository } from "../repositories/suscripcion";
-import { Result, ok, err } from "neverthrow";
-import { ApiError } from "../utils/apierrors";
-import { Suscripcion } from "../models/suscripcion";
+import { SuscripcionRepository } from "../repositories/suscripciones.js";
+import { Result } from "neverthrow";
+import { ApiError } from "../utils/apierrors.js";
+import { Suscripcion } from "../models/suscripcion.js";
 
 export interface SuscripcionService {
   getSuscripcionByID(id: number): Promise<Result<Suscripcion, ApiError>>;
@@ -21,6 +20,7 @@ export class SuscripcionServiceImpl {
   }
 
   async getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>> {
+    console.log("-> service");
     return await this.repo.getAllSuscripciones();
   }
 }

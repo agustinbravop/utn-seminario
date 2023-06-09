@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { SuscripcionService } from "../services/suscripciones";
+import { SuscripcionService } from "../services/suscripciones.js";
 
 export class SuscripcionHandler {
   service: SuscripcionService;
@@ -10,8 +10,8 @@ export class SuscripcionHandler {
 
   getAllSuscripciones(): RequestHandler {
     return async (_req, res) => {
+      console.log("-> handler");
       const susResult = await this.service.getAllSuscripciones();
-
       susResult.match(
         (suscripciones) => res.status(200).json(suscripciones),
         (err) => res.status(err.status).json(err)

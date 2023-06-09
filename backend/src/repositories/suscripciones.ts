@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { ApiError } from "../utils/apierrors";
+import { ApiError } from "../utils/apierrors.js";
 import { Result, err, ok } from "neverthrow";
-import { Suscripcion } from "../models/suscripcion";
+import { Suscripcion } from "../models/suscripcion.js";
 
 export interface SuscripcionRepository {
   getSuscripcionByID(id: number): Promise<Result<Suscripcion, ApiError>>;
@@ -11,8 +11,8 @@ export interface SuscripcionRepository {
 export class PrismaSuscripcionRepository {
   prisma: PrismaClient;
 
-  constructor() {
-    this.prisma = new PrismaClient();
+  constructor(client: PrismaClient) {
+    this.prisma = client;
   }
 
   async getSuscripcionByID(id: number): Promise<Result<Suscripcion, ApiError>> {
@@ -30,6 +30,8 @@ export class PrismaSuscripcionRepository {
   }
 
   async getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>> {
+    console.log("-> repo");
+
     try {
       const suscripciones = await this.prisma.suscripcion.findMany();
       return ok(suscripciones);
