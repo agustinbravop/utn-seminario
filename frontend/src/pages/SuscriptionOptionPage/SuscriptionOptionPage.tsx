@@ -4,43 +4,14 @@ import TopMenu from "../../components/TopMenu";
 import {Rocket} from 'react-bootstrap-icons';
 import {Shop} from 'react-bootstrap-icons';
 import {Buildings} from 'react-bootstrap-icons';
+import {getAllSuscription} from '../../data/suscriptions'
 //revisar iconos
 
 function SuscriptionOptionPage() {
-  type local = {
-    icon: React.ReactNode;
-    tipo: string;
-    price: number;
-    countEst: number;
-    countEmp: number;
-  };
-
-  const opc: local[] = [
-    {
-      icon: <Shop fill="#47A992" size={90} />,
-      tipo: "Startup",
-      price: 1999.00,
-      countEst: 1,
-      countEmp: 0,
-    },
-    {
-      icon: <Buildings fill="#47A992" size={90}/>,
-      tipo: "Premium",
-      price: 3999.00,
-      countEst: 5,
-      countEmp: 10,
-    },
-    {
-      icon: <Rocket fill="#47A992" size={90}/>,
-      tipo: "Enterprise",
-      price: 8999,
-      countEst: 15,
-      countEmp: 50,
-    },
-  ];
+  const suscriptions = getAllSuscription();
 
   //Agregar ternario para controlar empleados
-  const cards = opc.map((o) => {
+  const cards = suscriptions.map((o) => {
     return (
       <Card
         bg="light"
@@ -60,6 +31,13 @@ function SuscriptionOptionPage() {
             por mes <br />
             {o.countEst} establecimientos
           </Card.Text>
+          <button
+            type="button"
+            className="btn btn-outline-danger"
+            style={{ marginLeft: "10px"}}
+          >
+            Continuar
+          </button>
         </Card.Body>
       </Card>
     );
