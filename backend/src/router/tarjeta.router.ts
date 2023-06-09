@@ -1,5 +1,5 @@
 import {Router} from 'express' 
-import { getAllTarjeta, getTarjetaById,getTarjetaByName , postTarjeta} from '../controller/tarjeta.controller'
+import { getAllTarjeta, getTarjetaById,getTarjetaByName , postTarjeta} from '../handlers/tarjeta.controller'
 
 const router=Router() 
 

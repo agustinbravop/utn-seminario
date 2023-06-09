@@ -16,7 +16,7 @@ model administrador {
   apellido         String?            @db.VarChar
   correo           String?            @db.VarChar
   telefono         String?            @db.VarChar
-  clave            String?            @db.VarChar
+  clave            String             @db.VarChar
   idsuscripcion    Int?
   idtarjeta        Int?
   suscripcion      suscripcion?       @relation(fields: [idsuscripcion], references: [idsuscripcion], onDelete: NoAction, onUpdate: NoAction, map: "suscripcionid")
@@ -191,7 +191,7 @@ model spatial_ref_sys {
 }
 
 model suscripcion {
-  idsuscripcion         Int              @default(autoincrement()) @id 
+  idsuscripcion         Int             @id @default(autoincrement())
   nombre                String?         @db.VarChar
   limiteestablecimiento Int?
   costomensual          Int?

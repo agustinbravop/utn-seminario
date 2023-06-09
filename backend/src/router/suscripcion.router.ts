@@ -1,5 +1,5 @@
 import {Router} from 'express' 
-import { getSuscripcion, getSuscripcionbyId, postSuscripcion, postSuscripcionTipo } from '../controller/suscripcion.controller'
+import { getSuscripcion, getSuscripcionbyId, postSuscripcion, postSuscripcionTipo } from '../handlers/suscripcion.controller'
 
 const router = Router() 
 //controller de suscripcion
