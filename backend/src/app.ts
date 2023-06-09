@@ -2,7 +2,6 @@ import 'reflect-metadata'
 import express, {Application} from 'express'
 import suscripcionRouter from './router/suscripcion.router'
 import tarjetaRouter from './router/tarjeta.router'
-import administradorRouter from './router/administrador.router'
 import morgan from 'morgan' 
 import cors from 'cors'
 const app: Application=express() 
