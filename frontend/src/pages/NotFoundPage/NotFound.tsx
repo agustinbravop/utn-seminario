@@ -6,7 +6,7 @@ function NotFound() {
   return (
     <div>
       <TopMenu />
-      <Title>404 Page Not Found</Title>
+      <Title style={{textAlign:"center", marginTop:"10px", color:"red"}}>404 Page Not Found</Title>
     </div>
   )
 }
