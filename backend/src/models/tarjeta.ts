@@ -1,6 +1,7 @@
 export type Tarjeta = {
+  id: number;
   nombre: string;
-  numero: number;
+  numero: string;
   cvv: number;
   vencimiento: string;
 };

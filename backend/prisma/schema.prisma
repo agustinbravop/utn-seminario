@@ -191,7 +191,7 @@ model suscripcion {
 model tarjeta {
   id            Int            @id @default(autoincrement()) @map("idTarjeta")
   nombre        String         @db.VarChar
-  numero        Int
+  numero        String
   cvv           Int
   vencimiento   String       
   administrador administrador?
