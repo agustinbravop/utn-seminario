@@ -11,14 +11,14 @@ datasource db {
 
 model administrador {
   idadministrador  Int                @id @default(autoincrement())
-  nombre           String?            @db.VarChar
-  nombreusuario    String?            @db.VarChar
-  apellido         String?            @db.VarChar
-  correo           String?            @db.VarChar
-  telefono         String?            @db.VarChar
-  clave            String?            @db.VarChar
-  idsuscripcion    Int?
-  idtarjeta        Int?
+  nombre           String            @db.VarChar
+  nombreusuario    String            @db.VarChar
+  apellido         String            @db.VarChar
+  email            String            @db.VarChar
+  telefono         String            @db.VarChar
+  clave            String            @db.VarChar
+  idsuscripcion    Int
+  idtarjeta        Int
   suscripcion      suscripcion?       @relation(fields: [idsuscripcion], references: [idsuscripcion], onDelete: NoAction, onUpdate: NoAction, map: "suscripcionid")
   tarjeta          tarjeta?           @relation(fields: [idtarjeta], references: [idtarjeta], onDelete: NoAction, onUpdate: NoAction, map: "tarjetaid")
   establecimiento  establecimiento[]
@@ -27,11 +27,11 @@ model administrador {
 
 model cancha {
   idcancha                Int                       @id @default(autoincrement())
-  nombre                  String?                   @db.VarChar
+  nombre                  String                   @db.VarChar
   descripcion             String?                   @db.VarChar
-  estahabilitada          Boolean?
-  urlimagen               String?                   @db.VarChar
-  idestablecimiento       Int?
+  estahabilitada          Boolean
+  urlimagen               String                   @db.VarChar
+  idestablecimiento       Int
   establecimiento         establecimiento?          @relation(fields: [idestablecimiento], references: [idestablecimiento], onDelete: NoAction, onUpdate: NoAction, map: "establecimientoid")
   canchapordisciplina     canchapordisciplina[]
   canchapordisponibilidad canchapordisponibilidad[]
@@ -74,11 +74,11 @@ model disponibilidad {
   iddisponibilidad                                 Int                            @id @default(autoincrement())
   horainicio                                       DateTime?                      @db.Time(6)
   horafin                                          DateTime?                      @db.Time(6)
-  duracionreservaminutos                           Int?
-  precioreserva                                    Decimal?                       @db.Decimal
-  preciose_a                                       Decimal?                       @map("preciose¤a") @db.Decimal
-  idcancha                                         Int?
-  disciplina                                       String?                        @db.VarChar
+  duracionreservaminutos                           Int
+  precioreserva                                    Decimal                       @db.Decimal
+  preciosenia                                      Decimal                       @map("preciosenia") @db.Decimal
+  idcancha                                         Int
+  disciplina                                       String                        @db.VarChar
   canchapordisponibilidad                          canchapordisponibilidad[]
   disciplina_disponibilidad_disciplinaTodisciplina disciplina?                    @relation("disponibilidad_disciplinaTodisciplina", fields: [disciplina], references: [nombredisciplina], onDelete: NoAction, onUpdate: NoAction, map: "disciplina")
   cancha                                           cancha?                        @relation(fields: [idcancha], references: [idcancha], onDelete: NoAction, onUpdate: NoAction, map: "idcancha")
@@ -96,13 +96,15 @@ model disponibilidadpordiadesemana {
 
 model establecimiento {
   idestablecimiento            Int                            @id @default(autoincrement())
-  nombre                       String?                        @db.VarChar
-  telefono                     Int?
-  direccion                    String?                        @db.VarChar
+  nombre                       String                         @db.VarChar
+  telefono                     String
+  direccion                    String                         @db.VarChar
   urlimagen                    String?                        @db.VarChar
-  email                        String?                        @db.VarChar
-  idadministrador              Int?
-  idhorariosdeatencion         Int?
+  email                        String                         @db.VarChar @unique 
+  idadministrador              Int
+  idhorariosdeatencion         Int
+  localidad                    String                        @db.VarChar
+  provincia                    String                        @db.VarChar
   cancha                       cancha[]
   administrador                administrador?                 @relation(fields: [idadministrador], references: [idadministrador], onDelete: NoAction, onUpdate: NoAction, map: "administradorid")
   horariosdeatencion           horariosdeatencion?            @relation(fields: [idhorariosdeatencion], references: [idhorariosatencion], onDelete: NoAction, onUpdate: NoAction, map: "horariosdeatencionid")
@@ -120,8 +122,8 @@ model establecimientopormetodopago {
 
 model horariosdeatencion {
   idhorariosatencion Int               @id @default(autoincrement())
-  horaapertura       DateTime?         @db.Time(6)
-  horacierre         DateTime?         @db.Time(6)
+  horaapertura       DateTime         @db.Time(6)
+  horacierre         DateTime         @db.Time(6)
   diasemana          String?           @db.VarChar
   establecimiento    establecimiento[]
   diasdesemana       diasdesemana?     @relation(fields: [diasemana], references: [diasemana], onDelete: NoAction, onUpdate: NoAction, map: "diasdesemana")
@@ -129,12 +131,12 @@ model horariosdeatencion {
 
 model jugador {
   idjugador     Int       @id @default(autoincrement())
-  nombre        String?   @db.VarChar
-  nombreusuario String?   @db.VarChar
-  apellido      String?   @db.VarChar
-  telefono      Int?
-  email         String?   @db.VarChar
-  clave         String?   @db.VarChar
+  nombre        String   @db.VarChar
+  nombreusuario String   @db.VarChar
+  apellido      String   @db.VarChar
+  telefono      String   @db.VarChar
+  email         String   @db.VarChar
+  clave         String   @db.VarChar
   reserva       reserva[]
 }
 
@@ -146,38 +148,38 @@ model metododepago {
 
 model pago {
   idpago                              Int           @id @default(autoincrement())
-  monto                               Decimal?      @db.Decimal
-  fechapago                           DateTime?     @db.Timestamp(6)
-  metodopago                          String?       @db.VarChar
+  monto                               Decimal      @db.Decimal
+  fechapago                           DateTime     @db.Timestamp(6)
+  metodopago                          String       @db.VarChar
   metododepago                        metododepago? @relation(fields: [metodopago], references: [metodopago], onDelete: NoAction, onUpdate: NoAction, map: "metodopago")
-  reserva_reserva_idpagose_aTopago    reserva[]     @relation("reserva_idpagose_aTopago")
+  reserva_reserva_idpagoseniaTopago    reserva[]     @relation("reserva_idpagoseniaTopago")
   reserva_reserva_idpagoreservaTopago reserva[]     @relation("reserva_idpagoreservaTopago")
 }
 
 model pago_suscripcion {
   idpago           Int            @id
-  adminid          Int?
-  monto            Decimal?       @db.Decimal
-  fechapago        DateTime?      @db.Timestamp(6)
-  fechavencimiento DateTime?      @db.Timestamp(6)
+  adminid          Int
+  monto            Decimal       @db.Decimal
+  fechapago        DateTime      @db.Timestamp(6)
+  fechavencimiento DateTime      @db.Timestamp(6)
   administrador    administrador? @relation(fields: [adminid], references: [idadministrador], onDelete: NoAction, onUpdate: NoAction, map: "adminid")
 }
 
 model reserva {
   idreserva                                 Int         @id(map: "rserva_pkey") @default(autoincrement())
-  fechareserva                              DateTime?   @db.Date
-  horainicio                                DateTime?   @db.Time(6)
-  horafin                                   DateTime?   @db.Time(6)
-  estado                                    String?     @db.VarChar
-  idcancha                                  Int?
-  disciplina                                String?     @db.VarChar
-  idpagoreserva                             Int?
-  idpagose_a                                Int?        @map("idpagose¤a")
+  fechareserva                              DateTime   @db.Date
+  horainicio                                DateTime   @db.Time(6)
+  horafin                                   DateTime   @db.Time(6)
+  estado                                    String     @db.VarChar
+  idcancha                                  Int
+  disciplina                                String     @db.VarChar
+  idpagoreserva                             Int
+  idpagosenia                                Int?        @map("idpagosenia")
   idjugador                                 Int?
   disciplina_reserva_disciplinaTodisciplina disciplina? @relation("reserva_disciplinaTodisciplina", fields: [disciplina], references: [nombredisciplina], onDelete: NoAction, onUpdate: NoAction, map: "disciplina")
   cancha                                    cancha?     @relation(fields: [idcancha], references: [idcancha], onDelete: NoAction, onUpdate: NoAction, map: "idcancha")
   jugador                                   jugador?    @relation(fields: [idjugador], references: [idjugador], onDelete: NoAction, onUpdate: NoAction, map: "idjugador")
-  pago_reserva_idpagose_aTopago             pago?       @relation("reserva_idpagose_aTopago", fields: [idpagose_a], references: [idpago], onDelete: NoAction, onUpdate: NoAction, map: "idpagose¤a")
+  pago_reserva_idpagoseniaTopago             pago?       @relation("reserva_idpagoseniaTopago", fields: [idpagosenia], references: [idpago], onDelete: NoAction, onUpdate: NoAction, map: "idpagosenia")
   pago_reserva_idpagoreservaTopago          pago?       @relation("reserva_idpagoreservaTopago", fields: [idpagoreserva], references: [idpago], onDelete: NoAction, onUpdate: NoAction, map: "pagoreserva")
 }
 
@@ -191,18 +193,18 @@ model spatial_ref_sys {
 }
 
 model suscripcion {
-  idsuscripcion         Int              @default(autoincrement()) @id 
-  nombre                String?         @db.VarChar
-  limiteestablecimiento Int?
-  costomensual          Int?
+  idsuscripcion         Int             @id @default(autoincrement())
+  nombre                String         @db.VarChar
+  limiteestablecimiento Int
+  costomensual          Int
   administrador         administrador[]
 }
 
 model tarjeta {
   idtarjeta        Int             @id @default(autoincrement())
-  nombre           String?         @db.VarChar
-  numero           Int?
-  cvv              Int?
-  fechavencimiento DateTime?       @db.Timestamp(6)
+  nombre           String         @db.VarChar
+  numero           Int            @unique
+  cvv              Int            @unique
+  fechavencimiento DateTime       @db.Timestamp(6)
   administrador    administrador[]
 }
