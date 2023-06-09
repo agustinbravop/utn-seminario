@@ -1,6 +1,6 @@
 export type Suscripcion = {
   id: number;
-  nombre: number;
+  nombre: string;
   limiteEstablecimientos: number;
   costoMensual: number;
 };

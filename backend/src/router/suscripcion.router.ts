@@ -1,13 +1,16 @@
-import {Router} from 'express' 
-import { getSuscripcion, getSuscripcionbyId, postSuscripcion, postSuscripcionTipo } from '../handlers/suscripcion.controller'
+import express from "express";
+import { SuscripcionHandler } from "../handlers/suscripcion";
+import { PrismaSuscripcionRepository } from "../repositories/suscripcion";
+import { SuscripcionServiceImpl } from "../services/suscripciones";
 
-const router = Router() 
-//controller de suscripcion
-router.post("/suscripciones",postSuscripcion)
-router.post('/suscripciones/:nombre',postSuscripcionTipo)
-router.get("/suscripciones", getSuscripcion)
-router.get('/suscripcion/:id', getSuscripcionbyId)
+export function suscripcionesRouter() {
+  const router = express.Router();
 
+  const repository = new PrismaSuscripcionRepository();
+  const service = new SuscripcionServiceImpl(repository);
+  const handler = new SuscripcionHandler(service);
 
+  router.get("/", handler.getAllSuscripciones());
 
-export default router 
+  return router;
+}

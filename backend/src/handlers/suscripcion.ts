@@ -1,0 +1,21 @@
+import { RequestHandler } from "express";
+import { SuscripcionService } from "../services/suscripciones";
+
+export class SuscripcionHandler {
+  service: SuscripcionService;
+
+  constructor(service: SuscripcionService) {
+    this.service = service;
+  }
+
+  getAllSuscripciones(): RequestHandler {
+    return async (_req, res) => {
+      const susResult = await this.service.getAllSuscripciones();
+
+      susResult.match(
+        (suscripciones) => res.status(200).json(suscripciones),
+        (err) => res.status(err.status).json(err)
+      );
+    };
+  }
+}
