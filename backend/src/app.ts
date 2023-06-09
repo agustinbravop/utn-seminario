@@ -8,7 +8,6 @@ const app: Application=express()
 app.use(express.json()) 
 app.use("/api", suscripcionRouter)
 app.use('/api', tarjetaRouter)
-app.use('/api', administradorRouter)
 app.use(morgan('dev')) 
 app.use(cors())
 export default app 
