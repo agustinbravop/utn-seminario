@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
-import { AuthRepository } from "../repositories/auth";
+import { AuthRepository } from "../repositories/auth.js";
 import { Result, ok, err } from "neverthrow";
-import { Administrador } from "../models/administrador";
-import { ApiError } from "../utils/apierrors";
+import { Administrador } from "../models/administrador.js";
+import { ApiError } from "../utils/apierrors.js";
 import { SignJWT, jwtVerify } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
 
-interface AuthService {
+export interface AuthService {
   loginUsuario(
     correoOUsuario: string,
     clave: string
@@ -15,6 +15,7 @@ interface AuthService {
     admin: Administrador,
     clave: string
   ): Promise<Result<Administrador, ApiError>>;
+  verifyJWT(token: string): Promise<boolean>;
 }
 
 export class AuthServiceImpl {
@@ -41,7 +42,7 @@ export class AuthServiceImpl {
     return token;
   }
 
-  private async verifyJWT(token: string): Promise<boolean> {
+  async verifyJWT(token: string): Promise<boolean> {
     try {
       const { payload, protectedHeader } = await jwtVerify(
         token,
@@ -64,16 +65,18 @@ export class AuthServiceImpl {
     correoOUsuario: string,
     clave: string
   ): Promise<Result<string, ApiError>> {
-    const adminConClaveResult =
-      await this.repo.getAdministradorByCorreoOUsuario(correoOUsuario);
+    const adminConClaveResult = await this.repo.getAdministradorYClave(
+      correoOUsuario
+    );
     if (adminConClaveResult.isErr()) {
       return err(adminConClaveResult._unsafeUnwrapErr());
     }
 
     const { admin, clave: hash } = adminConClaveResult._unsafeUnwrap();
-    const esValido = await bcrypt.compare(hash, clave);
+    console.log(admin, clave, hash);
+    const esValido = await bcrypt.compare(clave, hash);
     if (!esValido) {
-      return err(new ApiError(401, "Error al validar el JWT"));
+      return err(new ApiError(401, "Contraseña incorrecta"));
     }
 
     const jwt = await this.signJWT(admin);

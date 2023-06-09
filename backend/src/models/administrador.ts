@@ -1,5 +1,5 @@
-import { Suscripcion } from "./suscripcion";
-import { Tarjeta } from "./tarjeta";
+import { Suscripcion } from "./suscripcion.js";
+import { Tarjeta } from "./tarjeta.js";
 
 export type Administrador = {
   id: number;
@@ -9,5 +9,5 @@ export type Administrador = {
   correo: string;
   usuario: string;
   tarjeta: Tarjeta;
-  suscripcion: Suscripcion | null;
+  suscripcion: Suscripcion;
 };

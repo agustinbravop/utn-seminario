@@ -1,12 +1,20 @@
 import { RequestHandler } from "express";
-import { Tarjeta } from "../models/tarjeta";
-import { Administrador } from "../models/administrador";
-import { AuthService } from "../services/auth";
+import { Tarjeta } from "../models/tarjeta.js";
+import { Administrador } from "../models/administrador.js";
+import { AuthService } from "../services/auth.js";
+import { SuscripcionService } from "../services/suscripciones.js";
 
-type LoginReq = {
-  correoOUsuario: string;
-  clave: string;
-};
+type LoginReq =
+  | {
+      usuario: string;
+      correo: never;
+      clave: string;
+    }
+  | {
+      usuario: never;
+      correo: string;
+      clave: string;
+    };
 
 type RegistroReq = {
   nombre: string;
@@ -21,17 +29,21 @@ type RegistroReq = {
 
 export class AuthHandler {
   service: AuthService;
+  susService: SuscripcionService;
 
-  constructor(service: AuthService) {
+  constructor(service: AuthService, susService: SuscripcionService) {
     this.service = service;
+    this.susService = susService;
   }
 
   login(): RequestHandler {
     return async (req, res) => {
       const loginReq: LoginReq = req.body;
 
+      // Se puede iniciar sesión o con usuario o con correp.
+      const correoOUsuario = loginReq.usuario || loginReq.correo;
       const loginResult = await this.service.loginUsuario(
-        loginReq.correoOUsuario,
+        correoOUsuario,
         loginReq.clave
       );
 
@@ -45,16 +57,22 @@ export class AuthHandler {
   register(): RequestHandler {
     return async (req, res) => {
       const body: RegistroReq = req.body;
+
+      // Se obtiene la suscripcion mediante el idSuscripcion.
+      const sus = await this.susService.getSuscripcionByID(body.idSubscripcion);
+      if (sus.isErr()) {
+        const err = sus._unsafeUnwrapErr();
+        res.status(err.status).json(err);
+        return;
+      }
+
+      // Se construye el Administrador del modelo.
       const admin: Administrador = {
+        ...body,
         id: 0,
-        usuario: body.usuario,
-        apellido: body.apellido,
-        telefono: body.telefono,
-        nombre: body.nombre,
-        correo: body.correo,
-        tarjeta: body.tarjeta,
-        suscripcion: null /* getSuscripcionByID() */,
+        suscripcion: sus._unsafeUnwrap(),
       };
+      console.log(admin);
 
       const regResult = await this.service.registrarAdministrador(
         admin,
