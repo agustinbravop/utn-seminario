@@ -1,5 +1,20 @@
 
-
+.modal {
+    font-family: arial;
+  }
+  
+  .modal {
+    position: fixed;
+    width: 400px;
+    z-index: 1040;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  }
 
 
 
@@ -26,7 +41,7 @@
     justify-items: center;
     display: flex;
     padding: 0px;
-    margin: 0px;
+    margin-left: 0px;
 }
 .page{
     margin-top: 15px;

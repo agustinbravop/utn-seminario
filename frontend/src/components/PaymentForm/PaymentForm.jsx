@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
  
 export default class PaymentForm extends React.Component {
   state = {
@@ -30,68 +31,47 @@ export default class PaymentForm extends React.Component {
       
       <div id="PaymentForm">
 
-
-          <Container>
+      <Container>
               <Row>
                 <Col>
-                    <Row>  <Col><Form.Control type="text" placeholder="Número de tarjeta" required /> </Col> </Row>
+                    <Row>  <Col><Form.Control type="tel"
+                                      name="number"
+                                      placeholder="Numero de tarjeta"
+                                      onChange={this.handleInputChange}
+                                      onFocus={this.handleInputFocus} required /> </Col> </Row>
                         <br />
-                            <Row>  <Col><Form.Control type="text" placeholder="Nombre" required /> </Col>    </Row>
+                            <Row>  <Col><Form.Control type="tel"
+                                    name="name"
+                                    placeholder=" Nombre "
+                                    onChange={this.handleInputChange}
+                                    onFocus={this.handleInputFocus} required /> </Col>    </Row>
                         <br />
                         <Row>
-                            <Col> <Form.Control type="date" placeholder="Valida hasta" required /> </Col>
-                            <Col> <Form.Control type="text" placeholder="CVV" required /> </Col>
+                            <Col> <Form.Control  type="tel"
+                                  name="expiry"
+                                  placeholder="Valida hasta "
+                                  onChange={this.handleInputChange}
+                                  onFocus={this.handleInputFocus}  required /> </Col>
+                            <Col> <Form.Control type="tel"
+                                name="cvc"
+                                placeholder="CVV "
+                                onChange={this.handleInputChange}
+                                onFocus={this.handleInputFocus} required /> </Col>
                         </Row>
                         <br />  
                 </Col>
-                   <Col> <PaymentForm/> </Col>
+                   <Col>      
+                      <Cards
+                          cvc={this.state.cvc}
+                          expiry={this.state.expiry}
+                          focused={this.state.focus}
+                          name={this.state.name}
+                          number={this.state.number}
+                        /> 
+                    </Col>
                 </Row>       
           </Container>
-
-
-        <Cards
-          cvc={this.state.cvc}
-          expiry={this.state.expiry}
-          focused={this.state.focus}
-          name={this.state.name}
-          number={this.state.number}
-        />
-
-          <form>
-            <input
-              type="tel"
-              name="number"
-              placeholder="Card Number"
-              onChange={this.handleInputChange}
-              onFocus={this.handleInputFocus}
-            />
-            
-        	<input
-            type="tel"
-            name="name"
-            placeholder="Cnombre "
-            onChange={this.handleInputChange}
-            onFocus={this.handleInputFocus}
-          />
-
-            <input
-            type="tel"
-            name="expiry"
-            placeholder="Cnombre "
-            onChange={this.handleInputChange}
-            onFocus={this.handleInputFocus}
-          />
-
-          <input
-            type="tel"
-            name="cvc"
-            placeholder="Cnombre "
-            onChange={this.handleInputChange}
-            onFocus={this.handleInputFocus}
-          />
-
-          </form>
-
+         
 
       </div>
     );
