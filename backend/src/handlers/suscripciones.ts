@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { SuscripcionService } from "../services/suscripciones.js";
 
 export class SuscripcionHandler {
-  service: SuscripcionService;
+  private service: SuscripcionService;
 
   constructor(service: SuscripcionService) {
     this.service = service;

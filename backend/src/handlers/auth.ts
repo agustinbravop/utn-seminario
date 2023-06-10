@@ -28,8 +28,8 @@ type RegistroReq = {
 };
 
 export class AuthHandler {
-  service: AuthService;
-  susService: SuscripcionService;
+  private service: AuthService;
+  private susService: SuscripcionService;
 
   constructor(service: AuthService, susService: SuscripcionService) {
     this.service = service;

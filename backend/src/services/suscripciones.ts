@@ -9,7 +9,7 @@ export interface SuscripcionService {
 }
 
 export class SuscripcionServiceImpl {
-  repo: SuscripcionRepository;
+  private repo: SuscripcionRepository;
 
   constructor(repository: SuscripcionRepository) {
     this.repo = repository;

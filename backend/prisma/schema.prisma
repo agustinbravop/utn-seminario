@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -127,14 +127,14 @@ model horariosdeatencion {
 }
 
 model jugador {
-  idjugador     Int       @id @default(autoincrement())
-  nombre        String?   @db.VarChar
-  nombreusuario String?   @db.VarChar
-  apellido      String?   @db.VarChar
-  telefono      Int?
-  email         String?   @db.VarChar
-  clave         String?   @db.VarChar
-  reserva       reserva[]
+  idjugador Int       @id @default(autoincrement())
+  nombre    String    @db.VarChar
+  usuario   String    @db.VarChar
+  apellido  String    @db.VarChar
+  telefono  Int
+  correo    String    @db.VarChar
+  clave     String    @db.VarChar
+  reserva   reserva[]
 }
 
 model metododepago {
@@ -193,6 +193,6 @@ model tarjeta {
   nombre        String         @db.VarChar
   numero        String
   cvv           Int
-  vencimiento   String       
+  vencimiento   String
   administrador administrador?
 }

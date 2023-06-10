@@ -7,6 +7,7 @@ import {
 import { Administrador } from "../models/administrador.js";
 import { Result, err, ok } from "neverthrow";
 import { ApiError } from "../utils/apierrors.js";
+import { Rol } from "../services/auth.js";
 
 export type AdministradorConClave = {
   admin: Administrador;
@@ -21,10 +22,11 @@ export interface AuthRepository {
   getAdministradorYClave(
     correoOUsuario: string
   ): Promise<Result<AdministradorConClave, ApiError>>;
+  getRoles(correoOUsuario: string): Promise<Result<Rol[], ApiError>>;
 }
 
 export class PrismaAuthRepository {
-  prisma: PrismaClient;
+  private prisma: PrismaClient;
 
   // Transforma objetos de Prisma de la base de datos a objetos del modelo del dominio.
   // Sirve para sacar la clave, que pasa desapercibida en el tipo Administrador.
@@ -61,6 +63,36 @@ export class PrismaAuthRepository {
       return err(
         new ApiError(404, "No existe administrador con ese correo o usuario")
       );
+    }
+  }
+
+  /*
+   getRoles obtiene los roles de un usuario.
+   Hasta ahora, cada usuario tiene un solo rol, pero se retorna un arreglo de roles por las dudas.
+  */
+  async getRoles(correoOUsuario: string): Promise<Result<Rol[], ApiError>> {
+    try {
+      const dbAdmin = await this.prisma.administrador.findFirst({
+        where: {
+          OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
+        },
+      });
+      if (dbAdmin) {
+        return ok([Rol.Administrador]);
+      }
+
+      const dbJugador = await this.prisma.jugador.findFirst({
+        where: {
+          OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
+        },
+      });
+      if (dbJugador) {
+        return ok([Rol.Jugador]);
+      }
+
+      return err(new ApiError(401, "Correo o usuario incorrecto"));
+    } catch (e) {
+      return err(new ApiError(500, "Error interno con la base de datos"));
     }
   }
 

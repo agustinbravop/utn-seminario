@@ -9,7 +9,7 @@ export interface SuscripcionRepository {
 }
 
 export class PrismaSuscripcionRepository {
-  prisma: PrismaClient;
+  private prisma: PrismaClient;
 
   constructor(client: PrismaClient) {
     this.prisma = client;
