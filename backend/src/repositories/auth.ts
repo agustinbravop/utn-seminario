@@ -101,7 +101,6 @@ export class PrismaAuthRepository {
     clave: string
   ): Promise<Result<Administrador, ApiError>> {
     try {
-      console.log(admin, clave);
       const dbAdmin = await this.prisma.administrador.create({
         data: {
           id: undefined,

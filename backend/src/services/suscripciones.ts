@@ -20,7 +20,6 @@ export class SuscripcionServiceImpl {
   }
 
   async getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>> {
-    console.log("-> service");
     return await this.repo.getAllSuscripciones();
   }
 }

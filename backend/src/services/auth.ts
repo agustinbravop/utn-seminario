@@ -60,7 +60,6 @@ export class AuthServiceImpl {
       .setIssuer(process.env.JWT_ISSUER || "canchasapi")
       .setExpirationTime(process.env.JWT_EXPIRATION_TIME || "1h") // token expiration time, e.g., "1 day"
       .sign(this.secretKey as Uint8Array);
-    console.log(token);
 
     return token;
   }
@@ -69,19 +68,16 @@ export class AuthServiceImpl {
   // El JWT es auténtico si fue firmado por la función signJWT.
   async verifyJWT(token: string): Promise<boolean> {
     try {
-      const { payload, protectedHeader } = await jwtVerify(
+      await jwtVerify(
         token,
         this.secretKey as Uint8Array,
         {
           issuer: process.env.JWT_ISSUER,
         }
       );
-      console.log(payload);
-      console.log(protectedHeader);
       return true;
     } catch (e) {
       // token verification failed
-      console.log("Token is invalid");
       return false;
     }
   }
@@ -122,7 +118,6 @@ export class AuthServiceImpl {
     }
 
     const { admin, clave: hash } = adminConClaveResult._unsafeUnwrap();
-    console.log(admin, clave, hash);
     const esValido = await bcrypt.compare(clave, hash);
     if (!esValido) {
       return err(new ApiError(401, "Contraseña incorrecta"));

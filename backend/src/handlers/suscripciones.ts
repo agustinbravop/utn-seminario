@@ -10,7 +10,6 @@ export class SuscripcionHandler {
 
   getAllSuscripciones(): RequestHandler {
     return async (_req, res) => {
-      console.log("-> handler");
       const susResult = await this.service.getAllSuscripciones();
       susResult.match(
         (suscripciones) => res.status(200).json(suscripciones),

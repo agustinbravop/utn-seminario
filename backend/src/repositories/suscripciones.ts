@@ -30,8 +30,6 @@ export class PrismaSuscripcionRepository {
   }
 
   async getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>> {
-    console.log("-> repo");
-
     try {
       const suscripciones = await this.prisma.suscripcion.findMany();
       return ok(suscripciones);

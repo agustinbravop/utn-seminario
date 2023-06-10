@@ -72,7 +72,6 @@ export class AuthHandler {
         id: 0,
         suscripcion: sus._unsafeUnwrap(),
       };
-      console.log(admin);
 
       const regResult = await this.service.registrarAdministrador(
         admin,
