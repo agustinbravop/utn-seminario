@@ -30,6 +30,7 @@ export const postEstablecimiento = async (req:any, res:Response)=> {
             diasemana:String(req.body.diasdesemana)
         }
        })
+       
        const horariosdeatencion= await prisma.horariosdeatencion.create({ 
         data: { 
             horaapertura:new Date(String(req.body.horaapertura)), 
