@@ -28,8 +28,14 @@ export interface AuthRepository {
 export class PrismaAuthRepository {
   private prisma: PrismaClient;
 
-  // Transforma objetos de Prisma de la base de datos a objetos del modelo del dominio.
-  // Sirve para sacar la clave, que pasa desapercibida en el tipo Administrador.
+  /**
+   * Transforma objetos de Prisma (de la BBDD) a objetos del modelo del dominio.
+   * Sirve para sacar la clave, que pasa desapercibida en el tipo `Administrador`.
+   * @param admin una entidad administrador de Prisma.
+   * @param suscripcion una entidad suscripcion de Prisma.
+   * @param tarjeta una entidad tarjeta de Prisma.
+   * @returns un objeto Administrador del dominio.
+   */
   private toModel(
     { clave, idSuscripcion, idTarjeta, ...admin }: administrador,
     suscripcion: suscripcion,
@@ -66,10 +72,12 @@ export class PrismaAuthRepository {
     }
   }
 
-  /*
-   getRoles obtiene los roles de un usuario.
-   Hasta ahora, cada usuario tiene un solo rol, pero se retorna un arreglo de roles por las dudas.
-  */
+  /**
+   * Obtiene los roles de un usuario. Hasta ahora, cada usuario
+   * tiene un solo rol, pero se retorna un arreglo de roles por las dudas.
+   * @param correoOUsuario el correo/usuario guardado.
+   * @returns los roles del usuario, o un `ApiError` si algo falla.
+   */
   async getRoles(correoOUsuario: string): Promise<Result<Rol[], ApiError>> {
     try {
       const dbAdmin = await this.prisma.administrador.findFirst({

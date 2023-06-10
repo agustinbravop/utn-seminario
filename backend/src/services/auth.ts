@@ -6,6 +6,10 @@ import { ApiError } from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
 
+/**
+ * Representa el tipo de un usuario.
+ * Se usa en los middlewares de autorización para definir a qué endpoints tiene acceso.
+ */
 export enum Rol {
   Jugador = "Jugador",
   Administrador = "Administrador",
@@ -35,7 +39,12 @@ export class AuthServiceImpl {
     this.secretKey = createSecretKey(process.env.JWT_SECRET || "", "utf-8");
   }
 
-  // Extrae los roles del JWT y los devuelve como Rol[].
+  /**
+   * Extrae los roles del JWT, que van guardados en el capo 'roles' del payload.
+   * Antes de usar esta funcion es importante verificar que el JWT sea válido.
+   * @param token el JWT del usuario como string.
+   * @returns Rol[] los roles del usuario.
+   */
   getRolesFromJWT(token: string): Rol[] {
     const payload: JWTPayload = decodeJwt(token);
     if (!(payload["roles"] instanceof Array)) {
@@ -50,8 +59,11 @@ export class AuthServiceImpl {
     return roles;
   }
 
-  // signJWT crea un JSON Web Token con un Administrador como payload.
-  // Setea los headers del JWT según variables de entorno.
+  /**
+   * Esta función genera un JWT con los datos del usuario y sus roles.
+   * @param usuario el Administrador que va a ir en el payload. Corresponde al usuario autenticado.
+   * @returns un `Promise<string>` con el JWT firmado.
+   */
   private async signJWT(usuario: Administrador): Promise<string> {
     const token = await new SignJWT({ ...usuario, roles: [Rol.Administrador] })
       .setProtectedHeader({ alg: "HS256" })
@@ -64,17 +76,15 @@ export class AuthServiceImpl {
     return token;
   }
 
-  // veriftJWT devuelve true si el JWT es auténtico.
-  // El JWT es auténtico si fue firmado por la función signJWT.
+  /**
+   * Valida un JWT. Un JWT es auténtico si fue firmado por la función signJWT.
+   * @returns true si el JWT es válido. Retorna falso en caso contrario.
+   */
   async verifyJWT(token: string): Promise<boolean> {
     try {
-      await jwtVerify(
-        token,
-        this.secretKey as Uint8Array,
-        {
-          issuer: process.env.JWT_ISSUER,
-        }
-      );
+      await jwtVerify(token, this.secretKey as Uint8Array, {
+        issuer: process.env.JWT_ISSUER,
+      });
       return true;
     } catch (e) {
       // token verification failed
@@ -82,30 +92,12 @@ export class AuthServiceImpl {
     }
   }
 
-  // hasAllRoles verifica el token JWT de un usuario y devuelve verdadero si tiene todos los roles (permisos) pasados por parámetro.
-  // Un usuario no registrado no tiene roles.
-  async hasAllRoles(
-    token: string,
-    roles: Rol[]
-  ): Promise<Result<boolean, ApiError>> {
-    const esValido = await this.verifyJWT(token);
-    if (!esValido) {
-      return err(new ApiError(401, "Token inválido"));
-    }
-    const rolesResult = await this.repo.getRoles(token);
-    if (rolesResult.isErr()) {
-      return rolesResult.map((_) => false);
-    }
-
-    const rolesUsuario = rolesResult._unsafeUnwrap();
-    if (rolesUsuario.every((rol) => roles.includes(rol))) {
-      return ok(true);
-    }
-    return ok(false);
-  }
-
-  // loginUsuario devuelve un JWT si el correo coincide con la contraseña.
-  // Devuelve un ApiError en caso contrario.
+  /**
+   * Valida que el correo/usuario corresponda con la clave y que la clave sea correcta.
+   * @param correoOUsuario el correo o username del usuario.
+   * @param clave la contraseña en texto plano del usuario.
+   * @returns el JWT de la sesión si los datos son correctos. ApiError si alguna validación falla.
+   */
   async loginUsuario(
     correoOUsuario: string,
     clave: string
@@ -127,6 +119,12 @@ export class AuthServiceImpl {
     return ok(jwt);
   }
 
+  /**
+   * Se hashea la clave del usuario y luego se lo persiste en la base de datos.
+   * @param admin el nuevo Administrador a registrar.
+   * @param clave la contraseña en texto plano del nuevo usuario administrador.
+   * @returns el Administrador creado.
+   */
   async registrarAdministrador(
     admin: Administrador,
     clave: string
