@@ -40,7 +40,7 @@ model cancha {
 model diaDeSemana {
   diaDeSemana        String               @id @db.VarChar
   disponibilidades   disponibilidad[]
-  horariosDeAtencion horariosDeAtencion[]
+  horariosDeAtencion horarioDeAtencion[]
 }
 
 model disciplina {
@@ -75,7 +75,7 @@ model establecimiento {
   idAdministrador    Int
   administrador      administrador?       @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
   canchas            cancha[]
-  horariosDeAtencion horariosDeAtencion[]
+  horariosDeAtencion horarioDeAtencion[]
   metodosDePago      metodoDePago[]
 }
 
@@ -85,7 +85,7 @@ model metodoDePago {
   pagos            pago[]
 }
 
-model horariosDeAtencion {
+model horarioDeAtencion {
   id                Int             @id @default(autoincrement()) @map("idHorariosDeAtencion")
   horaApertura      DateTime        @db.Time(6)
   horaCierre        DateTime        @db.Time(6)
