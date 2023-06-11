@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { authRouter } from "./router/auth.js";
 import { PrismaClient } from "@prisma/client";
+import { establecimientosRouter } from "./router/establecimientos.js";
 
 const app: Application = express();
 
@@ -19,6 +20,7 @@ prismaClient
 
 app.use("/auth", authRouter(prismaClient));
 app.use("/suscripciones", suscripcionesRouter(prismaClient));
+app.use("/establecimientos", establecimientosRouter(prismaClient));
 app.use("/tarjetas", tarjetaRouter);
 
 app.listen(process.env.PORT || 3000, () => {

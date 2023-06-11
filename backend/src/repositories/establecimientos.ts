@@ -42,7 +42,7 @@ export class PrismaEstablecimientoRepository {
     est: Establecimiento
   ): Promise<Result<Establecimiento, ApiError>> {
     try {
-      const horarios = est.horariosDeAtencion.map((h) => ({
+      const horarios = est.horariosDeAtencion?.map((h) => ({
         horaApertura: h.horaApertura,
         horaCierre: h.horaCierre,
         idDiaDeSemana: h.diaDeSemana,
@@ -58,7 +58,7 @@ export class PrismaEstablecimientoRepository {
           direccion: est.direccion,
           localidad: est.localidad,
           provincia: est.provincia,
-          idAdministrador: est.idAdministrador,
+          idAdministrador: Number(est.idAdministrador),
           urlImagen: est.urlImagen,
           horariosDeAtencion: {
             create: horarios,

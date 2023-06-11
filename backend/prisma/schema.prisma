@@ -73,7 +73,7 @@ model establecimiento {
   urlImagen          String?              @db.VarChar
   correo             String               @unique @db.VarChar
   idAdministrador    Int
-  administrador      administrador?       @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  administrador      administrador       @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
   canchas            cancha[]
   horariosDeAtencion horarioDeAtencion[]
   metodosDePago      metodoDePago[]
