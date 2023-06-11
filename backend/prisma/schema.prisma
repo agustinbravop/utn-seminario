@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -10,17 +9,17 @@ datasource db {
 }
 
 model administrador {
-  idadministrador  Int                @id @default(autoincrement())
-  nombre           String?            @db.VarChar
-  nombreusuario    String?            @db.VarChar
-  apellido         String?            @db.VarChar
-  correo           String?            @db.VarChar
-  telefono         String?            @db.VarChar
-  clave            String?            @db.VarChar
-  idsuscripcion    Int?
-  idtarjeta        Int?
-  suscripcion      suscripcion?       @relation(fields: [idsuscripcion], references: [idsuscripcion], onDelete: NoAction, onUpdate: NoAction, map: "suscripcionid")
-  tarjeta          tarjeta?           @relation(fields: [idtarjeta], references: [idtarjeta], onDelete: NoAction, onUpdate: NoAction, map: "tarjetaid")
+  id               Int                @id @default(autoincrement()) @map("idAdministrador")
+  usuario          String             @unique @db.VarChar
+  correo           String             @unique @db.VarChar
+  clave            String             @db.VarChar
+  nombre           String             @db.VarChar
+  apellido         String             @db.VarChar
+  telefono         String             @db.VarChar
+  idTarjeta        Int                @unique
+  tarjeta          tarjeta            @relation(fields: [idTarjeta], references: [id], onDelete: Cascade)
+  idSuscripcion    Int
+  suscripcion      suscripcion        @relation(fields: [idSuscripcion], references: [id], onDelete: NoAction, onUpdate: NoAction)
   establecimiento  establecimiento[]
   pago_suscripcion pago_suscripcion[]
 }
@@ -31,8 +30,8 @@ model cancha {
   descripcion             String?                   @db.VarChar
   estahabilitada          Boolean?
   urlimagen               String?                   @db.VarChar
-  idestablecimiento       Int?
-  establecimiento         establecimiento?          @relation(fields: [idestablecimiento], references: [idestablecimiento], onDelete: NoAction, onUpdate: NoAction, map: "establecimientoid")
+  idEstablecimiento       Int?
+  establecimientos        establecimiento?          @relation(fields: [idEstablecimiento], references: [idestablecimiento], onDelete: NoAction, onUpdate: NoAction)
   canchapordisciplina     canchapordisciplina[]
   canchapordisponibilidad canchapordisponibilidad[]
   disponibilidad          disponibilidad[]
@@ -104,7 +103,7 @@ model establecimiento {
   idadministrador              Int?
   idhorariosdeatencion         Int?
   cancha                       cancha[]
-  administrador                administrador?                 @relation(fields: [idadministrador], references: [idadministrador], onDelete: NoAction, onUpdate: NoAction, map: "administradorid")
+  administrador                administrador?                 @relation(fields: [idadministrador], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "administradorid")
   horariosdeatencion           horariosdeatencion?            @relation(fields: [idhorariosdeatencion], references: [idhorariosatencion], onDelete: NoAction, onUpdate: NoAction, map: "horariosdeatencionid")
   establecimientopormetodopago establecimientopormetodopago[]
 }
@@ -128,14 +127,14 @@ model horariosdeatencion {
 }
 
 model jugador {
-  idjugador     Int       @id @default(autoincrement())
-  nombre        String?   @db.VarChar
-  nombreusuario String?   @db.VarChar
-  apellido      String?   @db.VarChar
-  telefono      Int?
-  email         String?   @db.VarChar
-  clave         String?   @db.VarChar
-  reserva       reserva[]
+  idjugador Int       @id @default(autoincrement())
+  nombre    String    @db.VarChar
+  usuario   String    @db.VarChar
+  apellido  String    @db.VarChar
+  telefono  Int
+  correo    String    @db.VarChar
+  clave     String    @db.VarChar
+  reserva   reserva[]
 }
 
 model metododepago {
@@ -160,7 +159,7 @@ model pago_suscripcion {
   monto            Decimal?       @db.Decimal
   fechapago        DateTime?      @db.Timestamp(6)
   fechavencimiento DateTime?      @db.Timestamp(6)
-  administrador    administrador? @relation(fields: [adminid], references: [idadministrador], onDelete: NoAction, onUpdate: NoAction, map: "adminid")
+  administrador    administrador? @relation(fields: [adminid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "adminid")
 }
 
 model reserva {
@@ -181,28 +180,19 @@ model reserva {
   pago_reserva_idpagoreservaTopago          pago?       @relation("reserva_idpagoreservaTopago", fields: [idpagoreserva], references: [idpago], onDelete: NoAction, onUpdate: NoAction, map: "pagoreserva")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model spatial_ref_sys {
-  srid      Int     @id
-  auth_name String? @db.VarChar(256)
-  auth_srid Int?
-  srtext    String? @db.VarChar(2048)
-  proj4text String? @db.VarChar(2048)
-}
-
 model suscripcion {
-  idsuscripcion         Int              @default(autoincrement()) @id 
-  nombre                String?         @db.VarChar
-  limiteestablecimiento Int?
-  costomensual          Int?
-  administrador         administrador[]
+  id                     Int             @id @default(autoincrement()) @map("idSuscripcion")
+  nombre                 String          @db.VarChar
+  limiteEstablecimientos Int
+  costoMensual           Int
+  administrador          administrador[]
 }
 
 model tarjeta {
-  idtarjeta        Int             @id @default(autoincrement())
-  nombre           String?         @db.VarChar
-  numero           Int?
-  cvv              Int?
-  fechavencimiento DateTime?       @db.Timestamp(6)
-  administrador    administrador[]
+  id            Int            @id @default(autoincrement()) @map("idTarjeta")
+  nombre        String         @db.VarChar
+  numero        String
+  cvv           Int
+  vencimiento   String
+  administrador administrador?
 }
