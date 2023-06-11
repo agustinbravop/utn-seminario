@@ -23,8 +23,9 @@ function BrandNav() {
 };
 
 function MenuNav() {
-    return (<Nav className='mr-auto'>
-            <Nav.Link href='#'>Establecimientos</Nav.Link>
+    return (
+    <Nav className='mr-auto'>
+            <Nav.Link href="/frontend/src/pages/establecimientoPage.js" className='link'>Establecimientos</Nav.Link>
             <Nav.Link href='#'>Eventos</Nav.Link>
             <Nav.Link href='#'>Grupos</Nav.Link>
         </Nav>)

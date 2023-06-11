@@ -16,4 +16,12 @@
         font-size: 22px;
     }
     }
+
+    .nav-link {
+        .link {
+            position: sticky;
+        z-index: 1000px;
+        }
+        
+    }
 }
