@@ -5,12 +5,23 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import Modal from 'react-overlays/Modal';
+import { useState } from 'react';
+import { JSX } from "react/jsx-runtime";
 
 const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 const valoresSelect = [ " " , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
 
 function AdmPage() {
+
+  const [showModal, setShowModal] = useState(false);
+  const renderBackdrop = (props: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>) => <div className="backdrop" {...props} />;
+  var handleClose = () => setShowModal(false);
+  var handleSuccess = () => {
+    console.log(":)");
+  };
+
+
   return (
     <div className="page">
     <div className="margen">
@@ -23,61 +34,27 @@ function AdmPage() {
     <br />
 
     <div className="formulario" >
-      <Form style={{ width: '50%' }}>
+    <Form style={{ width: '50%', marginLeft: '4%' }}>
 
         <Form.Group >
-
-
-
-
-          <Container>
-              <Row>
-                <Col>
-                    <Row>  <Col><Form.Control type="text" placeholder="Número de tarjeta" required /> </Col> </Row>
-                        <br />
-                            <Row>  <Col><Form.Control type="text" placeholder="Nombre" required /> </Col>    </Row>
-                        <br />
-                        <Row>
-                            <Col> <Form.Control type="date" placeholder="Valida hasta" required /> </Col>
-                            <Col> <Form.Control type="text" placeholder="CVV" required /> </Col>
-                        </Row>
-                        <br />  
-                </Col>
-                   
-
-                   <Col> <PaymentForm/> </Col>
-
-                </Row>       
-          </Container>
-
-            
-
-
+                <PaymentForm/> 
         </Form.Group>
         </Form>
-
 </div>
-
-
         <br />
-
-
 
       <div className="margen">
         <h2>Cuenta</h2>
         <p> Ingrese los datos a usar para iniciar sesión.</p>
       </div>
 
-      
     <br />
     <br />
-
 
             <div className="formulario">
             <Form style={{ width: '34%' }}>
 
               <Form.Group >
-                
                 <Container>
                     <Row>
                         <Col> <Form.Control type="text" placeholder="Nombre" required /> </Col>
@@ -85,6 +62,8 @@ function AdmPage() {
                     </Row>
                     <br />
                     <Row>  <Col><Form.Control type="text" placeholder="Teléfono" required /> </Col> </Row>
+                    <br />
+                    <Row>  <Col><Form.Control type="text" placeholder="Nombre de usuario" required /> </Col> </Row>
                     <br />
                    
                     <Row>  <Col><Form.Control type="email" placeholder="Correo electrónico" required /> </Col> </Row>
@@ -96,9 +75,6 @@ function AdmPage() {
                           
                 </Container>
 
-
-
-
               </Form.Group>
 
                     <div className="centrado">
@@ -106,19 +82,45 @@ function AdmPage() {
                     type="submit"
                     className="btn btn-danger"
                     style={{ backgroundColor: "#249AD5", borderColor: "#249AD5" }}
+                    onClick={() => console.log (":(") }
                   >
                     Registrarse
                   </button>
                 </div>
 
-
               </Form>
-
       </div>
-     
+
+            <Modal
+                    className="modal"
+                    show={showModal}
+                    onHide={handleClose}
+                    renderBackdrop={renderBackdrop}
+                  >
+                    <div>
+                      <div className="modal-header">
+                        <div className="modal-title">Confirmar Cancelación</div>
+                        <div>
+                          <span className="close-button" onClick={handleClose}>
+                            x
+                          </span>
+                        </div>
+                      </div>
+                      <div className="modal-desc">
+                        <p>¿Desea cancelar?</p>
+                      </div>
+                      <div className="modal-footer">
+                        <button className="secondary-button" onClick={handleClose}>
+                          Cancelar
+                        </button>
+                        <button className="primary-button" onClick={handleSuccess}>
+                          Aceptar
+                        </button>
+                      </div>
+                    </div>
+                </Modal>
 
   </div>
   );
 }
-
 export default AdmPage;
