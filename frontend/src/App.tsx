@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react'
-import InputMail from './components/Input'
-import Title from './components/Title'
+import React, { Fragment } from 'react';
+import InputMail from './components/Input';
+import Title from './components/Title';
 import TopMenu from './components/TopMenu';
 
 function App() {
-  return (
+return (
     <div>
       <TopMenu />
         <Fragment>
