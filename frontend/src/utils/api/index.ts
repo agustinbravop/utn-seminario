@@ -97,13 +97,7 @@ export async function login(
 }
 
 export async function register(usuario: Administrador): Promise<Administrador> {
-  return post<JWT>(`${API_URL}/auth/register`, usuario, 201)
-    .then((data) => {
-      writeLocalStorage("token", data.token);
-      return jwtDecode(data.token) as { usuario: Administrador };
-    })
-    .then((payload) => payload.usuario)
-    .then((data) => data as Administrador);
+  return post<Administrador>(`${API_URL}/auth/register`, usuario, 201);
 }
 
 export async function crearEstablecimiento(
