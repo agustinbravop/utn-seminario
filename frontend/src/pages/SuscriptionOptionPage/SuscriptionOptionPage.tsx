@@ -1,17 +1,34 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import TopMenu from "../../components/TopMenu";
-import {Rocket} from 'react-bootstrap-icons';
-import {Shop} from 'react-bootstrap-icons';
-import {Buildings} from 'react-bootstrap-icons';
-import {getAllSuscription} from '../../data/suscriptions'
+import { Rocket } from "react-bootstrap-icons";
+import { Shop } from "react-bootstrap-icons";
+import { Buildings } from "react-bootstrap-icons";
+import { getSuscripciones } from "../../utils/api";
+import { Suscripcion } from "../../types";
+import { useNavigate } from "react-router";
 //revisar iconos
 
+const iconos = [
+  <Shop fill="#47A992" size={90} />,
+  <Buildings fill="#47A992" size={90} />,
+  <Rocket fill="#47A992" size={90} />,
+];
+
 function SuscriptionOptionPage() {
-  const suscriptions = getAllSuscription();
+  let [suscripciones, setSuscripciones] = useState<Suscripcion[]>();
+  useEffect(() => {
+    getSuscripciones()
+      .then((suscripciones) => setSuscripciones(suscripciones))
+      .catch((err) => console.log(err));
+  }, [setSuscripciones]);
+
+  const sus = suscripciones?.map((s, idx) => ({ icono: iconos[idx], ...s }));
+
+  const navigate = useNavigate();
 
   //Agregar ternario para controlar empleados
-  const cards = suscriptions.map((o) => {
+  const cards = sus?.map((s) => {
     return (
       <Card
         bg="light"
@@ -20,21 +37,20 @@ function SuscriptionOptionPage() {
         style={{ width: "14rem" }}
         className="mb-2 mt-4 pt-2"
       >
-        <Card.Header style={{textAlign:"center"}}>
-          {o.icon}
-        </Card.Header>
-        <Card.Body style={{textAlign:"center"}}>
-          <Card.Title>{o.tipo}</Card.Title>
+        <Card.Header style={{ textAlign: "center" }}>{s.icono}</Card.Header>
+        <Card.Body style={{ textAlign: "center" }}>
+          <Card.Title>{s.nombre}</Card.Title>
           <Card.Text>
-            <b style={{fontSize:"30px"}}>${o.price}</b>
+            <b style={{ fontSize: "30px" }}>${s.costoMensual}</b>
             <br />
             por mes <br />
-            {o.countEst} establecimientos
+            {s.limiteEstablecimientos} establecimientos
           </Card.Text>
           <button
             type="button"
             className="btn btn-outline-danger"
-            style={{ marginLeft: "10px"}}
+            style={{ marginLeft: "10px" }}
+            onClick={() => navigate(`/register?idSuscripcion=${s.id}`)}
           >
             Continuar
           </button>

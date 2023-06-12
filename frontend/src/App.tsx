@@ -8,11 +8,11 @@ import AdmPage from "./pages/AdmPage/AdmPage";
 
 const routes = [
   {
-    path: "/home",
+    path: "/landing",
     element: <HomePage />,
   },
   {
-    path: "/suscription",
+    path: "/suscripciones",
     element: <SuscriptionOptionPage />,
   },
   {
@@ -20,7 +20,7 @@ const routes = [
     element: <LogIn />,
   },
   {
-    path: "/new-estab",
+    path: "/establecimientos",
     element: <NewEstab />,
   },
   {
@@ -28,7 +28,7 @@ const routes = [
     element: <NotFound />,
   },
   {
-    path: "/admin",
+    path: "/register",
     element: <AdmPage />,
   },
 ];
@@ -38,84 +38,6 @@ const router = createBrowserRouter(routes);
 
 function App() {
   return (
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     <div>
       <RouterProvider router={router} />
     </div>

@@ -2,22 +2,23 @@ import React from "react";
 import Title from "../../components/Title/Title";
 import "./HomePage.css";
 import TopMenu from "../../components/TopMenu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function HomePage() {
+  const navigate = useNavigate();
   return (
     <div>
       <TopMenu />
       <div className="container col">
-        <div className="header" style={{alignContent:"end"}}>
-          <Link to={'/suscription'}>
-          <button
-            type="button"
-            className="btn btn-outline-dark"
-            style={{ marginLeft: "4px" }}
-          >
-            Suscripcion
-          </button>
+        <div className="header" style={{ alignContent: "end" }}>
+          <Link to={"/suscription"}>
+            <button
+              type="button"
+              className="btn btn-outline-dark"
+              style={{ marginLeft: "4px" }}
+            >
+              Suscripcion
+            </button>
           </Link>
           <button
             type="button"
@@ -35,7 +36,6 @@ function HomePage() {
                 marginTop: "20px",
                 display: "flex",
                 alignContent: "center",
-                
               }}
             >
               Reserva una cancha desde donde quieras
@@ -79,6 +79,7 @@ function HomePage() {
                 type="button"
                 className="btn btn-danger"
                 style={{ backgroundColor: "#FF604F", width: "15%" }}
+                onClick={() => navigate("/suscripciones")}
               >
                 Ver Opciones
               </button>

@@ -1,18 +1,10 @@
 import "./NewEstab.css";
 import Form from 'react-bootstrap/Form';
-
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { FloatingLabel } from "react-bootstrap";
-
-const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-const valoresSelect = [" ", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
-
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TopMenu from "../../components/TopMenu";
+import { FloatingLabel } from "react-bootstrap";
 
 const diasSemana = [
   "Lunes",
