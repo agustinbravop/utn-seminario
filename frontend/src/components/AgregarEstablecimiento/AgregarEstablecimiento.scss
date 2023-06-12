@@ -1,0 +1,36 @@
+.agregarestablecimiento {
+    padding:0;
+    
+    .btn {
+        margin-top: 30px;
+        margin-bottom: 15px;
+        margin-right: 15px;
+        margin-left: 15px;
+        background-color: transparent;
+        color: #0098d3;
+        border-color: #0098d3;
+        border-radius: 50px;
+
+        &:hover,
+        &:active {
+                background-color: #0098d3 !important;
+                border-color: #0098d3;
+                color: #fff;
+                box-shadow: none !important;
+            }
+    }
+
+    .form-group {
+        .center {
+            .react-calendar {
+                display: flex;
+                justify-content: 'center';
+                align-items: 'center';
+            }
+        }
+
+    }
+
+    
+    
+}
