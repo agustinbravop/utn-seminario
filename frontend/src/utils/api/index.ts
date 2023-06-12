@@ -58,11 +58,16 @@ async function get<T>(endpoint: string, token?: string): Promise<T> {
     .then((data) => data as T);
 }
 
-async function post<T>(endpoint: string, body: object, token?: string): Promise<T> {
+async function post<T>(
+  endpoint: string,
+  body: object,
+  expectedStatus: number,
+  token?: string
+): Promise<T> {
   return fetch(request("POST", endpoint), {
     body: JSON.stringify(body),
   })
-    .then((res) => (res.ok ? res.json() : reject(res)))
+    .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
     .then((data) => data as T);
 }
 
@@ -74,11 +79,15 @@ export async function login(
   correoOUsuario: string,
   clave: string
 ): Promise<Administrador> {
-  return post<JWT>(`${API_URL}/auth/login`, {
-    correo: correoOUsuario,
-    usuario: correoOUsuario,
-    clave: clave,
-  })
+  return post<JWT>(
+    `${API_URL}/auth/login`,
+    {
+      correo: correoOUsuario,
+      usuario: correoOUsuario,
+      clave: clave,
+    },
+    200
+  )
     .then((data) => {
       writeLocalStorage("token", data.token);
       return jwtDecode(data.token) as { usuario: Administrador };
@@ -88,11 +97,23 @@ export async function login(
 }
 
 export async function register(usuario: Administrador): Promise<Administrador> {
-  return post<JWT>(`${API_URL}/auth/register`, usuario)
+  return post<JWT>(`${API_URL}/auth/register`, usuario, 201)
     .then((data) => {
       writeLocalStorage("token", data.token);
       return jwtDecode(data.token) as { usuario: Administrador };
     })
     .then((payload) => payload.usuario)
     .then((data) => data as Administrador);
+}
+
+export async function crearEstablecimiento(
+  establecimiento: Establecimiento
+): Promise<Establecimiento> {
+  const token = readLocalStorage("token");
+  return post<Establecimiento>(
+    `${API_URL}/establecimientos`,
+    establecimiento,
+    201,
+    token
+  );
 }
