@@ -9,13 +9,22 @@ export interface EstablecimientoService {
     establecimiento: Establecimiento,
     imagen?: Express.Multer.File
   ): Promise<Result<Establecimiento, ApiError>>;
+  getByAdministradorID(
+    idAdmin: number
+  ): Promise<Result<Establecimiento[], ApiError>>;
 }
 
-export class EstablecimientoServiceImpl {
+export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
 
   constructor(repository: EstablecimientoRepository) {
     this.repo = repository;
+  }
+  
+  async getByAdministradorID(
+    idAdmin: number
+  ): Promise<Result<Establecimiento[], ApiError>> {
+    return await this.repo.getByAdministradorID(idAdmin);
   }
 
   async crearEstablecimiento(

@@ -28,7 +28,7 @@ export interface AuthService {
   getRolesFromJWT(token: string): Rol[];
 }
 
-export class AuthServiceImpl {
+export class AuthServiceImpl implements AuthService {
   private repo: AuthRepository;
   private secretKey: KeyLike;
   private SALT_ROUNDS: number;

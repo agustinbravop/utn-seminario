@@ -8,7 +8,7 @@ export interface SuscripcionService {
   getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>>;
 }
 
-export class SuscripcionServiceImpl {
+export class SuscripcionServiceImpl implements SuscripcionService {
   private repo: SuscripcionRepository;
 
   constructor(repository: SuscripcionRepository) {

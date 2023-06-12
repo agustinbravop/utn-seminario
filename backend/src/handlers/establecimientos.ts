@@ -24,4 +24,16 @@ export class EstablecimientoHandler {
       );
     };
   }
+
+  getByAdminID(): RequestHandler {
+    return async (req, res) => {
+      // TODO: mejorar input validation
+      const idAdmin = Number(req.params.idAdmin);
+      const estsResult = await this.service.getByAdministradorID(idAdmin);
+      estsResult.match(
+        (ests) => res.status(200).json(ests),
+        (err) => res.status(err.status).json(err)
+      );
+    };
+  }
 }

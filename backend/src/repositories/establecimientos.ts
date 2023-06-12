@@ -14,9 +14,14 @@ export interface EstablecimientoRepository {
   crearEstablecimiento(
     est: Establecimiento
   ): Promise<Result<Establecimiento, ApiError>>;
+  getByAdministradorID(
+    idAdmin: number
+  ): Promise<Result<Establecimiento[], ApiError>>;
 }
 
-export class PrismaEstablecimientoRepository {
+export class PrismaEstablecimientoRepository
+  implements EstablecimientoRepository
+{
   private prisma: PrismaClient;
 
   constructor(client: PrismaClient) {
@@ -71,6 +76,28 @@ export class PrismaEstablecimientoRepository {
       return ok(this.toModel(dbEst, dbEst.horariosDeAtencion));
     } catch (e) {
       return err(new ApiError(500, "No se pudo registrar el establecimiento"));
+    }
+  }
+
+  async getByAdministradorID(
+    idAdmin: number
+  ): Promise<Result<Establecimiento[], ApiError>> {
+    try {
+      const dbEsts = await this.prisma.establecimiento.findMany({
+        where: {
+          idAdministrador: idAdmin,
+        },
+        include: {
+          horariosDeAtencion: true,
+        },
+      });
+
+      const establecimientos = dbEsts.map((dbEst) =>
+        this.toModel(dbEst, dbEst.horariosDeAtencion)
+      );
+      return ok(establecimientos);
+    } catch (e) {
+      return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
   }
 }

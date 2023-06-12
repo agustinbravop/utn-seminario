@@ -8,7 +8,7 @@ export interface SuscripcionRepository {
   getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>>;
 }
 
-export class PrismaSuscripcionRepository {
+export class PrismaSuscripcionRepository implements SuscripcionRepository {
   private prisma: PrismaClient;
 
   constructor(client: PrismaClient) {

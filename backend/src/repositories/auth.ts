@@ -25,7 +25,7 @@ export interface AuthRepository {
   getRoles(correoOUsuario: string): Promise<Result<Rol[], ApiError>>;
 }
 
-export class PrismaAuthRepository {
+export class PrismaAuthRepository implements AuthRepository {
   private prisma: PrismaClient;
 
   /**
