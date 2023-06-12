@@ -8,13 +8,13 @@ export type Establecimiento = {
   urlImagen: string | null;
   correo: string;
   idAdministrador: number;
-  horariosDeAtencion: HorarioDeAtencion[];
+  horariosDeAtencion: string | null;
 };
 
-export type HorarioDeAtencion = {
-  id: number;
-  horaApertura: Date;
-  horaCierre: Date;
-  idEstablecimiento: number;
-  diaDeSemana: string;
-};
+// export type HorarioDeAtencion = {
+//   id: number;
+//   horaApertura: Date;
+//   horaCierre: Date;
+//   idEstablecimiento: number;
+//   diaDeSemana: string;
+// };

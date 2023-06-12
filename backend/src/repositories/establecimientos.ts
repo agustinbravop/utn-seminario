@@ -1,14 +1,7 @@
-import {
-  PrismaClient,
-  establecimiento,
-  horarioDeAtencion,
-} from "@prisma/client";
+import { PrismaClient, establecimiento } from "@prisma/client";
 import { ApiError } from "../utils/apierrors.js";
 import { Result, err, ok } from "neverthrow";
-import {
-  Establecimiento,
-  HorarioDeAtencion,
-} from "../models/establecimiento.js";
+import { Establecimiento } from "../models/establecimiento.js";
 
 export interface EstablecimientoRepository {
   crearEstablecimiento(
@@ -28,32 +21,14 @@ export class PrismaEstablecimientoRepository
     this.prisma = client;
   }
 
-  private toModel(
-    est: establecimiento,
-    horarios: horarioDeAtencion[]
-  ): Establecimiento {
-    const horariosDeAtencion: HorarioDeAtencion[] = horarios.map((h) => ({
-      id: h.id,
-      horaApertura: h.horaApertura,
-      horaCierre: h.horaCierre,
-      diaDeSemana: h.idDiaDeSemana,
-      idEstablecimiento: h.idEstablecimiento,
-    }));
-
-    return { ...est, horariosDeAtencion };
+  private toModel(est: establecimiento): Establecimiento {
+    return { ...est };
   }
 
   async crearEstablecimiento(
     est: Establecimiento
   ): Promise<Result<Establecimiento, ApiError>> {
     try {
-      const horarios = est.horariosDeAtencion?.map((h) => ({
-        horaApertura: h.horaApertura,
-        horaCierre: h.horaCierre,
-        idDiaDeSemana: h.diaDeSemana,
-        idEstablecimiento: h.idEstablecimiento,
-      }));
-
       const dbEst = await this.prisma.establecimiento.create({
         data: {
           id: undefined,
@@ -65,15 +40,10 @@ export class PrismaEstablecimientoRepository
           provincia: est.provincia,
           idAdministrador: Number(est.idAdministrador),
           urlImagen: est.urlImagen,
-          horariosDeAtencion: {
-            create: horarios,
-          },
-        },
-        include: {
-          horariosDeAtencion: true,
+          horariosDeAtencion: est.horariosDeAtencion,
         },
       });
-      return ok(this.toModel(dbEst, dbEst.horariosDeAtencion));
+      return ok(this.toModel(dbEst));
     } catch (e) {
       return err(new ApiError(500, "No se pudo registrar el establecimiento"));
     }
@@ -87,14 +57,9 @@ export class PrismaEstablecimientoRepository
         where: {
           idAdministrador: idAdmin,
         },
-        include: {
-          horariosDeAtencion: true,
-        },
       });
 
-      const establecimientos = dbEsts.map((dbEst) =>
-        this.toModel(dbEst, dbEst.horariosDeAtencion)
-      );
+      const establecimientos = dbEsts.map((dbEst) => this.toModel(dbEst));
       return ok(establecimientos);
     } catch (e) {
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));

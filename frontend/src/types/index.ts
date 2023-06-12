@@ -19,7 +19,7 @@ export type Establecimiento = {
   urlImagen: string | null;
   correo: string;
   idAdministrador: number;
-  horariosDeAtencion: HorarioDeAtencion[];
+  horariosDeAtencion: string;
 };
 
 export type HorarioDeAtencion = {

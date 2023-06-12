@@ -20,7 +20,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   constructor(repository: EstablecimientoRepository) {
     this.repo = repository;
   }
-  
+
   async getByAdministradorID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>> {
