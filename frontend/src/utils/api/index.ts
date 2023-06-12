@@ -64,7 +64,7 @@ async function post<T>(
   expectedStatus: number,
   token?: string
 ): Promise<T> {
-  return fetch(request("POST", endpoint), {
+  return fetch(request("POST", endpoint, token), {
     body: JSON.stringify(body),
   })
     .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
