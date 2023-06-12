@@ -11,7 +11,7 @@ type LoginReq =
       clave: string;
     }
   | {
-      usuario: never;
+      usuario?: never;
       correo: string;
       clave: string;
     };
@@ -79,7 +79,7 @@ export class AuthHandler {
       );
 
       regResult.match(
-        (admin) => res.json(admin),
+        (admin) => res.status(201).json(admin),
         (err) => res.status(err.status).json(err)
       );
     };

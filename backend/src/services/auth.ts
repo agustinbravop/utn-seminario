@@ -65,7 +65,7 @@ export class AuthServiceImpl implements AuthService {
    * @returns un `Promise<string>` con el JWT firmado.
    */
   private async signJWT(usuario: Administrador): Promise<string> {
-    const token = await new SignJWT({ ...usuario, roles: [Rol.Administrador] })
+    const token = await new SignJWT({ usuario, roles: [Rol.Administrador] })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setSubject(usuario.id.toString())

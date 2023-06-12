@@ -1,34 +1,5 @@
-/*
-import {Rocket} from 'react-bootstrap-icons';
-import {Shop} from 'react-bootstrap-icons';
-import {Buildings} from 'react-bootstrap-icons';
-
-const opc: subs[] = [
-  {
-    icon: <Shop fill="#47A992" size={90} />,
-    tipo: "Startup",
-    price: 1999.0,
-    countEst: 1,
-    countEmp: 0,
-  },
-  {
-    icon: <Buildings fill="#47A992" size={90} />,
-    tipo: "Premium",
-    price: 3999.0,
-    countEst: 5,
-    countEmp: 10,
-  },
-  {
-    icon: <Rocket fill="#47A992" size={90} />,
-    tipo: "Enterprise",
-    price: 8999,
-    countEst: 15,
-    countEmp: 50,
-  },
-];
-*/
-
-import { Suscripcion } from "../../types";
+import { Administrador, Establecimiento, Suscripcion } from "../../types";
+import jwtDecode from "jwt-decode";
 const API_URL = process.env.REACT_APP_API_BASE_URL;
 
 export class ApiError extends Error {
@@ -42,17 +13,35 @@ export class ApiError extends Error {
   }
 }
 
-function reject(res?: Response): Promise<Response> {
+type JWT = {
+  token: string;
+};
+
+/**
+ * Una petición al backend fallida devuelve un `ApiError`.
+ * Esta función ayuda a tirar un error con la información del ApiError.
+ * @param res la respuesta con status indeseado.
+ * @returns una promesa con el `ApiError` parseado.
+ */
+async function reject(res: Response): Promise<ApiError> {
+  const body = await res.json();
   return Promise.reject(
     new ApiError(
-      (res && res.status) || 0,
-      (res && res.statusText) || "Ocurrió un error"
+      (body && body.status) || 0,
+      (body && body.message) || "Ocurrió un error inesperado"
     )
   );
 }
 
-function init(method = "GET", token?: string) {
-  return {
+/**
+ * Ayuda a construir las solicitudes.
+ * @param method el verbo HTTP de la petición
+ * @param endpoint el endpoint de la API
+ * @param token JWT necesario para los endpoints protegidos
+ * @returns el objeto Request que consume `fetch`, al hacer `fetch(request(...))`
+ */
+function request(method: string, endpoint: string, token?: string): Request {
+  return new Request(endpoint, {
     method,
     headers: {
       "Content-Type": "application/json",
@@ -60,18 +49,50 @@ function init(method = "GET", token?: string) {
     },
     mode: "cors" as RequestMode,
     cache: "default" as RequestCache,
-  };
+  });
 }
 
-function request(method: string, endpoint: string, token?: string) {
-  return new Request(endpoint, init(method, token));
+async function get<T>(endpoint: string, token?: string): Promise<T> {
+  return fetch(request("GET", endpoint, token))
+    .then((res) => (res.ok ? res.json() : reject(res)))
+    .then((data) => data as T);
+}
+
+async function post<T>(endpoint: string, body: object, token?: string): Promise<T> {
+  return fetch(request("POST", endpoint), {
+    body: JSON.stringify(body),
+  })
+    .then((res) => (res.ok ? res.json() : reject(res)))
+    .then((data) => data as T);
 }
 
 export async function getSuscripciones(): Promise<Suscripcion[]> {
-  return fetch(request("GET", `${API_URL}/suscripciones`))
-    .then((response) => (response.ok ? response.json() : reject(response)))
-    .catch((err) => {
-      console.log(err);
-      return reject(err);
-    });
+  return get(`${API_URL}/suscripciones`);
+}
+
+export async function login(
+  correoOUsuario: string,
+  clave: string
+): Promise<Administrador> {
+  return post<JWT>(`${API_URL}/auth/login`, {
+    correo: correoOUsuario,
+    usuario: correoOUsuario,
+    clave: clave,
+  })
+    .then((data) => {
+      writeLocalStorage("token", data.token);
+      return jwtDecode(data.token) as { usuario: Administrador };
+    })
+    .then((payload) => payload.usuario)
+    .then((data) => data as Administrador);
+}
+
+export async function register(usuario: Administrador): Promise<Administrador> {
+  return post<JWT>(`${API_URL}/auth/register`, usuario)
+    .then((data) => {
+      writeLocalStorage("token", data.token);
+      return jwtDecode(data.token) as { usuario: Administrador };
+    })
+    .then((payload) => payload.usuario)
+    .then((data) => data as Administrador);
 }

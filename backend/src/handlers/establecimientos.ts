@@ -19,7 +19,7 @@ export class EstablecimientoHandler {
       const estResult = await this.service.crearEstablecimiento(est, imagen);
 
       estResult.match(
-        (est) => res.json(est),
+        (est) => res.status(201).json(est),
         (err) => res.status(err.status).json(err)
       );
     };
