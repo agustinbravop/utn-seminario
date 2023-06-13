@@ -1,5 +1,6 @@
 import { Administrador, Establecimiento, Suscripcion } from "../../types";
 import jwtDecode from "jwt-decode";
+import { readLocalStorage, writeLocalStorage } from "../storage/localStorage";
 const API_URL = process.env.REACT_APP_API_BASE_URL;
 
 export class ApiError extends Error {
@@ -71,6 +72,26 @@ async function post<T>(
     .then((data) => data as T);
 }
 
+async function postFormData<T>(
+  endpoint: string,
+  formData: FormData,
+  expectedStatus: number,
+  token?: string
+): Promise<T> {
+  return fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+    body: formData,
+    mode: "cors" as RequestMode,
+    cache: "default" as RequestCache,
+  })
+    .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
+    .then((data) => data as T);
+}
+
 export async function getSuscripciones(): Promise<Suscripcion[]> {
   return get(`${API_URL}/suscripciones`);
 }
@@ -101,12 +122,22 @@ export async function register(usuario: Administrador): Promise<Administrador> {
 }
 
 export async function crearEstablecimiento(
-  establecimiento: Establecimiento
+  establecimiento: Establecimiento,
+  imagen?: File
 ): Promise<Establecimiento> {
+  const formData = new FormData();
+  if (imagen) {
+    formData.append("imagen", imagen);
+  }
+  let key: keyof Establecimiento;
+  for (key in establecimiento) {
+    formData.append(key, String(establecimiento[key]));
+  }
+
   const token = readLocalStorage("token");
-  return post<Establecimiento>(
+  return postFormData<Establecimiento>(
     `${API_URL}/establecimientos`,
-    establecimiento,
+    formData,
     201,
     token
   );
