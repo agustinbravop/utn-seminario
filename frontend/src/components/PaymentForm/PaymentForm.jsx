@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { FloatingLabel } from 'react-bootstrap';
 
  
 export default class PaymentForm extends React.Component {
@@ -34,31 +35,51 @@ export default class PaymentForm extends React.Component {
       <Container>
               <Row>
                 <Col>
-                    <Row>  <Col><Form.Control type="tel"
-                                      name="number"
-                                      placeholder="Numero de tarjeta"
-                                      onChange={this.handleInputChange}
-                                      onFocus={this.handleInputFocus} required /> </Col> </Row>
-                        <br />
-                            <Row>  <Col><Form.Control type="tel"
-                                    name="name"
-                                    placeholder=" Nombre "
-                                    onChange={this.handleInputChange}
-                                    onFocus={this.handleInputFocus} required /> </Col>    </Row>
-                        <br />
+                    <Row>  <Col>   <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Telefono"
+                    type="tel"
+                    className="mb-3"
+                  >  <Form.Control type="tel"
+                  name="number"
+                  placeholder="Numero de tarjeta"
+                  onChange={this.handleInputChange}
+                  onFocus={this.handleInputFocus} required /> </FloatingLabel>   </Col> </Row>
+                       
+                            <Row>  <Col>    <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Nombre"
+                    type="name"
+                    className="mb-3"
+                  > <Form.Control type="tel"
+                  name="name"
+                  placeholder=" Nombre "
+                  onChange={this.handleInputChange}
+                  onFocus={this.handleInputFocus} required /> </FloatingLabel> </Col>    </Row>
+                        
                         <Row>
-                            <Col> <Form.Control  type="tel"
-                                  name="expiry"
-                                  placeholder="Valida hasta "
-                                  onChange={this.handleInputChange}
-                                  onFocus={this.handleInputFocus}  required /> </Col>
-                            <Col> <Form.Control type="tel"
-                                name="cvc"
-                                placeholder="CVV "
-                                onChange={this.handleInputChange}
-                                onFocus={this.handleInputFocus} required /> </Col>
+                            <Col> <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Valida hasta"
+                    type="expiry"
+                    className="mb-3"
+                  > <Form.Control  type="tel"
+                  name="expiry"
+                  placeholder="Valida hasta "
+                  onChange={this.handleInputChange}
+                  onFocus={this.handleInputFocus}  required /> </FloatingLabel>  </Col>
+                            <Col> <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="CVV"
+                    type="cvv"
+                    className="mb-3"
+                  >  <Form.Control type="tel"
+                  name="cvc"
+                  placeholder="CVV "
+                  onChange={this.handleInputChange}
+                  onFocus={this.handleInputFocus} required /> </FloatingLabel> </Col>
                         </Row>
-                        <br />  
+                        
                 </Col>
                    <Col>      
                       <Cards
