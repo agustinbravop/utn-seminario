@@ -3,7 +3,7 @@
  * @param {string} key
  * @returns The value of the key argument
  */
-function readLocalStorage(key: string) {
+export function readLocalStorage(key: string) {
   try {
     return JSON.parse(localStorage.getItem(key) || "");
   } catch {
@@ -17,7 +17,7 @@ function readLocalStorage(key: string) {
  * @param {any} value
  * @returns N/A
  */
-function writeLocalStorage(key: string, value: any) {
+export function writeLocalStorage(key: string, value: any) {
   if (typeof value === "object") {
     localStorage.setItem(key, JSON.stringify(value));
   } else {

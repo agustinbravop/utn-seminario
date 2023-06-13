@@ -11,15 +11,16 @@ function HomePage() {
       <TopMenu />
       <div className="container col">
         <div className="header" style={{ alignContent: "end" }}>
-          <Link to={"/suscription"}>
-            <button
-              type="button"
-              className="btn btn-outline-dark"
-              style={{ marginLeft: "4px" }}
-            >
-              Suscripcion
-            </button>
-          </Link>
+          
+          <button
+            type="button"
+            className="btn btn-outline-dark"
+            style={{ marginLeft: "4px" }}
+            onClick={() => navigate('/suscripciones')}
+          >
+            Suscripcion
+          </button>
+          
           <button
             type="button"
             className="btn btn-outline-danger"
