@@ -37,7 +37,7 @@ export default class PaymentForm extends React.Component {
                 <Col>
                     <Row>  <Col>   <FloatingLabel
                     controlId="floatingTextarea"
-                    label="Telefono"
+                    label="Numero de tarjeta"
                     type="tel"
                     className="mb-3"
                   >  <Form.Control type="tel"
