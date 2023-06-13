@@ -7,8 +7,9 @@ import { Buildings } from "react-bootstrap-icons";
 import { getSuscripciones } from "../../utils/api";
 import { Suscripcion } from "../../types";
 import { useNavigate } from "react-router";
-//revisar iconos
+import { useQuery } from "@tanstack/react-query";
 
+//revisar iconos
 const iconos = [
   <Shop fill="#47A992" size={90} />,
   <Buildings fill="#47A992" size={90} />,
@@ -16,19 +17,24 @@ const iconos = [
 ];
 
 function SuscriptionOptionPage() {
-  let [suscripciones, setSuscripciones] = useState<Suscripcion[]>();
-  useEffect(() => {
-    getSuscripciones()
-      .then((suscripciones) => setSuscripciones(suscripciones))
-      .catch((err) => console.log(err));
-  }, [setSuscripciones]);
-
-  const sus = suscripciones?.map((s, idx) => ({ icono: iconos[idx], ...s }));
-
+  const { data, isLoading, isError } = useQuery<Suscripcion[]>(
+    ["suscripciones"],
+    getSuscripciones
+  );
   const navigate = useNavigate();
 
-  //Agregar ternario para controlar empleados
-  const cards = sus?.map((s) => {
+  // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
+  if (isLoading) {
+    return <p>Cargando!</p>;
+  }
+  if (isError) {
+    return <p>error!</p>;
+  }
+
+  const suscripciones = data
+    ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
+    .map((s, idx) => ({ icono: iconos[idx], ...s }));
+  const cards = suscripciones?.map((s) => {
     return (
       <Card
         bg="light"

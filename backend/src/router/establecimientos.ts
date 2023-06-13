@@ -15,11 +15,8 @@ export function establecimientosRouter(prismaClient: PrismaClient): Router {
 
   const upload = multer({ dest: "imagenes/" });
 
-  router.post(
-    "/",
-    upload.single("imagen"),
-    handler.crearEstablecimiento()
-  );
+  router.post("/", upload.single("imagen"), handler.crearEstablecimiento());
+  router.get("/", handler.getByAdminID());
 
   return router;
 }

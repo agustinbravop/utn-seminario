@@ -19,7 +19,19 @@ export class EstablecimientoHandler {
       const estResult = await this.service.crearEstablecimiento(est, imagen);
 
       estResult.match(
-        (est) => res.json(est),
+        (est) => res.status(201).json(est),
+        (err) => res.status(err.status).json(err)
+      );
+    };
+  }
+
+  getByAdminID(): RequestHandler {
+    return async (req, res) => {
+      // TODO: mejorar input validation
+      const idAdmin = Number(req.params.idAdmin);
+      const estsResult = await this.service.getByAdministradorID(idAdmin);
+      estsResult.match(
+        (ests) => res.status(200).json(ests),
         (err) => res.status(err.status).json(err)
       );
     };

@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import NewEstab from "./pages/NewEstab/NewEstab";
 import SuscriptionOptionPage from "./pages/SuscriptionOptionPage/SuscriptionOptionPage";
 import AdmPage from "./pages/AdmPage/AdmPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const routes = [
   {
@@ -35,12 +36,12 @@ const routes = [
 
 //AGREGAR PARA QUE VAYA DIRECTO A HOME
 const router = createBrowserRouter(routes);
-
+const queryClient = new QueryClient();
 function App() {
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-    </div>
+    </QueryClientProvider>
   );
 }
 
