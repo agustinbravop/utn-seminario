@@ -8,17 +8,16 @@ import Col from 'react-bootstrap/Col';
 import Modal from 'react-overlays/Modal';
 import { useState } from 'react';
 import { JSX } from "react/jsx-runtime";
+import { FloatingLabel } from "react-bootstrap";
 
 
 function AdmPage() {
-
   const [showModal, setShowModal] = useState(false);
   const renderBackdrop = (props: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>) => <div className="backdrop" {...props} />;
   var handleClose = () => setShowModal(false);
   var handleSuccess = () => {
     console.log(":)");
   };
-
 
   return (
     <div className="page">
@@ -55,18 +54,50 @@ function AdmPage() {
               <Form.Group >
                 <Container>
                     <Row>
-                        <Col> <Form.Control type="text" placeholder="Nombre" required /> </Col>
-                        <Col> <Form.Control type="text" placeholder="Apellido" required /> </Col>
+                        <Col>  <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Nombre"
+                    className="mb-3"
+                  > <Form.Control type="text" placeholder="Nombre" required /> </FloatingLabel> </Col>
+                        <Col>  <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Apellido"
+                    className="mb-3"
+                  >  <Form.Control type="text" placeholder="Apellido" required /> </FloatingLabel> </Col>
                     </Row>
-                    <br />
-                    <Row>  <Col><Form.Control type="text" placeholder="Teléfono" required /> </Col> </Row>
-                    <br />
-                    <Row>  <Col><Form.Control type="text" placeholder="Nombre de usuario" required /> </Col> </Row>
-                    <br />
+                    
+                    <Row>  <Col>    <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Teléfono"
+                    className="mb-3"
+                  >   <Form.Control type="text" placeholder="Teléfono" required />  </FloatingLabel>     </Col> </Row>
                    
-                    <Row>  <Col><Form.Control type="email" placeholder="Correo electrónico" required /> </Col> </Row>
-                    <br />
-                        <Row>  <Col><Form.Control type="text" placeholder="Contraseña" required /> </Col>    </Row>
+                    <Row>  <Col>   <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Nombre de usuario"
+                    className="mb-3"
+                  > <Form.Control type="text" placeholder="Nombre de usuario" required />   </FloatingLabel>      </Col> </Row>
+                  
+                   
+                    <Row>  <Col>    
+                    
+                    <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Correo electronico"
+                    className="mb-3"
+                  >
+                    <Form.Control type="text" placeholder="Nombre" required />
+                  </FloatingLabel> 
+                    
+                    </Col> </Row>
+              
+
+                    
+                        <Row>  <Col>   <FloatingLabel
+                    controlId="floatingTextarea"
+                    label="Contraseña"
+                    className="mb-3"
+                  > <Form.Control type="password" placeholder="Contraseña" required />  </FloatingLabel>   </Col>    </Row>
                     <br />
                     
                     <br />
@@ -89,6 +120,36 @@ function AdmPage() {
               </Form>
       </div>
 
+            <Modal
+                    className="modal"
+                    show={showModal}
+                    onHide={handleClose}
+                    renderBackdrop={renderBackdrop}
+                  >
+                    <div>
+                      <div className="modal-header">
+                        <div className="modal-title">Confirmar Cancelación</div>
+                        <div>
+                          <span className="close-button" onClick={handleClose}>
+                            x
+                          </span>
+                        </div>
+                      </div>
+                      <div className="modal-desc">
+                        <p>¿Desea cancelar?</p>
+                      </div>
+                      <div className="modal-footer">
+                        <button className="secondary-button" onClick={handleClose}>
+                          Cancelar
+                        </button>
+                        <button className="primary-button" onClick={handleSuccess}>
+                          Aceptar
+                        </button>
+                      </div>
+                    </div>
+                </Modal>
+
+                
             <Modal
                     className="modal"
                     show={showModal}
