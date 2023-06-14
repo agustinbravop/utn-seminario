@@ -65,6 +65,7 @@ async function post<T>(
   expectedStatus: number,
   token?: string
 ): Promise<T> {
+  console.log(body);
   return fetch(request("POST", endpoint, token), {
     body: JSON.stringify(body),
   })
@@ -119,7 +120,7 @@ export async function login(
 
 export async function register(
   usuario: Administrador,
-  clave: string,
+  clave: string
 ): Promise<Administrador> {
   return post<Administrador>(
     `${API_URL}/auth/register`,

@@ -10,7 +10,13 @@ import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
 import { FloatingLabel } from "react-bootstrap";
 import { Administrador, Tarjeta } from "../../types";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import { ApiError, register } from "../../utils/api";
+
+type FormState = Administrador & {
+  clave: string;
+};
 
 function AdmPage() {
   const [showModal, setShowModal] = useState(false);
@@ -27,12 +33,14 @@ function AdmPage() {
   const idSuscripcion = Number(
     new URLSearchParams(search).get("idSuscripcion")
   );
+  const navigate = useNavigate();
 
-  const [state, setState] = useState<Administrador>({
+  const [state, setState] = useState<FormState>({
     nombre: "",
     apellido: "",
     usuario: "",
     telefono: "",
+    clave: "",
     correo: "",
     tarjeta: {
       cvv: 0,
@@ -48,6 +56,11 @@ function AdmPage() {
     },
   });
 
+  const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
+    mutationFn: ({ clave, ...admin }) => register(admin, clave),
+    onSuccess: () => navigate("/landing")
+  });
+
   const setTarjeta = (t: Tarjeta) => {
     setState({ ...state, tarjeta: t });
   };
@@ -56,6 +69,11 @@ function AdmPage() {
     const { name, value } = e.target;
     console.log(state);
     setState({ ...state, [name]: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutate(state);
   };
 
   return (
@@ -86,7 +104,7 @@ function AdmPage() {
       <br />
 
       <div className="formulario">
-        <Form style={{ width: "34%" }}>
+        <Form style={{ width: "34%" }} onSubmit={handleSubmit}>
           <Form.Group>
             <Container>
               <Row>
@@ -205,6 +223,7 @@ function AdmPage() {
             >
               Registrarse
             </button>
+            {isError && <p>Error al registrarse. Intente de nuevo</p>}
           </div>
         </Form>
       </div>

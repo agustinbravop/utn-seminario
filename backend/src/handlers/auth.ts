@@ -24,7 +24,7 @@ type RegistroReq = {
   usuario: string;
   clave: string;
   tarjeta: Tarjeta;
-  idSubscripcion: number;
+  idSuscripcion: number;
 };
 
 export class AuthHandler {
@@ -59,7 +59,7 @@ export class AuthHandler {
       const body: RegistroReq = req.body;
 
       // Se obtiene la suscripcion mediante el idSuscripcion.
-      const sus = await this.susService.getSuscripcionByID(body.idSubscripcion);
+      const sus = await this.susService.getSuscripcionByID(body.idSuscripcion);
       if (sus.isErr()) {
         const err = sus._unsafeUnwrapErr();
         res.status(err.status).json(err);
