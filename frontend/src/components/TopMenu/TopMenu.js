@@ -26,9 +26,5 @@ function BrandNav() {
 }
 
 function MenuNav() {
-  return (
-    <Nav className="mr-auto">
-      <Nav.Link href="#">Grupos</Nav.Link>
-    </Nav>
-  );
+  return <Nav className="mr-auto"></Nav>;
 }

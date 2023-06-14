@@ -63,6 +63,7 @@ function NewEstab() {
     <Fragment>
       <TopMenu />
       <div className="page">
+        <br />
         <div className="centrado">
           <h1>Nuevo Establecimiento</h1>
         </div>

@@ -66,9 +66,10 @@ function HomePage() {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                marginTop: "10px",
+                marginTop: "50px",
               }}
             >
+              <br />
               <Title style={{ fontSize: "20px" }}>
                 ¿Queres publicitar tu Establecimiento?
               </Title>

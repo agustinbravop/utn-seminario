@@ -13,6 +13,7 @@ import { Administrador, Tarjeta } from "../../types";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError, register } from "../../utils/api";
+import TopMenu from "../../components/TopMenu/TopMenu";
 
 type FormState = Administrador & {
   clave: string;
@@ -78,6 +79,7 @@ function AdmPage() {
 
   return (
     <div className="page">
+      <TopMenu />
       <div className="margen">
         <h2>Tarjeta de credito</h2>
         <p>
