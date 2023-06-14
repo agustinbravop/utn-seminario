@@ -82,7 +82,6 @@ async function postFormData<T>(
   return fetch(endpoint, {
     method: "POST",
     headers: {
-      "Content-Type": "multipart/form-data",
       Authorization: token ? `Bearer ${token}` : "",
     },
     body: formData,
