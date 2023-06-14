@@ -9,6 +9,8 @@ import Modal from "react-overlays/Modal";
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
 import { FloatingLabel } from "react-bootstrap";
+import { Administrador, Tarjeta } from "../../types";
+import { useLocation } from "react-router";
 
 function AdmPage() {
   const [showModal, setShowModal] = useState(false);
@@ -21,36 +23,66 @@ function AdmPage() {
   var handleSuccess = () => {
     console.log(":)");
   };
+  const { search } = useLocation();
+  const idSuscripcion = Number(
+    new URLSearchParams(search).get("idSuscripcion")
+  );
+
+  const [state, setState] = useState<Administrador>({
+    nombre: "",
+    apellido: "",
+    usuario: "",
+    telefono: "",
+    correo: "",
+    tarjeta: {
+      cvv: 0,
+      vencimiento: "",
+      nombre: "",
+      numero: "",
+    },
+    suscripcion: {
+      id: idSuscripcion,
+      nombre: "",
+      limiteEstablecimientos: 0,
+      costoMensual: 0,
+    },
+  });
+
+  const setTarjeta = (t: Tarjeta) => {
+    setState({ ...state, tarjeta: t });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    console.log(state);
+    setState({ ...state, [name]: value });
+  };
 
   return (
     <div className="page">
       <div className="margen">
         <h2>Tarjeta de credito</h2>
         <p>
-          {" "}
           Se factura una cuota cada 30 días. Se puede dar de baja en cualquier
           momento.
         </p>
       </div>
 
       <br />
-      <br />
 
       <div className="formulario">
         <Form style={{ width: "50%", marginLeft: "4%" }}>
           <Form.Group>
-            <PaymentForm />
+            <PaymentForm tarjeta={state.tarjeta} setTarjeta={setTarjeta} />
           </Form.Group>
         </Form>
       </div>
-      <br />
 
       <div className="margen">
         <h2>Cuenta</h2>
-        <p> Ingrese los datos a usar para iniciar sesión.</p>
+        <p> Ingrese sus datos a usar para iniciar sesión.</p>
       </div>
 
-      <br />
       <br />
 
       <div className="formulario">
@@ -59,108 +91,108 @@ function AdmPage() {
             <Container>
               <Row>
                 <Col>
-                  {" "}
                   <FloatingLabel
-                    controlId="floatingTextarea"
+                    controlId="floatingNombre"
                     label="Nombre"
                     className="mb-3"
                   >
-                    {" "}
                     <Form.Control
                       type="text"
+                      name="nombre"
+                      onChange={handleChange}
                       placeholder="Nombre"
                       required
-                    />{" "}
-                  </FloatingLabel>{" "}
+                    />
+                  </FloatingLabel>
                 </Col>
                 <Col>
-                  {" "}
                   <FloatingLabel
-                    controlId="floatingTextarea"
+                    controlId="floatingApellido"
                     label="Apellido"
                     className="mb-3"
                   >
-                    {" "}
                     <Form.Control
                       type="text"
+                      name="apellido"
+                      onChange={handleChange}
                       placeholder="Apellido"
                       required
-                    />{" "}
-                  </FloatingLabel>{" "}
+                    />
+                  </FloatingLabel>
                 </Col>
               </Row>
 
               <Row>
-                {" "}
                 <Col>
-                  {" "}
                   <FloatingLabel
-                    controlId="floatingTextarea"
+                    controlId="floatingTelefono"
                     label="Teléfono"
                     className="mb-3"
                   >
-                    {" "}
                     <Form.Control
                       type="text"
+                      name="telefono"
+                      onChange={handleChange}
                       placeholder="Teléfono"
                       required
-                    />{" "}
-                  </FloatingLabel>{" "}
-                </Col>{" "}
+                    />
+                  </FloatingLabel>
+                </Col>
               </Row>
 
               <Row>
-                {" "}
                 <Col>
-                  {" "}
                   <FloatingLabel
-                    controlId="floatingTextarea"
+                    controlId="floatingUsuario"
                     label="Nombre de usuario"
                     className="mb-3"
                   >
-                    {" "}
                     <Form.Control
                       type="text"
+                      name="usuario"
+                      onChange={handleChange}
                       placeholder="Nombre de usuario"
                       required
-                    />{" "}
-                  </FloatingLabel>{" "}
-                </Col>{" "}
+                    />
+                  </FloatingLabel>
+                </Col>
               </Row>
 
               <Row>
-                {" "}
                 <Col>
                   <FloatingLabel
-                    controlId="floatingTextarea"
+                    controlId="floatingCorreo"
                     label="Correo electronico"
                     className="mb-3"
                   >
-                    <Form.Control type="text" placeholder="Nombre" required />
+                    <Form.Control
+                      type="text"
+                      name="correo"
+                      onChange={handleChange}
+                      placeholder="Correo"
+                      required
+                    />
                   </FloatingLabel>
-                </Col>{" "}
+                </Col>
               </Row>
 
               <Row>
-                {" "}
                 <Col>
-                  {" "}
                   <FloatingLabel
-                    controlId="floatingTextarea"
+                    controlId="floatingClave"
                     label="Contraseña"
                     className="mb-3"
                   >
-                    {" "}
                     <Form.Control
                       type="password"
+                      name="clave"
+                      onChange={handleChange}
                       placeholder="Contraseña"
                       required
-                    />{" "}
-                  </FloatingLabel>{" "}
-                </Col>{" "}
+                    />
+                  </FloatingLabel>
+                </Col>
               </Row>
-              <br />
-
               <br />
             </Container>
           </Form.Group>
@@ -170,7 +202,6 @@ function AdmPage() {
               type="submit"
               className="btn btn-danger"
               style={{ backgroundColor: "#249AD5", borderColor: "#249AD5" }}
-              onClick={() => console.log(":(")}
             >
               Registrarse
             </button>

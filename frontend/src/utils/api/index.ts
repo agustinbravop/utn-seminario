@@ -117,8 +117,19 @@ export async function login(
     .then((data) => data as Administrador);
 }
 
-export async function register(usuario: Administrador): Promise<Administrador> {
-  return post<Administrador>(`${API_URL}/auth/register`, usuario, 201);
+export async function register(
+  usuario: Administrador,
+  clave: string,
+): Promise<Administrador> {
+  return post<Administrador>(
+    `${API_URL}/auth/register`,
+    {
+      ...usuario,
+      clave,
+      idSuscripcion: usuario.suscripcion?.id,
+    },
+    201
+  );
 }
 
 export async function crearEstablecimiento(
