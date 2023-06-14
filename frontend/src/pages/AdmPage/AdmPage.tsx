@@ -58,7 +58,7 @@ function AdmPage() {
 
   const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
     mutationFn: ({ clave, ...admin }) => register(admin, clave),
-    onSuccess: () => navigate("/landing")
+    onSuccess: () => navigate("/landing"),
   });
 
   const setTarjeta = (t: Tarjeta) => {

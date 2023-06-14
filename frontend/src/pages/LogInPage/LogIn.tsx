@@ -6,21 +6,35 @@ import Col from "react-bootstrap/Col";
 import { FloatingLabel } from "react-bootstrap";
 import TopMenu from "../../components/TopMenu";
 import { Fragment, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { ApiError, login } from "../../utils/api";
+import { Administrador } from "../../types";
+import { useNavigate } from "react-router";
 
 interface LoginState {
   correoOUsuario: string;
   clave: string;
 }
 function LogIn() {
+  const navigate = useNavigate();
   const [state, setState] = useState<LoginState>({
     correoOUsuario: "",
     clave: "",
+  });
+  const { mutate, isError } = useMutation<Administrador, ApiError, LoginState>({
+    mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
+    onSuccess: (admin) => navigate(`/administrador/${admin.id}`),
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     console.log(state);
     setState({ ...state, [name]: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutate(state);
   };
 
   return (
@@ -37,7 +51,7 @@ function LogIn() {
           <br />
 
           <div className="formulario">
-            <Form style={{ width: "100%" }}>
+            <Form style={{ width: "100%" }} onSubmit={handleSubmit}>
               <Form.Group>
                 <Container>
                   <Row>
@@ -90,6 +104,7 @@ function LogIn() {
                 >
                   Iniciar Sesión
                 </button>
+                {isError && <p>Error al registrarse. Intente de nuevo</p>}
               </div>
             </Form>
           </div>

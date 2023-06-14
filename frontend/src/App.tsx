@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import LogIn from "./pages/LogInPage/LogIn";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import HomePage from "./pages/HomePage/HomePage";
@@ -8,6 +12,10 @@ import AdmPage from "./pages/AdmPage/AdmPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const routes = [
+  {
+    path: "/",
+    element: <Navigate to={"/landing"} />,
+  },
   {
     path: "/landing",
     element: <HomePage />,
