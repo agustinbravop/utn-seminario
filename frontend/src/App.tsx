@@ -10,6 +10,7 @@ import NewEstab from "./pages/NewEstab/NewEstab";
 import SuscriptionOptionPage from "./pages/SuscriptionOptionPage/SuscriptionOptionPage";
 import AdmPage from "./pages/AdmPage/AdmPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import EstablecimientosPage from "./pages/EstablecimientosPage/EstablecimientosPage";
 
 const routes = [
   {
@@ -29,12 +30,16 @@ const routes = [
     element: <LogIn />,
   },
   {
-    path: "/establecimientos",
-    element: <NewEstab />,
-  },
-  {
     path: "*",
     element: <NotFound />,
+  },
+  {
+    path: "/administrador/:id",
+    element: <EstablecimientosPage />
+  },
+  {
+    path: "/administrador/:id/nuevoEstablecimiento",
+    element: <NewEstab />
   },
   {
     path: "/register",
