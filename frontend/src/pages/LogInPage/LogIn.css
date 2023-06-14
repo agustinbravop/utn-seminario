@@ -1,0 +1,18 @@
+.centrado{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.page{
+    margin-top: 15px;
+    padding-bottom: 20px;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+}
+.contenedor{
+    height: 100%;
+    width: 100%;
+}
