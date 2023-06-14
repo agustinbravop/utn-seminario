@@ -1,51 +1,45 @@
+.modal {
+  font-family: arial;
+}
 
 .modal {
-    font-family: arial;
-  }
-  
-  .modal {
-    position: fixed;
-    width: 400px;
-    z-index: 1040;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  }
-
-
-
-.centrado{
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    display: flex;
+  position: fixed;
+  width: 400px;
+  z-index: 1040;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
-.margen{
-    width: 100%;
-    align-items: first baseline;
-    justify-content: left;
-    padding-left: 16.3% ;
-    padding-top: 2% ;
+.centrado {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
+.margen {
+  width: 100%;
+  align-items: first baseline;
+  justify-content: left;
+  padding-left: 16.3%;
+  padding-top: 2%;
+}
 
 .formulario {
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    justify-items: center;
-    display: flex;
-    padding: 0px;
-    margin-left: 0px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  display: flex;
+  padding: 0px;
+  margin-left: 0px;
 }
-.page{
-    margin-top: 15px;
-    padding-bottom: 20px;
+.page {
+  padding-bottom: 20px;
 }
-
-

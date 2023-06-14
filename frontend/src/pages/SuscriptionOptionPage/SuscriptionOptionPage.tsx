@@ -23,18 +23,19 @@ function SuscriptionOptionPage() {
   );
   const navigate = useNavigate();
 
+  let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {
-    return <p>Cargando!</p>;
+    cards = <p>Cargando!</p>;
   }
   if (isError) {
-    return <p>error!</p>;
+    cards = <p>error!</p>;
   }
 
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
     .map((s, idx) => ({ icono: iconos[idx], ...s }));
-  const cards = suscripciones?.map((s) => {
+  cards = suscripciones?.map((s) => {
     return (
       <Card
         bg="light"

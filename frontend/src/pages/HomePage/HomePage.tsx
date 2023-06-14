@@ -11,19 +11,21 @@ function HomePage() {
       <TopMenu />
       <div className="container col">
         <div className="header" style={{ alignContent: "end" }}>
-          <Link to={"/suscription"}>
-            <button
-              type="button"
-              className="btn btn-outline-dark"
-              style={{ marginLeft: "4px" }}
-            >
-              Suscripcion
-            </button>
-          </Link>
+          
+          <button
+            type="button"
+            className="btn btn-outline-dark"
+            style={{ marginLeft: "4px" }}
+            onClick={() => navigate('/suscripciones')}
+          >
+            Suscripcion
+          </button>
+          
           <button
             type="button"
             className="btn btn-outline-danger"
             style={{ marginLeft: "10px" }}
+            onClick={() => navigate('/login')}
           >
             Iniciar Sesion
           </button>
@@ -64,9 +66,10 @@ function HomePage() {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                marginTop: "10px",
+                marginTop: "50px",
               }}
             >
+              <br />
               <Title style={{ fontSize: "20px" }}>
                 ¿Queres publicitar tu Establecimiento?
               </Title>

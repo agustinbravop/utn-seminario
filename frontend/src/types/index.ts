@@ -1,5 +1,5 @@
 export type Administrador = {
-  id: number;
+  id?: number;
   nombre: string;
   apellido: string;
   telefono: string;
@@ -38,7 +38,7 @@ export type Suscripcion = {
 };
 
 export type Tarjeta = {
-  id: number;
+  id?: number;
   nombre: string;
   numero: string;
   cvv: number;
