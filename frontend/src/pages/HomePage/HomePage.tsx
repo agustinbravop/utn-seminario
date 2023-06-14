@@ -25,6 +25,7 @@ function HomePage() {
             type="button"
             className="btn btn-outline-danger"
             style={{ marginLeft: "10px" }}
+            onClick={() => navigate('/login')}
           >
             Iniciar Sesion
           </button>
