@@ -8,8 +8,8 @@
     "dev": "ts-node src/index.ts",
     "start": "npx tsc --project . && node dist/index.js",
     "serve": "nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "prisma generate"
+    "test": "echo \"Error: no test specified\" && exit 1"
+    
   },
   "keywords": [],
   "author": "",

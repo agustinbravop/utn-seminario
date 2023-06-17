@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { EstablecimientoService } from "../services/establecimientos.js";
 import { Establecimiento } from "../models/establecimiento.js";
-import { PrismaClient } from ".prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 
 import {getSuscripcionByAdminID } from '../repositories/administrador.js'
