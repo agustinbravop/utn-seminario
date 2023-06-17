@@ -43,4 +43,5 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
     return await this.repo.crearEstablecimiento(establecimiento);
   }
+
 }

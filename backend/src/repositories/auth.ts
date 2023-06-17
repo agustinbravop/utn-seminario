@@ -111,7 +111,7 @@ export class PrismaAuthRepository implements AuthRepository {
     try {
       const dbAdmin = await this.prisma.administrador.create({
         data: {
-          id: undefined,
+         
           nombre: admin.nombre,
           telefono: admin.telefono,
           apellido: admin.apellido,
@@ -134,6 +134,7 @@ export class PrismaAuthRepository implements AuthRepository {
       });
       return ok(this.toModel(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta));
     } catch (e) {
+      
       return err(new ApiError(500, "No se pudo registrar al administrador"));
     }
   }

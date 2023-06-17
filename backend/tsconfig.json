@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es6",
     "useDefineForClassFields": true,
-    "module": "ESNext",
+    "module": "ESNEXT",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "outDir": "dist",
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
+    "esModuleInterop": true, 
+ 
 
     /* Linting */
     "strict": true,
@@ -25,5 +27,6 @@
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

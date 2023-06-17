@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
@@ -154,7 +155,7 @@ model reserva {
 
 model tarjeta {
   id            Int            @id @default(autoincrement()) @map("idTarjeta")
-  nombre        String         @db.VarChar
+  nombre        String         @db.VarChar 
   numero        String
   cvv           Int
   vencimiento   String

@@ -5,6 +5,8 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaEstablecimientoRepository } from "../repositories/establecimientos.js";
 import { EstablecimientoServiceImpl } from "../services/establecimientos.js";
 import { EstablecimientoHandler } from "../handlers/establecimientos.js";
+import {establecimientoValidation} from '../middlewares/SchemaEstablecimiento.middleware'
+import {establecimientoSchema} from '../validaciones/establecimiento.validaciones'
 
 export function establecimientosRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -15,8 +17,9 @@ export function establecimientosRouter(prismaClient: PrismaClient): Router {
 
   const upload = multer({ dest: "imagenes/" });
 
-  router.post("/", upload.single("imagen"), handler.crearEstablecimiento());
-  router.get("/", handler.getByAdminID());
+  router.post("/", upload.single("imagen"), establecimientoValidation(establecimientoSchema),handler.crearEstablecimiento());
+  router.get("/", handler.getByAdminID())
+  
 
   return router;
 }

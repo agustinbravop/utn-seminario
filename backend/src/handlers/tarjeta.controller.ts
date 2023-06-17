@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { z, ZodError } from "Zod";
+import { z, ZodError } from "zod";
 import moment from "moment";
 
 const prisma = new PrismaClient();

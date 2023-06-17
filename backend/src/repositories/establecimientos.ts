@@ -3,6 +3,7 @@ import { ApiError } from "../utils/apierrors.js";
 import { Result, err, ok } from "neverthrow";
 import { Establecimiento } from "../models/establecimiento.js";
 
+
 export interface EstablecimientoRepository {
   crearEstablecimiento(
     est: Establecimiento
@@ -45,24 +46,27 @@ export class PrismaEstablecimientoRepository
       });
       return ok(this.toModel(dbEst));
     } catch (e) {
-      return err(new ApiError(500, "No se pudo registrar el establecimiento"));
+      console.log(e)
+      return err(new ApiError(500, "No se pudo registrar el establecimiento, el Administrador Ingresado no existe"));
     }
   }
 
   async getByAdministradorID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>> {
-    try {
+    try { 
       const dbEsts = await this.prisma.establecimiento.findMany({
         where: {
           idAdministrador: idAdmin,
         },
       });
 
-      const establecimientos = dbEsts.map((dbEst) => this.toModel(dbEst));
+      const establecimientos = dbEsts.map((dbEsts) => this.toModel(dbEsts));
+      
       return ok(establecimientos);
     } catch (e) {
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
-  }
+  } 
+
 }
