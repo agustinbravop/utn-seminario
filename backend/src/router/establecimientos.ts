@@ -5,8 +5,8 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaEstablecimientoRepository } from "../repositories/establecimientos.js";
 import { EstablecimientoServiceImpl } from "../services/establecimientos.js";
 import { EstablecimientoHandler } from "../handlers/establecimientos.js";
-import {establecimientoValidation} from '../middlewares/SchemaEstablecimiento.middleware'
-import {establecimientoSchema} from '../validaciones/establecimiento.validaciones'
+import {establecimientoValidation} from '../middlewares/SchemaEstablecimiento.middleware.js'
+import {establecimientoSchema} from '../validaciones/establecimiento.validaciones.js'
 
 export function establecimientosRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();

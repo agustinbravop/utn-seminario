@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
-import {AdministradorHandler} from '../handlers/administrador'
-import { PrismaAdministrador} from '../repositories/administrador'
-import {AdministradorServiceImpl} from '../services/administrador'
+import {AdministradorHandler} from '../handlers/administrador.js'
+import { PrismaAdministrador} from '../repositories/administrador.js'
+import {AdministradorServiceImpl} from '../services/administrador.js'
 
 export function AdministradorRouter(prismaClient:PrismaClient): Router { 
     const router=Router() 
