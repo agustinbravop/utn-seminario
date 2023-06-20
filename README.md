@@ -5,6 +5,8 @@ materia de la carrera Ingeniería en Sistemas de Información dentro de la Unive
 
 ## Levantar la app en entorno local
 
+NOTA: Tener en cuenta que las variables de entorno que se muestran acá tienen valores placeholders o defaults.
+
 1. Clonar el repositorio:
 
 ```
