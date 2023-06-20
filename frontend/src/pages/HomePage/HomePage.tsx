@@ -4,11 +4,17 @@ import "./HomePage.css";
 import TopMenu from "../../components/TopMenu";
 import { Link, useNavigate } from "react-router-dom";
 
+
 function HomePage() {
   const navigate = useNavigate();
+ 
   return (
     <div>
-      <TopMenu />
+     
+      
+       <TopMenu />
+        
+     
       <div className="container col">
         <div className="header" style={{ alignContent: "end" }}>
           

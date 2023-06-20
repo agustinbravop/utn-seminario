@@ -17,6 +17,7 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
     "react-bootstrap-icons": "^1.10.3",
+    "react-cookie": "^4.1.1",
     "react-credit-cards": "^0.8.3",
     "react-dom": "^18.2.0",
     "react-icons": "^4.9.0",

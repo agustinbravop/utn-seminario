@@ -14,6 +14,9 @@ import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError, register } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
+import 'react-toastify/dist/ReactToastify.css'; 
+import { ToastContainer, toast } from 'react-toastify';
+import Alert from 'react-bootstrap/Alert';
 
 type FormState = Administrador & {
   clave: string;
@@ -77,6 +80,58 @@ function AdmPage() {
     mutate(state);
   };
 
+  
+  const advertencia= (message:string) => { 
+    toast.warning(message, { 
+      position: "top-center",
+      autoClose:5000,
+      progress:1, 
+      closeOnClick: true, 
+      hideProgressBar: false, 
+      draggable: true
+    })
+  }
+  const validacion = () => { 
+    let result=false; 
+   
+    if ((state.nombre==='' || state.nombre===null) && result===false) { 
+      result=true; 
+      advertencia("El campo Nombre no puede estar vacio")
+    }
+
+    if ((state.apellido==='' || state.apellido === null) && result===false) { 
+      result=true
+      advertencia("El campo Apellido no puede estar vacio")
+
+    }
+
+
+    if ((state.telefono==='' || state.telefono===null) && result===false) { 
+      result=true; 
+      advertencia("El campo telefono no puede estar vacio")
+    }
+
+    if ((state.usuario==='' || state.usuario===null) && result===false) { 
+      result=true 
+      advertencia("El campo Nombre de Usuario no puede estar vacio")
+    }
+
+    if ((state.correo==='' || state.correo===null) && result===false) { 
+      result=true
+      advertencia("El campo correo electronico no puede estar vacio")
+    }
+
+    if ((state.clave==='' || state.clave===null) && result===false) { 
+      result=true; 
+      advertencia("El campo constraseña no puede estar vacio")
+    }
+
+
+    
+    }
+    
+  
+
   return (
     <div className="page">
       <TopMenu />
@@ -101,6 +156,7 @@ function AdmPage() {
       <div className="margen">
         <h2>Cuenta</h2>
         <p> Ingrese sus datos a usar para iniciar sesión.</p>
+        {isError && <Alert variant="danger" dismissible> Datos Incorrectos. Intente de Nuevo</Alert>}
       </div>
 
       <br />
@@ -177,24 +233,28 @@ function AdmPage() {
                   </FloatingLabel>
                 </Col>
               </Row>
-
+              
               <Row>
                 <Col>
+                
                   <FloatingLabel
                     controlId="floatingCorreo"
                     label="Correo electronico"
                     className="mb-3"
+                   
                   >
                     <Form.Control
-                      type="text"
+                      type="email"
                       name="correo"
                       onChange={handleChange}
                       placeholder="Correo"
                       required
                     />
                   </FloatingLabel>
+                 
                 </Col>
               </Row>
+              
 
               <Row>
                 <Col>
@@ -222,13 +282,15 @@ function AdmPage() {
               type="submit"
               className="btn btn-danger"
               style={{ backgroundColor: "#249AD5", borderColor: "#249AD5" }}
+              onClick={validacion}
             >
               Registrarse
             </button>
-            {isError && <p>Error al registrarse. Intente de nuevo</p>}
+            
           </div>
         </Form>
       </div>
+      <ToastContainer/>
 
       <Modal
         className="modal"

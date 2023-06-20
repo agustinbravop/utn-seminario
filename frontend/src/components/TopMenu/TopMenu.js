@@ -5,17 +5,19 @@ import "./TopMenu.scss";
 import { Link } from "react-router-dom";
 
 export default function TopMenu() {
+  
+  
   return (
     <Navbar bg="dark" variant="dark" className="top-menu">
       <Container>
-        <BrandNav />
+        <BrandNav/>
         <MenuNav />
       </Container>
     </Navbar>
   );
 }
 
-function BrandNav() {
+function BrandNav(props) {
   return (
     <Navbar.Brand>
       <Link to={"/landing"}>
