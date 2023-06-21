@@ -1,26 +1,25 @@
-/*
- * To get the value from local storage that matches the given key
- * @param {string} key
- * @returns The value of the key argument
+/**
+ * Obtiene un string JSON de localStorage y lo devuelve parseado como un objeto.
+ * @param {string} key la llave del objecto a guardar
+ * @returns el valor de la llave pasada por parámetro, como objeto
  */
-export function readLocalStorage(key: string) {
+export function readLocalStorage<T>(key: string): T | null {
   try {
     return JSON.parse(localStorage.getItem(key) || "");
   } catch {
-    return localStorage.getItem(key);
+    return null;
   }
 }
 
 /**
- * To set the key-value pair to local storage
+ * Guarda un objeto en localStorage como JSON.
  * @param {string} key
- * @param {any} value
- * @returns N/A
+ * @param {object} value objeto a guardar. Si es null, se limpia el valor guardado.
  */
-export function writeLocalStorage(key: string, value: any) {
-  if (typeof value === "object") {
-    localStorage.setItem(key, JSON.stringify(value));
+export function writeLocalStorage(key: string, value: object | null) {
+  if (value === null) {
+    localStorage.removeItem(key);
   } else {
-    localStorage.setItem(key, value);
+    localStorage.setItem(key, JSON.stringify(value));
   }
 }

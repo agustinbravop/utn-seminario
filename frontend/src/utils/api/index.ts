@@ -14,7 +14,7 @@ export class ApiError extends Error {
   }
 }
 
-type JWT = {
+export type JWT = {
   token: string;
 };
 
@@ -110,7 +110,7 @@ export async function login(
     200
   )
     .then((data) => {
-      writeLocalStorage("token", data.token);
+      writeLocalStorage("token", data);
       return jwtDecode(data.token) as { usuario: Administrador };
     })
     .then((payload) => payload.usuario)
@@ -145,11 +145,14 @@ export async function crearEstablecimiento(
     formData.append(key, String(establecimiento[key]));
   }
 
-  const token = readLocalStorage("token");
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
   return postFormData<Establecimiento>(
     `${API_URL}/establecimientos`,
     formData,
     201,
-    token
+    token.token
   );
 }
