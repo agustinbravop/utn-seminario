@@ -12,7 +12,7 @@ import { FloatingLabel } from "react-bootstrap";
 import { Administrador, Tarjeta } from "../../types";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError, register } from "../../utils/api";
+import { ApiError, apiRegister } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import 'react-toastify/dist/ReactToastify.css'; 
 import { ToastContainer, toast } from 'react-toastify';
@@ -61,7 +61,7 @@ function AdmPage() {
   });
 
   const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
-    mutationFn: ({ clave, ...admin }) => register(admin, clave),
+    mutationFn: ({ clave, ...admin }) => apiRegister(admin, clave),
     onSuccess: () => navigate("/landing"),
   });
 

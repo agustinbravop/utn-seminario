@@ -72,7 +72,7 @@ function HomePage() {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                marginTop: "50px",
+                marginTop: "20px",
               }}
             >
               <br />

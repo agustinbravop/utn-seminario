@@ -11,6 +11,7 @@ import SuscriptionOptionPage from "./pages/SuscriptionOptionPage/SuscriptionOpti
 import AdmPage from "./pages/AdmPage/AdmPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EstablecimientosPage from "./pages/EstablecimientosPage/EstablecimientosPage";
+import { CurrentAdminProvider } from "./hooks/useCurrentAdmin";
 
 const routes = [
   {
@@ -35,11 +36,11 @@ const routes = [
   },
   {
     path: "/administrador/:id",
-    element: <EstablecimientosPage />
+    element: <EstablecimientosPage />,
   },
   {
     path: "/administrador/:id/nuevoEstablecimiento",
-    element: <NewEstab />
+    element: <NewEstab />,
   },
   {
     path: "/register",
@@ -53,7 +54,9 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <CurrentAdminProvider>
+        <RouterProvider router={router} />
+      </CurrentAdminProvider>
     </QueryClientProvider>
   );
 }
