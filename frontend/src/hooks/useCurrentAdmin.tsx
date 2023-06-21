@@ -5,31 +5,29 @@ import {
   writeLocalStorage,
 } from "../utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
-import { JWT } from "../utils/api";
+import { JWT, apiLogin } from "../utils/api";
 
-type CurrentAdmin = Administrador | undefined;
-
-interface CurrentAdminContext {
-  currentAdmin: CurrentAdmin;
+interface ICurrentAdminContext {
+  currentAdmin?: Administrador;
   logout: () => void;
-  login: () => void;
+  login: (correoOUsuario: string, clave: string) => Promise<Administrador>;
 }
 
 interface CurrentAdminProviderProps {
   children?: React.ReactNode;
 }
 
-export const CurrentAdminContext = React.createContext<
-  CurrentAdminContext | undefined
->(undefined);
+export const CurrentAdminContext = React.createContext<ICurrentAdminContext>({
+  login: (correoOUsuario, clave) => Promise.reject(),
+  logout: () => {},
+});
 
 export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
-  const [currentAdmin, setCurrentAdmin] =
-    React.useState<CurrentAdmin>(undefined);
+  const [currentAdmin, setCurrentAdmin] = React.useState<
+    Administrador | undefined
+  >(undefined);
 
-  useEffect(() => login(), []);
-
-  const login = () => {
+  useEffect(() => {
     const token = readLocalStorage<JWT>("token");
     if (token) {
       const { usuario } = jwtDecode(token.token) as { usuario: Administrador };
@@ -37,6 +35,13 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     } else {
       setCurrentAdmin(undefined);
     }
+  }, []);
+
+  const login = async (correoOUsuario: string, clave: string) => {
+    return apiLogin(correoOUsuario, clave).then((admin) => {
+      setCurrentAdmin(admin);
+      return admin;
+    });
   };
 
   const logout = () => {

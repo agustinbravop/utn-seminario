@@ -7,35 +7,35 @@ import { FloatingLabel } from "react-bootstrap";
 import TopMenu from "../../components/TopMenu";
 import { Fragment, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError, login } from "../../utils/api";
+import { ApiError } from "../../utils/api";
 import { Administrador } from "../../types";
 import { useNavigate } from "react-router";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css' ; 
-import Alert from 'react-bootstrap/Alert';
-import Cookies from "universal-cookie"; 
-
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Alert from "react-bootstrap/Alert";
+import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 
 interface LoginState {
   correoOUsuario: string;
   clave: string;
 }
+
 function LogIn() {
   const navigate = useNavigate();
+  const { login } = useCurrentAdmin();
   const [state, setState] = useState<LoginState>({
     correoOUsuario: "",
     clave: "",
   });
+
   const { mutate, isError } = useMutation<Administrador, ApiError, LoginState>({
     mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
     onSuccess: (admin) => navigate(`/administrador/${admin.id}`),
-    
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-  
+
     console.log(state);
     setState({ ...state, [name]: value });
   };
@@ -43,47 +43,38 @@ function LogIn() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutate(state);
-  
-   
   };
-  
-  const advertencia= (message:string) => { 
-    toast.warning(message, { 
+
+  const advertencia = (message: string) => {
+    toast.warning(message, {
       position: "top-center",
-      autoClose:5000,
-      progress:1, 
-      closeOnClick: true, 
-      hideProgressBar: false, 
-      draggable: true
-    })
-  }
+      autoClose: 5000,
+      progress: 1,
+      closeOnClick: true,
+      hideProgressBar: false,
+      draggable: true,
+    });
+  };
 
-  const validation = () => { 
-   
-    if (state.correoOUsuario==='' || state.correoOUsuario===null) { 
-      advertencia("El campo Usuario no puede estar vacio")
-      
-    }else {
-
-    if (state.clave==='' || state.clave===null) { 
-     advertencia("El campo contraseña no puede estar vacio")
+  const validation = () => {
+    if (state.correoOUsuario === "" || state.correoOUsuario === null) {
+      advertencia("El campo Usuario no puede estar vacio");
+    } else {
+      if (state.clave === "" || state.clave === null) {
+        advertencia("El campo contraseña no puede estar vacio");
+      }
     }
-  }
-   
-      
-  }
+  };
 
   return (
     <Fragment>
-      
       <TopMenu />
-      
+
       <div className="page">
         <div className="contenedor">
           <br />
           <div className="centrado">
             <h1>Bienvenido a CANCHAS.NET</h1>
-            
           </div>
           <br />
           <br />
@@ -143,15 +134,19 @@ function LogIn() {
                 >
                   Iniciar Sesión
                 </button>
-                {isError &&  <Alert variant="danger" dismissible> Datos Incorrectos. Intente de Nuevo</Alert>}
+                {isError && (
+                  <Alert variant="danger" dismissible>
+                    {" "}
+                    Datos Incorrectos. Intente de Nuevo
+                  </Alert>
+                )}
               </div>
             </Form>
           </div>
         </div>
       </div>
-    <ToastContainer/>
+      <ToastContainer />
     </Fragment>
-    
   );
 }
 

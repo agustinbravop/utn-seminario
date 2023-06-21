@@ -96,7 +96,7 @@ export async function getSuscripciones(): Promise<Suscripcion[]> {
   return get(`${API_URL}/suscripciones`);
 }
 
-export async function login(
+export async function apiLogin(
   correoOUsuario: string,
   clave: string
 ): Promise<Administrador> {
@@ -117,7 +117,7 @@ export async function login(
     .then((data) => data as Administrador);
 }
 
-export async function register(
+export async function apiRegister(
   usuario: Administrador,
   clave: string
 ): Promise<Administrador> {
