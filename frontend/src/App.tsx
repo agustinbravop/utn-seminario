@@ -12,6 +12,7 @@ import AdmPage from "./pages/AdmPage/AdmPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EstablecimientosPage from "./pages/EstablecimientosPage/EstablecimientosPage";
 import { CurrentAdminProvider } from "./hooks/useCurrentAdmin";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const routes = [
   {
@@ -53,11 +54,13 @@ const router = createBrowserRouter(routes);
 const queryClient = new QueryClient();
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <CurrentAdminProvider>
-        <RouterProvider router={router} />
-      </CurrentAdminProvider>
-    </QueryClientProvider>
+    <ChakraProvider>
+      <QueryClientProvider client={queryClient}>
+        <CurrentAdminProvider>
+          <RouterProvider router={router} />
+        </CurrentAdminProvider>
+      </QueryClientProvider>
+    </ChakraProvider>
   );
 }
 
