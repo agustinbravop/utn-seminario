@@ -14,9 +14,7 @@ export default function TopMenu() {
         <BrandNav />
         <MenuNav />
         {currentAdmin && (
-          <button
-            className="btn btn-light rounded-pill btn-sm"
-          >
+          <button className="btn btn-light rounded-pill btn-sm">
             {currentAdmin.usuario}
           </button>
         )}

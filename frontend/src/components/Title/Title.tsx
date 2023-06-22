@@ -6,10 +6,6 @@ type TitleProps = {
 };
 
 function Title({ style, children }: TitleProps) {
-  return (
-    <h1 style={style}>
-        {children}
-    </h1>
-  )
+  return <h1 style={style}>{children}</h1>;
 }
 export default Title;

@@ -1,1 +1,1 @@
-export { default } from './Establecimientos'; 
+export { default } from "./Establecimientos";

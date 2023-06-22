@@ -1,1 +1,1 @@
-export { default } from './AgregarEstablecimiento';
+export { default } from "./AgregarEstablecimiento";

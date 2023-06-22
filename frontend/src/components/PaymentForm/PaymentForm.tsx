@@ -8,7 +8,6 @@ import { FloatingLabel } from "react-bootstrap";
 import { useState } from "react";
 import { Tarjeta } from "../../types";
 
-
 interface PaymentFormProps {
   tarjeta: Tarjeta;
   setTarjeta: (t: Tarjeta) => void;
@@ -29,8 +28,6 @@ export default function PaymentForm({ tarjeta, setTarjeta }: PaymentFormProps) {
     };
     setTarjeta(t);
   };
-
-
 
   return (
     <div id="PaymentForm">
@@ -132,6 +129,5 @@ export default function PaymentForm({ tarjeta, setTarjeta }: PaymentFormProps) {
         </Row>
       </Container>
     </div>
-    
   );
 }

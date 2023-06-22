@@ -1,0 +1,26 @@
+node_modules/*
+
+# artefactos
+dist/*
+build/*
+backend/imagenes
+
+# configs
+package.json
+package-lock.json
+tsconfig.json
+.yarnrc.yml
+yarn.lock
+.idea
+.editorconfig
+
+# Keep environment variables out of version control
+.env
+
+# testing
+/coverage
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
