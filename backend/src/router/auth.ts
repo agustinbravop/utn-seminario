@@ -5,8 +5,8 @@ import { PrismaAuthRepository } from "../repositories/auth.js";
 import { PrismaSuscripcionRepository } from "../repositories/suscripciones.js";
 import { SuscripcionServiceImpl } from "../services/suscripciones.js";
 import { PrismaClient } from "@prisma/client";
-import {schemaValidation} from '../middlewares/SchemaValidator.middleware.js'
-import {loginSchema} from '../validaciones/loginAdministrador.validaciones.js'
+import { schemaValidation } from "../middlewares/SchemaValidator.middleware.js";
+import { loginSchema } from "../validaciones/loginAdministrador.validaciones.js";
 
 export function authRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -19,7 +19,7 @@ export function authRouter(prismaClient: PrismaClient): Router {
   const handler = new AuthHandler(service, susService);
 
   router.post("/login", handler.login());
-  router.post("/register",schemaValidation(loginSchema), handler.register());
+  router.post("/register", schemaValidation(loginSchema), handler.register());
 
   return router;
 }

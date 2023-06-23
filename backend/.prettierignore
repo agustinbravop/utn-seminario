@@ -1,11 +1,16 @@
-node_modules/
-.yarn
-.idea
+node_modules/*
 
 # artefactos
-dist
-build
+dist/*
+build/*
 backend/imagenes
+
+# configs
+package.json
+package-lock.json
+tsconfig.json
+.yarn
+.idea
 
 # Keep environment variables out of version control
 .env

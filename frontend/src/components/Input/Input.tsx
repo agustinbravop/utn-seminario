@@ -1,31 +1,31 @@
-import React from 'react'
+import React from "react";
 
 export default function InputMail() {
   return (
     <form
-    onSubmit={(e: React.SyntheticEvent) => {
+      onSubmit={(e: React.SyntheticEvent) => {
         e.preventDefault();
         const target = e.target as typeof e.target & {
-        email: { value: string };
-        password: { value: string };
+          email: { value: string };
+          password: { value: string };
         };
-    }}
+      }}
     >
-  <div>
-    <label>
-      Correo:
-      <input type="email" name="email" />
-    </label>
-  </div>
-  <div>
-    <label>
-      Contraseña:
-      <input type="password" name="password" />
-    </label>
-  </div>
-  <div>
-    <input type="submit" value="Ingresar" />
-  </div>
-</form>
-  )
-};
+      <div>
+        <label>
+          Correo:
+          <input type="email" name="email" />
+        </label>
+      </div>
+      <div>
+        <label>
+          Contraseña:
+          <input type="password" name="password" />
+        </label>
+      </div>
+      <div>
+        <input type="submit" value="Ingresar" />
+      </div>
+    </form>
+  );
+}
