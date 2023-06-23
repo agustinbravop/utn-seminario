@@ -1,12 +1,14 @@
 import Cards, { Focused } from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { FloatingLabel } from "react-bootstrap";
 import { useState } from "react";
 import { Tarjeta } from "../../types";
+import {
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  VStack,
+} from "@chakra-ui/react";
 
 interface PaymentFormProps {
   tarjeta: Tarjeta;
@@ -30,104 +32,59 @@ export default function PaymentForm({ tarjeta, setTarjeta }: PaymentFormProps) {
   };
 
   return (
-    <div id="PaymentForm">
-      <Container>
-        <Row>
-          <Col>
-            <Row>
-              {" "}
-              <Col>
-                {" "}
-                <FloatingLabel
-                  controlId="floatingNumero"
-                  label="Numero de tarjeta"
-                  className="mb-3"
-                >
-                  {" "}
-                  <Form.Control
-                    type="tel"
-                    name="number"
-                    placeholder="Numero de tarjeta"
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    required
-                  />{" "}
-                </FloatingLabel>{" "}
-              </Col>{" "}
-            </Row>
+    <HStack spacing="4" justifyContent="center">
+      <VStack spacing="4" minWidth="150px" maxWidth="300px">
+        <FormControl
+          variant="floating"
+          id="number"
+          isRequired
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+        >
+          <Input placeholder="Contraseña" name="number" />
+          <FormLabel>Numero de tarjeta</FormLabel>
+        </FormControl>
+        <FormControl
+          variant="floating"
+          id="name"
+          isRequired
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+        >
+          <Input placeholder="Nombre" name="name" />
+          <FormLabel>Nombre del dueño</FormLabel>
+        </FormControl>
 
-            <Row>
-              {" "}
-              <Col>
-                {" "}
-                <FloatingLabel
-                  controlId="floatingNombreTarjeta"
-                  label="Nombre del dueño"
-                  className="mb-3"
-                >
-                  {" "}
-                  <Form.Control
-                    type="tel"
-                    name="name"
-                    placeholder=" Nombre del dueño"
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    required
-                  />{" "}
-                </FloatingLabel>{" "}
-              </Col>{" "}
-            </Row>
-
-            <Row>
-              <Col>
-                {" "}
-                <FloatingLabel
-                  controlId="floatingVencimiento"
-                  label="Valida hasta"
-                  className="mb-3"
-                >
-                  {" "}
-                  <Form.Control
-                    type="tel"
-                    name="expiry"
-                    placeholder="Valida hasta "
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    required
-                  />{" "}
-                </FloatingLabel>{" "}
-              </Col>
-              <Col>
-                {" "}
-                <FloatingLabel
-                  controlId="floatingCVV"
-                  label="CVV"
-                  className="mb-3"
-                >
-                  {" "}
-                  <Form.Control
-                    type="tel"
-                    name="cvc"
-                    placeholder="CVV "
-                    onChange={handleInputChange}
-                    onFocus={handleInputFocus}
-                    required
-                  />{" "}
-                </FloatingLabel>{" "}
-              </Col>
-            </Row>
-          </Col>
-          <Col>
-            <Cards
-              cvc={tarjeta.cvv}
-              expiry={tarjeta.vencimiento}
-              focused={focused}
-              name={tarjeta.nombre}
-              number={tarjeta.numero}
-            />
-          </Col>
-        </Row>
-      </Container>
-    </div>
+        <HStack spacing="20px">
+          <FormControl
+            variant="floating"
+            id="expiry"
+            isRequired
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+          >
+            <Input placeholder="00/00" name="expiry" />
+            <FormLabel>Vencimiento</FormLabel>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="cvc"
+            isRequired
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+          >
+            <Input placeholder="000" name="cvc" />
+            <FormLabel>CVV</FormLabel>
+          </FormControl>
+        </HStack>
+      </VStack>
+      <Cards
+        cvc={tarjeta.cvv}
+        expiry={tarjeta.vencimiento}
+        focused={focused}
+        name={tarjeta.nombre}
+        number={tarjeta.numero}
+      />
+    </HStack>
   );
 }

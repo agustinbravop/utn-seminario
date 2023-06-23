@@ -1,24 +1,18 @@
-import React from "react";
-import { Container, Row } from "react-bootstrap";
 import Establecimiento from "../Establecimiento";
 import Loading from "../Loading";
+import { HStack } from "@chakra-ui/react";
 
-export default function Establecimientos(props) {
-  const {
-    establecimientos: { result, loading, error },
-  } = props;
-
+export default function Establecimientos({ result, loading, error }) {
+  console.log(loading, result);
   return (
-    <Container>
-      <Row>
-        {loading || !result ? (
-          <Loading />
-        ) : (
-          result.record.map((establecimiento, index) => (
-            <Establecimiento key={index} establecimiento={establecimiento} />
-          ))
-        )}
-      </Row>
-    </Container>
+    <HStack display="flex" flexWrap="wrap" justifyContent="center">
+      {loading || !result ? (
+        <Loading />
+      ) : (
+        result.record.map((establecimiento, index) => (
+          <Establecimiento key={index} establecimiento={establecimiento} />
+        ))
+      )}
+    </HStack>
   );
 }
