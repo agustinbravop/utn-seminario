@@ -93,7 +93,7 @@ function AdmPage() {
   }
   const validacion = () => { 
     let result=false; 
-   
+ 
     if ((state.nombre==='' || state.nombre===null) && result===false) { 
       result=true; 
       advertencia("El campo Nombre no puede estar vacio")
@@ -156,7 +156,8 @@ function AdmPage() {
       <div className="margen">
         <h2>Cuenta</h2>
         <p> Ingrese sus datos a usar para iniciar sesión.</p>
-        {isError && <Alert variant="danger" dismissible> Datos Incorrectos. Intente de Nuevo</Alert>}
+        {isError  && <Alert variant="danger" dismissible> Datos Incorrectos. Intente de Nuevo</Alert>}
+       
       </div>
 
       <br />
