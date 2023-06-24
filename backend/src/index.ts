@@ -23,8 +23,9 @@ app.use("/auth", authRouter(prismaClient));
 app.use("/suscripciones", suscripcionesRouter(prismaClient));
 app.use("/establecimientos", establecimientosRouter(prismaClient));
 app.use("/administrador", AdministradorRouter(prismaClient));
+app.use("/administradores", establecimientosRouter(prismaClient))
 app.use("/tarjetas", tarjetaRouter);
 
 app.listen(process.env.PORT || 3001, () => {
-  console.log("Servidor desplegado en el puerto " + process.env.PORT || 3001);
+  console.log("Servidor desplegado en el puerto " + process.env.PORT || 3000);
 });

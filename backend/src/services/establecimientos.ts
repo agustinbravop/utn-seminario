@@ -12,6 +12,7 @@ export interface EstablecimientoService {
   getByAdministradorID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>>;
+  getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
 }
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
@@ -42,5 +43,9 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     establecimiento.urlImagen = urlImagen;
 
     return await this.repo.crearEstablecimiento(establecimiento);
+  }
+
+  async getEstablecimientoByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>> {
+     return await this.repo.getEstablecimientoByAdminID(idAdmin) 
   }
 }

@@ -10,6 +10,7 @@ export interface EstablecimientoRepository {
   getByAdministradorID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>>;
+  getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
 }
 
 export class PrismaEstablecimientoRepository
@@ -69,7 +70,25 @@ export class PrismaEstablecimientoRepository
 
       return ok(establecimientos);
     } catch (e) {
+     
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
+  }
+
+  async getEstablecimientoByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>> {
+  
+      try { 
+        const establecimiento= await this.prisma.establecimiento.findMany({ 
+          where: { 
+            idAdministrador:idAdmin
+          }
+        })
+        if (establecimiento.length===0) { 
+        return err(new ApiError(500, "Error, El ID "+idAdmin+" del administrador ingresado no existe. Intente nuevamente"))
+        }
+        return ok(establecimiento)   
+      }catch(e) { 
+        return err(new ApiError(500, "Error, El ID ingresado no existe. Intente de nuevo"))
+      }
   }
 }

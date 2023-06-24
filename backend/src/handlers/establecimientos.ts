@@ -2,8 +2,8 @@ import { RequestHandler } from "express";
 import { EstablecimientoService } from "../services/establecimientos.js";
 import { Establecimiento } from "../models/establecimiento.js";
 import { PrismaClient } from "@prisma/client";
-
 import { getSuscripcionByAdminID } from "../repositories/administrador.js";
+
 
 const prisma = new PrismaClient();
 export class EstablecimientoHandler {
@@ -53,6 +53,17 @@ export class EstablecimientoHandler {
       );
     };
   }
+
+  getEstablecimientoByAdminID():RequestHandler { 
+    return async (req, res) => { 
+      const idAdmin=Number(req.params['idAdmin']) 
+      const estResult=await this.service.getEstablecimientoByAdminID(idAdmin) 
+      estResult.match( 
+        (est)=> res.status(200).json(est), 
+        (err)=>res.status(err.status).json(err)
+      )
+    }
+  }
 }
 
 export async function getEstablecimientoByID(id: number): Promise<number> {
@@ -64,3 +75,4 @@ export async function getEstablecimientoByID(id: number): Promise<number> {
 
   return admin.length;
 }
+

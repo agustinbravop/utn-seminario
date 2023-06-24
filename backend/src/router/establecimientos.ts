@@ -24,6 +24,7 @@ export function establecimientosRouter(prismaClient: PrismaClient): Router {
     handler.crearEstablecimiento()
   );
   router.get("/", handler.getByAdminID());
+  router.get("/:idAdmin/establecimientos", handler.getEstablecimientoByAdminID())
 
   return router;
 }
