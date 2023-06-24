@@ -64,6 +64,19 @@ export class EstablecimientoHandler {
       )
     }
   }
+
+  getEstablecimientoByIDByAdminID(): RequestHandler{ 
+    return async(req, res)=> { 
+      const idAdmin=Number(req.params['idAdmin'] )
+      const idEst=Number(req.params['id'] )
+      const estResul=await this.service.getEstablecimientoByIDByAdminID(idAdmin, idEst)
+
+      estResul.match( 
+        (est)=>res.status(200).json(est), 
+        (err)=>res.status(err.status).json(err)
+      )
+    }
+  }
 }
 
 export async function getEstablecimientoByID(id: number): Promise<number> {

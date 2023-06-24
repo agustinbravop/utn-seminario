@@ -13,6 +13,7 @@ export interface EstablecimientoService {
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>>;
   getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
+  getEstablecimientoByIDByAdminID(idAdmin:number, IdEstablecimiento:number): Promise<Result<Establecimiento,ApiError>>
 }
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
@@ -47,5 +48,9 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
   async getEstablecimientoByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>> {
      return await this.repo.getEstablecimientoByAdminID(idAdmin) 
+  }
+
+  async getEstablecimientoByIDByAdminID(idAdmin: number, IdEstablecimiento: number): Promise<Result<Establecimiento, ApiError>> {
+      return await this.repo.getEstablecimientoByIDByAdminID(idAdmin, IdEstablecimiento)
   }
 }

@@ -3,6 +3,7 @@ import { ApiError } from "../utils/apierrors.js";
 import { Result, err, ok } from "neverthrow";
 import { Establecimiento } from "../models/establecimiento.js";
 
+
 export interface EstablecimientoRepository {
   crearEstablecimiento(
     est: Establecimiento
@@ -11,6 +12,7 @@ export interface EstablecimientoRepository {
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>>;
   getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
+  getEstablecimientoByIDByAdminID(idAdmin:number, idEstablecimiento:number):Promise<Result<Establecimiento,ApiError>>;
 }
 
 export class PrismaEstablecimientoRepository
@@ -91,4 +93,30 @@ export class PrismaEstablecimientoRepository
         return err(new ApiError(500, "Error, El ID ingresado no existe. Intente de nuevo"))
       }
   }
+
+ async getEstablecimientoByIDByAdminID(idAdmin: number, idEstablecimiento: number): Promise<Result<Establecimiento, ApiError>> {
+      try {
+        const establecimiento=await this.prisma.establecimiento.findFirstOrThrow({ 
+          where: { 
+            AND: [ 
+              {
+                id:idEstablecimiento
+              }, 
+              {
+                idAdministrador:idAdmin
+              }
+            ]
+          }
+        }); 
+
+        return ok(establecimiento)
+
+      }catch(e) { 
+       
+        
+        return err(new ApiError(500, "Error no se encuentra el establecimiento con los datos ingresados. Intente de nuevo"))
+      }
+  }
+
+
 }
