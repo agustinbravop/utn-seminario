@@ -92,6 +92,27 @@ async function postFormData<T>(
     .then((data) => data as T);
 }
 
+//REVISAR
+async function putFormData<T>(
+  endpoint: string,
+  formData: FormData,
+  expectedStatus: number,
+  token?: string
+): Promise<T> {
+  return fetch(endpoint, {
+    method: "PUT",
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+    body: formData,
+    mode: "cors" as RequestMode,
+    cache: "default" as RequestCache,
+  })
+    .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
+    .then((data) => data as T);
+}
+
+
 export async function getSuscripciones(): Promise<Suscripcion[]> {
   return get(`${API_URL}/suscripciones`);
 }
@@ -151,6 +172,42 @@ export async function crearEstablecimiento(
   }
   return postFormData<Establecimiento>(
     `${API_URL}/establecimientos`,
+    formData,
+    201,
+    token.token
+  );
+}
+
+//REVISAR//REVISAR//REVISAR
+//REVISAR//REVISAR//REVISAR
+//REVISAR//REVISAR//REVISAR
+export async function traerEstablecimiento(
+  idAdmin: number,
+  id: number
+): Promise<Establecimiento> {
+  return get<Establecimiento>(`${API_URL}//${idAdmin}/establecimientos/${id}`); //REVISAR
+}
+
+//REVISAR
+export async function actualizarEstablecimiento(
+  establecimiento: Establecimiento,
+  imagen?: File
+): Promise<Establecimiento> {
+  const formData = new FormData();
+  if (imagen) {
+    formData.append("imagen", imagen);
+  }
+  let key: keyof Establecimiento;
+  for (key in establecimiento) {
+    formData.append(key, String(establecimiento[key]));
+  }
+
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return putFormData<Establecimiento>(
+    `${API_URL}/establecimientos`, //CAMBIAR CUANDO MATIAS SUBA LOS CAMBIOS
     formData,
     201,
     token.token

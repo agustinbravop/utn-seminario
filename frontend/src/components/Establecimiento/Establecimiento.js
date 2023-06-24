@@ -13,10 +13,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
-import { PhoneIcon } from "@chakra-ui/icons";
+import { PhoneIcon, SettingsIcon } from "@chakra-ui/icons";
+import { Link, useNavigate } from "react-router-dom";
+import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 
 export default function Establecimiento(props) {
   const { establecimiento } = props;
+  const navigate = useNavigate;
+  const admin = useCurrentAdmin()
 
   return (
     <Card maxWidth="xs" height="450px">
@@ -60,6 +64,9 @@ export default function Establecimiento(props) {
           }
         >
           Canchas
+        </Button>
+        <Button leftIcon={SettingsIcon} width="16" height="16" onClick={()=> navigate(`${admin.id}/establecimiento/${establecimiento.id}/editar`)}>
+          Editar
         </Button>
       </CardFooter>
     </Card>
