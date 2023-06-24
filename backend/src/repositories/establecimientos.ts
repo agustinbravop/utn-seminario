@@ -2,6 +2,7 @@ import { PrismaClient, establecimiento } from "@prisma/client";
 import { ApiError } from "../utils/apierrors.js";
 import { Result, err, ok } from "neverthrow";
 import { Establecimiento } from "../models/establecimiento.js";
+import {transporter} from '../utils/EnviodeCorreoUpdate.js'
 
 
 export interface EstablecimientoRepository {
@@ -137,9 +138,18 @@ export class PrismaEstablecimientoRepository
             horariosDeAtencion: est.horariosDeAtencion,
           },
         })
-        return ok(ests)
+
+        await transporter.sendMail({ 
+          from: "Actualizacion de Datos <seminariointegrador21@gmail.com>", 
+          to:ests.correo, 
+          subject:"Actualizacion de datos", 
+          text:"Los datos ingresados fueron actualizados correctamente"
+        })
+       
+        return ok(this.toModel(ests))
          
       }catch(e){ 
+        console.log(e)
         return err(new ApiError(500, "Error no se pudo actualizar el establecimiento"))
       }
   }

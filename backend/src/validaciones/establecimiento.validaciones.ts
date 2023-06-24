@@ -6,7 +6,7 @@ export const establecimientoSchema = z.object({
     telefono: z
       .string()
       .nonempty("El telefono no puede estar vacio")
-      .length(10, "La longitud del telefon debe ser de 10 caracteres"),
+      .length(10, "La longitud del telefono debe ser de 10 caracteres"),
     correo: z
       .string()
       .nonempty("El correo no puede estar vacio")

@@ -14,6 +14,7 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
+
 const prismaClient = new PrismaClient();
 prismaClient
   .$connect()
@@ -23,7 +24,6 @@ app.use("/auth", authRouter(prismaClient));
 app.use("/suscripciones", suscripcionesRouter(prismaClient));
 app.use("/establecimientos", establecimientosRouter(prismaClient));
 app.use("/administrador", AdministradorRouter(prismaClient));
-app.use("/administradores", establecimientosRouter(prismaClient))
 app.use("/administradores", establecimientosRouter(prismaClient))
 app.use("/tarjetas", tarjetaRouter);
 

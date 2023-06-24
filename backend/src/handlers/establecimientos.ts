@@ -77,6 +77,23 @@ export class EstablecimientoHandler {
       )
     }
   }
+
+  putEstablecimientoByAdminIDByID():RequestHandler{ 
+    return async (req, res)=> { 
+      const est: Establecimiento= { 
+        ...req.body
+      }
+      const imagen= req.file 
+      const idEst=Number(req.params['id'])
+
+      const estResul=await this.service.putEstablecimientoByAdminIDByID(est,idEst,imagen); 
+      estResul.match( 
+        (est)=>res.status(200).json(est), 
+        (err)=>res.status(err.status).json(err)
+      )
+      
+    }
+  }
 }
 
 export async function getEstablecimientoByID(id: number): Promise<number> {
