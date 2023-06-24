@@ -1,10 +1,10 @@
 .header {
-  margin-top: 30px !important;
+  margin-top: 20px !important;
   text-align: end;
 }
 
 .content {
-  margin-top: 2.5rem;
+  margin-top: 2rem;
 }
 
 #figuras {
@@ -14,7 +14,7 @@
 
 #fig1 {
   margin-left: 5rem;
-  margin-top: 4rem;
+  margin-top: 2rem;
   background-color: #47a992;
   height: 10px;
   width: 23rem !important;
@@ -22,7 +22,7 @@
 }
 #fig2 {
   margin-left: 7rem;
-  margin-top: 4rem;
+  margin-top: 2rem;
   background-color: #47a992;
   height: 10px;
   width: 23rem !important;

@@ -1,3 +1,19 @@
 node_modules/
 .yarn
 .idea
+
+# artefactos
+dist
+build
+backend/imagenes
+
+# Keep environment variables out of version control
+.env
+
+# testing
+/coverage
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

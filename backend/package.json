@@ -3,24 +3,27 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
-    "build": "npx tsc --project .",
+    "build": "npx prisma migrate dev && npx tsc --project .",
     "dev": "ts-node src/index.ts",
-    "start": "npx tsc --project . && node dist/index.js",
+    "start": "npx tsc --project . && node dist/src/index.js",
     "serve": "nodemon src/index.ts",
+    "format": "npx prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
-    
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",     
+  "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/cors": "^2.8.13",     
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/morgan": "^1.9.4",
     "@types/multer": "^1.4.7",
-    "@types/node": "^20.2.5",
+    "@types/node": "^20.3.1",
     "eslint-plugin-neverthrow": "^1.1.4",
     "express": "^4.18.2",
     "nodemon": "^2.0.22",

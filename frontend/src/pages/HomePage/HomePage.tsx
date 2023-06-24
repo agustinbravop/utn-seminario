@@ -4,34 +4,29 @@ import "./HomePage.css";
 import TopMenu from "../../components/TopMenu";
 import { Link, useNavigate } from "react-router-dom";
 
-
 function HomePage() {
   const navigate = useNavigate();
- 
+
   return (
     <div>
-     
-      
-       <TopMenu />
-        
-     
+      <TopMenu />
+
       <div className="container col">
         <div className="header" style={{ alignContent: "end" }}>
-          
           <button
             type="button"
             className="btn btn-outline-dark"
             style={{ marginLeft: "4px" }}
-            onClick={() => navigate('/suscripciones')}
+            onClick={() => navigate("/suscripciones")}
           >
             Suscripcion
           </button>
-          
+
           <button
             type="button"
             className="btn btn-outline-danger"
             style={{ marginLeft: "10px" }}
-            onClick={() => navigate('/login')}
+            onClick={() => navigate("/login")}
           >
             Iniciar Sesion
           </button>
@@ -72,7 +67,7 @@ function HomePage() {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                marginTop: "50px",
+                marginTop: "20px",
               }}
             >
               <br />
