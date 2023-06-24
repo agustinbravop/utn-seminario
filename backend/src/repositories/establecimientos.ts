@@ -10,6 +10,7 @@ export interface EstablecimientoRepository {
   getByAdministradorID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>>;
+  putEstablecimientoByAdminIDByID(est:Establecimiento, idEst:number):Promise<Result<Establecimiento,ApiError>>
 }
 
 export class PrismaEstablecimientoRepository
@@ -71,5 +72,29 @@ export class PrismaEstablecimientoRepository
     } catch (e) {
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
+  }
+
+  async putEstablecimientoByAdminIDByID(est: Establecimiento, idEst:number): Promise<Result<Establecimiento, ApiError>> {
+      try { 
+        const ests=await this.prisma.establecimiento.update({ 
+          where: { 
+            id:idEst
+          },
+          data: { 
+            nombre:est.nombre, 
+            telefono: est.telefono,
+            correo: est.correo,
+            direccion: est.direccion,
+            localidad: est.localidad,
+            provincia: est.provincia,
+            urlImagen: est.urlImagen,
+            horariosDeAtencion: est.horariosDeAtencion,
+          },
+        })
+        return ok(ests)
+         
+      }catch(e){ 
+        return err(new ApiError(500, "Error no se pudo actualizar el establecimiento"))
+      }
   }
 }
