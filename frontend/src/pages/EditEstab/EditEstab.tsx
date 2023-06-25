@@ -1,9 +1,8 @@
-import "./NewEstab.css";
+//import "./NewEstab.css";
 import TopMenu from "../../components/TopMenu";
 import {
   ApiError,
   actualizarEstablecimiento,
-  crearEstablecimiento,
   traerEstablecimiento,
 } from "../../utils/api";
 import { Establecimiento } from "../../types";
@@ -179,7 +178,7 @@ function EditEstab() {
           </VStack>
 
           <Button type="submit" className="btn btn-danger">
-            Crear
+            Guardar
           </Button>
         </Container>
       </form>

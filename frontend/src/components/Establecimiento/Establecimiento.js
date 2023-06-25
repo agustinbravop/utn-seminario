@@ -14,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
 import { PhoneIcon, SettingsIcon } from "@chakra-ui/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 
 export default function Establecimiento(props) {
   const { establecimiento } = props;
-  const navigate = useNavigate;
-  const admin = useCurrentAdmin()
+  const navigate = useNavigate();
+  const admin = useCurrentAdmin();
 
   return (
     <Card maxWidth="xs" height="450px">

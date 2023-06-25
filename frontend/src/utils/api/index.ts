@@ -207,7 +207,7 @@ export async function actualizarEstablecimiento(
     return Promise.reject(new ApiError(403, "JWT inexistente"));
   }
   return putFormData<Establecimiento>(
-    `${API_URL}/establecimientos`, //CAMBIAR CUANDO MATIAS SUBA LOS CAMBIOS
+    `${API_URL}/${establecimiento.idAdministrador}/establecimiento/${establecimiento.id}`, //CAMBIAR CUANDO MATIAS SUBA LOS CAMBIOS
     formData,
     201,
     token.token

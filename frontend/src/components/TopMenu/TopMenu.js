@@ -2,7 +2,7 @@ import { ReactComponent as Logo } from "../../assets/svg/tennis-icon.svg";
 import "./TopMenu.scss";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
-import { HStack, Icon } from "@chakra-ui/react";
+import { HStack, Stack, Icon } from "@chakra-ui/react";
 
 export default function TopMenu() {
   const { currentAdmin, logout } = useCurrentAdmin();
@@ -18,10 +18,22 @@ export default function TopMenu() {
       <BrandNav />
       <MenuNav />
       {currentAdmin && (
-        <button className="btn btn-light rounded-pill btn-sm">
-          {currentAdmin.usuario}
-        </button>
-      )}
+          <Stack direction='row'>
+          <Link to={`/administrador/${currentAdmin.id}`}>
+            <button className="btn btn-light rounded-pill btn-sm">
+              {currentAdmin.usuario}
+            </button>
+          </Link>
+          <Link to={"/landing"}>
+            <button
+              className="btn btn-danger rounded-pill btn-sm"
+              onClick={logout}
+            >
+              Cerrar Sesión
+            </button>
+          </Link>
+        </Stack>
+        )}
     </HStack>
   );
 }
