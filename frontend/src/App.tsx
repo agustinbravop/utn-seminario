@@ -13,6 +13,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EstablecimientosPage from "./pages/EstablecimientosPage/EstablecimientosPage";
 import { CurrentAdminProvider } from "./hooks/useCurrentAdmin";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import PerfilPage from "./pages/PerfilPage/PerfilPage";
 
 const routes = [
   {
@@ -46,6 +47,10 @@ const routes = [
   {
     path: "/register",
     element: <AdmPage />,
+  },
+  {
+    path: "/perfil", //provisorio
+    element: <PerfilPage />
   },
 ];
 
