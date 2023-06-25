@@ -2,6 +2,7 @@ import { BASE_PATH } from "../../utils/constants";
 import "./Establecimiento.scss";
 import {
   Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardFooter,
@@ -20,7 +21,7 @@ import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 export default function Establecimiento(props) {
   const { establecimiento } = props;
   const navigate = useNavigate();
-  const admin = useCurrentAdmin();
+  const admin = useCurrentAdmin()
 
   return (
     <Card maxWidth="xs" height="450px">
@@ -48,26 +49,39 @@ export default function Establecimiento(props) {
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">
-        <Button
-          leftIcon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-eye-fill"
-              viewBox="0 0 16 16"
-            >
-              <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-              <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-            </svg>
-          }
-        >
-          Canchas
-        </Button>
-        <Button leftIcon={SettingsIcon} width="16" height="16" onClick={()=> navigate(`${admin.id}/establecimiento/${establecimiento.id}/editar`)}>
-          Editar
-        </Button>
+        <ButtonGroup>
+          <Button
+            key={0}
+            leftIcon={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-eye-fill"
+                viewBox="0 0 16 16"
+              >
+                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+              </svg>
+            }
+          >
+            Canchas
+          </Button>
+          <Button
+            key={1}
+            leftIcon={<SettingsIcon />}
+            width="16"
+            height="16"
+            onClick={() =>
+              navigate(
+                `/administrador/${admin.id}/establecimiento/${establecimiento.id}/editar`
+              )
+            }
+          >
+            Editar
+          </Button>
+        </ButtonGroup>
       </CardFooter>
     </Card>
   );

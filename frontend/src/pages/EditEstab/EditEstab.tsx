@@ -28,6 +28,7 @@ type FormState = Establecimiento & {
 function EditEstab() {
   const { idAdmin, id } = useParams(); //REVISAR
   const navigate = useNavigate();
+
   const [state, setState] = useState<FormState>({
     id: Number(id),
     nombre: "",
@@ -51,10 +52,10 @@ function EditEstab() {
   useEffect(() => {
     const cargarEstablecimiento = async () => {
       const e = await traerEstablecimiento(Number(idAdmin), Number(id));
-      setState(e);
+      console.log(e)
     };
     cargarEstablecimiento();
-  }, []);
+  });
 
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
