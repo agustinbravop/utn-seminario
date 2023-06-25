@@ -1,20 +1,21 @@
 import "./NewEstab.css";
-import Form from "react-bootstrap/Form";
-
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { FloatingLabel } from "react-bootstrap";
 import TopMenu from "../../components/TopMenu";
-import { Fragment } from "react";
 import { ApiError, crearEstablecimiento } from "../../utils/api";
 import { Establecimiento } from "../../types";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
-
-// const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-// const valoresSelect = [" ", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+import {
+  Button,
+  Container,
+  FormControl,
+  FormLabel,
+  HStack,
+  Heading,
+  Input,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 type FormState = Establecimiento & {
   imagen?: File;
@@ -60,217 +61,114 @@ function NewEstab() {
   };
 
   return (
-    <Fragment>
+    <div className="page">
       <TopMenu />
-      <div className="page">
-        <br />
-        <div className="centrado">
-          <h1>Nuevo Establecimiento</h1>
-        </div>
-        <br />
-
-        <div className="formulario">
-          <Form style={{ width: "60%" }} onSubmit={handleSubmit}>
-            <Form.Group>
-              <Container>
-                <Row>
-                  <Col>
-                    <FloatingLabel
-                      controlId="floatingTextarea"
-                      label="Nombre"
-                      className="mb-3"
-                    >
-                      <Form.Control
-                        type="text"
-                        name="nombre"
-                        onChange={handleChange}
-                        placeholder="Nombre"
-                        required
-                      />
-                    </FloatingLabel>
-                  </Col>
-                  <Col>
-                    <FloatingLabel
-                      controlId="floatingTextarea"
-                      label="Dirección"
-                      className="mb-3"
-                    >
-                      <Form.Control
-                        type="text"
-                        placeholder="Dirección"
-                        name="direccion"
-                        onChange={handleChange}
-                        required
-                      />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <FloatingLabel
-                      controlId="floatingTextarea"
-                      label="Localidad"
-                      className="mb-3"
-                    >
-                      <Form.Control
-                        type="text"
-                        placeholder="Localidad"
-                        name="localidad"
-                        onChange={handleChange}
-                        required
-                      />
-                    </FloatingLabel>
-                  </Col>
-                  <Col>
-                    <FloatingLabel
-                      controlId="floatingTextarea"
-                      label="Provincia"
-                      className="mb-3"
-                    >
-                      <Form.Control
-                        type="text"
-                        placeholder="Provincia"
-                        name="provincia"
-                        onChange={handleChange}
-                        required
-                      />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <FloatingLabel
-                      controlId="floatingTextarea"
-                      label="Correo electronico"
-                      className="mb-3"
-                    >
-                      <Form.Control
-                        type="email"
-                        placeholder="Correo electronico"
-                        name="correo"
-                        onChange={handleChange}
-                        required
-                      />
-                    </FloatingLabel>
-                  </Col>
-                  <Col>
-                    <FloatingLabel
-                      controlId="floatingTextarea"
-                      label="Télefono"
-                      className="mb-3"
-                    >
-                      <Form.Control
-                        type="number"
-                        placeholder="Télefono"
-                        name="telefono"
-                        onChange={handleChange}
-                        required
-                      />
-                    </FloatingLabel>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Control
-                      type="file"
-                      required
-                      name="imagen"
-                      onChange={handleImagenChange}
-                      accept="image/*"
-                      placeholder="Seleccionar imagen"
-                    />
-                  </Col>
-                </Row>
-                <br />
-              </Container>
-            </Form.Group>
-            <br />
-            <br />
-            <div className="parrafo">
-              <h2>Horarios de Atención</h2>
-              <p>Describa los horarios de atención del establecimiento</p>
-            </div>
-
-            <Container>
-              <Row>
-                <Col>
-                  <Form.Control
-                    as="textarea"
-                    name="horariosDeAtencion"
-                    onChange={handleChange}
-                    rows={3}
-                  />
-                </Col>
-              </Row>
-            </Container>
-
-            {/*
-            <div className="parrafo">
-              <h2>Horarios de Atención</h2>
-              <p>En qué rango horario el establecimiento está abierto.</p>
-            </div>
-         
-            <Container>
-              <Row>
-                <Col></Col>
-                {diasSemana.map((dia, index) => (
-                  <Col key={index}>{dia}</Col>
-                ))}
-              </Row>
-              <br />
-              <Row>
-                <Col>Desde las</Col>
-                {diasSemana.map((dia, index) => (
-                  <Col key={index}>
-                    <Form.Select aria-label="Default select example">
-                      {valoresSelect.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                ))}
-              </Row>
-              <br />
-              <br />
-              <Row>
-                <Col>Hasta las</Col>
-                {diasSemana.map((dia, index) => (
-                  <Col key={index}>
-                    <Form.Select aria-label="Default select example">
-                      {valoresSelect.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                ))}
-              </Row>
-              <br />
-            </Container> */}
-
-            <br />
-            <div className="centrado">
-              <button
-                type="submit"
-                className="btn btn-danger"
-                style={{ backgroundColor: "#FF604F" }}
-                onClick={() => console.log("crearEstab")}
-              >
-                Crear
-              </button>
-
-              <br />
-              <br />
-              <br />
-              <br />
-            </div>
-          </Form>
-        </div>
+      <div className="centrado">
+        <Heading size="xl" margin="50px">
+          Nuevo Establecimiento
+        </Heading>
       </div>
-    </Fragment>
+
+      <form onSubmit={handleSubmit}>
+        <Container centerContent gap="25px">
+          <VStack spacing="4">
+            <FormControl
+              variant="floating"
+              id="clave"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input name="nombre" placeholder="Nombre" />
+              <FormLabel>Nombre del establecimiento</FormLabel>
+            </FormControl>
+            <FormControl
+              variant="floating"
+              id="correo"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input name="correo" type="email" placeholder="abc@ejemplo.com" />
+              <FormLabel>Correo del establecimiento</FormLabel>
+            </FormControl>
+            <FormControl
+              variant="floating"
+              id="direccion"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input name="direccion" placeholder="Dirección" />
+              <FormLabel>Dirección</FormLabel>
+            </FormControl>
+            <HStack>
+              <FormControl
+                variant="floating"
+                id="localidad"
+                isRequired
+                onChange={handleChange}
+              >
+                <Input name="localidad" placeholder="Localidad" />
+                <FormLabel>Localidad</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="provincia"
+                isRequired
+                onChange={handleChange}
+              >
+                <Input name="provincia" placeholder="Provincia" />
+                <FormLabel>Provincia</FormLabel>
+              </FormControl>
+            </HStack>
+            <FormControl
+              variant="floating"
+              id="telefono"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input name="telefono" placeholder="Teléfono" type="tel" />
+              <FormLabel>Teléfono</FormLabel>
+            </FormControl>
+            <FormControl>
+              <FormControl
+                variant="floating"
+                id="horariosDeAtencion"
+                onChange={handleChange}
+              >
+                <Input
+                  name="horariosDeAtencion"
+                  placeholder="8:00-12:00"
+                  type="text"
+                />
+                <FormLabel>Horarios de Atención</FormLabel>
+              </FormControl>
+              <FormLabel marginTop="10px" marginLeft="10px">
+                Imagen
+              </FormLabel>
+              <Input
+                type="file"
+                name="imagen"
+                onChange={handleImagenChange}
+                accept="image/*"
+                sx={{
+                  "::file-selector-button": {
+                    height: 10,
+                    padding: 0,
+                    mr: 4,
+                    background: "none",
+                    border: "none",
+                    fontWeight: "bold",
+                  },
+                }}
+              />
+            </FormControl>
+          </VStack>
+
+          <Button type="submit" className="btn btn-danger">
+            Crear
+          </Button>
+        </Container>
+      </form>
+    </div>
   );
 }
 

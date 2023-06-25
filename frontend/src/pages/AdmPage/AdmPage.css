@@ -38,7 +38,8 @@
   justify-items: center;
   display: flex;
   padding: 0px;
-  margin-left: 0px;
+  padding-left: 16.3%;
+  padding-top: 2%;
 }
 .page {
   padding-bottom: 20px;

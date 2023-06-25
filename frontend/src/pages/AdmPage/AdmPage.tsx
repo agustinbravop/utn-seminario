@@ -1,22 +1,25 @@
 import React from "react";
 import "./AdmPage.css";
 import PaymentForm from "../../components/PaymentForm/PaymentForm";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Modal from "react-overlays/Modal";
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import { FloatingLabel } from "react-bootstrap";
 import { Administrador, Tarjeta } from "../../types";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError, register } from "../../utils/api";
+import { ApiError, apiRegister } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
-import 'react-toastify/dist/ReactToastify.css'; 
-import { ToastContainer, toast } from 'react-toastify';
-import Alert from 'react-bootstrap/Alert';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import {
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  VStack,
+  Alert,
+  Button,
+} from "@chakra-ui/react";
 
 type FormState = Administrador & {
   clave: string;
@@ -61,7 +64,7 @@ function AdmPage() {
   });
 
   const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
-    mutationFn: ({ clave, ...admin }) => register(admin, clave),
+    mutationFn: ({ clave, ...admin }) => apiRegister(admin, clave),
     onSuccess: () => navigate("/landing"),
   });
 
@@ -80,217 +83,151 @@ function AdmPage() {
     mutate(state);
   };
 
-  
-  const advertencia= (message:string) => { 
-    toast.warning(message, { 
+  const advertencia = (message: string) => {
+    toast.warning(message, {
       position: "top-center",
-      autoClose:5000,
-      progress:1, 
-      closeOnClick: true, 
-      hideProgressBar: false, 
-      draggable: true
-    })
-  }
-  const validacion = () => { 
-    let result=false; 
-   
-    if ((state.nombre==='' || state.nombre===null) && result===false) { 
-      result=true; 
-      advertencia("El campo Nombre no puede estar vacio")
+      autoClose: 5000,
+      progress: 1,
+      closeOnClick: true,
+      hideProgressBar: false,
+      draggable: true,
+    });
+  };
+  const validacion = () => {
+    let result = false;
+
+    if ((state.nombre === "" || state.nombre === null) && result === false) {
+      result = true;
+      advertencia("El campo Nombre no puede estar vacio");
     }
 
-    if ((state.apellido==='' || state.apellido === null) && result===false) { 
-      result=true
-      advertencia("El campo Apellido no puede estar vacio")
-
+    if (
+      (state.apellido === "" || state.apellido === null) &&
+      result === false
+    ) {
+      result = true;
+      advertencia("El campo Apellido no puede estar vacio");
     }
 
-
-    if ((state.telefono==='' || state.telefono===null) && result===false) { 
-      result=true; 
-      advertencia("El campo telefono no puede estar vacio")
+    if (
+      (state.telefono === "" || state.telefono === null) &&
+      result === false
+    ) {
+      result = true;
+      advertencia("El campo telefono no puede estar vacio");
     }
 
-    if ((state.usuario==='' || state.usuario===null) && result===false) { 
-      result=true 
-      advertencia("El campo Nombre de Usuario no puede estar vacio")
+    if ((state.usuario === "" || state.usuario === null) && result === false) {
+      result = true;
+      advertencia("El campo Nombre de Usuario no puede estar vacio");
     }
 
-    if ((state.correo==='' || state.correo===null) && result===false) { 
-      result=true
-      advertencia("El campo correo electronico no puede estar vacio")
+    if ((state.correo === "" || state.correo === null) && result === false) {
+      result = true;
+      advertencia("El campo correo electronico no puede estar vacio");
     }
 
-    if ((state.clave==='' || state.clave===null) && result===false) { 
-      result=true; 
-      advertencia("El campo constraseña no puede estar vacio")
+    if ((state.clave === "" || state.clave === null) && result === false) {
+      result = true;
+      advertencia("El campo constraseña no puede estar vacio");
     }
-
-
-    
-    }
-    
-  
+  };
 
   return (
     <div className="page">
       <TopMenu />
-      <div className="margen">
-        <h2>Tarjeta de credito</h2>
-        <p>
-          Se factura una cuota cada 30 días. Se puede dar de baja en cualquier
-          momento.
-        </p>
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="margen">
+          <h2>Tarjeta de crédito</h2>
+          <p>
+            Se factura una cuota cada 30 días. Se puede dar de baja en cualquier
+            momento.
+          </p>
+        </div>
+        <div className="formulario">
+          <PaymentForm tarjeta={state.tarjeta} setTarjeta={setTarjeta} />
+        </div>
 
-      <br />
+        <div className="margen">
+          <h2>Cuenta</h2>
+          <p> Ingrese sus datos a usar para iniciar sesión.</p>
+          {isError && (
+            <Alert status="error" margin="20px">
+              Datos incorrectos. Intente de nuevo
+            </Alert>
+          )}
+        </div>
 
-      <div className="formulario">
-        <Form style={{ width: "50%", marginLeft: "4%" }}>
-          <Form.Group>
-            <PaymentForm tarjeta={state.tarjeta} setTarjeta={setTarjeta} />
-          </Form.Group>
-        </Form>
-      </div>
-
-      <div className="margen">
-        <h2>Cuenta</h2>
-        <p> Ingrese sus datos a usar para iniciar sesión.</p>
-        {isError && <Alert variant="danger" dismissible> Datos Incorrectos. Intente de Nuevo</Alert>}
-      </div>
-
-      <br />
-
-      <div className="formulario">
-        <Form style={{ width: "34%" }} onSubmit={handleSubmit}>
-          <Form.Group>
-            <Container>
-              <Row>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingNombre"
-                    label="Nombre"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      name="nombre"
-                      onChange={handleChange}
-                      placeholder="Nombre"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingApellido"
-                    label="Apellido"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      name="apellido"
-                      onChange={handleChange}
-                      placeholder="Apellido"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingTelefono"
-                    label="Teléfono"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      name="telefono"
-                      onChange={handleChange}
-                      placeholder="Teléfono"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingUsuario"
-                    label="Nombre de usuario"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      name="usuario"
-                      onChange={handleChange}
-                      placeholder="Nombre de usuario"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-              </Row>
-              
-              <Row>
-                <Col>
-                
-                  <FloatingLabel
-                    controlId="floatingCorreo"
-                    label="Correo electronico"
-                    className="mb-3"
-                   
-                  >
-                    <Form.Control
-                      type="email"
-                      name="correo"
-                      onChange={handleChange}
-                      placeholder="Correo"
-                      required
-                    />
-                  </FloatingLabel>
-                 
-                </Col>
-              </Row>
-              
-
-              <Row>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingClave"
-                    label="Contraseña"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="password"
-                      name="clave"
-                      onChange={handleChange}
-                      placeholder="Contraseña"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-              </Row>
-              <br />
-            </Container>
-          </Form.Group>
+        <VStack spacing="4" width="400px" justifyContent="center" margin="auto">
+          <HStack>
+            <FormControl
+              variant="floating"
+              id="nombre"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input placeholder="Nombre" name="nombre" />
+              <FormLabel>Nombre</FormLabel>
+            </FormControl>
+            <FormControl
+              variant="floating"
+              id="apellido"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input placeholder="Apellido" name="apellido" />
+              <FormLabel>Apellido</FormLabel>
+            </FormControl>
+          </HStack>
+          <FormControl
+            variant="floating"
+            id="telefono"
+            isRequired
+            onChange={handleChange}
+          >
+            <Input placeholder="0" name="telefono" type="tel" />
+            <FormLabel>Teléfono</FormLabel>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="usuario"
+            isRequired
+            onChange={handleChange}
+          >
+            <Input placeholder="Usuario" name="usuario" />
+            <FormLabel>Nombre de usuario</FormLabel>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="correo"
+            isRequired
+            onChange={handleChange}
+          >
+            <Input placeholder="abc@ejemplo.com" type="email" name="correo" />
+            <FormLabel>Correo electrónico</FormLabel>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="clave"
+            isRequired
+            onChange={handleChange}
+          >
+            <Input name="clave" placeholder=" " type="password" />
+            <FormLabel>Contraseña</FormLabel>
+          </FormControl>
 
           <div className="centrado">
-            <button
+            <Button
               type="submit"
               className="btn btn-danger"
-              style={{ backgroundColor: "#249AD5", borderColor: "#249AD5" }}
               onClick={validacion}
             >
               Registrarse
-            </button>
-            
+            </Button>
           </div>
-        </Form>
-      </div>
-      <ToastContainer/>
+        </VStack>
+      </form>
+      <ToastContainer />
 
       <Modal
         className="modal"

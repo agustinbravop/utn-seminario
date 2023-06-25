@@ -31,9 +31,8 @@ PORT=3001
 3. Obtener las dependencias:
 
 ```
-cd backend
 npm install
-npx prisma generate dev
+npx prisma migrate dev
 ```
 
 4. Levantar el servidor:

@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  HStack,
+  Heading,
+  Icon,
+  Text,
+} from "@chakra-ui/react";
 import TopMenu from "../../components/TopMenu";
-import { Rocket } from "react-bootstrap-icons";
-import { Shop } from "react-bootstrap-icons";
-import { Buildings } from "react-bootstrap-icons";
+import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { getSuscripciones } from "../../utils/api";
 import { Suscripcion } from "../../types";
 import { useNavigate } from "react-router";
@@ -11,9 +17,9 @@ import { useQuery } from "@tanstack/react-query";
 
 //revisar iconos
 const iconos = [
-  <Shop fill="#47A992" size={90} />,
-  <Buildings fill="#47A992" size={90} />,
-  <Rocket fill="#47A992" size={90} />,
+  <Icon as={BsShop} fill="#47A992" fontSize={90} />,
+  <Icon as={BsBuildings} fill="#47A992" fontSize={90} />,
+  <Icon as={BsRocket} fill="#47A992" fontSize={90} />,
 ];
 
 function SuscriptionOptionPage() {
@@ -40,28 +46,30 @@ function SuscriptionOptionPage() {
       <Card
         bg="light"
         key="light"
-        text="dark"
-        style={{ width: "14rem" }}
+        color="dark"
+        width="14rem"
         className="mb-2 mt-4 pt-2"
       >
-        <Card.Header style={{ textAlign: "center" }}>{s.icono}</Card.Header>
-        <Card.Body style={{ textAlign: "center" }}>
-          <Card.Title>{s.nombre}</Card.Title>
-          <Card.Text>
-            <b style={{ fontSize: "30px" }}>${s.costoMensual}</b>
-            <br />
-            por mes <br />
-            {s.limiteEstablecimientos} establecimientos
-          </Card.Text>
-          <button
+        <CardHeader margin="auto">{s.icono}</CardHeader>
+        <CardBody style={{ textAlign: "center" }}>
+          <Heading size="md">{s.nombre}</Heading>
+          <Text fontSize="30px" marginBottom="0px">
+            ${s.costoMensual}
+          </Text>
+          <Text>por mes</Text>
+          <Text>
+            {s.limiteEstablecimientos} establecimiento
+            {s.limiteEstablecimientos === 1 ? "" : "s"}
+          </Text>
+          <Button
             type="button"
             className="btn btn-outline-danger"
             style={{ marginLeft: "10px" }}
             onClick={() => navigate(`/register?idSuscripcion=${s.id}`)}
           >
             Continuar
-          </button>
-        </Card.Body>
+          </Button>
+        </CardBody>
       </Card>
     );
   });
@@ -69,6 +77,8 @@ function SuscriptionOptionPage() {
   return (
     <div>
       <TopMenu />
+      <HStack justifyContent="space-around">{cards}</HStack>
+
       <div
         className="row"
         style={{
@@ -76,9 +86,7 @@ function SuscriptionOptionPage() {
           justifyContent: "space-around",
           marginTop: "5px",
         }}
-      >
-        {cards}
-      </div>
+      ></div>
     </div>
   );
 }

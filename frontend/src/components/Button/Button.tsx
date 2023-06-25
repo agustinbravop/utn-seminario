@@ -6,10 +6,6 @@ type ButtonProps = {
 };
 
 function Button({ style, children }: ButtonProps) {
-  return (
-    <button style={style}>
-        {children}
-    </button>
-  )
+  return <button style={style}>{children}</button>;
 }
 export default Button;
