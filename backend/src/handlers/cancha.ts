@@ -1,5 +1,6 @@
 import { CanchaService } from "../services/cancha";
 import { RequestHandler } from "express";
+import { Cancha } from "../models/cancha";
 
 export class CanchaHandler { 
     private service:CanchaService
@@ -31,6 +32,23 @@ export class CanchaHandler {
                 (cancha)=>res.status(200).json(cancha), 
                 (err)=>res.status(err.status).json(err)
             )
+        }
+    }
+
+    crearCancha(): RequestHandler { 
+        return async (req, res)=> { 
+           const cancha: Cancha= { 
+            ...req.body
+
+           }
+           
+           const imagen=req.file; 
+           const idEst=Number(req.params['id'])
+           const cancha_post=await this.service.crearCancha(cancha,idEst,imagen); 
+           cancha_post.match( 
+            (cancha_post)=>res.status(200).json(cancha_post), 
+            (err)=>res.status(err.status).json(err)
+           )
         }
     }
 }
