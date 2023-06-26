@@ -4,7 +4,8 @@ import { Result,ok,err } from 'neverthrow';
 import { PrismaClient} from '@prisma/client';
 
 export interface CanchaRepository{ 
-    getCanchaByEstablecimientoByID(idEst:number):Promise<Result<Cancha[], ApiError>>
+    getCanchaByEstablecimientoByID(idEst:number):Promise<Result<Cancha[], ApiError>>; 
+    getCanchaByID(idCancha:number): Promise<Result<Cancha, ApiError>>; 
 }
 
 export class PrismaCanchaRepository implements CanchaRepository { 
@@ -29,5 +30,19 @@ export class PrismaCanchaRepository implements CanchaRepository {
         }catch(e) { 
             return err(new ApiError(500, "Error, no se pudo listar las canchas"))
         }
+    }
+
+    async getCanchaByID(idCancha: number): Promise<Result<Cancha, ApiError>> {
+        try { 
+            const cancha=await this.prisma.cancha.findUniqueOrThrow({ 
+                where: { 
+                    id:idCancha
+                }
+            }); 
+            return ok(cancha)
+        }catch(e) { 
+            return err(new ApiError(500, "Error datos ingresado incorrectamente. Intente nuevamente"))
+        }
+        
     }
 }

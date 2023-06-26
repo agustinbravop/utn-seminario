@@ -4,7 +4,8 @@ import { ApiError } from "../utils/apierrors";
 import { CanchaRepository } from "../repositories/cancha";
 
 export interface CanchaService { 
-    getCanchaByEstablecimientoByID(idEst:number):Promise<Result<Cancha[],ApiError>>
+    getCanchaByEstablecimientoByID(idEst:number):Promise<Result<Cancha[],ApiError>>; 
+    getCanchaByID(idCancha:number):Promise<Result<Cancha,ApiError>>; 
 }
 
 export class CanchaServiceimpl implements CanchaService { 
@@ -16,5 +17,9 @@ export class CanchaServiceimpl implements CanchaService {
 
     async getCanchaByEstablecimientoByID(idEst: number): Promise<Result<Cancha[], ApiError>> {
         return await this.repo.getCanchaByEstablecimientoByID(idEst)
+    }
+
+    async getCanchaByID(idCancha: number): Promise<Result<Cancha, ApiError>> {
+        return await this.repo.getCanchaByID(idCancha); 
     }
 }

@@ -12,7 +12,8 @@ export function CanchaRouter(prismaClient:PrismaClient):Router {
     const service=new CanchaServiceimpl(repository)
     const handler=new CanchaHandler(service) 
 
-    router.get('/establecimiento/:id', handler.getCanchaByEstablecimientoByID())
+    router.get('/establecimiento/:id', handler.getCanchaByEstablecimientoByID()); 
+    router.get('/:id_cancha', handler.getCanchaByID()); 
 
     return router 
 }

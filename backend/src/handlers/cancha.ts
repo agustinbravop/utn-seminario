@@ -20,4 +20,17 @@ export class CanchaHandler {
             )
         }
     }
+
+    getCanchaByID():RequestHandler { 
+        return async (req, res)=> { 
+            const idCancha=Number(req.params['id_cancha']); 
+
+            const cancha=await this.service.getCanchaByID(idCancha); 
+
+            cancha.match( 
+                (cancha)=>res.status(200).json(cancha), 
+                (err)=>res.status(err.status).json(err)
+            )
+        }
+    }
 }
