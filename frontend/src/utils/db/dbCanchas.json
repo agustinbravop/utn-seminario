@@ -1,0 +1,33 @@
+[
+    {
+        "ubicación": "Av. Sarmiento 2201 3400, W3400 Corrientes",
+        "correo": "huracancorrientes@gmail.com",
+        "telefono": "0379 443-5519"
+    },
+    [
+        {
+            "id": 1,
+            "name": "Cancha 1",
+            "image": "img/padel-lacortada.jpg",
+            "disciplinas": "Basket - Voley",
+            "horario": "10hs a 17hs",
+            "precio": 1000
+        },
+        {
+            "id": 2,
+            "name": "Cancha 2",
+            "image": "img/padel-lacortada.jpg",
+            "disciplinas": "Tenis",
+            "horario": "10hs a 17hs",
+            "precio": 1000
+        },
+        {
+            "id": 3,
+            "name": "Cancha 3",
+            "image": "img/padel-lacortada.jpg",
+            "disciplinas": "Tenis",
+            "horario": "8hs a 21hs",
+            "precio": 700
+        }
+    ]
+]
