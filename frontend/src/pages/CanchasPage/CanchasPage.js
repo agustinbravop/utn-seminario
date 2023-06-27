@@ -15,11 +15,11 @@ export default function CanchasPage() {
 
       <Box display="flex" alignItems="center" justifyContent='center' flexDirection="column">
         <Heading size="xl" margin="50px">
-          Club Huracán
+          {canchas.result && canchas.result.record[0] && canchas.result.record[0].nombre}
         </Heading>
         <Card width='50vw' >
           <CardBody>
-            <Text><b>Ubicación:</b> {canchas.result && canchas.result.record[0] && canchas.result.record[0].ubicación}</Text>
+            <Text><b>Ubicación:</b> {canchas.result && canchas.result.record[0] && canchas.result.record[0].ubicacion}</Text>
             <Text><b>Correo de contacto:</b> {canchas.result && canchas.result.record[0] && canchas.result.record[0].correo}</Text>
             <Text><b>Número de télefono:</b> {canchas.result && canchas.result.record[0] && canchas.result.record[0].telefono}</Text>
           </CardBody>
@@ -44,10 +44,10 @@ export default function CanchasPage() {
             Agregar cancha +
           </Button>
         </Box>
+        <Canchas {...canchas} />
       </Box>
 
-
-      <Canchas {...canchas} />
+      
       <br />
     </div>
   );
