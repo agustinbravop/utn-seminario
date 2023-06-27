@@ -15,12 +15,14 @@ import {
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router";
 
 export default function Cancha(props) {
   const { cancha } = props;
+  const navigate = useNavigate();
 
   return (
-    <Card maxWidth="xs" width='20vw'>
+    <Card maxWidth="xs" width='20vw' onClick={()=>{alert('Cancha')}} style={{ cursor: 'pointer'}}>
       <Image
         className="image-size"
         src={`${BASE_PATH}/${cancha.image}`}
