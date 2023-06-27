@@ -1,47 +1,41 @@
 import { PrismaClient } from "@prisma/client";
 import { ApiError } from "../utils/apierrors.js";
 import { Result, err, ok } from "neverthrow";
-
-const prisma = new PrismaClient();
+import { Administrador } from "../models/administrador.js";
 
 export interface AdministradorRepository {
-  getAdministradorByID(id: number): Promise<Result<Number, ApiError>>;
+  getAdministradorByID(id: number): Promise<Result<Administrador, ApiError>>;
 }
 
-export class PrismaAdministrador implements AdministradorRepository {
+export class PrismaAdministradorRepository implements AdministradorRepository {
   private prisma: PrismaClient;
 
   constructor(client: PrismaClient) {
     this.prisma = client;
   }
 
-  async getAdministradorByID(id: number): Promise<Result<Number, ApiError>> {
+  async getAdministradorByID(
+    id: number
+  ): Promise<Result<Administrador, ApiError>> {
     try {
-      const dbAdmin = await this.prisma.administrador.findUniqueOrThrow({
+      const dbAdmin = await this.prisma.administrador.findUnique({
         where: {
           id: id,
         },
-        select: {
-          idSuscripcion: true,
+        include: {
+          tarjeta: true,
+          suscripcion: true,
         },
       });
-      return ok(dbAdmin.idSuscripcion);
+
+      if (dbAdmin === null) {
+        return err(new ApiError(404, "No existe administrador con id " + id));
+      }
+
+      return ok(dbAdmin);
     } catch (e) {
-      return err(new ApiError(500, "El Administrador Buscado no existe"));
+      console.error(e);
+      return err(new ApiError(500, "No se pudo buscar el administrador"));
     }
   }
-}
-
-export async function getSuscripcionByAdminID(
-  id: number
-): Promise<number | undefined> {
-  const admin = await prisma.administrador.findFirst({
-    where: {
-      id: Number(id),
-    },
-    select: {
-      idSuscripcion: true,
-    },
-  });
-  return admin?.idSuscripcion;
 }
