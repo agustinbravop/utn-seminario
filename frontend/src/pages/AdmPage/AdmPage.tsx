@@ -1,16 +1,11 @@
-import React from "react";
 import "./AdmPage.css";
 import PaymentForm from "../../components/PaymentForm/PaymentForm";
-import Modal from "react-overlays/Modal";
-import { useState } from "react";
-import { JSX } from "react/jsx-runtime";
 import { Administrador, Tarjeta } from "../../types";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError, apiRegister } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import * as Yup from "yup";
 import {
   FormControl,
   FormLabel,
@@ -19,118 +14,104 @@ import {
   VStack,
   Alert,
   Button,
+  FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
+import { useFormik } from "formik";
 
 type FormState = Administrador & {
   clave: string;
 };
 
 function AdmPage() {
-  const [showModal, setShowModal] = useState(false);
-  const renderBackdrop = (
-    props: JSX.IntrinsicAttributes &
-      React.ClassAttributes<HTMLDivElement> &
-      React.HTMLAttributes<HTMLDivElement>
-  ) => <div className="backdrop" {...props} />;
-  var handleClose = () => setShowModal(false);
-  var handleSuccess = () => {
-    console.log(":)");
-  };
   const { search } = useLocation();
   const idSuscripcion = Number(
     new URLSearchParams(search).get("idSuscripcion")
   );
   const navigate = useNavigate();
+  const toast = useToast();
 
-  const [state, setState] = useState<FormState>({
-    nombre: "",
-    apellido: "",
-    usuario: "",
-    telefono: "",
-    clave: "",
-    correo: "",
-    tarjeta: {
-      cvv: 0,
-      vencimiento: "",
-      nombre: "",
-      numero: "",
-    },
-    suscripcion: {
-      id: idSuscripcion,
-      nombre: "",
-      limiteEstablecimientos: 0,
-      costoMensual: 0,
-    },
-  });
-
-  const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
+  const { mutate, isLoading, isError } = useMutation<
+    Administrador,
+    ApiError,
+    FormState
+  >({
     mutationFn: ({ clave, ...admin }) => apiRegister(admin, clave),
-    onSuccess: () => navigate("/landing"),
+    onSuccess: () => {
+      toast({
+        title: "Cuenta registrada correctamente.",
+        description: `Inicie sesión para continuar.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al registrar su cuenta.",
+        description: `Intente de nuevo.`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
   });
+
+  const { values, setValues, errors, handleSubmit, handleChange } =
+    useFormik<FormState>({
+      initialValues: {
+        nombre: "",
+        apellido: "",
+        usuario: "",
+        telefono: "",
+        clave: "",
+        correo: "",
+        tarjeta: {
+          cvv: 0,
+          vencimiento: "",
+          nombre: "",
+          numero: "",
+        },
+        suscripcion: {
+          id: idSuscripcion,
+          nombre: "",
+          limiteEstablecimientos: 0,
+          costoMensual: 0,
+        },
+      },
+      onSubmit: (values) => mutate(values),
+      validationSchema: Yup.object({
+        nombre: Yup.string().required("Obligatorio"),
+        apellido: Yup.string().required("Obligatorio"),
+        usuario: Yup.string().required("Obligatorio"),
+        telefono: Yup.string().required("Obligatorio"),
+        clave: Yup.string()
+          .min(8, "La contraseña debe tener al menos 8 caracteres")
+          .required("Obligatorio"),
+        correo: Yup.string()
+          .email("Formato de correo inválido")
+          .required("Obligatorio"),
+        tarjeta: Yup.object({
+          cvv: Yup.number()
+            .min(100, "Solo 3 o 4 dígitos")
+            .max(9_999, "Solo 3 o 4 dígitos"),
+          vencimiento: Yup.string().matches(
+            /\d\d\/\d\d\d?\d?/,
+            "Usar formato MM/AA o MM/AAAA"
+          ),
+          nombre: Yup.string().required("Obligatorio"),
+          numero: Yup.string()
+            .matches(/[0-9]+/, "Debe ser un número")
+            .min(15, "Deben ser entre 15 y 19 dígitos")
+            .max(19, "Deben ser entre 15 y 19 dígitos")
+            .required("Obligatorio"),
+        }),
+      }),
+    });
 
   const setTarjeta = (t: Tarjeta) => {
-    setState({ ...state, tarjeta: t });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    console.log(state);
-    setState({ ...state, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate(state);
-  };
-
-  const advertencia = (message: string) => {
-    toast.warning(message, {
-      position: "top-center",
-      autoClose: 5000,
-      progress: 1,
-      closeOnClick: true,
-      hideProgressBar: false,
-      draggable: true,
-    });
-  };
-  const validacion = () => {
-    let result = false;
-
-    if ((state.nombre === "" || state.nombre === null) && result === false) {
-      result = true;
-      advertencia("El campo Nombre no puede estar vacio");
-    }
-
-    if (
-      (state.apellido === "" || state.apellido === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El campo Apellido no puede estar vacio");
-    }
-
-    if (
-      (state.telefono === "" || state.telefono === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El campo telefono no puede estar vacio");
-    }
-
-    if ((state.usuario === "" || state.usuario === null) && result === false) {
-      result = true;
-      advertencia("El campo Nombre de Usuario no puede estar vacio");
-    }
-
-    if ((state.correo === "" || state.correo === null) && result === false) {
-      result = true;
-      advertencia("El campo correo electronico no puede estar vacio");
-    }
-
-    if ((state.clave === "" || state.clave === null) && result === false) {
-      result = true;
-      advertencia("El campo constraseña no puede estar vacio");
-    }
+    setValues({ ...values, tarjeta: t });
   };
 
   return (
@@ -145,17 +126,16 @@ function AdmPage() {
           </p>
         </div>
         <div className="formulario">
-          <PaymentForm tarjeta={state.tarjeta} setTarjeta={setTarjeta} />
+          <PaymentForm
+            tarjeta={values.tarjeta}
+            setTarjeta={setTarjeta}
+            errors={errors.tarjeta}
+          />
         </div>
 
         <div className="margen">
           <h2>Cuenta</h2>
           <p> Ingrese sus datos a usar para iniciar sesión.</p>
-          {isError && (
-            <Alert status="error" margin="20px">
-              Datos incorrectos. Intente de nuevo
-            </Alert>
-          )}
         </div>
 
         <VStack spacing="4" width="400px" justifyContent="center" margin="auto">
@@ -164,128 +144,113 @@ function AdmPage() {
               variant="floating"
               id="nombre"
               isRequired
-              onChange={handleChange}
+              isInvalid={!!errors.nombre && !!values.nombre}
             >
-              <Input placeholder="Nombre" name="nombre" />
+              <Input
+                value={values.nombre}
+                onChange={handleChange}
+                placeholder="Nombre"
+                name="nombre"
+              />
               <FormLabel>Nombre</FormLabel>
+              <FormErrorMessage>{errors.nombre}</FormErrorMessage>
             </FormControl>
             <FormControl
               variant="floating"
               id="apellido"
               isRequired
-              onChange={handleChange}
+              isInvalid={!!errors.apellido && !!values.apellido}
             >
-              <Input placeholder="Apellido" name="apellido" />
+              <Input
+                value={values.apellido}
+                onChange={handleChange}
+                placeholder="Apellido"
+                name="apellido"
+              />
               <FormLabel>Apellido</FormLabel>
+              <FormErrorMessage>{errors.apellido}</FormErrorMessage>
             </FormControl>
           </HStack>
           <FormControl
             variant="floating"
             id="telefono"
             isRequired
-            onChange={handleChange}
+            isInvalid={!!errors.telefono && !!values.telefono}
           >
-            <Input placeholder="0" name="telefono" type="tel" />
+            <Input
+              value={values.telefono}
+              onChange={handleChange}
+              placeholder="0"
+              name="telefono"
+              type="tel"
+            />
             <FormLabel>Teléfono</FormLabel>
+            <FormErrorMessage>{errors.telefono}</FormErrorMessage>
           </FormControl>
           <FormControl
             variant="floating"
             id="usuario"
             isRequired
-            onChange={handleChange}
+            isInvalid={!!errors.usuario && !!values.usuario}
           >
-            <Input placeholder="Usuario" name="usuario" />
+            <Input
+              value={values.usuario}
+              onChange={handleChange}
+              placeholder="Usuario"
+              name="usuario"
+            />
             <FormLabel>Nombre de usuario</FormLabel>
+            <FormErrorMessage>{errors.usuario}</FormErrorMessage>
           </FormControl>
           <FormControl
             variant="floating"
             id="correo"
             isRequired
-            onChange={handleChange}
+            isInvalid={!!errors.correo && !!values.correo}
           >
-            <Input placeholder="abc@ejemplo.com" type="email" name="correo" />
+            <Input
+              value={values.correo}
+              onChange={handleChange}
+              placeholder="abc@ejemplo.com"
+              type="email"
+              name="correo"
+            />
             <FormLabel>Correo electrónico</FormLabel>
+            <FormErrorMessage>{errors.correo}</FormErrorMessage>
           </FormControl>
           <FormControl
             variant="floating"
             id="clave"
             isRequired
-            onChange={handleChange}
+            isInvalid={!!errors.clave && !!values.clave}
           >
-            <Input name="clave" placeholder=" " type="password" />
+            <Input
+              value={values.clave}
+              onChange={handleChange}
+              name="clave"
+              placeholder=" "
+              type="password"
+            />
             <FormLabel>Contraseña</FormLabel>
+            <FormErrorMessage>{errors.clave}</FormErrorMessage>
           </FormControl>
 
           <div className="centrado">
             <Button
               type="submit"
               className="btn btn-danger"
-              onClick={validacion}
+              isLoading={isLoading}
             >
               Registrarse
             </Button>
           </div>
+          {isError && (
+            <Alert status="error">
+              Error al intentar registrar su cuenta. Intente de nuevo
+            </Alert>
+          )}
         </VStack>
       </form>
-      <ToastContainer />
-
-      <Modal
-        className="modal"
-        show={showModal}
-        onHide={handleClose}
-        renderBackdrop={renderBackdrop}
-      >
-        <div>
-          <div className="modal-header">
-            <div className="modal-title">Confirmar Cancelación</div>
-            <div>
-              <span className="close-button" onClick={handleClose}>
-                x
-              </span>
-            </div>
-          </div>
-          <div className="modal-desc">
-            <p>¿Desea cancelar?</p>
-          </div>
-          <div className="modal-footer">
-            <button className="secondary-button" onClick={handleClose}>
-              Cancelar
-            </button>
-            <button className="primary-button" onClick={handleSuccess}>
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      <Modal
-        className="modal"
-        show={showModal}
-        onHide={handleClose}
-        renderBackdrop={renderBackdrop}
-      >
-        <div>
-          <div className="modal-header">
-            <div className="modal-title">Confirmar Cancelación</div>
-            <div>
-              <span className="close-button" onClick={handleClose}>
-                x
-              </span>
-            </div>
-          </div>
-          <div className="modal-desc">
-            <p>¿Desea cancelar?</p>
-          </div>
-          <div className="modal-footer">
-            <button className="secondary-button" onClick={handleClose}>
-              Cancelar
-            </button>
-            <button className="primary-button" onClick={handleSuccess}>
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }

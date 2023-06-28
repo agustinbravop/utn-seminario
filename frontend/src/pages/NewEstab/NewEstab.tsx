@@ -1,21 +1,24 @@
 import "./NewEstab.css";
-import TopMenu from "../../components/TopMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 import { ApiError, crearEstablecimiento } from "../../utils/api";
 import { Establecimiento } from "../../types";
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import {
+  Alert,
   Button,
   Container,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Heading,
   Input,
-  Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 type FormState = Establecimiento & {
   imagen?: File;
@@ -24,40 +27,67 @@ type FormState = Establecimiento & {
 function NewEstab() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [state, setState] = useState<FormState>({
-    id: 0,
-    nombre: "",
-    telefono: "",
-    direccion: "",
-    localidad: "",
-    provincia: "",
-    urlImagen: "",
-    correo: "",
-    idAdministrador: Number(id),
-    horariosDeAtencion: "",
-    imagen: undefined,
+  const toast = useToast();
+  const { mutate, isLoading, isError } = useMutation<
+    Establecimiento,
+    ApiError,
+    FormState
+  >({
+    mutationFn: ({ imagen, ...admin }) => crearEstablecimiento(admin, imagen),
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento creado.",
+        description: `Establecimiento registrado correctamente.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear el establecimiento.",
+        description: `Intente de nuevo.`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
   });
 
-  const { mutate } = useMutation<Establecimiento, ApiError, FormState>({
-    mutationFn: ({ imagen, ...admin }) => crearEstablecimiento(admin, imagen),
-    onSuccess: () => navigate(-1),
-  });
+  const { values, setValues, errors, handleSubmit, handleChange } =
+    useFormik<FormState>({
+      initialValues: {
+        id: 0,
+        nombre: "",
+        telefono: "",
+        direccion: "",
+        localidad: "",
+        provincia: "",
+        urlImagen: "",
+        correo: "",
+        idAdministrador: Number(id),
+        horariosDeAtencion: "",
+        imagen: undefined,
+      },
+      onSubmit: (values) => mutate(values),
+      validationSchema: Yup.object({
+        nombre: Yup.string().required("Obligatorio"),
+        telefono: Yup.string().required("Obligatorio"),
+        direccion: Yup.string().required("Obligatorio"),
+        localidad: Yup.string().required("Obligatorio"),
+        provincia: Yup.string().required("Obligatorio"),
+        correo: Yup.string()
+          .email("Formato de correo inválido")
+          .required("Obligatorio"),
+      }),
+    });
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
+    setValues({
+      ...values,
       imagen: e.target.files ? e.target.files[0] : undefined,
     });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setState({ ...state, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate(state);
   };
 
   return (
@@ -74,72 +104,109 @@ function NewEstab() {
           <VStack spacing="4">
             <FormControl
               variant="floating"
-              id="clave"
+              id="nombre"
               isRequired
-              onChange={handleChange}
+              isInvalid={!!errors.nombre && !!values.nombre}
             >
-              <Input name="nombre" placeholder="Nombre" />
+              <Input
+                onChange={handleChange}
+                value={values.nombre}
+                name="nombre"
+                placeholder="Nombre"
+              />
               <FormLabel>Nombre del establecimiento</FormLabel>
+              <FormErrorMessage>{errors.nombre}</FormErrorMessage>
             </FormControl>
             <FormControl
               variant="floating"
               id="correo"
               isRequired
-              onChange={handleChange}
+              isInvalid={!!errors.correo && !!values.correo}
             >
-              <Input name="correo" type="email" placeholder="abc@ejemplo.com" />
+              <Input
+                onChange={handleChange}
+                value={values.correo}
+                name="correo"
+                type="email"
+                placeholder="abc@ejemplo.com"
+              />
               <FormLabel>Correo del establecimiento</FormLabel>
+              <FormErrorMessage>{errors.correo}</FormErrorMessage>
             </FormControl>
             <FormControl
               variant="floating"
               id="direccion"
               isRequired
-              onChange={handleChange}
+              isInvalid={!!errors.direccion && !!values.direccion}
             >
-              <Input name="direccion" placeholder="Dirección" />
+              <Input
+                onChange={handleChange}
+                value={values.direccion}
+                name="direccion"
+                placeholder="Dirección"
+              />
               <FormLabel>Dirección</FormLabel>
+              <FormErrorMessage>{errors.direccion}</FormErrorMessage>
             </FormControl>
             <HStack>
               <FormControl
                 variant="floating"
                 id="localidad"
                 isRequired
-                onChange={handleChange}
+                isInvalid={!!errors.localidad && !!values.localidad}
               >
-                <Input name="localidad" placeholder="Localidad" />
+                <Input
+                  onChange={handleChange}
+                  value={values.localidad}
+                  name="localidad"
+                  placeholder="Localidad"
+                />
                 <FormLabel>Localidad</FormLabel>
+                <FormErrorMessage>{errors.localidad}</FormErrorMessage>
               </FormControl>
               <FormControl
                 variant="floating"
                 id="provincia"
                 isRequired
-                onChange={handleChange}
+                isInvalid={!!errors.provincia && !!values.provincia}
               >
-                <Input name="provincia" placeholder="Provincia" />
+                <Input
+                  onChange={handleChange}
+                  value={values.provincia}
+                  name="provincia"
+                  placeholder="Provincia"
+                />
                 <FormLabel>Provincia</FormLabel>
+                <FormErrorMessage>{errors.provincia}</FormErrorMessage>
               </FormControl>
             </HStack>
             <FormControl
               variant="floating"
               id="telefono"
               isRequired
-              onChange={handleChange}
+              isInvalid={!!errors.telefono && !!values.telefono}
             >
-              <Input name="telefono" placeholder="Teléfono" type="tel" />
+              <Input
+                onChange={handleChange}
+                value={values.telefono}
+                name="telefono"
+                placeholder="Teléfono"
+                type="tel"
+              />
               <FormLabel>Teléfono</FormLabel>
+              <FormErrorMessage>{errors.telefono}</FormErrorMessage>
             </FormControl>
             <FormControl>
-              <FormControl
-                variant="floating"
-                id="horariosDeAtencion"
-                onChange={handleChange}
-              >
+              <FormControl variant="floating" id="horariosDeAtencion">
                 <Input
+                  onChange={handleChange}
+                  value={values.horariosDeAtencion}
                   name="horariosDeAtencion"
                   placeholder="8:00-12:00"
                   type="text"
                 />
                 <FormLabel>Horarios de Atención</FormLabel>
+                <FormErrorMessage>{errors.horariosDeAtencion}</FormErrorMessage>
               </FormControl>
               <FormLabel marginTop="10px" marginLeft="10px">
                 Imagen
@@ -161,11 +228,20 @@ function NewEstab() {
                 }}
               />
             </FormControl>
-          </VStack>
 
-          <Button type="submit" className="btn btn-danger">
-            Crear
-          </Button>
+            <Button
+              type="submit"
+              className="btn btn-danger"
+              isLoading={isLoading}
+            >
+              Crear
+            </Button>
+            {isError && (
+              <Alert status="error">
+                Error al intentar registrar su cuenta. Intente de nuevo
+              </Alert>
+            )}
+          </VStack>
         </Container>
       </form>
     </div>

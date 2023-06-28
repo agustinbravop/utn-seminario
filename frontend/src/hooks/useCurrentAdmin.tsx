@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useContext, createContext, useState } from "react";
 import { Administrador } from "../types";
 import {
   readLocalStorage,
@@ -17,17 +17,17 @@ interface CurrentAdminProviderProps {
   children?: React.ReactNode;
 }
 
-export const CurrentAdminContext = React.createContext<ICurrentAdminContext>({
+const CurrentAdminContext = createContext<ICurrentAdminContext>({
   login: (correoOUsuario, clave) => Promise.reject(),
   logout: () => {},
 });
 
 export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
-  const [currentAdmin, setCurrentAdmin] = React.useState<
-    Administrador | undefined
-  >(undefined);
+  const [currentAdmin, setCurrentAdmin] = useState<Administrador | undefined>(
+    undefined
+  );
 
-  useEffect(() => {
+  const updateCurrentAdmin = () => {
     const token = readLocalStorage<JWT>("token");
     if (token) {
       const { usuario } = jwtDecode(token.token) as { usuario: Administrador };
@@ -35,6 +35,21 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     } else {
       setCurrentAdmin(undefined);
     }
+  };
+
+  useEffect(() => {
+    updateCurrentAdmin();
+
+    // Responde cuando una request fue rechazada con un status `401 Unauthorized`.
+    function handleTokenUpdate(ev: StorageEvent) {
+      if (ev.key === "token") {
+        updateCurrentAdmin();
+      }
+    }
+    window.addEventListener("storage", handleTokenUpdate);
+    return () => {
+      window.removeEventListener("storage", handleTokenUpdate);
+    };
   }, []);
 
   const login = async (correoOUsuario: string, clave: string) => {
@@ -56,4 +71,4 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   );
 }
 
-export const useCurrentAdmin = () => React.useContext(CurrentAdminContext);
+export const useCurrentAdmin = () => useContext(CurrentAdminContext);

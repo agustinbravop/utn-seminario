@@ -8,7 +8,7 @@ export class AdministradorHandler {
     this.service = client;
   }
 
-  getAdministradorById(): RequestHandler {
+  getAdministradorByID(): RequestHandler {
     return async (req, res) => {
       const idAdmin = Number(req.params["id"]);
       const result = await this.service.getAdministradorByID(idAdmin);

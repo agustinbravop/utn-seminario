@@ -8,7 +8,7 @@ import {
   Icon,
   Text,
 } from "@chakra-ui/react";
-import TopMenu from "../../components/TopMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { getSuscripciones } from "../../utils/api";
 import { Suscripcion } from "../../types";

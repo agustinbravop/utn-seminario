@@ -1,6 +1,6 @@
 import React from "react";
 import Title from "../../components/Title/Title";
-import TopMenu from "../../components/TopMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 
 function NotFound() {
   return (
