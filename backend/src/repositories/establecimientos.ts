@@ -9,12 +9,16 @@ export interface EstablecimientoRepository {
   crearEstablecimiento(
     est: Establecimiento
   ): Promise<Result<Establecimiento, ApiError>>;
+<<<<<<< HEAD
   getByAdministradorID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>>;
   getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
   getEstablecimientoByIDByAdminID(idAdmin:number, idEstablecimiento:number):Promise<Result<Establecimiento,ApiError>>;
   putEstablecimientoByAdminIDByID(est:Establecimiento, idEst:number):Promise<Result<Establecimiento,ApiError>>
+=======
+  getByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>>;
+>>>>>>> 864bc67d86a3944c8a491f418f84937631672d97
 }
 
 export class PrismaEstablecimientoRepository
@@ -50,17 +54,12 @@ export class PrismaEstablecimientoRepository
       });
       return ok(this.toModel(dbEst));
     } catch (e) {
-      console.log(e);
-      return err(
-        new ApiError(
-          500,
-          "No se pudo registrar el establecimiento, el Administrador Ingresado no existe"
-        )
-      );
+      console.error(e);
+      return err(new ApiError(500, "No se pudo crear el establecimiento"));
     }
   }
 
-  async getByAdministradorID(
+  async getByAdminID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>> {
     try {
@@ -74,7 +73,11 @@ export class PrismaEstablecimientoRepository
 
       return ok(establecimientos);
     } catch (e) {
+<<<<<<< HEAD
      
+=======
+      console.error(e);
+>>>>>>> 864bc67d86a3944c8a491f418f84937631672d97
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
   }

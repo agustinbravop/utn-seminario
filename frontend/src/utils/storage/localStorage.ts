@@ -17,9 +17,25 @@ export function readLocalStorage<T>(key: string): T | null {
  * @param {object} value objeto a guardar. Si es null, se limpia el valor guardado.
  */
 export function writeLocalStorage(key: string, value: object | null) {
+  // Retrieve old value before we store the new one
+  const oldValue = localStorage.getItem(key);
+  let newValue;
   if (value === null) {
+    newValue = null;
     localStorage.removeItem(key);
   } else {
-    localStorage.setItem(key, JSON.stringify(value));
+    newValue = JSON.stringify(value);
+    localStorage.setItem(key, newValue);
   }
+
+  // Manually fire a "storage" event so this window is alerted. On its own,
+  // localStorage.setItem() only fires a "storage" event for other tabs.
+  const e = new StorageEvent("storage", {
+    storageArea: window.localStorage,
+    key,
+    oldValue,
+    newValue,
+    url: window.location.href,
+  });
+  window.dispatchEvent(e);
 }
