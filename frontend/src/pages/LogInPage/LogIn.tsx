@@ -26,7 +26,11 @@ interface LoginState {
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useCurrentAdmin();
-  const { mutate, isLoading, isError } = useMutation<Administrador, ApiError, LoginState>({
+  const { mutate, isLoading, isError } = useMutation<
+    Administrador,
+    ApiError,
+    LoginState
+  >({
     mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
     onSuccess: (admin) => navigate(`/administrador/${admin.id}`),
   });

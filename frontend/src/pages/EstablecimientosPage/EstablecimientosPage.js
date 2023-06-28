@@ -17,7 +17,7 @@ export default function EstablecimientosPage() {
       <Button
         className="btn-agregarestablecimiento"
         onClick={() => navigate("nuevoEstablecimiento")}
-        variant='outline'
+        variant="outline"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -34,8 +34,8 @@ export default function EstablecimientosPage() {
       <Button
         className="btn-agregarestablecimiento"
         onClick={() => navigate("perfil")}
-        leftIcon={<SettingsIcon/>}
-        variant='outline'
+        leftIcon={<SettingsIcon />}
+        variant="outline"
       >
         Perfil
       </Button>

@@ -7,9 +7,7 @@ export interface EstablecimientoRepository {
   crearEstablecimiento(
     est: Establecimiento
   ): Promise<Result<Establecimiento, ApiError>>;
-  getByAdminID(
-    idAdmin: number
-  ): Promise<Result<Establecimiento[], ApiError>>;
+  getByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>>;
 }
 
 export class PrismaEstablecimientoRepository

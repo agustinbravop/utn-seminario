@@ -18,7 +18,7 @@ export default function TopMenu() {
       <BrandNav />
       <MenuNav />
       {currentAdmin && (
-          <Stack direction='row'>
+        <Stack direction="row">
           <Link to={`/administrador/${currentAdmin.id}`}>
             <button className="btn btn-light rounded-pill btn-sm">
               {currentAdmin.usuario}
@@ -33,7 +33,7 @@ export default function TopMenu() {
             </button>
           </Link>
         </Stack>
-        )}
+      )}
     </HStack>
   );
 }

@@ -50,7 +50,7 @@ const routes = [
   },
   {
     path: "/perfil", //provisorio
-    element: <PerfilPage />
+    element: <PerfilPage />,
   },
 ];
 
