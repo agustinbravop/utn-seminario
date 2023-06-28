@@ -1,5 +1,5 @@
 import useFetch from "../../hooks/useFetch";
-import TopMenu from "../../components/TopMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 import Establecimientos from "../../components/Establecimientos";
 import { urlApiEstablecimientos } from "../../utils/constants";
 import { useNavigate } from "react-router";

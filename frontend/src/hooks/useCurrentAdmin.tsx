@@ -67,8 +67,8 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   };
 
   const logout = () => {
-    // El eventListener escucha este write y hace el `setCurrentAdmin(undefined)`.
     writeLocalStorage("token", null);
+    setCurrentAdmin(undefined);
   };
 
   return (

@@ -1,5 +1,5 @@
 import "./NewEstab.css";
-import TopMenu from "../../components/TopMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 import { ApiError, crearEstablecimiento } from "../../utils/api";
 import { Establecimiento } from "../../types";
 import { useMutation } from "@tanstack/react-query";

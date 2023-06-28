@@ -1,5 +1,5 @@
 import "./LogIn.css";
-import TopMenu from "../../components/TopMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
 import { Administrador } from "../../types";
