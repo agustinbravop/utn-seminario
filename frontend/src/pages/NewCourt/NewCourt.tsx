@@ -259,7 +259,7 @@ function NewCourt() {
 
         <VStack spacing="4" width="900px" justifyContent="center" margin="auto">
       
-          <HStack width="650px">
+          <HStack width="600px">
             <FormControl
               variant="floating"
               id="nombre"
@@ -287,7 +287,7 @@ function NewCourt() {
             </FormControl>
           </HStack>
 
-          <HStack width="650px">
+          <HStack width="600px">
             <FormControl
               variant="floating"
               id="hora-inicio"
@@ -314,7 +314,7 @@ function NewCourt() {
             </FormControl>
           </HStack>
          
-          <HStack width="650px">
+          <HStack width="600px">
             <FormControl
               variant="floating"
               id="hora-fin"
