@@ -15,6 +15,7 @@ import {
   Heading,
   Input,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -26,14 +27,32 @@ type FormState = Establecimiento & {
 function NewEstab() {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const toast = useToast();
   const { mutate, isLoading, isError } = useMutation<
     Establecimiento,
     ApiError,
     FormState
   >({
     mutationFn: ({ imagen, ...admin }) => crearEstablecimiento(admin, imagen),
-    onSuccess: () => navigate(-1),
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento creado.",
+        description: `Establecimiento registrado correctamente.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear el establecimiento.",
+        description: `Intente de nuevo.`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
   });
 
   const { values, setValues, errors, handleSubmit, handleChange } =

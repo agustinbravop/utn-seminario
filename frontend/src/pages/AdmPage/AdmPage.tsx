@@ -15,6 +15,7 @@ import {
   Alert,
   Button,
   FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 
@@ -28,6 +29,7 @@ function AdmPage() {
     new URLSearchParams(search).get("idSuscripcion")
   );
   const navigate = useNavigate();
+  const toast = useToast();
 
   const { mutate, isLoading, isError } = useMutation<
     Administrador,
@@ -35,7 +37,25 @@ function AdmPage() {
     FormState
   >({
     mutationFn: ({ clave, ...admin }) => apiRegister(admin, clave),
-    onSuccess: () => navigate("/landing"),
+    onSuccess: () => {
+      toast({
+        title: "Cuenta registrada correctamente.",
+        description: `Inicie sesión para continuar.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al registrar su cuenta.",
+        description: `Intente de nuevo.`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
   });
 
   const { values, setValues, errors, handleSubmit, handleChange } =

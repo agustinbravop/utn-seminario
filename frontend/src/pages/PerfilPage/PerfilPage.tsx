@@ -1,8 +1,5 @@
-import React from "react";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import TopMenu from "../../components/TopMenu/TopMenu";
-import { PersonFill } from "react-bootstrap-icons";
-import Title from "../../components/Title";
 import {
   Card,
   CardHeader,
