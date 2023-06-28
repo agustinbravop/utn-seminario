@@ -13,7 +13,7 @@ export const registroReqSchema = z.object({
   usuario: z.string().nonempty(),
   clave: z.string().nonempty(),
   idSuscripcion: z.number().positive().int(),
-  tarjeta: tarjetaSchema,
+  tarjeta: tarjetaSchema.partial({ id: true }),
 });
 
 // Se puede iniciar sesión o con usuario o con correo.
@@ -66,6 +66,10 @@ export class AuthHandler {
       // Se construye el Administrador del modelo.
       const admin: Administrador = {
         ...body,
+        tarjeta: {
+          id: 0,
+          ...body.tarjeta,
+        },
         id: 0,
         suscripcion: sus._unsafeUnwrap(),
       };
