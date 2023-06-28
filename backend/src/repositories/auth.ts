@@ -66,6 +66,7 @@ export class PrismaAuthRepository implements AuthRepository {
         clave: dbAdmin.clave,
       });
     } catch (e) {
+      console.error(e);
       return err(
         new ApiError(404, "No existe administrador con ese correo o usuario")
       );
@@ -100,6 +101,7 @@ export class PrismaAuthRepository implements AuthRepository {
 
       return err(new ApiError(401, "Correo o usuario incorrecto"));
     } catch (e) {
+      console.error(e);
       return err(new ApiError(500, "Error interno con la base de datos"));
     }
   }
@@ -123,7 +125,7 @@ export class PrismaAuthRepository implements AuthRepository {
             },
           },
           tarjeta: {
-            create: admin.tarjeta,
+            create: { ...admin.tarjeta, id: undefined },
           },
         },
         include: {
@@ -133,6 +135,7 @@ export class PrismaAuthRepository implements AuthRepository {
       });
       return ok(this.toModel(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta));
     } catch (e) {
+      console.error(e);
       return err(new ApiError(500, "No se pudo registrar al administrador"));
     }
   }

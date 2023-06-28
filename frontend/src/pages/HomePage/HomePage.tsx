@@ -1,8 +1,7 @@
-import React from "react";
 import Title from "../../components/Title/Title";
 import "./HomePage.css";
-import TopMenu from "../../components/TopMenu";
-import { Link, useNavigate } from "react-router-dom";
+import TopMenu from "../../components/TopMenu/TopMenu";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -12,25 +11,6 @@ function HomePage() {
       <TopMenu />
 
       <div className="container col">
-        <div className="header" style={{ alignContent: "end" }}>
-          <button
-            type="button"
-            className="btn btn-outline-dark"
-            style={{ marginLeft: "4px" }}
-            onClick={() => navigate("/suscripciones")}
-          >
-            Suscripcion
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-outline-danger"
-            style={{ marginLeft: "10px" }}
-            onClick={() => navigate("/login")}
-          >
-            Iniciar Sesion
-          </button>
-        </div>
         <div className="content">
           <div className="title">
             <Title

@@ -1,8 +1,8 @@
 import useFetch from "../../hooks/useFetch";
-import TopMenu from "../../components/TopMenu";
+import TopMenu from "../../components/TopMenu/TopMenu";
 import Establecimientos from "../../components/Establecimientos";
 import { urlApiEstablecimientos } from "../../utils/constants";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import "./EstablecimientosPage.scss";
 import { Button } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
@@ -17,7 +17,7 @@ export default function EstablecimientosPage() {
       <Button
         className="btn-agregarestablecimiento"
         onClick={() => navigate("nuevoEstablecimiento")}
-        variant='outline'
+        variant="outline"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -34,8 +34,8 @@ export default function EstablecimientosPage() {
       <Button
         className="btn-agregarestablecimiento"
         onClick={() => navigate("perfil")}
-        leftIcon={<SettingsIcon/>}
-        variant='outline'
+        leftIcon={<SettingsIcon />}
+        variant="outline"
       >
         Perfil
       </Button>
