@@ -6,7 +6,7 @@ import { z } from "zod";
 export const crearEstablecimientoReqSchema = z.object({
   nombre: z.string().nonempty(),
   correo: z.string().nonempty().email(),
-  telefono: z.string().nonempty().length(15),
+  telefono: z.string().nonempty().max(15),
   direccion: z.string().nonempty(),
   localidad: z.string().nonempty(),
   provincia: z.string().nonempty(),

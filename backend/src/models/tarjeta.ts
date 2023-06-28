@@ -3,12 +3,12 @@ import { z } from "zod";
 export const tarjetaSchema = z.object({
   id: z.number().positive().int(),
   nombre: z.string().nonempty(),
-  numero: z.string().nonempty().min(15).max(16),
+  numero: z.string().nonempty().min(15).max(19),
   cvv: z.number().int().gt(100).lt(10_000),
   vencimiento: z
     .string()
     .nonempty()
-    .regex(/[0-9]+\/[0-9]+/),
+    .regex(/\d\d\/\d\d\d?\d?/),
 });
 
 export type Tarjeta = z.infer<typeof tarjetaSchema>;

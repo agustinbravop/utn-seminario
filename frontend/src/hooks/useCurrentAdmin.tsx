@@ -17,7 +17,7 @@ interface CurrentAdminProviderProps {
   children?: React.ReactNode;
 }
 
-export const CurrentAdminContext = React.createContext<ICurrentAdminContext>({
+const CurrentAdminContext = React.createContext<ICurrentAdminContext>({
   login: (correoOUsuario, clave) => Promise.reject(),
   logout: () => {},
 });

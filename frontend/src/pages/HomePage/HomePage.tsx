@@ -1,8 +1,7 @@
-import React from "react";
 import Title from "../../components/Title/Title";
 import "./HomePage.css";
 import TopMenu from "../../components/TopMenu";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const navigate = useNavigate();

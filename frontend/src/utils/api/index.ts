@@ -26,6 +26,7 @@ export type JWT = {
  */
 async function reject(res: Response): Promise<ApiError> {
   const body = await res.json();
+  console.error(body);
   return Promise.reject(
     new ApiError(
       (body && body.status) || 0,

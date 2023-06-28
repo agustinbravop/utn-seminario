@@ -45,6 +45,7 @@ export class PrismaEstablecimientoRepository
       });
       return ok(this.toModel(dbEst));
     } catch (e) {
+      console.error(e);
       return err(new ApiError(500, "No se pudo crear el establecimiento"));
     }
   }
@@ -63,6 +64,7 @@ export class PrismaEstablecimientoRepository
 
       return ok(establecimientos);
     } catch (e) {
+      console.error(e);
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
   }

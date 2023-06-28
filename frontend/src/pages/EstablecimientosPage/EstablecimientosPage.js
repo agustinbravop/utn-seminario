@@ -2,7 +2,7 @@ import useFetch from "../../hooks/useFetch";
 import TopMenu from "../../components/TopMenu";
 import Establecimientos from "../../components/Establecimientos";
 import { urlApiEstablecimientos } from "../../utils/constants";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import "./EstablecimientosPage.scss";
 import { Button } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";

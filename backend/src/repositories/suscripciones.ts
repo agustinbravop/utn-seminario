@@ -25,6 +25,7 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
         });
       return ok(suscripcion);
     } catch (e) {
+      console.error(e);
       return err(new ApiError(404, "No existe suscripcion con ese id"));
     }
   }
@@ -34,6 +35,7 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
       const suscripciones = await this.prisma.suscripcion.findMany();
       return ok(suscripciones);
     } catch (e) {
+      console.error(e);
       return err(new ApiError(500, "No se pudo obtener las suscripciones"));
     }
   }
