@@ -56,84 +56,11 @@ function AdmPage() {
         isClosable: true,
       });
     },
-  });
+  })
+  
 
-<<<<<<< HEAD
-  const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
-    mutationFn: ({ clave, ...admin }) => apiRegister(admin, clave),
-    onSuccess: () => navigate("/landing"),
-  });
-
-  const setTarjeta = (t: Tarjeta) => {
-    setState({ ...state, tarjeta: t });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    console.log(state);
-    setState({ ...state, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate(state);
-  };
-
-  const advertencia = (message: string) => {
-    toast.warning(message, {
-      position: "top-center",
-<<<<<<< HEAD
-      autoClose:5000,
-      progress:1, 
-      closeOnClick: true, 
-      hideProgressBar: false, 
-      draggable: true
-    })
-  }
-  const validacion = () => { 
-    let result=false; 
  
-    if ((state.nombre==='' || state.nombre===null) && result===false) { 
-      result=true; 
-      advertencia("El campo Nombre no puede estar vacio")
-    }
-
-    if ((state.apellido==='' || state.apellido === null) && result===false) { 
-      result=true
-      advertencia("El campo Apellido no puede estar vacio")
-=======
-      autoClose: 5000,
-      progress: 1,
-      closeOnClick: true,
-      hideProgressBar: false,
-      draggable: true,
-    });
-  };
-  const validacion = () => {
-    let result = false;
->>>>>>> e198ec05b17acca930ee3ae08b128ead3971ff1f
-
-    if ((state.nombre === "" || state.nombre === null) && result === false) {
-      result = true;
-      advertencia("El campo Nombre no puede estar vacio");
-    }
-
-    if (
-      (state.apellido === "" || state.apellido === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El campo Apellido no puede estar vacio");
-    }
-
-    if (
-      (state.telefono === "" || state.telefono === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El campo telefono no puede estar vacio");
-    }
-=======
+ 
   const { values, setValues, errors, handleSubmit, handleChange } =
     useFormik<FormState>({
       initialValues: {
@@ -185,7 +112,7 @@ function AdmPage() {
         }),
       }),
     });
->>>>>>> 864bc67d86a3944c8a491f418f84937631672d97
+
 
   const setTarjeta = (t: Tarjeta) => {
     setValues({ ...values, tarjeta: t });
@@ -193,226 +120,142 @@ function AdmPage() {
 
   return (
     <div className="page">
-      <TopMenu />
-<<<<<<< HEAD
+    <TopMenu />
+    <form onSubmit={handleSubmit}>
       <div className="margen">
-        <h2>Tarjeta de credito</h2>
+        <h2>Tarjeta de crédito</h2>
         <p>
           Se factura una cuota cada 30 días. Se puede dar de baja en cualquier
           momento.
         </p>
       </div>
-
-      <br />
-
       <div className="formulario">
-        <Form style={{ width: "50%", marginLeft: "4%" }}>
-          <Form.Group>
-            <PaymentForm tarjeta={state.tarjeta} setTarjeta={setTarjeta} />
-          </Form.Group>
-        </Form>
+        <PaymentForm
+          tarjeta={values.tarjeta}
+          setTarjeta={setTarjeta}
+          errors={errors.tarjeta}
+        />
       </div>
 
       <div className="margen">
         <h2>Cuenta</h2>
         <p> Ingrese sus datos a usar para iniciar sesión.</p>
-        {isError  && <Alert variant="danger" dismissible> Datos Incorrectos. Intente de Nuevo</Alert>}
-       
       </div>
 
-      <br />
-
-      <div className="formulario">
-        <Form style={{ width: "34%" }} onSubmit={handleSubmit}>
-          <Form.Group>
-            <Container>
-              <Row>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingNombre"
-                    label="Nombre"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      name="nombre"
-                      onChange={handleChange}
-                      placeholder="Nombre"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingApellido"
-                    label="Apellido"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      name="apellido"
-                      onChange={handleChange}
-                      placeholder="Apellido"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <FloatingLabel
-                    controlId="floatingTelefono"
-                    label="Teléfono"
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      type="text"
-                      name="telefono"
-                      onChange={handleChange}
-                      placeholder="Teléfono"
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-              </Row>
-=======
-      <form onSubmit={handleSubmit}>
-        <div className="margen">
-          <h2>Tarjeta de crédito</h2>
-          <p>
-            Se factura una cuota cada 30 días. Se puede dar de baja en cualquier
-            momento.
-          </p>
-        </div>
-        <div className="formulario">
-          <PaymentForm
-            tarjeta={values.tarjeta}
-            setTarjeta={setTarjeta}
-            errors={errors.tarjeta}
+      <VStack spacing="4" width="400px" justifyContent="center" margin="auto">
+        <HStack>
+          <FormControl
+            variant="floating"
+            id="nombre"
+            isRequired
+            isInvalid={!!errors.nombre && !!values.nombre}
+          >
+            <Input
+              value={values.nombre}
+              onChange={handleChange}
+              placeholder="Nombre"
+              name="nombre"
+            />
+            <FormLabel>Nombre</FormLabel>
+            <FormErrorMessage>{errors.nombre}</FormErrorMessage>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="apellido"
+            isRequired
+            isInvalid={!!errors.apellido && !!values.apellido}
+          >
+            <Input
+              value={values.apellido}
+              onChange={handleChange}
+              placeholder="Apellido"
+              name="apellido"
+            />
+            <FormLabel>Apellido</FormLabel>
+            <FormErrorMessage>{errors.apellido}</FormErrorMessage>
+          </FormControl>
+        </HStack>
+        <FormControl
+          variant="floating"
+          id="telefono"
+          isRequired
+          isInvalid={!!errors.telefono && !!values.telefono}
+        >
+          <Input
+            value={values.telefono}
+            onChange={handleChange}
+            placeholder="0"
+            name="telefono"
+            type="tel"
           />
+          <FormLabel>Teléfono</FormLabel>
+          <FormErrorMessage>{errors.telefono}</FormErrorMessage>
+        </FormControl>
+        <FormControl
+          variant="floating"
+          id="usuario"
+          isRequired
+          isInvalid={!!errors.usuario && !!values.usuario}
+        >
+          <Input
+            value={values.usuario}
+            onChange={handleChange}
+            placeholder="Usuario"
+            name="usuario"
+          />
+          <FormLabel>Nombre de usuario</FormLabel>
+          <FormErrorMessage>{errors.usuario}</FormErrorMessage>
+        </FormControl>
+        <FormControl
+          variant="floating"
+          id="correo"
+          isRequired
+          isInvalid={!!errors.correo && !!values.correo}
+        >
+          <Input
+            value={values.correo}
+            onChange={handleChange}
+            placeholder="abc@ejemplo.com"
+            type="email"
+            name="correo"
+          />
+          <FormLabel>Correo electrónico</FormLabel>
+          <FormErrorMessage>{errors.correo}</FormErrorMessage>
+        </FormControl>
+        <FormControl
+          variant="floating"
+          id="clave"
+          isRequired
+          isInvalid={!!errors.clave && !!values.clave}
+        >
+          <Input
+            value={values.clave}
+            onChange={handleChange}
+            name="clave"
+            placeholder=" "
+            type="password"
+          />
+          <FormLabel>Contraseña</FormLabel>
+          <FormErrorMessage>{errors.clave}</FormErrorMessage>
+        </FormControl>
+
+        <div className="centrado">
+          <Button
+            type="submit"
+            className="btn btn-danger"
+            isLoading={isLoading}
+          >
+            Registrarse
+          </Button>
         </div>
->>>>>>> e198ec05b17acca930ee3ae08b128ead3971ff1f
-
-        <div className="margen">
-          <h2>Cuenta</h2>
-          <p> Ingrese sus datos a usar para iniciar sesión.</p>
-        </div>
-
-        <VStack spacing="4" width="400px" justifyContent="center" margin="auto">
-          <HStack>
-            <FormControl
-              variant="floating"
-              id="nombre"
-              isRequired
-              isInvalid={!!errors.nombre && !!values.nombre}
-            >
-              <Input
-                value={values.nombre}
-                onChange={handleChange}
-                placeholder="Nombre"
-                name="nombre"
-              />
-              <FormLabel>Nombre</FormLabel>
-              <FormErrorMessage>{errors.nombre}</FormErrorMessage>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="apellido"
-              isRequired
-              isInvalid={!!errors.apellido && !!values.apellido}
-            >
-              <Input
-                value={values.apellido}
-                onChange={handleChange}
-                placeholder="Apellido"
-                name="apellido"
-              />
-              <FormLabel>Apellido</FormLabel>
-              <FormErrorMessage>{errors.apellido}</FormErrorMessage>
-            </FormControl>
-          </HStack>
-          <FormControl
-            variant="floating"
-            id="telefono"
-            isRequired
-            isInvalid={!!errors.telefono && !!values.telefono}
-          >
-            <Input
-              value={values.telefono}
-              onChange={handleChange}
-              placeholder="0"
-              name="telefono"
-              type="tel"
-            />
-            <FormLabel>Teléfono</FormLabel>
-            <FormErrorMessage>{errors.telefono}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            variant="floating"
-            id="usuario"
-            isRequired
-            isInvalid={!!errors.usuario && !!values.usuario}
-          >
-            <Input
-              value={values.usuario}
-              onChange={handleChange}
-              placeholder="Usuario"
-              name="usuario"
-            />
-            <FormLabel>Nombre de usuario</FormLabel>
-            <FormErrorMessage>{errors.usuario}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            variant="floating"
-            id="correo"
-            isRequired
-            isInvalid={!!errors.correo && !!values.correo}
-          >
-            <Input
-              value={values.correo}
-              onChange={handleChange}
-              placeholder="abc@ejemplo.com"
-              type="email"
-              name="correo"
-            />
-            <FormLabel>Correo electrónico</FormLabel>
-            <FormErrorMessage>{errors.correo}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            variant="floating"
-            id="clave"
-            isRequired
-            isInvalid={!!errors.clave && !!values.clave}
-          >
-            <Input
-              value={values.clave}
-              onChange={handleChange}
-              name="clave"
-              placeholder=" "
-              type="password"
-            />
-            <FormLabel>Contraseña</FormLabel>
-            <FormErrorMessage>{errors.clave}</FormErrorMessage>
-          </FormControl>
-
-          <div className="centrado">
-            <Button
-              type="submit"
-              className="btn btn-danger"
-              isLoading={isLoading}
-            >
-              Registrarse
-            </Button>
-          </div>
-          {isError && (
-            <Alert status="error">
-              Error al intentar registrar su cuenta. Intente de nuevo
-            </Alert>
-          )}
-        </VStack>
-      </form>
-    </div>
-  );
+        {isError && (
+          <Alert status="error">
+            Error al intentar registrar su cuenta. Intente de nuevo
+          </Alert>
+        )}
+      </VStack>
+    </form>
+  </div>
+);
 }
 export default AdmPage;
