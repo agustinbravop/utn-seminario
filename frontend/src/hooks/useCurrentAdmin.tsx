@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useCallback,
-  useContext,
-  createContext,
-  useState,
-} from "react";
+import { useEffect, useContext, createContext, useState } from "react";
 import { Administrador } from "../types";
 import {
   readLocalStorage,
@@ -45,19 +39,18 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
 
   useEffect(() => {
     updateCurrentAdmin();
-  }, []);
 
-  const handleTokenUpdate = useCallback((ev: StorageEvent) => {
-    if (ev.key === "token") {
-      updateCurrentAdmin();
-    }
-  }, []);
-
-  useEffect(() => {
     // Responde cuando una request fue rechazada con un status `401 Unauthorized`.
+    function handleTokenUpdate(ev: StorageEvent) {
+      if (ev.key === "token") {
+        updateCurrentAdmin();
+      }
+    }
     window.addEventListener("storage", handleTokenUpdate);
-    return () => window.removeEventListener("storage", handleTokenUpdate);
-  }, [handleTokenUpdate]);
+    return () => {
+      window.removeEventListener("storage", handleTokenUpdate);
+    };
+  }, []);
 
   const login = async (correoOUsuario: string, clave: string) => {
     return apiLogin(correoOUsuario, clave).then((admin) => {
