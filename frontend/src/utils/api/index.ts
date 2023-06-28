@@ -103,8 +103,7 @@ export async function apiLogin(
   return post<JWT>(
     `${API_URL}/auth/login`,
     {
-      correo: correoOUsuario,
-      usuario: correoOUsuario,
+      correoOUsuario: correoOUsuario,
       clave: clave,
     },
     200

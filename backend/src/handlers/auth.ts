@@ -1,31 +1,30 @@
-import { RequestHandler } from "express";
-import { Tarjeta } from "../models/tarjeta.js";
+import { Request, RequestHandler, Response } from "express";
+import { tarjetaSchema } from "../models/tarjeta.js";
 import { Administrador } from "../models/administrador.js";
 import { AuthService } from "../services/auth.js";
 import { SuscripcionService } from "../services/suscripciones.js";
+import { z } from "zod";
 
-type LoginReq =
-  | {
-      usuario: string;
-      correo: never;
-      clave: string;
-    }
-  | {
-      usuario?: never;
-      correo: string;
-      clave: string;
-    };
+export const registroReqSchema = z.object({
+  nombre: z.string().nonempty(),
+  apellido: z.string().nonempty(),
+  telefono: z.string().nonempty(),
+  correo: z.string().nonempty(),
+  usuario: z.string().nonempty(),
+  clave: z.string().nonempty(),
+  idSuscripcion: z.number().positive().int(),
+  tarjeta: tarjetaSchema,
+});
 
-type RegistroReq = {
-  nombre: string;
-  apellido: string;
-  telefono: string;
-  correo: string;
-  usuario: string;
-  clave: string;
-  tarjeta: Tarjeta;
-  idSuscripcion: number;
-};
+// Se puede iniciar sesión o con usuario o con correo.
+export const loginReqSchema = z.object({
+  correoOUsuario: z.string().nonempty(),
+  clave: z.string().nonempty(),
+});
+
+type LoginReq = z.infer<typeof loginReqSchema>;
+
+type RegistroReq = z.infer<typeof registroReqSchema>;
 
 export class AuthHandler {
   private service: AuthService;
@@ -37,13 +36,11 @@ export class AuthHandler {
   }
 
   login(): RequestHandler {
-    return async (req, res) => {
-      const loginReq: LoginReq = req.body;
+    return async (_req, res) => {
+      const loginReq: LoginReq = res.locals.body;
 
-      // Se puede iniciar sesión o con usuario o con correp.
-      const correoOUsuario = loginReq.usuario || loginReq.correo;
       const loginResult = await this.service.loginUsuario(
-        correoOUsuario,
+        loginReq.correoOUsuario,
         loginReq.clave
       );
 
@@ -55,8 +52,8 @@ export class AuthHandler {
   }
 
   register(): RequestHandler {
-    return async (req, res) => {
-      const body: RegistroReq = req.body;
+    return async (_req: Request, res: Response) => {
+      const body: RegistroReq = res.locals.body;
 
       // Se obtiene la suscripcion mediante el idSuscripcion.
       const sus = await this.susService.getSuscripcionByID(body.idSuscripcion);
