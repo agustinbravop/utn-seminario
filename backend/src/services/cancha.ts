@@ -7,7 +7,9 @@ import { subirImagen } from "../utils/imagenes";
 export interface CanchaService { 
     getCanchaByEstablecimientoByID(idEst:number):Promise<Result<Cancha[],ApiError>>; 
     getCanchaByID(idCancha:number):Promise<Result<Cancha,ApiError>>; 
+    getCanchaAllByEstablecimientoByID(idEst:number):Promise<Result<Cancha[], ApiError>>; 
     crearCancha(cancha:Cancha,idEst:number, imagen?:Express.Multer.File ):Promise<Result<Cancha,ApiError>>; 
+    putCanchaByIDByEstablecimiento(canchaUpdate:Cancha, id_cancha:number, imagen?:Express.Multer.File) : Promise<Result<Cancha, ApiError>>; 
 }
 
 export class CanchaServiceimpl implements CanchaService { 
@@ -24,6 +26,12 @@ export class CanchaServiceimpl implements CanchaService {
     async getCanchaByID(idCancha: number): Promise<Result<Cancha, ApiError>> {
         return await this.repo.getCanchaByID(idCancha); 
     }
+
+async getCanchaAllByEstablecimientoByID(idEst: number): Promise<Result<Cancha[], ApiError>> {
+    return await this.repo.getCanchaAllByEstablecimientoByID(idEst); 
+}
+
+
     async crearCancha(
         cancha: Cancha, 
         idEst:number,
@@ -51,5 +59,25 @@ export class CanchaServiceimpl implements CanchaService {
             
        
         return await this.repo.crearCancha(cancha); 
+    }
+
+    async putCanchaByIDByEstablecimiento(canchaUpdate: Cancha, id_cancha: number, imagen?:Express.Multer.File): Promise<Result<Cancha, ApiError>> {
+        if (imagen) { 
+           if (imagen.mimetype.startsWith("image/")) { 
+            try { 
+                canchaUpdate.urlImagen=await subirImagen(imagen)
+            }catch(e) { 
+                return err(new ApiError(500, "Error al actualizar la imagen"))
+            }
+           }else { 
+            return err(new ApiError(500, "El archivo no es una imagen"))
+           }
+        }
+        if (String(canchaUpdate.estaHabilitada)==='false') { 
+            canchaUpdate.estaHabilitada=false 
+        }else { 
+            canchaUpdate.estaHabilitada=true
+        }
+        return await this.repo.putCanchaByIDByEstablecimiento(canchaUpdate, id_cancha)
     }
 }

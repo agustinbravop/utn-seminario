@@ -7,6 +7,8 @@ export interface CanchaRepository{
     getCanchaByEstablecimientoByID(idEst:number):Promise<Result<Cancha[], ApiError>>; 
     getCanchaByID(idCancha:number): Promise<Result<Cancha, ApiError>>; 
     crearCancha(cancha:Cancha):Promise<Result<Cancha,ApiError>>; 
+    getCanchaAllByEstablecimientoByID(idEst:number): Promise<Result<Cancha[], ApiError>>
+    putCanchaByIDByEstablecimiento(canchaUpdate:Cancha, id_cancha:number): Promise<Result<Cancha,ApiError>>; 
 }
 
 export class PrismaCanchaRepository implements CanchaRepository { 
@@ -47,6 +49,22 @@ export class PrismaCanchaRepository implements CanchaRepository {
         
     }
 
+async getCanchaAllByEstablecimientoByID(idEst: number): Promise<Result<Cancha[], ApiError>> {
+    try { 
+        const cancha=await this.prisma.cancha.findMany({ 
+            where: { 
+                idEstablecimiento:idEst
+            }
+        }); 
+        if (cancha.length===0) { 
+            return err(new ApiError(200, "No existe ninguna cancha"))
+        }
+        return ok(cancha)
+    }catch(e) { 
+        return err(new ApiError(500, "Error. Intente nuevamente"))
+    }
+}
+
     async crearCancha(cancha: Cancha): Promise<Result<Cancha, ApiError>> {
         try { 
             const cancha_post=await this.prisma.cancha.create({ 
@@ -63,5 +81,32 @@ export class PrismaCanchaRepository implements CanchaRepository {
             console.log(cancha.urlImagen)
             return err(new ApiError(500, "Error no se pudo cargar la cancha. Intente de nuevo"))
         }
+    }
+
+    async putCanchaByIDByEstablecimiento(canchaUpdate:Cancha, id_cancha:number): Promise<Result<Cancha, ApiError>> {
+
+        try { 
+            const cancha=await this.prisma.cancha.update({ 
+                where:
+                   
+                    {
+                        id:id_cancha
+                    },
+            data: { 
+                nombre:canchaUpdate.nombre, 
+                descripcion:canchaUpdate.descripcion, 
+                urlImagen:canchaUpdate.urlImagen, 
+                estaHabilitada:canchaUpdate.estaHabilitada
+            }
+            
+            }); 
+
+            
+            return ok(cancha)
+
+        }catch(e) { 
+            return err (new ApiError(500, "Error. Intente de nuevo"))
+        }
+        
     }
 }

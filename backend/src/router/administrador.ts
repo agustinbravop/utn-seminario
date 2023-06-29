@@ -12,6 +12,7 @@ export function AdministradorRouter(prismaClient: PrismaClient): Router {
   const handler = new AdministradorHandler(service);
 
   router.get("/:id", handler.getAdministradorByID());
+  
 
   return router;
 }

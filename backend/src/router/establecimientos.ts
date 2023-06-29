@@ -4,13 +4,9 @@ import multer from "multer";
 import { PrismaClient } from "@prisma/client";
 import { PrismaEstablecimientoRepository } from "../repositories/establecimientos.js";
 import { EstablecimientoServiceImpl } from "../services/establecimientos.js";
-<<<<<<< HEAD
-import { EstablecimientoHandler } from "../handlers/establecimientos.js";
-import { establecimientoValidation } from "../middlewares/SchemaEstablecimiento.middleware.js";
 import {establecimientoValidationUpdate} from "../middlewares/SchemaEstbalecimientoUpdate.js"
 import {establecimientoSchemaUpdate} from "../validaciones/establecimientoUpdate.js"
-import { establecimientoSchema } from "../validaciones/establecimiento.validaciones.js";
-=======
+
 import {
   EstablecimientoHandler,
   crearEstablecimientoReqSchema,
@@ -18,7 +14,7 @@ import {
 import { PrismaAdministradorRepository } from "../repositories/administrador.js";
 import { AdministradorServiceImpl } from "../services/administrador.js";
 import { validateBody } from "../middlewares/validation.js";
->>>>>>> 864bc67d86a3944c8a491f418f84937631672d97
+
 
 export function establecimientosRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -38,17 +34,16 @@ export function establecimientosRouter(prismaClient: PrismaClient): Router {
     validateBody(crearEstablecimientoReqSchema),
     handler.crearEstablecimiento()
   );
-<<<<<<< HEAD
-  router.get("/", handler.getByAdminID());
-  router.get("/:idAdmin/establecimientos", handler.getEstablecimientoByAdminID());
-  router.get("/:idAdmin/establecimientos/:id", handler.getEstablecimientoByIDByAdminID());
-  router.put("/:idAdmin/establecimiento/:id", 
+  //router.get("/", handler.getByAdminID());
+  //router.get("/:idAdmin", handler.getByAdminID());
+  router.get("/:id/administrador/:idAdmin", handler.getEstablecimientoByIDByAdminID());
+  router.put("/:id/administrador/:idAdmin", 
   upload.single("imagen"),
   establecimientoValidationUpdate(establecimientoSchemaUpdate),
   handler.putEstablecimientoByAdminIDByID());
-=======
-  router.get("/:idAdmin", handler.getByAdminID());
->>>>>>> 864bc67d86a3944c8a491f418f84937631672d97
+  router.get("/administrador/:idAdmin", handler.getEstablecimientoByAdminID());
+ 
+
 
   return router;
 }

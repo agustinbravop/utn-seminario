@@ -35,6 +35,34 @@ export class CanchaHandler {
         }
     }
 
+    getCanchaAllByEstablecimientoByID(): RequestHandler { 
+        return async (req, res)=> { 
+            const idEst=Number(req.params['idEst']) 
+            const cancha=await this.service.getCanchaAllByEstablecimientoByID(idEst); 
+            cancha.match(
+                (canchas)=>res.status(200).json(canchas), 
+                (err)=>res.status(err.status).json(err)
+            )
+        }
+    }
+
+    putCanchaByIDBEstablecimiento():RequestHandler { 
+        return async (req, res)=> { 
+            const cancha: Cancha= { 
+                ...req.body 
+            }
+           
+            const imagen=req.file
+            const id_cancha=Number(req.params['idCancha'])
+            const canchaActualizada=await this.service.putCanchaByIDByEstablecimiento(cancha, id_cancha,imagen)
+
+            canchaActualizada.match( 
+                (canchaAct)=>res.status(200).json(canchaAct), 
+                (err)=>res.status(err.status).json(err)
+            )
+        }
+    }
+
     crearCancha(): RequestHandler { 
         return async (req, res)=> { 
            const cancha: Cancha= { 

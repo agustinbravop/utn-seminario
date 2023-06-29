@@ -25,7 +25,6 @@ app.use("/auth", authRouter(prismaClient));
 app.use("/suscripciones", suscripcionesRouter(prismaClient));
 app.use("/establecimientos", establecimientosRouter(prismaClient));
 app.use("/administrador", AdministradorRouter(prismaClient));
-app.use("/administradores", establecimientosRouter(prismaClient))
 app.use("/tarjetas", tarjetaRouter);
 app.use("/canchas", CanchaRouter(prismaClient))
 
