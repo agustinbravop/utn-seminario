@@ -5,6 +5,8 @@ import { PrismaCanchaRepository } from "../repositories/cancha";
 import { CanchaServiceimpl } from "../services/cancha";
 import { CanchaHandler } from "../handlers/cancha";
 import multer from "multer";
+import { ActualizarCanchaSchema } from "../validaciones/ActualizarCancha";
+import { validateBody } from "../middlewares/validation";
 
 
 export function CanchaRouter(prismaClient:PrismaClient):Router { 
@@ -18,8 +20,8 @@ export function CanchaRouter(prismaClient:PrismaClient):Router {
     router.get('/establecimiento/:id', handler.getCanchaByEstablecimientoByID()); 
     router.get('/:id_cancha', handler.getCanchaByID()); 
     router.get('/establecimientos/:idEst', handler.getCanchaAllByEstablecimientoByID()); 
-    router.post('/establecimientos/:idEst',upload.single('imagen'), handler.crearCancha()); 
-    router.put('/:idEst/establecimiento/:idCancha', upload.single('imagen'), handler.putCanchaByIDBEstablecimiento()); 
+    router.post('/establecimientos/:idEst',upload.single('imagen'),validateBody(ActualizarCanchaSchema), handler.crearCancha()); 
+    router.put('/:idEst/establecimiento/:idCancha', upload.single('imagen'),validateBody(ActualizarCanchaSchema),handler.putCanchaByIDBEstablecimiento()); 
 
     return router 
 }

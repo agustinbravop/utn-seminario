@@ -73,8 +73,9 @@ export const postTarjeta = async (req: Request, res: Response) => {
   };
   try {
     tarjetaSchema.parse(data);
-    const fecha = moment(req.body["vencimiento"], "DD/MM/YYYY", true).isValid();
-    if (fecha == true) {
+    const fecha = moment(req.body["vencimiento"], "MM/YY", true).isValid();
+
+    if (fecha === true) {
       const tarjeta = await prisma.tarjeta.createMany({
         data: {
           nombre: req.body["nombre"].toLowerCase(),
