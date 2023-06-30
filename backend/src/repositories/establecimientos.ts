@@ -11,7 +11,7 @@ export interface EstablecimientoRepository {
   ): Promise<Result<Establecimiento, ApiError>>;
   getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
   getEstablecimientoByIDByAdminID(idAdmin:number, idEstablecimiento:number):Promise<Result<Establecimiento,ApiError>>;
-  putEstablecimientoByAdminIDByID(est:Establecimiento, idEst:number):Promise<Result<Establecimiento,ApiError>>
+  putEstablecimientoByAdminIDByID(est:Establecimiento):Promise<Result<Establecimiento,ApiError>>
 
   getByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>>;
 
@@ -81,7 +81,12 @@ export class PrismaEstablecimientoRepository
         const establecimiento= await this.prisma.establecimiento.findMany({ 
           where: { 
             idAdministrador:idAdmin
-          }
+          }, 
+          orderBy:[ 
+            { 
+              nombre:'asc'
+            }
+          ]
         })
         if (establecimiento.length===0) { 
         return err(new ApiError(500, "Error, El ID "+idAdmin+" del administrador ingresado no existe. Intente nuevamente"))
@@ -117,12 +122,15 @@ export class PrismaEstablecimientoRepository
   }
 
 
-  async putEstablecimientoByAdminIDByID(est: Establecimiento, idEst:number): Promise<Result<Establecimiento, ApiError>> {
+  async putEstablecimientoByAdminIDByID(est: Establecimiento): Promise<Result<Establecimiento, ApiError>> {
       try {
         
-        const ests=await this.prisma.establecimiento.update({ 
+        await this.prisma.establecimiento.updateMany({ 
           where: { 
-            id:idEst
+            AND: [ 
+              {id:est.id}, 
+              {idAdministrador:est.idAdministrador}
+            ]
           },
           data: { 
             nombre:est.nombre, 
@@ -136,9 +144,9 @@ export class PrismaEstablecimientoRepository
           },
         })
 
-       EnvioCorreo(ests)
+       EnvioCorreo(est)
         
-        return ok(this.toModel(ests))
+        return ok(this.toModel(est))
          
       }catch(e){ 
       

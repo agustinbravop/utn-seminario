@@ -80,8 +80,9 @@ export class EstablecimientoHandler {
       }
       const imagen= req.file 
       const idEst=Number(req.params['id'])
+      const idAdmin=Number(req.params['idAdmin'])
 
-      const estResul=await this.service.putEstablecimientoByAdminIDByID(est,idEst,imagen); 
+      const estResul=await this.service.putEstablecimientoByAdminIDByID(est,idEst,idAdmin,imagen); 
       estResul.match( 
         (est)=>res.status(200).json(est), 
         (err)=>res.status(err.status).json(err)

@@ -8,7 +8,7 @@ export interface CanchaRepository{
     getCanchaByID(idCancha:number): Promise<Result<Cancha, ApiError>>; 
     crearCancha(cancha:Cancha):Promise<Result<Cancha,ApiError>>; 
     getCanchaAllByEstablecimientoByID(idEst:number): Promise<Result<Cancha[], ApiError>>
-    putCanchaByIDByEstablecimiento(canchaUpdate:Cancha, id_cancha:number): Promise<Result<Cancha,ApiError>>; 
+    putCanchaByIDByEstablecimiento(canchaUpdate:Cancha): Promise<Result<Cancha,ApiError>>; 
 }
 
 export class PrismaCanchaRepository implements CanchaRepository { 
@@ -24,7 +24,12 @@ export class PrismaCanchaRepository implements CanchaRepository {
             const canchaAll=await this.prisma.cancha.findMany({ 
                 where: { 
                     idEstablecimiento:idEst
-                }
+                }, 
+                orderBy: [ 
+                    { 
+                        nombre:'asc'
+                    }
+                ]
             }); 
             if (canchaAll.length===0) { 
                 return err(new ApiError(200, "No existen canchas por el momento"))
@@ -83,15 +88,18 @@ async getCanchaAllByEstablecimientoByID(idEst: number): Promise<Result<Cancha[],
         }
     }
 
-    async putCanchaByIDByEstablecimiento(canchaUpdate:Cancha, id_cancha:number): Promise<Result<Cancha, ApiError>> {
+    async putCanchaByIDByEstablecimiento(canchaUpdate:Cancha): Promise<Result<Cancha, ApiError>> {
 
         try { 
-            const cancha=await this.prisma.cancha.update({ 
-                where:
-                   
-                    {
-                        id:id_cancha
-                    },
+            await this.prisma.cancha.updateMany({ 
+                where:{ 
+                    AND: [ 
+                        {idEstablecimiento:canchaUpdate.idEstablecimiento}, 
+                        { 
+                            id:canchaUpdate.id
+                        }
+                    ]
+                },
             data: { 
                 nombre:canchaUpdate.nombre, 
                 descripcion:canchaUpdate.descripcion, 
@@ -102,7 +110,7 @@ async getCanchaAllByEstablecimientoByID(idEst: number): Promise<Result<Cancha[],
             }); 
 
             
-            return ok(cancha)
+            return ok(canchaUpdate)
 
         }catch(e) { 
             return err (new ApiError(500, "Error. Intente de nuevo"))

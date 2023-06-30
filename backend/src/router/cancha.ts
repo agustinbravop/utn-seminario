@@ -18,8 +18,8 @@ export function CanchaRouter(prismaClient:PrismaClient):Router {
     router.get('/establecimiento/:id', handler.getCanchaByEstablecimientoByID()); 
     router.get('/:id_cancha', handler.getCanchaByID()); 
     router.get('/establecimientos/:idEst', handler.getCanchaAllByEstablecimientoByID()); 
-    router.post('/establecimiento/:id',upload.single('imagen'), handler.crearCancha()); 
-    router.put('/establecimiento/:idCancha', upload.single('imagen'), handler.putCanchaByIDBEstablecimiento()); 
+    router.post('/establecimientos/:idEst',upload.single('imagen'), handler.crearCancha()); 
+    router.put('/:idEst/establecimiento/:idCancha', upload.single('imagen'), handler.putCanchaByIDBEstablecimiento()); 
 
     return router 
 }

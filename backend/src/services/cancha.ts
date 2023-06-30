@@ -9,7 +9,7 @@ export interface CanchaService {
     getCanchaByID(idCancha:number):Promise<Result<Cancha,ApiError>>; 
     getCanchaAllByEstablecimientoByID(idEst:number):Promise<Result<Cancha[], ApiError>>; 
     crearCancha(cancha:Cancha,idEst:number, imagen?:Express.Multer.File ):Promise<Result<Cancha,ApiError>>; 
-    putCanchaByIDByEstablecimiento(canchaUpdate:Cancha, id_cancha:number, imagen?:Express.Multer.File) : Promise<Result<Cancha, ApiError>>; 
+    putCanchaByIDByEstablecimiento(canchaUpdate:Cancha, id_cancha:number,idEst:number, imagen?:Express.Multer.File) : Promise<Result<Cancha, ApiError>>; 
 }
 
 export class CanchaServiceimpl implements CanchaService { 
@@ -61,11 +61,13 @@ async getCanchaAllByEstablecimientoByID(idEst: number): Promise<Result<Cancha[],
         return await this.repo.crearCancha(cancha); 
     }
 
-    async putCanchaByIDByEstablecimiento(canchaUpdate: Cancha, id_cancha: number, imagen?:Express.Multer.File): Promise<Result<Cancha, ApiError>> {
+    async putCanchaByIDByEstablecimiento(canchaUpdate: Cancha, id_cancha: number, idEst:number,imagen?:Express.Multer.File ): Promise<Result<Cancha, ApiError>> {
         if (imagen) { 
            if (imagen.mimetype.startsWith("image/")) { 
             try { 
                 canchaUpdate.urlImagen=await subirImagen(imagen)
+                canchaUpdate.idEstablecimiento=idEst 
+                canchaUpdate.id=id_cancha
             }catch(e) { 
                 return err(new ApiError(500, "Error al actualizar la imagen"))
             }
@@ -78,6 +80,6 @@ async getCanchaAllByEstablecimientoByID(idEst: number): Promise<Result<Cancha[],
         }else { 
             canchaUpdate.estaHabilitada=true
         }
-        return await this.repo.putCanchaByIDByEstablecimiento(canchaUpdate, id_cancha)
+        return await this.repo.putCanchaByIDByEstablecimiento(canchaUpdate)
     }
 }

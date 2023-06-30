@@ -54,7 +54,8 @@ export class CanchaHandler {
            
             const imagen=req.file
             const id_cancha=Number(req.params['idCancha'])
-            const canchaActualizada=await this.service.putCanchaByIDByEstablecimiento(cancha, id_cancha,imagen)
+            const idEst=Number(req.params['idEst'])
+            const canchaActualizada=await this.service.putCanchaByIDByEstablecimiento(cancha, id_cancha,idEst,imagen)
 
             canchaActualizada.match( 
                 (canchaAct)=>res.status(200).json(canchaAct), 
@@ -71,7 +72,7 @@ export class CanchaHandler {
            }
            
            const imagen=req.file; 
-           const idEst=Number(req.params['id'])
+           const idEst=Number(req.params['idEst'])
            const cancha_post=await this.service.crearCancha(cancha,idEst,imagen); 
            cancha_post.match( 
             (cancha_post)=>res.status(200).json(cancha_post), 
