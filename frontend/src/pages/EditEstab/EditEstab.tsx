@@ -131,7 +131,8 @@ function EditEstab() {
 
   useEffect(() => {
     const cargarEstablecimiento = async () => {
-      await traerEstablecimiento(Number(idAdmin), Number(id));
+      const e = await traerEstablecimiento(Number(idAdmin), Number(id));
+      setState(e)
     };
     cargarEstablecimiento();
   });
