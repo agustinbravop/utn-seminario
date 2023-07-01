@@ -6,7 +6,7 @@ export default function Establecimientos({ result, loading, error }) {
   console.log(loading, result);
   return (
     <HStack display="flex" flexWrap="wrap" justifyContent="center">
-      {loading || !result ? (
+      {loading? (
         <Loading />
       ) : (
         result.record.map((establecimiento, index) => (

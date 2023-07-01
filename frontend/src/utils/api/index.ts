@@ -162,3 +162,12 @@ export async function crearEstablecimiento(
     token.token
   );
 }
+
+
+export async function traerEstablecimientos(id:number):Promise<Establecimiento[]> {
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return get(`${API_URL}/establecimientos/administrador/${id}`)
+}
