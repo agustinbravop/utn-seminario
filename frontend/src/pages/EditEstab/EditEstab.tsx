@@ -1,5 +1,4 @@
 //import "./NewEstab.css";
-import TopMenu from "../../components/TopMenu";
 import {
   ApiError,
   actualizarEstablecimiento,
@@ -24,6 +23,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import TopMenu from "../../components/TopMenu/TopMenu";
 
 type FormState = Establecimiento & {
   imagen?: File;
