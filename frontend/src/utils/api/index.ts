@@ -178,14 +178,12 @@ export async function crearEstablecimiento(
   );
 }
 
-//REVISAR//REVISAR//REVISAR
-//REVISAR//REVISAR//REVISAR
-//REVISAR//REVISAR//REVISAR
+
 export async function traerEstablecimiento(
   idAdmin: number,
   id: number
 ): Promise<Establecimiento> {
-  return get<Establecimiento>(`${API_URL}//${idAdmin}/establecimientos/${id}`); //REVISAR
+  return get<Establecimiento>(`${API_URL}/${idAdmin}/establecimientos/${id}`); //REVISAR
 }
 
 //REVISAR
@@ -207,7 +205,7 @@ export async function actualizarEstablecimiento(
     return Promise.reject(new ApiError(403, "JWT inexistente"));
   }
   return putFormData<Establecimiento>(
-    `${API_URL}/${establecimiento.idAdministrador}/establecimiento/${establecimiento.id}`, //CAMBIAR CUANDO MATIAS SUBA LOS CAMBIOS
+    `${API_URL}/establecimiento/${establecimiento.id}/administrador/${establecimiento.idAdministrador}`,
     formData,
     201,
     token.token

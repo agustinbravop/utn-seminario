@@ -9,6 +9,10 @@ import { Establecimiento } from "../../types";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-overlays/Modal";
+import { JSX } from "react/jsx-runtime";
 import {
   Button,
   Container,
@@ -26,7 +30,7 @@ type FormState = Establecimiento & {
 };
 
 function EditEstab() {
-  const { idAdmin, id } = useParams(); //REVISAR
+  const { idAdmin, id } = useParams();
   const navigate = useNavigate();
 
   const [state, setState] = useState<FormState>({
@@ -43,20 +47,94 @@ function EditEstab() {
     imagen: undefined,
   });
 
+  const [showModal, setShowModal] = useState(false);
+  const renderBackdrop = (
+    props: JSX.IntrinsicAttributes &
+      React.ClassAttributes<HTMLDivElement> &
+      React.HTMLAttributes<HTMLDivElement>
+  ) => <div className="backdrop" {...props} />;
+  var handleClose = () => setShowModal(false);
+  var handleSuccess = () => {
+    console.log(":)");
+  };
+
+  const advertencia = (message: string) => {
+    toast.warning(message, {
+      position: "top-center",
+      autoClose: 5000,
+      progress: 1,
+      closeOnClick: true,
+      hideProgressBar: false,
+      draggable: true,
+    });
+  };
+
+  const validacion = () => {
+    let result = false;
+
+    if ((state.nombre === "" || state.nombre === null) && result === false) {
+      result = true;
+      advertencia("El establecimiento debe tener un nombre");
+    }
+
+    if (
+      (state.telefono === "" || state.telefono === null) &&
+      result === false
+    ) {
+      result = true;
+      advertencia("El establecimiento debe tener un telefono");
+    }
+
+    if (
+      (state.direccion === "" || state.direccion === null) &&
+      result === false
+    ) {
+      result = true;
+      advertencia("El campo Dirección no puede estar vacio");
+    }
+
+    if (
+      (state.provincia === "" || state.provincia === null) &&
+      result === false
+    ) {
+      result = true;
+      advertencia("El campo Provincia no puede estar vacio");
+    }
+
+    if (
+      (state.localidad === "" || state.localidad === null) &&
+      result === false
+    ) {
+      result = true;
+      advertencia("El campo Localidad no puede estar vacio");
+    }
+
+    if ((state.correo === "" || state.correo === null) && result === false) {
+      result = true;
+      advertencia("El establecimiento debe tener correo electronico");
+    }
+
+    if (
+      (state.horariosDeAtencion === "" || state.horariosDeAtencion === null) &&
+      result === false
+    ) {
+      result = true;
+      advertencia("Los horarios deben estar definidos");
+    }
+  };
+
   const { mutate } = useMutation<Establecimiento, ApiError, FormState>({
-    mutationFn: ({ imagen, ...admin }) => actualizarEstablecimiento(admin, imagen), //REVISAR
-    onSuccess: () => navigate(-1),
+    mutationFn: ({ imagen, ...admin }) =>
+      actualizarEstablecimiento(admin, imagen), //REVISAR
+    onSuccess: () => navigate(`/administrador/${idAdmin}`),
   });
 
-  //REVISAR REVISAR
   useEffect(() => {
     const cargarEstablecimiento = async () => {
-      const e = await traerEstablecimiento(Number(idAdmin), Number(id));
-      console.log(e)
+      await traerEstablecimiento(Number(idAdmin), Number(id));
     };
     cargarEstablecimiento();
   });
-
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -89,7 +167,7 @@ function EditEstab() {
           <VStack spacing="4">
             <FormControl
               variant="floating"
-              id="clave"
+              id="nombre"
               isRequired
               onChange={handleChange}
             >
@@ -178,11 +256,76 @@ function EditEstab() {
             </FormControl>
           </VStack>
 
-          <Button type="submit" className="btn btn-danger">
-            Guardar
-          </Button>
+          <div className="centrado">
+            <Button
+              type="submit"
+              className="btn btn-danger"
+              onClick={validacion}
+            >
+              Guardar
+            </Button>
+          </div>
         </Container>
       </form>
+      <ToastContainer />
+
+      <Modal
+        className="modal"
+        show={showModal}
+        onHide={handleClose}
+        renderBackdrop={renderBackdrop}
+      >
+        <div>
+          <div className="modal-header">
+            <div className="modal-title">Confirmar Cancelación</div>
+            <div>
+              <span className="close-button" onClick={handleClose}>
+                x
+              </span>
+            </div>
+          </div>
+          <div className="modal-desc">
+            <p>¿Desea cancelar?</p>
+          </div>
+          <div className="modal-footer">
+            <button className="secondary-button" onClick={handleClose}>
+              Cancelar
+            </button>
+            <button className="primary-button" onClick={handleSuccess}>
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        className="modal"
+        show={showModal}
+        onHide={handleClose}
+        renderBackdrop={renderBackdrop}
+      >
+        <div>
+          <div className="modal-header">
+            <div className="modal-title">Confirmar Cancelación</div>
+            <div>
+              <span className="close-button" onClick={handleClose}>
+                x
+              </span>
+            </div>
+          </div>
+          <div className="modal-desc">
+            <p>¿Desea cancelar?</p>
+          </div>
+          <div className="modal-footer">
+            <button className="secondary-button" onClick={handleClose}>
+              Cancelar
+            </button>
+            <button className="primary-button" onClick={handleSuccess}>
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
