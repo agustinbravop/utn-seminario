@@ -14,6 +14,7 @@ import EstablecimientosPage from "./pages/EstablecimientosPage/EstablecimientosP
 import { CurrentAdminProvider } from "./hooks/useCurrentAdmin";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import PerfilPage from "./pages/PerfilPage/PerfilPage";
+import NewCourt from "./pages/NewCourt/NewCourt";
 
 const routes = [
   {
@@ -51,6 +52,10 @@ const routes = [
   {
     path: "/perfil", //provisorio
     element: <PerfilPage />,
+  },
+  {
+    path: "/nueva-cancha", //provisorio
+    element: <NewCourt />
   },
 ];
 

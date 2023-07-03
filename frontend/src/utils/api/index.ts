@@ -1,4 +1,4 @@
-import { Administrador, Establecimiento, Suscripcion } from "../../types";
+import { Administrador, Establecimiento, Suscripcion, Cancha } from "../../types";
 import jwtDecode from "jwt-decode";
 import { readLocalStorage, writeLocalStorage } from "../storage/localStorage";
 const API_URL = process.env.REACT_APP_API_BASE_URL;
@@ -99,6 +99,25 @@ async function postFormData<T>(
     .then((data) => data as T);
 }
 
+async function putFormData<T>(
+  endpoint: string,
+  formData: FormData,
+  expectedStatus: number,
+  token?: string
+): Promise<T> {
+  return fetch(endpoint, {
+    method: "PUT",
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+    body: formData,
+    mode: "cors" as RequestMode,
+    cache: "default" as RequestCache,
+  })
+    .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
+    .then((data) => data as T);
+}
+
 export async function getSuscripciones(): Promise<Suscripcion[]> {
   return get(`${API_URL}/suscripciones`);
 }
@@ -170,4 +189,47 @@ export async function traerEstablecimientos(id:number):Promise<Establecimiento[]
     return Promise.reject(new ApiError(403, "JWT inexistente"));
   }
   return get(`${API_URL}/establecimientos/administrador/${id}`)
+};
+
+
+
+export async function getAllCanchas(idE:number):Promise<Cancha[]> {
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return get(`${API_URL}/canchas/establecimientos/${idE}`)
+}
+
+export async function getCanchaByIdC(idE:number, idC:number):Promise<Cancha> {
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return get(`${API_URL}/canchas/${idE}/establecimiento/${idC}`)
+};
+
+export async function editCancha(
+  cancha: Cancha,
+  imagen?: File
+): Promise<Cancha> {
+  const formData = new FormData();
+  if (imagen) {
+    formData.append("imagen", imagen);
+  }
+  let key: keyof Cancha;
+  for (key in cancha) {
+    formData.append(key, String(cancha[key]));
+  }
+
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return putFormData<Cancha>(
+    `${API_URL}/canchas/${cancha.idEstablecimiento}/establecimiento/${cancha.id}`,
+    formData,
+    201,
+    token.token
+  );
 }
