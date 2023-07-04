@@ -1,4 +1,9 @@
-import { Administrador, Establecimiento, Suscripcion } from "../../types";
+import {
+  Administrador,
+  Establecimiento,
+  Suscripcion,
+  Cancha,
+} from "../../types";
 import jwtDecode from "jwt-decode";
 import { readLocalStorage, writeLocalStorage } from "../storage/localStorage";
 const API_URL = process.env.REACT_APP_API_BASE_URL;
@@ -99,7 +104,6 @@ async function postFormData<T>(
     .then((data) => data as T);
 }
 
-//REVISAR
 async function putFormData<T>(
   endpoint: string,
   formData: FormData,
@@ -118,7 +122,6 @@ async function putFormData<T>(
     .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
     .then((data) => data as T);
 }
-
 
 export async function getSuscripciones(): Promise<Suscripcion[]> {
   return get(`${API_URL}/suscripciones`);
@@ -184,34 +187,79 @@ export async function crearEstablecimiento(
   );
 }
 
-
-export async function traerEstablecimiento(
-  idAdmin: number,
+export async function traerEstablecimientos(
   id: number
-): Promise<Establecimiento> {
-  return get<Establecimiento>(`${API_URL}/${idAdmin}/establecimientos/${id}`); //REVISAR
+): Promise<Establecimiento[]> {
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return get(`${API_URL}/establecimientos/administrador/${id}`);
 }
 
-//REVISAR
-export async function actualizarEstablecimiento(
-  establecimiento: Establecimiento,
+export async function crearCancha(
+  cancha: Cancha,
   imagen?: File
-): Promise<Establecimiento> {
+): Promise<Cancha> {
   const formData = new FormData();
   if (imagen) {
     formData.append("imagen", imagen);
   }
-  let key: keyof Establecimiento;
-  for (key in establecimiento) {
-    formData.append(key, String(establecimiento[key]));
+  let key: keyof Cancha;
+  for (key in cancha) {
+    formData.append(key, String(cancha[key]));
   }
 
   const token = readLocalStorage<JWT>("token");
   if (!token) {
     return Promise.reject(new ApiError(403, "JWT inexistente"));
   }
-  return putFormData<Establecimiento>(
-    `${API_URL}/establecimiento/${establecimiento.id}/administrador/${establecimiento.idAdministrador}`,
+  return postFormData<Cancha>(
+    `${API_URL}/canchas/establecimientos/${cancha.idEstablecimiento}`,
+    formData,
+    201,
+    token.token
+  );
+}
+
+export async function getAllCanchas(idE: number): Promise<Cancha[]> {
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return get(`${API_URL}/canchas/establecimientos/${idE}`);
+}
+
+export async function getCanchaByIdC(
+  idE: number,
+  idC: number
+): Promise<Cancha> {
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return get(`${API_URL}/canchas/${idE}/establecimiento/${idC}`);
+}
+
+export async function editCancha(
+  cancha: Cancha,
+  imagen?: File
+): Promise<Cancha> {
+  const formData = new FormData();
+  if (imagen) {
+    formData.append("imagen", imagen);
+  }
+  let key: keyof Cancha;
+  for (key in cancha) {
+    formData.append(key, String(cancha[key]));
+  }
+
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return putFormData<Cancha>(
+    `${API_URL}/canchas/${cancha.idEstablecimiento}/establecimiento/${cancha.id}`,
     formData,
     201,
     token.token

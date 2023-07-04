@@ -1,0 +1,5 @@
+.button-text-scale {
+  transform-origin: center;
+  transition: transform 0.3s;
+  transform: scale(1.2); /* Ajusta el factor de escala según tus necesidades */
+}

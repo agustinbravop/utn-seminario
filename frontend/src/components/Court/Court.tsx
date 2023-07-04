@@ -1,8 +1,6 @@
 import { BASE_PATH } from "../../utils/constants";
-import "./Establecimiento.scss";
 import {
   Button,
-  ButtonGroup,
   Card,
   CardBody,
   CardFooter,
@@ -13,22 +11,23 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
-import { PhoneIcon, SettingsIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router";
-import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { PhoneIcon } from "@chakra-ui/icons";
+import { Cancha } from "../../types/index";
+import { Link } from "react-router-dom";
 
-export default function Establecimiento(props) {
-  const { establecimiento } = props;
-  const navigate = useNavigate();
-  const admin = useCurrentAdmin()
+type estabProps = {
+  cancha: Cancha;
+  key: number;
+};
 
+export default function Court({ cancha, key }: estabProps) {
   return (
     <Card maxWidth="xs" height="450px">
       <Image
         className="image-size"
-        src={`${BASE_PATH}/${establecimiento.image}`}
+        src={cancha.urlImagen !== null ? cancha.urlImagen : undefined}
         borderRadius="lg"
-        alt={`Imagen del establecimiento ${establecimiento.name}`}
+        alt={`Imagen del cancha ${cancha.nombre}`}
         objectFit="cover"
         maxWidth="100%"
         height="200px"
@@ -36,21 +35,16 @@ export default function Establecimiento(props) {
       <CardBody height="300px">
         <VStack spacing="0">
           <Heading className="card-title" size="md" marginBottom="10px">
-            {establecimiento.name}
+            {cancha.nombre}
           </Heading>
           <Text marginBottom="0">
-            <PhoneIcon boxSize={3.5} color="gray" /> {establecimiento.domicilio}
-          </Text>
-          <Text>
-            <Icon as={MdPlace} boxSize={5} color="gray" />
-            {establecimiento.telefono}
+            <PhoneIcon boxSize={3.5} color="gray" /> {cancha.descripcion}
           </Text>
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">
-        <ButtonGroup>
+        <Link to={`/cancha/${cancha.id}/canchas`}>
           <Button
-            key={0}
             leftIcon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -65,22 +59,9 @@ export default function Establecimiento(props) {
               </svg>
             }
           >
-            Canchas
-          </Button>
-          <Button
-            key={1}
-            leftIcon={<SettingsIcon />}
-            width="16"
-            height="16"
-            onClick={() =>
-              navigate(
-                `/administrador/${admin.id}/establecimiento/${establecimiento.id}/editar`
-              )
-            }
-          >
             Editar
           </Button>
-        </ButtonGroup>
+        </Link>
       </CardFooter>
     </Card>
   );
