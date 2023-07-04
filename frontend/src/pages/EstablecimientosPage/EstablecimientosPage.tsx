@@ -9,7 +9,6 @@ import { SettingsIcon } from "@chakra-ui/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "../../types";
 import { traerEstablecimientos } from "../../utils/api";
-import { useEffect } from "react";
 
 export default function EstablecimientosPage() {
   const navigate = useNavigate();

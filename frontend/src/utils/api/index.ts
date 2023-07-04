@@ -191,7 +191,30 @@ export async function traerEstablecimientos(id:number):Promise<Establecimiento[]
   return get(`${API_URL}/establecimientos/administrador/${id}`)
 };
 
+export async function crearCancha(
+  cancha: Cancha,
+  imagen?: File
+): Promise<Cancha> {
+  const formData = new FormData();
+  if (imagen) {
+    formData.append("imagen", imagen);
+  }
+  let key: keyof Cancha;
+  for (key in cancha) {
+    formData.append(key, String(cancha[key]));
+  }
 
+  const token = readLocalStorage<JWT>("token");
+  if (!token) {
+    return Promise.reject(new ApiError(403, "JWT inexistente"));
+  }
+  return postFormData<Cancha>(
+    `${API_URL}/canchas/establecimientos/${cancha.idEstablecimiento}`,
+    formData,
+    201,
+    token.token
+  );
+}
 
 export async function getAllCanchas(idE:number):Promise<Cancha[]> {
   const token = readLocalStorage<JWT>("token");

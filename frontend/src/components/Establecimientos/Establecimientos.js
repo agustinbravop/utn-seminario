@@ -3,15 +3,15 @@ import Loading from "../Loading";
 import { HStack } from "@chakra-ui/react";
 
 export default function Establecimientos({ result, loading, error }) {
-  console.log(loading, result);
+  console.log(result);
   return (
     <HStack display="flex" flexWrap="wrap" justifyContent="center">
       {loading? (
         <Loading />
-      ) : (
-        result.record.map((establecimiento, index) => (
-          <Establecimiento key={index} establecimiento={establecimiento} />
-        ))
+      ) : ( (error? <></> :
+          result.map((establecimiento, index) => (
+            <Establecimiento key={index} establecimiento={establecimiento} />
+          )))
       )}
     </HStack>
   );
