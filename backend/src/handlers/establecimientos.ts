@@ -1,66 +1,110 @@
 import { RequestHandler } from "express";
 import { EstablecimientoService } from "../services/establecimientos.js";
-import { Establecimiento } from "../models/establecimiento.js";
-import { PrismaClient } from "@prisma/client";
+import {
+  Establecimiento,
+  establecimientoSchema,
+} from "../models/establecimiento.js";
+import { ApiError } from "../utils/apierrors.js";
 
-import { getSuscripcionByAdminID } from "../repositories/administrador.js";
+export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
+  id: true,
+  urlImagen: true,
+});
 
-const prisma = new PrismaClient();
+export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
+  urlImagen: true,
+});
+
 export class EstablecimientoHandler {
-  prismaClient = new PrismaClient();
   private service: EstablecimientoService;
   constructor(service: EstablecimientoService) {
     this.service = service;
   }
 
-  crearEstablecimiento(): RequestHandler {
+  postEstablecimiento(): RequestHandler {
     return async (req, res) => {
       const est: Establecimiento = {
-        ...req.body,
+        ...res.locals.body,
+        idAdministrador: res.locals.idAdmin,
         id: 0,
       };
       const imagen = req.file;
-      const idSuscripcion = await getSuscripcionByAdminID(est.idAdministrador);
 
-      const cantidad = await getEstablecimientoByID(est.idAdministrador);
-
-      if (
-        (idSuscripcion === 1 && cantidad < 1) ||
-        (idSuscripcion === 2 && cantidad < 3) ||
-        (idSuscripcion === 3 && cantidad < 15)
-      ) {
-        const estResult = await this.service.crearEstablecimiento(est, imagen);
-        estResult.match(
-          (est) => res.status(201).json(est),
-          (err: any) => res.status(err.status).json(err)
-        );
-      } else {
-        console.log(
-          "La suscripcion asignada no le permite cargar mas establecimientos"
-        );
-      }
-    };
-  }
-
-  getByAdminID(): RequestHandler {
-    return async (req, res) => {
-      // TODO: mejorar input validation
-      const idAdmin = Number(req.body.idAdmin);
-      const estsResult = await this.service.getByAdministradorID(idAdmin);
-      estsResult.match(
-        (ests) => res.status(200).json(ests),
-        (err: any) => res.status(err.status).json(err)
+      const estResult = await this.service.crear(est, imagen);
+      estResult.match(
+        (est) => res.status(201).json(est),
+        (err) => res.status(err.status).json(err)
       );
     };
   }
-}
 
-export async function getEstablecimientoByID(id: number): Promise<number> {
-  const admin = await prisma.establecimiento.findMany({
-    where: {
-      idAdministrador: Number(id),
-    },
-  });
+  getEstablecimientoByID(): RequestHandler {
+    return async (req, res) => {
+      // TODO: mejorar input validation
+      const id = Number(req.params.idEst);
+      const estResult = await this.service.getByID(id);
+      estResult.match(
+        (est) => res.status(200).json(est),
+        (err) => res.status(err.status).json(err)
+      );
+    };
+  }
 
-  return admin.length;
+  getEstablecimientosByAdminID(): RequestHandler {
+    return async (req, res) => {
+      // TODO: mejorar input validation
+      const idAdmin = Number(req.params.idAdmin);
+      const estsResult = await this.service.getByAdminID(idAdmin);
+      estsResult.match(
+        (ests) => res.status(200).json(ests),
+        (err) => res.status(err.status).json(err)
+      );
+    };
+  }
+
+  putEstablecimiento(): RequestHandler {
+    return async (req, res) => {
+      const est: Establecimiento = {
+        ...res.locals.body,
+        // El `idAdministrador` es el `id` que recibimos en el JWT Payload.
+        idAdministrador: res.locals.idAdmin,
+      };
+      const imagen = req.file;
+
+      const estResult = await this.service.modificar(est, imagen);
+      estResult.match(
+        (est) => res.status(200).json(est),
+        (err) => res.status(err.status).json(err)
+      );
+    };
+  }
+
+  /**
+   * Valida que el idEst de los params corresponda a un establecimiento del idAdmin del JWT.
+   * Esto se usa para prevenir que un admin modifique un establecimiento que no es suyo.
+   */
+  validateAdminOwnsEstablecimiento(): RequestHandler {
+    return async (req, res, next) => {
+      const idEst = Number(req.params.idEst);
+      const est = (await this.service.getByID(idEst)).unwrapOr(null);
+      if (est === null) {
+        return res
+          .status(404)
+          .json(new ApiError(404, `No existe establecimiento con id ${idEst}`));
+      }
+
+      if (est.idAdministrador !== res.locals.idAdmin) {
+        return res
+          .status(403)
+          .json(
+            new ApiError(
+              403,
+              "No puede alterar establecimientos de otro administrador"
+            )
+          );
+      }
+
+      next();
+    };
+  }
 }
