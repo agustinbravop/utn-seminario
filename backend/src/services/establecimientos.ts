@@ -13,6 +13,9 @@ export interface EstablecimientoService {
   getAllByAdminID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>>;
+  getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
+  getEstablecimientoByIDByAdminID(idAdmin:number, IdEstablecimiento:number): Promise<Result<Establecimiento,ApiError>>;
+  putEstablecimientoByAdminIDByID(est:Establecimiento, idEst:number, idAdmin:number, imagen?: Express.Multer.File):Promise<Result<Establecimiento,ApiError>>; 
 }
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
@@ -76,5 +79,36 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     est.urlImagen = urlImagen;
 
     return await this.repo.crearEstablecimiento(est);
+  }
+
+  async getEstablecimientoByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>> {
+     return await this.repo.getEstablecimientoByAdminID(idAdmin) 
+  }
+
+  async getEstablecimientoByIDByAdminID(idAdmin: number, IdEstablecimiento: number): Promise<Result<Establecimiento, ApiError>> {
+      return await this.repo.getEstablecimientoByIDByAdminID(idAdmin, IdEstablecimiento)
+  }
+  
+
+  async putEstablecimientoByAdminIDByID(
+    est: Establecimiento, 
+    idEst: number, 
+    idAdmin:number,
+    imagen?: Express.Multer.File
+    ): Promise<Result<Establecimiento, ApiError>> {
+      let urlimagen=null
+      if (imagen) { 
+        try { 
+          urlimagen=await subirImagen(imagen)
+          est.urlImagen=urlimagen
+          est.id=idEst, 
+          est.idAdministrador=idAdmin
+        }catch(e) { 
+          return err(new ApiError(500, "Error al actualizar la imagen"))
+        }
+      }
+     
+      return await this.repo.putEstablecimientoByAdminIDByID(est)
+      
   }
 }

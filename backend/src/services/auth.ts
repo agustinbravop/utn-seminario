@@ -130,6 +130,25 @@ export class AuthServiceImpl implements AuthService {
     clave: string
   ): Promise<Result<Administrador, ApiError>> {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
-    return await this.repo.crearAdministrador(admin, hash);
+    let now=new Date()
+    const anioString=String(now.getUTCFullYear() ).slice(-2)
+    const anioActual=Number(anioString)
+    const mesString = String(now.getUTCMonth()+1); 
+    const mesActual=Number(mesString); 
+
+    const ArregloDigitos=admin.tarjeta.vencimiento.split("/"); 
+    const mesDigitos=Number(ArregloDigitos[0]); 
+    const anioDigitos=Number(ArregloDigitos[1])
+    if (anioActual<=anioDigitos) { 
+      const dif=mesActual-mesDigitos; 
+
+      if (dif>=2) { 
+        return await this.repo.crearAdministrador(admin, hash);
+
+      }
+      return err(new ApiError(400, "La tarjeta ingresada esta vencida "+admin.tarjeta.vencimiento))
+    }
+    return err(new ApiError(500, "La tarjeta ingresada esta vencida "+admin.tarjeta.vencimiento))
+    
   }
 }

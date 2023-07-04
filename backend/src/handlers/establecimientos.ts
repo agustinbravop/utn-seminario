@@ -48,4 +48,46 @@ export class EstablecimientoHandler {
       );
     };
   }
+
+  getEstablecimientoByAdminID():RequestHandler { 
+    return async (req, res) => { 
+      const idAdmin=Number(req.params['idAdmin']) 
+      const estResult=await this.service.getEstablecimientoByAdminID(idAdmin) 
+      estResult.match( 
+        (est)=> res.status(200).json(est), 
+        (err)=>res.status(err.status).json(err)
+      )
+    }
+  }
+
+  getEstablecimientoByIDByAdminID(): RequestHandler{ 
+    return async(req, res)=> { 
+      const idAdmin=Number(req.params['idAdmin'] )
+      const idEst=Number(req.params['id'] )
+      const estResul=await this.service.getEstablecimientoByIDByAdminID(idAdmin, idEst)
+
+      estResul.match( 
+        (est)=>res.status(200).json(est), 
+        (err)=>res.status(err.status).json(err)
+      )
+    }
+  }
+
+  putEstablecimientoByAdminIDByID():RequestHandler{ 
+    return async (req, res)=> { 
+      const est: Establecimiento= { 
+        ...req.body
+      }
+      const imagen= req.file 
+      const idEst=Number(req.params['id'])
+      const idAdmin=Number(req.params['idAdmin'])
+
+      const estResul=await this.service.putEstablecimientoByAdminIDByID(est,idEst,idAdmin,imagen); 
+      estResul.match( 
+        (est)=>res.status(200).json(est), 
+        (err)=>res.status(err.status).json(err)
+      )
+      
+    }
+  }
 }
