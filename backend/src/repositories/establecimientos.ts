@@ -2,19 +2,14 @@ import { PrismaClient, establecimiento } from "@prisma/client";
 import { ApiError } from "../utils/apierrors.js";
 import { Result, err, ok } from "neverthrow";
 import { Establecimiento } from "../models/establecimiento.js";
-import {EnvioCorreo} from '../utils/EnviodeCorreoUpdate.js'
-
 
 export interface EstablecimientoRepository {
-  crearEstablecimiento(
-    est: Establecimiento
-  ): Promise<Result<Establecimiento, ApiError>>;
-  getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
-  getEstablecimientoByIDByAdminID(idAdmin:number, idEstablecimiento:number):Promise<Result<Establecimiento,ApiError>>;
-  putEstablecimientoByAdminIDByID(est:Establecimiento):Promise<Result<Establecimiento,ApiError>>
-
+  crear(est: Establecimiento): Promise<Result<Establecimiento, ApiError>>;
   getByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>>;
-
+  getByID(
+    idEstablecimiento: number
+  ): Promise<Result<Establecimiento, ApiError>>;
+  modificar(est: Establecimiento): Promise<Result<Establecimiento, ApiError>>;
 }
 
 export class PrismaEstablecimientoRepository
@@ -30,7 +25,7 @@ export class PrismaEstablecimientoRepository
     return { ...est };
   }
 
-  async crearEstablecimiento(
+  async crear(
     est: Establecimiento
   ): Promise<Result<Establecimiento, ApiError>> {
     try {
@@ -43,7 +38,7 @@ export class PrismaEstablecimientoRepository
           direccion: est.direccion,
           localidad: est.localidad,
           provincia: est.provincia,
-          idAdministrador: Number(est.idAdministrador),
+          idAdministrador: est.idAdministrador,
           urlImagen: est.urlImagen,
           horariosDeAtencion: est.horariosDeAtencion,
         },
@@ -55,102 +50,70 @@ export class PrismaEstablecimientoRepository
     }
   }
 
+  async getByID(idEst: number): Promise<Result<Establecimiento, ApiError>> {
+    return awaitQuery(
+      this.prisma.establecimiento.findUnique({
+        where: {
+          id: idEst,
+        },
+      }),
+      `No existe establecimiento con id ${idEst}`,
+      "Error al intentar obtener el establecimiento"
+    );
+  }
+
   async getByAdminID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>> {
     try {
-      const dbEsts = await this.prisma.establecimiento.findMany({
-        where: {
-          idAdministrador: idAdmin,
-        },
+      const estsDB = await this.prisma.establecimiento.findMany({
+        where: { idAdministrador: idAdmin },
       });
 
-      const establecimientos = dbEsts.map((dbEsts) => this.toModel(dbEsts));
-
-      return ok(establecimientos);
+      return ok(estsDB.map((estDB) => this.toModel(estDB)));
     } catch (e) {
-
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
   }
-  
 
-  async getEstablecimientoByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>> {
-  
-      try { 
-        const establecimiento= await this.prisma.establecimiento.findMany({ 
-          where: { 
-            idAdministrador:idAdmin
-          }, 
-          orderBy:[ 
-            { 
-              nombre:'asc'
-            }
-          ]
-        })
-        if (establecimiento.length===0) { 
-        return err(new ApiError(500, "Error, El ID "+idAdmin+" del administrador ingresado no existe. Intente nuevamente"))
-        }
-        return ok(establecimiento)   
-      }catch(e) { 
-        return err(new ApiError(500, "Error, El ID ingresado no existe. Intente de nuevo"))
-      }
+  async modificar(
+    est: Establecimiento
+  ): Promise<Result<Establecimiento, ApiError>> {
+    return awaitQuery(
+      this.prisma.establecimiento.update({
+        where: {
+          id: est.id,
+        },
+        data: {
+          ...est,
+          id: undefined,
+        },
+      }),
+      `No existe establecimiento con id ${est.id}`,
+      "Error al intentar modificar el establecimiento"
+    );
   }
+}
 
- async getEstablecimientoByIDByAdminID(idAdmin: number, idEstablecimiento: number): Promise<Result<Establecimiento, ApiError>> {
-      try {
-        const establecimiento=await this.prisma.establecimiento.findFirstOrThrow({ 
-          where: { 
-            AND: [ 
-              {
-                id:idEstablecimiento
-              }, 
-              {
-                idAdministrador:idAdmin
-              }
-            ]
-          }
-        }); 
+type establecimientoDB = establecimiento;
 
-        return ok(establecimiento)
+function toModel(est: establecimientoDB): Establecimiento {
+  return { ...est };
+}
 
-      }catch(e) { 
-       
-        
-        return err(new ApiError(500, "Error no se encuentra el establecimiento con los datos ingresados. Intente de nuevo"))
-      }
-  }
+async function awaitQuery(
+  promise: Promise<establecimientoDB | null>,
+  notFoundMsg: string,
+  errorMsg: string
+): Promise<Result<Establecimiento, ApiError>> {
+  try {
+    const estDB = await promise;
 
-
-  async putEstablecimientoByAdminIDByID(est: Establecimiento): Promise<Result<Establecimiento, ApiError>> {
-      try {
-        
-        await this.prisma.establecimiento.updateMany({ 
-          where: { 
-            AND: [ 
-              {id:est.id}, 
-              {idAdministrador:est.idAdministrador}
-            ]
-          },
-          data: { 
-            nombre:est.nombre, 
-            telefono: est.telefono,
-            correo: est.correo,
-            direccion: est.direccion,
-            localidad: est.localidad,
-            provincia: est.provincia,
-            urlImagen: est.urlImagen,
-            horariosDeAtencion: est.horariosDeAtencion,
-          },
-        })
-
-       EnvioCorreo(est)
-        
-        return ok(this.toModel(est))
-         
-      }catch(e){ 
-      
-        return err(new ApiError(500, "Error no se pudo actualizar el establecimiento "))
-      }
+    if (estDB === null) {
+      return err(new ApiError(404, notFoundMsg));
+    }
+    return ok(toModel(estDB));
+  } catch (e) {
+    return err(new ApiError(500, errorMsg));
   }
 }

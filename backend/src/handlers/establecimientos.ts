@@ -21,7 +21,7 @@ export class EstablecimientoHandler {
     this.service = service;
   }
 
-  crearEstablecimiento(): RequestHandler {
+  postEstablecimiento(): RequestHandler {
     return async (req, res) => {
       const est: Establecimiento = {
         ...res.locals.body,
@@ -29,65 +29,50 @@ export class EstablecimientoHandler {
       };
       const imagen = req.file;
 
-      const estResult = await this.service.crearEstablecimiento(est, imagen);
+      const estResult = await this.service.crear(est, imagen);
       estResult.match(
         (est) => res.status(201).json(est),
-        (err: any) => res.status(err.status).json(err)
+        (err) => res.status(err.status).json(err)
       );
     };
   }
 
-  getByAdminID(): RequestHandler {
+  getEstablecimientoByID(): RequestHandler {
+    return async (req, res) => {
+      // TODO: mejorar input validation
+      const id = Number(req.params.idEst);
+      const estResult = await this.service.getByID(id);
+      estResult.match(
+        (est) => res.status(200).json(est),
+        (err) => res.status(err.status).json(err)
+      );
+    };
+  }
+
+  getEstablecimientosByAdminID(): RequestHandler {
     return async (req, res) => {
       // TODO: mejorar input validation
       const idAdmin = Number(req.params.idAdmin);
-      const estsResult = await this.service.getAllByAdminID(idAdmin);
+      const estsResult = await this.service.getByAdminID(idAdmin);
       estsResult.match(
         (ests) => res.status(200).json(ests),
-        (err: any) => res.status(err.status).json(err)
+        (err) => res.status(err.status).json(err)
       );
     };
   }
 
-  getEstablecimientoByAdminID():RequestHandler { 
-    return async (req, res) => { 
-      const idAdmin=Number(req.params['idAdmin']) 
-      const estResult=await this.service.getEstablecimientoByAdminID(idAdmin) 
-      estResult.match( 
-        (est)=> res.status(200).json(est), 
-        (err)=>res.status(err.status).json(err)
-      )
-    }
-  }
+  putEstablecimiento(): RequestHandler {
+    return async (req, res) => {
+      const est: Establecimiento = {
+        ...req.body,
+      };
+      const imagen = req.file;
 
-  getEstablecimientoByIDByAdminID(): RequestHandler{ 
-    return async(req, res)=> { 
-      const idAdmin=Number(req.params['idAdmin'] )
-      const idEst=Number(req.params['id'] )
-      const estResul=await this.service.getEstablecimientoByIDByAdminID(idAdmin, idEst)
-
-      estResul.match( 
-        (est)=>res.status(200).json(est), 
-        (err)=>res.status(err.status).json(err)
-      )
-    }
-  }
-
-  putEstablecimientoByAdminIDByID():RequestHandler{ 
-    return async (req, res)=> { 
-      const est: Establecimiento= { 
-        ...req.body
-      }
-      const imagen= req.file 
-      const idEst=Number(req.params['id'])
-      const idAdmin=Number(req.params['idAdmin'])
-
-      const estResul=await this.service.putEstablecimientoByAdminIDByID(est,idEst,idAdmin,imagen); 
-      estResul.match( 
-        (est)=>res.status(200).json(est), 
-        (err)=>res.status(err.status).json(err)
-      )
-      
-    }
+      const estResul = await this.service.modificar(est, imagen);
+      estResul.match(
+        (est) => res.status(200).json(est),
+        (err) => res.status(err.status).json(err)
+      );
+    };
   }
 }

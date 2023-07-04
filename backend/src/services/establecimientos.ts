@@ -6,16 +6,16 @@ import { subirImagen } from "../utils/imagenes.js";
 import { AdministradorService } from "./administrador.js";
 
 export interface EstablecimientoService {
-  crearEstablecimiento(
+  crear(
     establecimiento: Establecimiento,
     imagen?: Express.Multer.File
   ): Promise<Result<Establecimiento, ApiError>>;
-  getAllByAdminID(
-    idAdmin: number
-  ): Promise<Result<Establecimiento[], ApiError>>;
-  getEstablecimientoByAdminID(idAdmin:number): Promise<Result<Establecimiento[], ApiError>>; 
-  getEstablecimientoByIDByAdminID(idAdmin:number, IdEstablecimiento:number): Promise<Result<Establecimiento,ApiError>>;
-  putEstablecimientoByAdminIDByID(est:Establecimiento, idEst:number, idAdmin:number, imagen?: Express.Multer.File):Promise<Result<Establecimiento,ApiError>>; 
+  getByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>>;
+  getByID(idEst: number): Promise<Result<Establecimiento, ApiError>>;
+  modificar(
+    est: Establecimiento,
+    imagen?: Express.Multer.File
+  ): Promise<Result<Establecimiento, ApiError>>;
 }
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
@@ -23,17 +23,60 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   private adminService: AdministradorService;
 
   constructor(
-    repository: EstablecimientoRepository,
+    repo: EstablecimientoRepository,
     adminService: AdministradorService
   ) {
-    this.repo = repository;
+    this.repo = repo;
     this.adminService = adminService;
   }
 
-  async getAllByAdminID(
+  async getByID(idEst: number): Promise<Result<Establecimiento, ApiError>> {
+    return await this.repo.getByID(idEst);
+  }
+
+  async getByAdminID(
     idAdmin: number
   ): Promise<Result<Establecimiento[], ApiError>> {
     return await this.repo.getByAdminID(idAdmin);
+  }
+
+  async crear(
+    est: Establecimiento,
+    imagen?: Express.Multer.File
+  ): Promise<Result<Establecimiento, ApiError>> {
+    const validacionErr = await this.validarLimiteEstablecimientos(
+      est.idAdministrador
+    );
+    if (validacionErr) {
+      return err(validacionErr);
+    }
+
+    let urlImagen = null;
+    if (imagen) {
+      try {
+        urlImagen = await subirImagen(imagen);
+      } catch (e) {
+        return err(new ApiError(500, "Error al subir la imagen"));
+      }
+    }
+    est.urlImagen = urlImagen;
+
+    return await this.repo.crear(est);
+  }
+
+  async modificar(
+    est: Establecimiento,
+    imagen?: Express.Multer.File
+  ): Promise<Result<Establecimiento, ApiError>> {
+    if (imagen) {
+      try {
+        est.urlImagen = await subirImagen(imagen);
+      } catch (e) {
+        return err(new ApiError(500, "Error al actualizar la imagen"));
+      }
+    }
+
+    return await this.repo.modificar(est);
   }
 
   async validarLimiteEstablecimientos(
@@ -55,60 +98,5 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
       return new ApiError(409, "Limite de establecimientos alcanzado");
     }
     return null;
-  }
-
-  async crearEstablecimiento(
-    est: Establecimiento,
-    imagen?: Express.Multer.File
-  ): Promise<Result<Establecimiento, ApiError>> {
-    const validacionErr = await this.validarLimiteEstablecimientos(
-      est.idAdministrador
-    );
-    if (validacionErr) {
-      return err(validacionErr);
-    }
-
-    let urlImagen = null;
-    if (imagen) {
-      try {
-        urlImagen = await subirImagen(imagen);
-      } catch (e) {
-        return err(new ApiError(500, "Error al subir la imagen"));
-      }
-    }
-    est.urlImagen = urlImagen;
-
-    return await this.repo.crearEstablecimiento(est);
-  }
-
-  async getEstablecimientoByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>> {
-     return await this.repo.getEstablecimientoByAdminID(idAdmin) 
-  }
-
-  async getEstablecimientoByIDByAdminID(idAdmin: number, IdEstablecimiento: number): Promise<Result<Establecimiento, ApiError>> {
-      return await this.repo.getEstablecimientoByIDByAdminID(idAdmin, IdEstablecimiento)
-  }
-  
-
-  async putEstablecimientoByAdminIDByID(
-    est: Establecimiento, 
-    idEst: number, 
-    idAdmin:number,
-    imagen?: Express.Multer.File
-    ): Promise<Result<Establecimiento, ApiError>> {
-      let urlimagen=null
-      if (imagen) { 
-        try { 
-          urlimagen=await subirImagen(imagen)
-          est.urlImagen=urlimagen
-          est.id=idEst, 
-          est.idAdministrador=idAdmin
-        }catch(e) { 
-          return err(new ApiError(500, "Error al actualizar la imagen"))
-        }
-      }
-     
-      return await this.repo.putEstablecimientoByAdminIDByID(est)
-      
   }
 }
