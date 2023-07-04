@@ -1,6 +1,15 @@
 import { CanchaService } from "../services/canchas";
 import { RequestHandler } from "express";
-import { Cancha } from "../models/cancha";
+import { Cancha, canchaSchema } from "../models/cancha";
+
+export const crearCanchaReqSchema = canchaSchema.omit({
+  id: true,
+  urlImagen: true,
+});
+
+export const modificarCanchaReqSchema = canchaSchema.omit({
+  urlImagen: true,
+});
 
 export class CanchaHandler {
   private service: CanchaService;

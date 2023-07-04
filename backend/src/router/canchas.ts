@@ -1,8 +1,11 @@
 import express from "express";
 import { Router } from "express";
-import { CanchaHandler } from "../handlers/canchas";
+import {
+  CanchaHandler,
+  crearCanchaReqSchema,
+  modificarCanchaReqSchema,
+} from "../handlers/canchas";
 import multer from "multer";
-import { ActualizarCanchaSchema } from "../validaciones/ActualizarCancha";
 import { validateBody } from "../middlewares/validation";
 import { EstablecimientoHandler } from "../handlers/establecimientos";
 import { AuthMiddleware } from "../middlewares/auth";
@@ -22,7 +25,7 @@ export function canchasRouter(
     authMiddle.isAdmin(),
     estHandler.validateAdminOwnsEstablecimiento(),
     upload.single("imagen"),
-    validateBody(ActualizarCanchaSchema),
+    validateBody(crearCanchaReqSchema),
     handler.postCancha()
   );
   router.put(
@@ -30,7 +33,7 @@ export function canchasRouter(
     authMiddle.isAdmin(),
     estHandler.validateAdminOwnsEstablecimiento(),
     upload.single("imagen"),
-    validateBody(ActualizarCanchaSchema),
+    validateBody(modificarCanchaReqSchema),
     handler.putCancha()
   );
 

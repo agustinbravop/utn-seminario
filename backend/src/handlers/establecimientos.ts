@@ -1,19 +1,18 @@
 import { RequestHandler } from "express";
 import { EstablecimientoService } from "../services/establecimientos.js";
-import { Establecimiento } from "../models/establecimiento.js";
-import { z } from "zod";
+import {
+  Establecimiento,
+  establecimientoSchema,
+} from "../models/establecimiento.js";
 import { ApiError } from "../utils/apierrors.js";
 
-export const crearEstablecimientoReqSchema = z.object({
-  nombre: z.string().nonempty(),
-  correo: z.string().nonempty().email(),
-  telefono: z.string().nonempty().max(15),
-  direccion: z.string().nonempty(),
-  localidad: z.string().nonempty(),
-  provincia: z.string().nonempty(),
-  imagen: z.custom<Express.Multer.File>().optional(),
-  idAdministrador: z.string().transform((idAdm) => Number(idAdm)),
-  horariosDeAtencion: z.string().nonempty().nullable(),
+export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
+  id: true,
+  urlImagen: true,
+});
+
+export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
+  urlImagen: true,
 });
 
 export class EstablecimientoHandler {
@@ -66,7 +65,7 @@ export class EstablecimientoHandler {
   putEstablecimiento(): RequestHandler {
     return async (req, res) => {
       const est: Establecimiento = {
-        ...req.body,
+        ...res.locals.body,
         // El `idAdministrador` es el `id` que recibimos en el JWT Payload.
         idAdministrador: res.locals.idAdmin,
       };
@@ -82,6 +81,7 @@ export class EstablecimientoHandler {
 
   /**
    * Valida que el idEst de los params corresponda a un establecimiento del idAdmin del JWT.
+   * Esto se usa para prevenir que un admin modifique un establecimiento que no es suyo.
    */
   validateAdminOwnsEstablecimiento(): RequestHandler {
     return async (req, res, next) => {

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type Tarjeta = z.infer<typeof tarjetaSchema>;
+
 export const tarjetaSchema = z.object({
   id: z.number().positive().int(),
   nombre: z.string().nonempty(),
@@ -10,5 +12,3 @@ export const tarjetaSchema = z.object({
     .nonempty()
     .regex(/\d\d\/\d\d\d?\d?/),
 });
-
-export type Tarjeta = z.infer<typeof tarjetaSchema>;
