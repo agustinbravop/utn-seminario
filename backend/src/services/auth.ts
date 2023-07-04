@@ -24,7 +24,7 @@ export interface AuthService {
     admin: Administrador,
     clave: string
   ): Promise<Result<Administrador, ApiError>>;
-  verifyJWT(token: string): Promise<boolean>;
+  verifyJWT(token: string): Promise<JWTPayload | null>;
   getRolesFromJWT(token: string): Rol[];
 }
 
@@ -80,15 +80,15 @@ export class AuthServiceImpl implements AuthService {
    * Valida un JWT. Un JWT es auténtico si fue firmado por la función signJWT.
    * @returns true si el JWT es válido. Retorna falso en caso contrario.
    */
-  async verifyJWT(token: string): Promise<boolean> {
+  async verifyJWT(token: string): Promise<JWTPayload | null> {
     try {
-      await jwtVerify(token, this.secretKey as Uint8Array, {
+      const jwt = await jwtVerify(token, this.secretKey as Uint8Array, {
         issuer: process.env.JWT_ISSUER,
       });
-      return true;
+      return jwt.payload;
     } catch (e) {
       // token verification failed
-      return false;
+      return null;
     }
   }
 
