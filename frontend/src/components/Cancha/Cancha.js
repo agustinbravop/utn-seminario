@@ -1,20 +1,12 @@
-import { BASE_PATH } from "../../utils/constants";
 import "./Cancha.scss";
 import {
-  Button,
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
   Heading,
-  Icon,
   Image,
   Text,
-  VStack,
   Stack,
 } from "@chakra-ui/react";
-import { MdPlace } from "react-icons/md";
-import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router";
 
 export default function Cancha(props) {
@@ -25,7 +17,7 @@ export default function Cancha(props) {
     <Card maxWidth="xs" width='20vw' onClick={()=>{alert('Cancha')}} style={{ cursor: 'pointer'}}>
       <Image
         className="image-size"
-        src={`${BASE_PATH}/${cancha.image}`}
+        src={cancha.urlImagen}
         borderRadius="lg"
         alt={`Imagen de la cancha ${cancha.name}`}
         objectFit="cover"

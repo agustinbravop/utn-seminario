@@ -124,6 +124,7 @@ export const theme = extendTheme({
     }
   }
 });
+
 const router = createBrowserRouter(routes);
 const queryClient = new QueryClient();
 function App() {

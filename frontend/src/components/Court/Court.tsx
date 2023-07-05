@@ -1,16 +1,13 @@
-import { BASE_PATH } from "../../utils/constants";
 import {
   Button,
   Card,
   CardBody,
   CardFooter,
   Heading,
-  Icon,
   Image,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { Cancha } from "../../types/index";
 import { Link } from "react-router-dom";

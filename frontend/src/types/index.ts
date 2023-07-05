@@ -14,7 +14,7 @@ export type Cancha = {
   nombre: string;
   descripcion?: string;
   estaHabilitada: boolean;
-  urlImagen?: string | null;
+  urlImagen?: string;
   idEstablecimiento: number;
 };
 
@@ -25,7 +25,7 @@ export type Establecimiento = {
   direccion: string;
   localidad: string;
   provincia: string;
-  urlImagen: string | null;
+  urlImagen?: string;
   correo: string;
   idAdministrador: number;
   horariosDeAtencion: string;
