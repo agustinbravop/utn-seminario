@@ -1,15 +1,20 @@
-import useFetch from "../../hooks/useFetch";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import Establecimientos from "../../components/Establecimientos";
-import { urlApiEstablecimientos } from "../../utils/constants";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import "./EstablecimientosPage.scss";
 import { Button } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
+import { useQuery } from "@tanstack/react-query";
+import { Establecimiento } from "../../types";
+import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
 
 export default function EstablecimientosPage() {
   const navigate = useNavigate();
-  const establecimientos = useFetch(urlApiEstablecimientos, null);
+  const { id } = useParams();
+  const { data, isLoading, isError } = useQuery<Establecimiento[]>(
+    ["establecimientos"],
+    () => getEstablecimientosByAdminID(Number(id))
+  );
 
   return (
     <div>
@@ -39,7 +44,7 @@ export default function EstablecimientosPage() {
       >
         Perfil
       </Button>
-      <Establecimientos {...establecimientos} />
+      <Establecimientos result={data} loading={isLoading} error={isError} />
     </div>
   );
 }

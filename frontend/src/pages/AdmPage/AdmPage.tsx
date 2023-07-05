@@ -42,7 +42,6 @@ function AdmPage() {
         title: "Cuenta registrada correctamente.",
         description: `Inicie sesión para continuar.`,
         status: "success",
-        duration: 3000,
         isClosable: true,
       });
       navigate(-1);
@@ -52,7 +51,6 @@ function AdmPage() {
         title: "Error al registrar su cuenta.",
         description: `Intente de nuevo.`,
         status: "error",
-        duration: 3000,
         isClosable: true,
       });
     },

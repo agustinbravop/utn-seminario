@@ -1,6 +1,6 @@
 import "./NewEstab.css";
 import TopMenu from "../../components/TopMenu/TopMenu";
-import { ApiError, crearEstablecimiento } from "../../utils/api";
+import { ApiError } from "../../utils/api";
 import { Establecimiento } from "../../types";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { crearEstablecimiento } from "../../utils/api/establecimientos";
 
 type FormState = Establecimiento & {
   imagen?: File;
@@ -33,13 +34,12 @@ function NewEstab() {
     ApiError,
     FormState
   >({
-    mutationFn: ({ imagen, ...admin }) => crearEstablecimiento(admin, imagen),
+    mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
     onSuccess: () => {
       toast({
         title: "Establecimiento creado.",
         description: `Establecimiento registrado correctamente.`,
         status: "success",
-        duration: 3000,
         isClosable: true,
       });
       navigate(-1);
@@ -49,7 +49,6 @@ function NewEstab() {
         title: "Error al crear el establecimiento.",
         description: `Intente de nuevo.`,
         status: "error",
-        duration: 3000,
         isClosable: true,
       });
     },

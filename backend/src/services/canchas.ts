@@ -1,8 +1,8 @@
 import { Result, err } from "neverthrow";
-import { Cancha } from "../models/cancha";
-import { ApiError } from "../utils/apierrors";
-import { CanchaRepository } from "../repositories/canchas";
-import { subirImagen } from "../utils/imagenes";
+import { Cancha } from "../models/cancha.js";
+import { ApiError } from "../utils/apierrors.js";
+import { CanchaRepository } from "../repositories/canchas.js";
+import { subirImagen } from "../utils/imagenes.js";
 
 export interface CanchaService {
   getCanchasByEstablecimientoID(
