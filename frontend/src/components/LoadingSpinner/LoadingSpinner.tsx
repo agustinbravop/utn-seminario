@@ -1,7 +1,7 @@
 import { Spinner } from "@chakra-ui/react";
-import "./Loading.scss";
+import "./LoadingSpinner.scss";
 
-export default function Loading() {
+export default function LoadingSpinner() {
   return (
     <div className="loading">
       <Spinner size="lg" />

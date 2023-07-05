@@ -1,15 +1,29 @@
-import { RequestHandler } from "express"; 
+import { RequestHandler } from "express";
 import { CanchaService } from "../services/canchas.js";
 import { Cancha, canchaSchema } from "../models/cancha.js";
+import { z } from "zod";
 
-export const crearCanchaReqSchema = canchaSchema.omit({
-  id: true,
-  urlImagen: true,
-});
+export const crearCanchaReqSchema = canchaSchema
+  .omit({
+    id: true,
+    urlImagen: true,
+  })
+  .extend({
+    idEstablecimiento: z.string().transform((str) => Number(str)),
+    estaHabilitada: z.string().transform((str) => str === "true"),
+    // TODO: agregar validaciones para disciplinas (string[]) en un multipart/form-data
+    disciplinas: z.string().transform((_) => ["Fútbol"]),
+  });
 
-export const modificarCanchaReqSchema = canchaSchema.omit({
-  urlImagen: true,
-});
+export const modificarCanchaReqSchema = canchaSchema
+  .omit({
+    urlImagen: true,
+  })
+  .extend({
+    idEstablecimiento: z.string().transform((str) => Number(str)),
+    estaHabilitada: z.string().transform((str) => str === "true"),
+    disciplinas: z.string().transform((_) => [""]),
+  });
 
 export class CanchaHandler {
   private service: CanchaService;
@@ -20,6 +34,7 @@ export class CanchaHandler {
 
   getCanchasByEstablecimientoID(): RequestHandler {
     return async (req, res) => {
+      console.log(req.params);
       const idEst = Number(req.params["idEst"]);
 
       const cancha = await this.service.getCanchasByEstablecimientoID(idEst);

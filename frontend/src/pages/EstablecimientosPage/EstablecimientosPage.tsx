@@ -1,50 +1,69 @@
 import TopMenu from "../../components/TopMenu/TopMenu";
-import Establecimientos from "../../components/Establecimientos";
-import { useNavigate, useParams } from "react-router";
+import EstablecimientoCardList from "../../components/EstablecimientoCardList/EstablecimientoCardList";
+import { Navigate, useNavigate } from "react-router";
 import "./EstablecimientosPage.scss";
-import { Button } from "@chakra-ui/react";
+import { Button, HStack, Icon, Text } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Establecimiento } from "../../types";
+import { Establecimiento } from "../../models";
 import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
+import { GrAddCircle } from "react-icons/gr";
+import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+
+interface EstablecimientosListProps {
+  data?: Establecimiento[];
+  isLoading: boolean;
+  isError: boolean;
+}
+
+function EstablecimientosList({ data }: EstablecimientosListProps) {
+  return <EstablecimientoCardList establecimientos={data || []} />;
+}
 
 export default function EstablecimientosPage() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { currentAdmin } = useCurrentAdmin();
+
   const { data, isLoading, isError } = useQuery<Establecimiento[]>(
-    ["establecimientos"],
-    () => getEstablecimientosByAdminID(Number(id))
+    ["establecimientos", currentAdmin?.id],
+    () => getEstablecimientosByAdminID(Number(currentAdmin?.id))
   );
+
+  if (!currentAdmin) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div>
       <TopMenu />
-      <Button
-        className="btn-agregarestablecimiento"
-        onClick={() => navigate("nuevoEstablecimiento")}
-        variant="outline"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          className="bi bi-plus-circle-fill"
-          viewBox="0 0 16 16"
+      <HStack align="center">
+        <Button
+          className="btn-agregarestablecimiento"
+          onClick={() => navigate("nuevoEstablecimiento")}
+          variant="outline"
+          leftIcon={<Icon as={GrAddCircle} />}
         >
-          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-        </svg>{" "}
-        Establecimiento
-      </Button>
-      <Button
-        className="btn-agregarestablecimiento"
-        onClick={() => navigate("perfil")}
-        leftIcon={<SettingsIcon />}
-        variant="outline"
-      >
-        Perfil
-      </Button>
-      <Establecimientos result={data} loading={isLoading} error={isError} />
+          Establecimiento
+        </Button>
+        <Text mb="0" mt="15px">
+          {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
+          establecimientos
+        </Text>
+        <Button
+          className="btn-agregarestablecimiento"
+          onClick={() => navigate("perfil")}
+          leftIcon={<SettingsIcon />}
+          variant="outline"
+        >
+          Perfil
+        </Button>
+      </HStack>
+
+      <EstablecimientosList
+        data={data}
+        isLoading={isLoading}
+        isError={isError}
+      />
     </div>
   );
 }

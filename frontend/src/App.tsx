@@ -4,7 +4,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import LoginPage from "./pages/LogInPage/LogIn";
-import NotFound from "./pages/NotFoundPage/NotFound";
 import HomePage from "./pages/HomePage/HomePage";
 import NewEstab from "./pages/NewEstab/NewEstab";
 import SuscriptionOptionPage from "./pages/SuscriptionOptionPage/SuscriptionOptionPage";
@@ -12,11 +11,14 @@ import AdmPage from "./pages/AdmPage/AdmPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EstablecimientosPage from "./pages/EstablecimientosPage/EstablecimientosPage";
 import { CurrentAdminProvider } from "./hooks/useCurrentAdmin";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme, Theme } from "@chakra-ui/react";
 import EditEstab from "./pages/EditEstab/EditEstab";
 import PerfilPage from "./pages/PerfilPage/PerfilPage";
 import NewCourt from "./pages/NewCourt/NewCourt";
-import CourtPage from "./pages/CourtPage/CourtPAge";
+import CourtPage from "./pages/CourtPage/CourtPage";
+import CanchasPage from "./pages/CanchasPage/CanchasPage";
+import NotFound from "./pages/NotFoundPage/NotFound";
+import EditCourt from "./pages/EditCourt/EditCourt";
 
 const routes = [
   {
@@ -40,11 +42,11 @@ const routes = [
     element: <NotFound />,
   },
   {
-    path: "/administrador/:id",
+    path: "/administrador/:idAdmin",
     element: <EstablecimientosPage />,
   },
   {
-    path: "/administrador/:id/nuevoEstablecimiento",
+    path: "/administrador/:idAdmin/nuevoEstablecimiento",
     element: <NewEstab />,
   },
   {
@@ -52,7 +54,7 @@ const routes = [
     element: <AdmPage />,
   },
   {
-    path: "/administrador/:idAdmin/establecimiento/:id/editar",
+    path: "/administrador/:idAdmin/establecimiento/:idCancha/editar",
     element: <EditEstab />,
   },
   {
@@ -60,33 +62,50 @@ const routes = [
     element: <PerfilPage />,
   },
   {
-    path: "/establecimiento/:idE/canchas", //provisorio
+    path: "/establecimiento/:idEst/canchas", //provisorio
     element: <CourtPage />,
   },
   {
-    path: "/nueva-cancha", //provisorio
+    path: "/establecimiento/:idEst/canchas/nuevaCancha", //provisorio
     element: <NewCourt />,
+  },
+  {
+    path: "/establecimiento/:idEst/canchas/:idCancha", //provisorio
+    element: <EditCourt />,
+  },
+  {
+    path: "/canchas",
+    element: <CanchasPage />,
   },
 ];
 
-const activeLabelStyles = {
-  transform: "scale(0.85) translateY(-24px)",
-};
-
-export const theme = extendTheme({
+export const theme: Partial<Theme> = extendTheme({
   components: {
+    Input: {
+      variants: {
+        floating: {
+          field: {
+            "&::placeholder": {
+              color: "gray",
+            },
+          },
+        },
+      },
+    },
     Form: {
       variants: {
         floating: {
           container: {
             _focusWithin: {
               label: {
-                ...activeLabelStyles,
+                transform: "scale(0.85) translateY(-24px)",
+                fontWeight: "normal",
               },
             },
             "input:not(:placeholder-shown) + label, .chakra-select__wrapper + label, textarea:not(:placeholder-shown) ~ label":
               {
-                ...activeLabelStyles,
+                transform: "scale(0.85) translateY(-24px)",
+                fontWeight: "normal",
               },
             label: {
               top: 0,
@@ -99,6 +118,7 @@ export const theme = extendTheme({
               px: 1,
               my: 2,
               transformOrigin: "left top",
+              fontWeight: "normal",
             },
           },
         },

@@ -56,6 +56,8 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
       try {
         urlImagen = await subirImagen(imagen);
       } catch (e) {
+        console.error(e);
+
         return err(new ApiError(500, "Error al subir la imagen"));
       }
     }
@@ -72,6 +74,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
       try {
         est.urlImagen = await subirImagen(imagen);
       } catch (e) {
+        console.error(e);
         return err(new ApiError(500, "Error al actualizar la imagen"));
       }
     }

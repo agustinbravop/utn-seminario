@@ -24,9 +24,11 @@ export interface AuthService {
     admin: Administrador,
     clave: string
   ): Promise<Result<Administrador, ApiError>>;
-  verifyJWT(token: string): Promise<JWTPayload | null>;
+  verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(token: string): Rol[];
 }
+
+export type JWTUserPayload = JWTPayload & { usuario: Administrador };
 
 export class AuthServiceImpl implements AuthService {
   private repo: AuthRepository;
@@ -80,12 +82,12 @@ export class AuthServiceImpl implements AuthService {
    * Valida un JWT. Un JWT es auténtico si fue firmado por la función signJWT.
    * @returns true si el JWT es válido. Retorna falso en caso contrario.
    */
-  async verifyJWT(token: string): Promise<JWTPayload | null> {
+  async verifyJWT(token: string): Promise<JWTUserPayload | null> {
     try {
       const jwt = await jwtVerify(token, this.secretKey as Uint8Array, {
         issuer: process.env.JWT_ISSUER,
       });
-      return jwt.payload;
+      return jwt.payload as JWTUserPayload;
     } catch (e) {
       // token verification failed
       return null;
@@ -130,33 +132,22 @@ export class AuthServiceImpl implements AuthService {
     clave: string
   ): Promise<Result<Administrador, ApiError>> {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
-    let now = new Date();
-    const anioString = String(now.getUTCFullYear()).slice(-2);
-    const anioActual = Number(anioString);
-    const mesString = String(now.getUTCMonth() + 1);
-    const mesActual = Number(mesString);
 
-    const ArregloDigitos = admin.tarjeta.vencimiento.split("/");
-    const mesDigitos = Number(ArregloDigitos[0]);
-    const anioDigitos = Number(ArregloDigitos[1]);
-    if (anioActual <= anioDigitos) {
-      const dif = mesActual - mesDigitos;
+    const now = new Date();
+    const anioActual = String(now.getUTCFullYear()).slice(-2);
+    const mesActual = String(now.getUTCMonth() + 1);
+    const [mes, anio] = admin.tarjeta.vencimiento.split("/");
+    console.log(anioActual, mesActual, anio, mes, admin.tarjeta.vencimiento);
 
-      if (dif >= 2) {
-        return await this.repo.crearAdministrador(admin, hash);
-      }
+    if (anioActual > anio || (anioActual === anio && mesActual > mes + 1)) {
       return err(
         new ApiError(
           400,
-          "La tarjeta ingresada esta vencida " + admin.tarjeta.vencimiento
+          "La tarjeta no puede estar vencida o próxima a vencer"
         )
       );
     }
-    return err(
-      new ApiError(
-        500,
-        "La tarjeta ingresada esta vencida " + admin.tarjeta.vencimiento
-      )
-    );
+
+    return await this.repo.crearAdministrador(admin, hash);
   }
 }

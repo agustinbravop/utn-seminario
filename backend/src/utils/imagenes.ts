@@ -16,6 +16,7 @@ export async function subirImagen(img: Express.Multer.File): Promise<string> {
     const result = await cloudinary.v2.uploader.upload(img.path);
     return Promise.resolve(result.url);
   } catch (e) {
+    console.error(e);
     return Promise.reject();
   }
 }

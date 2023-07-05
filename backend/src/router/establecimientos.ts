@@ -16,24 +16,21 @@ export function establecimientosRouter(
 ): Router {
   const router = express.Router();
 
+  router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
   router.get("/:idEst", handler.getEstablecimientoByID());
-  router.get(
-    "/:idEst/byAdmin/:idAdmin",
-    handler.getEstablecimientosByAdminID()
-  );
   router.post(
     "/",
     authMiddle.isAdmin(),
-    validateBody(crearEstablecimientoReqSchema),
     upload.single("imagen"),
+    validateBody(crearEstablecimientoReqSchema),
     handler.postEstablecimiento()
   );
   router.put(
     "/:idEst",
     authMiddle.isAdmin(),
+    upload.single("imagen"),
     handler.validateAdminOwnsEstablecimiento(),
     validateBody(modificarEstablecimientoReqSchema),
-    upload.single("imagen"),
     handler.putEstablecimiento()
   );
 

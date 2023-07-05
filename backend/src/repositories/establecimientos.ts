@@ -72,6 +72,7 @@ export class PrismaEstablecimientoRepository
 
       return ok(estsDB.map((estDB) => this.toModel(estDB)));
     } catch (e) {
+      console.error(e);
       return err(new ApiError(500, "No se pudo obtener los establecimientos"));
     }
   }
@@ -114,6 +115,7 @@ async function awaitQuery(
     }
     return ok(toModel(estDB));
   } catch (e) {
+    console.error(e);
     return err(new ApiError(500, errorMsg));
   }
 }

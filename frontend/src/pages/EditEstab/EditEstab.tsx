@@ -1,5 +1,5 @@
 import { ApiError } from "../../utils/api";
-import { Establecimiento } from "../../types";
+import { Establecimiento } from "../../models";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
@@ -19,11 +19,12 @@ import {
 } from "@chakra-ui/react";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import {
+  ModificarEstablecimientoReq,
   getEstablecimientoByID,
   modificarEstablecimiento,
 } from "../../utils/api/establecimientos";
 
-type FormState = Establecimiento & {
+type FormState = ModificarEstablecimientoReq & {
   imagen?: File;
 };
 
@@ -38,7 +39,6 @@ function EditEstab() {
     direccion: "",
     localidad: "",
     provincia: "",
-    urlImagen: "",
     correo: "",
     idAdministrador: Number(idAdmin),
     horariosDeAtencion: "",

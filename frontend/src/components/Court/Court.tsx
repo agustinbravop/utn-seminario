@@ -1,18 +1,15 @@
-import { BASE_PATH } from "../../utils/constants";
 import {
   Button,
   Card,
   CardBody,
   CardFooter,
   Heading,
-  Icon,
   Image,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
-import { Cancha } from "../../types/index";
+import { Cancha } from "../../models/index";
 import { Link } from "react-router-dom";
 
 type estabProps = {
@@ -43,7 +40,7 @@ export default function Court({ cancha, key }: estabProps) {
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">
-        <Link to={`/cancha/${cancha.id}/canchas`}>
+        <Link to={`${cancha.id}`}>
           <Button
             leftIcon={
               <svg
