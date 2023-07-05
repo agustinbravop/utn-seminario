@@ -48,7 +48,7 @@ export default function CourtPage() {
       {isLoading ? (
         <Loading />
       ) : isError ? (
-        <Alerta mensaje="Ha ocurrido un error inesperado" status='error' />
+        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
       ) : (
         <Courts canchas={data} />
       )}

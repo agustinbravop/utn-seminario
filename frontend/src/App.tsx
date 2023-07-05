@@ -17,6 +17,7 @@ import EditEstab from "./pages/EditEstab/EditEstab";
 import PerfilPage from "./pages/PerfilPage/PerfilPage";
 import NewCourt from "./pages/NewCourt/NewCourt";
 import CourtPage from "./pages/CourtPage/CourtPAge";
+import EditCourt from "./pages/EditCourt/EditCourt";
 
 const routes = [
   {
@@ -64,8 +65,12 @@ const routes = [
     element: <CourtPage />,
   },
   {
-    path: "/nueva-cancha", //provisorio
+    path: "/establecimiento/:idE/canchas/crear", //provisorio
     element: <NewCourt />,
+  },
+  {
+    path: "/establecimiento/:idEst/canchas/:idCancha", //provisorio
+    element: <EditCourt />,
   },
 ];
 
