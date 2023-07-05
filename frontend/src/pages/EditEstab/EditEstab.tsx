@@ -1,15 +1,9 @@
-//import "./NewEstab.css";
-import {
-  ApiError,
-  actualizarEstablecimiento,
-  traerEstablecimiento,
-} from "../../utils/api";
+import { ApiError } from "../../utils/api";
 import { Establecimiento } from "../../types";
 import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
 import Modal from "react-overlays/Modal";
 import { JSX } from "react/jsx-runtime";
 import {
@@ -20,21 +14,25 @@ import {
   HStack,
   Heading,
   Input,
-  Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import TopMenu from "../../components/TopMenu/TopMenu";
+import {
+  getEstablecimientoByID,
+  modificarEstablecimiento,
+} from "../../utils/api/establecimientos";
 
 type FormState = Establecimiento & {
   imagen?: File;
 };
 
 function EditEstab() {
-  const { idAdmin, id } = useParams();
+  const { idAdmin, id: idEst } = useParams();
   const navigate = useNavigate();
 
   const [state, setState] = useState<FormState>({
-    id: Number(id),
+    id: Number(idEst),
     nombre: "",
     telefono: "",
     direccion: "",
@@ -58,14 +56,12 @@ function EditEstab() {
     console.log(":)");
   };
 
+  const toast = useToast();
   const advertencia = (message: string) => {
-    toast.warning(message, {
-      position: "top-center",
-      autoClose: 5000,
-      progress: 1,
-      closeOnClick: true,
-      hideProgressBar: false,
-      draggable: true,
+    toast({
+      title: message,
+      status: "success",
+      isClosable: true,
     });
   };
 
@@ -124,18 +120,19 @@ function EditEstab() {
   };
 
   const { mutate } = useMutation<Establecimiento, ApiError, FormState>({
-    mutationFn: ({ imagen, ...admin }) =>
-      actualizarEstablecimiento(admin, imagen), //REVISAR
+    mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
     onSuccess: () => navigate(`/administrador/${idAdmin}`),
   });
 
+  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
+    getEstablecimientoByID(Number(idEst))
+  );
+
   useEffect(() => {
-    const cargarEstablecimiento = async () => {
-      const e = await traerEstablecimiento(Number(idAdmin), Number(id));
-      setState(e);
-    };
-    cargarEstablecimiento();
-  });
+    if (data) {
+      setState({ ...data, imagen: state.imagen });
+    }
+  }, [data, state.imagen]);
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -268,7 +265,6 @@ function EditEstab() {
           </div>
         </Container>
       </form>
-      <ToastContainer />
 
       <Modal
         className="modal"

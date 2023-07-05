@@ -1,4 +1,3 @@
-import { BASE_PATH } from "../../utils/constants";
 import "./Establecimiento.scss";
 import {
   Button,
@@ -16,12 +15,13 @@ import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "../../types/index";
 import { Link } from "react-router-dom";
 
-type estabProps = {
+type CardEstablecimientoProps = {
   establecimiento: Establecimiento;
-  key: number;
 };
 
-export default function Establecimiento({ establecimiento, key }: estabProps) {
+export default function CardEstablecimiento({
+  establecimiento,
+}: CardEstablecimientoProps) {
   return (
     <Card maxWidth="xs" height="450px">
       <Image

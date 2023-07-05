@@ -1,6 +1,6 @@
-import { CanchaService } from "../services/canchas";
-import { RequestHandler } from "express";
-import { Cancha, canchaSchema } from "../models/cancha";
+import { RequestHandler } from "express"; 
+import { CanchaService } from "../services/canchas.js";
+import { Cancha, canchaSchema } from "../models/cancha.js";
 
 export const crearCanchaReqSchema = canchaSchema.omit({
   id: true,
@@ -72,7 +72,7 @@ export class CanchaHandler {
       const imagen = req.file;
       const canchaResult = await this.service.crearCancha(cancha, imagen);
       canchaResult.match(
-        (nuevaCancha) => res.status(200).json(nuevaCancha),
+        (nuevaCancha) => res.status(201).json(nuevaCancha),
         (err) => res.status(err.status).json(err)
       );
     };

@@ -1,6 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
-import { getAllCanchas } from "../../utils/api";
 import { Cancha } from "../../types";
 import { useNavigate, useParams } from "react-router";
 import TopMenu from "../../components/TopMenu/TopMenu";
@@ -9,12 +7,14 @@ import { SettingsIcon } from "@chakra-ui/icons";
 import Courts from "../../components/Courts/Courts";
 import Loading from "../../components/Loading";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
 
 export default function CourtPage() {
   const navigate = useNavigate();
-  const { idE } = useParams();
-  const { data, isLoading, isError } = useQuery<Cancha[]>(["canchas"], () =>
-    getAllCanchas(Number(idE))
+  const { idE: idEst } = useParams();
+  const { data, isLoading, isError } = useQuery<Cancha[]>(
+    ["canchas", idEst],
+    () => getCanchasByEstablecimientoID(Number(idEst))
   );
 
   return (
@@ -45,7 +45,7 @@ export default function CourtPage() {
       >
         Perfil
       </Button>
-      {isLoading || !data ? (
+      {isLoading ? (
         <Loading />
       ) : isError ? (
         <ErrorPage />

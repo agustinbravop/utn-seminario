@@ -6,7 +6,7 @@ import { JSX } from "react/jsx-runtime";
 import { Cancha } from "../../types";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError, editCancha, getCanchaByIdC } from "../../utils/api";
+import { ApiError } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -18,10 +18,10 @@ import {
   HStack,
   Input,
   VStack,
-  Alert,
   Button,
 } from "@chakra-ui/react";
 import SelectableButton from "../../components/SelectableButton/SelectableButton";
+import { getCanchaByID, modificarCancha } from "../../utils/api/canchas";
 
 type FormState = Cancha & {
   imagen: File | undefined;
@@ -41,21 +41,21 @@ function NewCourt() {
     console.log(":)");
   };
 
-  const { idE, idC } = useParams();
+  const { idE: idEst, idC: idCancha } = useParams();
   const navigate = useNavigate();
 
   const [state, setState] = useState<FormState>({
-    id: Number(idC),
+    id: Number(idCancha),
     nombre: "",
     descripcion: "",
     estaHabilitada: true,
     urlImagen: "",
-    idEstablecimiento: Number(idE),
+    idEstablecimiento: Number(idEst),
     imagen: undefined,
   });
 
   const { mutate } = useMutation<Cancha, ApiError, FormState>({
-    mutationFn: ({ imagen, ...cancha }) => editCancha(cancha, imagen), //REVISAR
+    mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen), //REVISAR
     onSuccess: () => navigate(-1),
   });
 
@@ -98,7 +98,7 @@ function NewCourt() {
 
   useEffect(() => {
     const cargarCancha = async () => {
-      const c = await getCanchaByIdC(Number(idE), Number(idC));
+      const c = await getCanchaByID(Number(idEst), Number(idCancha));
       setState({ ...c, imagen: undefined });
     };
     cargarCancha();

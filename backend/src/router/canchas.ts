@@ -4,11 +4,11 @@ import {
   CanchaHandler,
   crearCanchaReqSchema,
   modificarCanchaReqSchema,
-} from "../handlers/canchas";
+} from "../handlers/canchas.js";
 import multer from "multer";
-import { validateBody } from "../middlewares/validation";
-import { EstablecimientoHandler } from "../handlers/establecimientos";
-import { AuthMiddleware } from "../middlewares/auth";
+import { validateBody } from "../middlewares/validation.js";
+import { EstablecimientoHandler } from "../handlers/establecimientos.js";
+import { AuthMiddleware } from "../middlewares/auth.js";
 
 export function canchasRouter(
   handler: CanchaHandler,

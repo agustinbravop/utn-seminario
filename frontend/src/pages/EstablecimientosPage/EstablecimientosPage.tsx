@@ -1,21 +1,19 @@
-import useFetch from "../../hooks/useFetch";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import Establecimientos from "../../components/Establecimientos";
-import { urlApiEstablecimientos } from "../../utils/constants";
 import { useNavigate, useParams } from "react-router";
 import "./EstablecimientosPage.scss";
 import { Button } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "../../types";
-import { traerEstablecimientos } from "../../utils/api";
+import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
 
 export default function EstablecimientosPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading, isError } = useQuery<Establecimiento[]>(
     ["establecimientos"],
-    () => traerEstablecimientos(Number(id))
+    () => getEstablecimientosByAdminID(Number(id))
   );
 
   return (
