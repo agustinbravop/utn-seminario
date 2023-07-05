@@ -44,3 +44,11 @@ export type Tarjeta = {
   cvv: number;
   vencimiento: string;
 };
+
+
+
+export type Cancha = {
+  id?: number;
+  nombre: string;
+  descripcion: string;
+};

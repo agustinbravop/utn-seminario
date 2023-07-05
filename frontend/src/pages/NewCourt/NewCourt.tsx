@@ -1,10 +1,8 @@
 import React from "react";
 import './NewCourt.css';
-import PaymentForm from "../../components/PaymentForm/PaymentForm";
-import Modal from "react-overlays/Modal";
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import { Administrador, Tarjeta } from "../../types";
+import {  Cancha } from "../../types";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError, apiRegister } from "../../utils/api";
@@ -12,20 +10,15 @@ import TopMenu from "../../components/TopMenu/TopMenu";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { Textarea } from '@chakra-ui/react'
-import { Select } from '@chakra-ui/react'
 import {
   FormControl,
   FormLabel,
-  HStack,
   Input,
   VStack,
-  Alert,
   Button,
 } from "@chakra-ui/react";
-import SelectableButton from "../../components/SelectableButton/SelectableButton";
 
-type FormState = Administrador & {
-  clave: string;
+type FormState = Cancha & {
   imagen: File | undefined;
 };
 
@@ -48,29 +41,8 @@ function NewCourt() {
 
     const [state, setState] = useState<FormState>({
       nombre: "",
-      apellido: "",
-      usuario: "",
-      telefono: "",
-      clave: "",
-      correo: "",
-      tarjeta: {
-        cvv: 0,
-        vencimiento: "",
-        nombre: "",
-        numero: "",
-      },
-      suscripcion: {
-        id: idSuscripcion,
-        nombre: "",
-        limiteEstablecimientos: 0,
-        costoMensual: 0,
-      },
-      imagen: undefined, // Agregar la propiedad 'imagen' con valor undefined
-    });
-    
-    const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
-      mutationFn: ({ clave, ...admin }) => apiRegister(admin, clave),
-      onSuccess: () => navigate("/landing"),
+      descripcion: "",
+      imagen: undefined,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +53,6 @@ function NewCourt() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      mutate(state);
     };
 
     const advertencia = (message: string) => {
@@ -99,38 +70,12 @@ function NewCourt() {
 
       if ((state.nombre === "" || state.nombre === null) && result === false) {
         result = true;
-        advertencia("El campo Nombre no puede estar vacio");
+        advertencia("El campo nombre de la cancha no puede estar vacio");
       }
 
-      if (
-        (state.apellido === "" || state.apellido === null) &&
-        result === false
-      ) {
+      if ((state.descripcion === "" || state.descripcion === null) && result === false) {
         result = true;
-        advertencia("El campo Apellido no puede estar vacio");
-      }
-
-      if (
-        (state.telefono === "" || state.telefono === null) &&
-        result === false
-      ) {
-        result = true;
-        advertencia("El campo telefono no puede estar vacio");
-      }
-
-      if ((state.usuario === "" || state.usuario === null) && result === false) {
-        result = true;
-        advertencia("El campo Nombre de Usuario no puede estar vacio");
-      }
-
-      if ((state.correo === "" || state.correo === null) && result === false) {
-        result = true;
-        advertencia("El campo correo electronico no puede estar vacio");
-      }
-
-      if ((state.clave === "" || state.clave === null) && result === false) {
-        result = true;
-        advertencia("El campo constraseña no puede estar vacio");
+        advertencia("El campo descripcion no puede estar vacio");
       }
     };
 
@@ -140,7 +85,7 @@ function NewCourt() {
         imagen: e.target.files ? e.target.files[0] : undefined,
       });
     };
-
+    
     const horas = [
       { value: 'option1', label: '1:00hs' },
       { value: 'option2', label: '2:00hs' },
@@ -198,15 +143,15 @@ function NewCourt() {
             <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
             <FormControl
               variant="floating"
-              id="telefono"
+              id="nombre-cancha"
               isRequired
               onChange={handleChange}>
-              <Input placeholder="Cancha1" name="telefono" type="tel" />
+              <Input placeholder="Cancha1" name="nombre-cancha" />
               <FormLabel>Nombre de cancha</FormLabel>
             </FormControl>
             <FormControl
               variant="floating"
-              id="usuario"
+              id="descripcion"
               isRequired
               onChange={handleChange}>
               <Textarea placeholder=' ' />
@@ -229,8 +174,24 @@ function NewCourt() {
                   }}
             />
           </VStack>
-          <div className="formulario"> </div>
-          <div className="margen">
+          <div className="centrado">
+            <br/>
+            <Button
+                type="submit"
+                className="btn btn-danger"
+                onClick={validacion}>
+                  Crear cancha
+            </Button>
+          </div>
+        </form>
+      </div>
+    );
+}
+export default NewCourt;
+
+
+/*
+<div className="margen">
             <h3>Disponibilidad horaria</h3>
             <p> En qué rangos horarios la cancha estará disponible y para qué disciplinas.</p>
             {isError && (
@@ -333,17 +294,4 @@ function NewCourt() {
             <br/>
 
           <div className="centrado">
-            <Button
-              type="submit"
-              className="btn btn-danger"
-              onClick={validacion}>
-                Registrarse
-            </Button>
-          </div>    
-        </form>
-        <ToastContainer />
-      </div>
-    );
-}
-
-export default NewCourt;
+          */
