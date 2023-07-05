@@ -1,5 +1,5 @@
 import { postFormData, API_URL, get, putFormData } from ".";
-import { Cancha } from "../../types";
+import { Cancha } from "../../models";
 
 export type CrearCanchaReq = Omit<Cancha, "id" | "urlImagen">;
 
@@ -28,7 +28,7 @@ export async function crearCancha(
 export async function getCanchasByEstablecimientoID(
   idEst: number
 ): Promise<Cancha[]> {
-  return get(`${API_URL}/establecimientos/${idEst}`);
+  return get(`${API_URL}/establecimientos/${idEst}/canchas`);
 }
 
 export async function getCanchaByID(

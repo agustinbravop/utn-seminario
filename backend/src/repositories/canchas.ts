@@ -38,7 +38,8 @@ export class PrismaCanchaRepository implements CanchaRepository {
       });
       return ok(canchas.map((c) => toModel(c)));
     } catch (e) {
-      return err(new ApiError(500, "Error intentar listar las canchas"));
+      console.error(e);
+      return err(new ApiError(500, "Error al intentar listar las canchas"));
     }
   }
 
@@ -58,6 +59,8 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 
   async crearCancha(cancha: Cancha): Promise<Result<Cancha, ApiError>> {
+    console.log(cancha);
+
     try {
       const canchaCreada = await this.prisma.cancha.create({
         data: {
@@ -66,12 +69,12 @@ export class PrismaCanchaRepository implements CanchaRepository {
           estaHabilitada: Boolean(cancha.estaHabilitada),
           urlImagen: cancha.urlImagen,
           idEstablecimiento: Number(cancha.idEstablecimiento),
-          disciplinas: {
-            connectOrCreate: cancha.disciplinas.map((d) => ({
-              where: { disciplina: d },
-              create: { disciplina: d },
-            })),
-          },
+          // disciplinas: {
+          //   connectOrCreate: cancha.disciplinas.map((d) => ({
+          //     where: { disciplina: d },
+          //     create: { disciplina: d },
+          //   })),
+          // },
         },
         include: {
           disciplinas: true,
@@ -79,6 +82,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       });
       return ok(toModel(canchaCreada));
     } catch (e) {
+      console.error(e);
       return err(
         new ApiError(500, "Error interno al intentar cargar la cancha")
       );
@@ -99,12 +103,12 @@ export class PrismaCanchaRepository implements CanchaRepository {
           descripcion: cancha.descripcion,
           urlImagen: cancha.urlImagen,
           estaHabilitada: cancha.estaHabilitada,
-          disciplinas: {
-            connectOrCreate: cancha.disciplinas.map((d) => ({
-              where: { disciplina: d },
-              create: { disciplina: d },
-            })),
-          },
+          // disciplinas: {
+          //   connectOrCreate: cancha.disciplinas.map((d) => ({
+          //     where: { disciplina: d },
+          //     create: { disciplina: d },
+          //   })),
+          // },
         },
       }),
       `No existe cancha con id ${cancha.id}`,
@@ -135,6 +139,7 @@ async function awaitQuery(
     }
     return ok(toModel(cancha));
   } catch (e) {
+    console.error(e);
     return err(new ApiError(500, errorMsg));
   }
 }

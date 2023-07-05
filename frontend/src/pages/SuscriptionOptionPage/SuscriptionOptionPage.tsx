@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
-import { getSuscripciones } from "../../utils/api";
-import { Suscripcion } from "../../types";
+import { getSuscripciones } from "../../utils/api/auth";
+import { Suscripcion } from "../../models";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 

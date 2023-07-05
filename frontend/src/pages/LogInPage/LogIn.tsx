@@ -2,7 +2,7 @@ import "./LogIn.css";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
-import { Administrador } from "../../types";
+import { Administrador } from "../../models";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";

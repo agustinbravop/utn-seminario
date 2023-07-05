@@ -1,9 +1,10 @@
 import "./AdmPage.css";
 import PaymentForm from "../../components/PaymentForm/PaymentForm";
-import { Administrador, Tarjeta } from "../../types";
+import { Administrador, Tarjeta } from "../../models";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError, apiRegister } from "../../utils/api";
+import { ApiError } from "../../utils/api";
+import { RegistrarAdminReq, apiRegister } from "../../utils/api/auth";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import * as Yup from "yup";
 import {
@@ -19,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 
-type FormState = Administrador & {
+type FormState = RegistrarAdminReq & {
   clave: string;
 };
 
@@ -92,11 +93,11 @@ function AdmPage() {
           .required("Obligatorio"),
         tarjeta: Yup.object({
           cvv: Yup.number()
-            .min(100, "Solo 3 o 4 dígitos")
-            .max(9_999, "Solo 3 o 4 dígitos"),
+            .min(100, "3 o 4 dígitos")
+            .max(9_999, "3 o 4 dígitos"),
           vencimiento: Yup.string().matches(
             /\d\d\/\d\d\d?\d?/,
-            "Usar formato MM/AA o MM/AAAA"
+            "'MM/AA' o 'MM/AAAA'"
           ),
           nombre: Yup.string().required("Obligatorio"),
           numero: Yup.string()

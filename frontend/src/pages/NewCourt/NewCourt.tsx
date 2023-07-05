@@ -3,10 +3,10 @@ import "./NewCourt.css";
 import Modal from "react-overlays/Modal";
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import { Administrador, Cancha } from "../../types";
-import { useLocation, useNavigate } from "react-router";
+import { Administrador, Cancha } from "../../models";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError, apiRegister } from "../../utils/api";
+import { ApiError } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -37,18 +37,16 @@ function NewCourt() {
     console.log(":)");
   };
   const { search } = useLocation();
-  const idSuscripcion = Number(
-    new URLSearchParams(search).get("idSuscripcion")
-  );
+  const { idEst } = useParams();
   const navigate = useNavigate();
 
   const [state, setState] = useState<FormState>({
     nombre: "",
     descripcion: "",
     estaHabilitada: true,
-    idEstablecimiento: 1,
+    idEstablecimiento: Number(idEst),
     imagen: undefined,
-    disciplinas: []
+    disciplinas: [],
   });
 
   const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
@@ -86,12 +84,12 @@ function NewCourt() {
         <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
           <FormControl
             variant="floating"
-            id="nombre-cancha"
+            id="nombre"
             isRequired
             onChange={handleChange}
           >
-            <Input placeholder="Cancha1" name="nombre-cancha" />
-            <FormLabel>Nombre de cancha</FormLabel>
+            <Input placeholder="Nombre" name="nombre" />
+            <FormLabel>Nombre de la cancha</FormLabel>
           </FormControl>
           <FormControl
             variant="floating"
@@ -99,8 +97,8 @@ function NewCourt() {
             isRequired
             onChange={handleChange}
           >
-            <Input placeholder=" " name="duracionreserva" />
-            <FormLabel>Duracion de la reserva</FormLabel>
+            <Input placeholder="Descripción" name="descripcion" />
+            <FormLabel>Descripción</FormLabel>
           </FormControl>
           <Input
             type="file"

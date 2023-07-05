@@ -1,9 +1,9 @@
 import "./NewEstab.css";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { ApiError } from "../../utils/api";
-import { Establecimiento } from "../../types";
+import { Establecimiento } from "../../models";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import {
   Alert,
   Button,
@@ -19,14 +19,18 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { crearEstablecimiento } from "../../utils/api/establecimientos";
+import {
+  CrearEstablecimientoReq,
+  crearEstablecimiento,
+} from "../../utils/api/establecimientos";
+import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 
-type FormState = Establecimiento & {
+type FormState = CrearEstablecimientoReq & {
   imagen?: File;
 };
 
 function NewEstab() {
-  const { id } = useParams();
+  const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
   const { mutate, isLoading, isError } = useMutation<
@@ -57,15 +61,13 @@ function NewEstab() {
   const { values, setValues, errors, handleSubmit, handleChange } =
     useFormik<FormState>({
       initialValues: {
-        id: 0,
         nombre: "",
         telefono: "",
         direccion: "",
         localidad: "",
         provincia: "",
-        urlImagen: "",
         correo: "",
-        idAdministrador: Number(id),
+        idAdministrador: Number(currentAdmin?.id),
         horariosDeAtencion: "",
         imagen: undefined,
       },

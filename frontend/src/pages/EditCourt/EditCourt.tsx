@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import "./NewCourt.css";
 import Modal from "react-overlays/Modal"; //AGREGAR EL MODAL DE "¿SEGURO?"
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import { Cancha } from "../../types";
+import { Cancha } from "../../models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
@@ -31,7 +30,7 @@ type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
 };
 
-function NewCourt() {
+function EditCourt() {
   //ACA TA EL MODAL :)
 
   const [showModal, setShowModal] = useState(false);
@@ -45,7 +44,7 @@ function NewCourt() {
     console.log(":)");
   };
 
-  const { idE: idEst, idC: idCancha } = useParams();
+  const { idEst, idCancha } = useParams();
   const navigate = useNavigate();
 
   const [state, setState] = useState<FormState>({
@@ -59,7 +58,7 @@ function NewCourt() {
   });
 
   const { mutate } = useMutation<Cancha, ApiError, FormState>({
-    mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen), 
+    mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
     onSuccess: () => navigate(-1),
   });
 
@@ -103,10 +102,12 @@ function NewCourt() {
   useEffect(() => {
     const cargarCancha = async () => {
       const c = await getCanchaByID(Number(idEst), Number(idCancha));
+      console.log(c);
+
       setState({ ...c, imagen: undefined });
     };
     cargarCancha();
-  });
+  }, [idEst, idCancha]);
 
   const horas = [
     { value: "option1", label: "1:00hs" },
@@ -169,7 +170,12 @@ function NewCourt() {
             isRequired
             onChange={handleChange}
           >
-            <Input placeholder="Cancha" name="telefono" type="tel" />
+            <Input
+              value={state.nombre}
+              placeholder="Cancha"
+              name="telefono"
+              type="tel"
+            />
             <FormLabel>Nombre de cancha</FormLabel>
           </FormControl>
           <FormControl
@@ -178,7 +184,7 @@ function NewCourt() {
             isRequired
             onChange={handleChange}
           >
-            <Textarea placeholder=" " />
+            <Textarea value={state.descripcion} placeholder=" " />
             <FormLabel>Descripción</FormLabel>
           </FormControl>
           <Input
@@ -375,4 +381,4 @@ function NewCourt() {
   );
 }
 
-export default NewCourt;
+export default EditCourt;

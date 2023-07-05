@@ -18,21 +18,21 @@ export function canchasRouter(
 ): Router {
   const router = express.Router();
 
-  router.get("/", handler.getCanchasByEstablecimientoID());
-  router.get("/:idCancha", handler.getCanchaByID());
+  router.get("/:idEst/canchas/", handler.getCanchasByEstablecimientoID());
+  router.get("/:idEst/canchas/:idCancha", handler.getCanchaByID());
   router.post(
-    "/",
+    "/:idEst/canchas/",
     authMiddle.isAdmin(),
-    estHandler.validateAdminOwnsEstablecimiento(),
     upload.single("imagen"),
+    estHandler.validateAdminOwnsEstablecimiento(),
     validateBody(crearCanchaReqSchema),
     handler.postCancha()
   );
   router.put(
-    "/:idCancha",
+    "/:idEst/canchas/:idCancha",
     authMiddle.isAdmin(),
-    estHandler.validateAdminOwnsEstablecimiento(),
     upload.single("imagen"),
+    estHandler.validateAdminOwnsEstablecimiento(),
     validateBody(modificarCanchaReqSchema),
     handler.putCancha()
   );

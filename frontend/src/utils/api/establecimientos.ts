@@ -1,37 +1,50 @@
 import { postFormData, get, API_URL, putFormData } from ".";
-import { Establecimiento } from "../../types";
+import { Establecimiento } from "../../models";
 
-function buildFormData(establecimiento: Establecimiento, imagen?: File) {
+export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
+
+export type ModificarEstablecimientoReq = Omit<Establecimiento, "urlImagen">;
+
+export async function crearEstablecimiento(
+  est: CrearEstablecimientoReq,
+  imagen?: File
+): Promise<Establecimiento> {
   const formData = new FormData();
   if (imagen) {
     formData.append("imagen", imagen);
   }
-  let key: keyof Establecimiento;
-  for (key in establecimiento) {
-    formData.append(key, String(establecimiento[key]));
+  let key: keyof CrearEstablecimientoReq;
+  for (key in est) {
+    formData.append(key, String(est[key]));
   }
 
-  return formData;
-}
+  console.log(est, formData);
 
-export async function crearEstablecimiento(
-  establecimiento: Establecimiento,
-  imagen?: File
-): Promise<Establecimiento> {
   return postFormData<Establecimiento>(
     `${API_URL}/establecimientos`,
-    buildFormData(establecimiento, imagen),
+    formData,
     201
   );
 }
 
 export async function modificarEstablecimiento(
-  establecimiento: Establecimiento,
+  establecimiento: ModificarEstablecimientoReq,
   imagen?: File
 ): Promise<Establecimiento> {
+  console.log(establecimiento);
+
+  const formData = new FormData();
+  if (imagen) {
+    formData.append("imagen", imagen);
+  }
+  let key: keyof ModificarEstablecimientoReq;
+  for (key in establecimiento) {
+    formData.append(key, String(establecimiento[key]));
+  }
+
   return putFormData<Establecimiento>(
     `${API_URL}/establecimientos`,
-    buildFormData(establecimiento, imagen),
+    formData,
     200
   );
 }
