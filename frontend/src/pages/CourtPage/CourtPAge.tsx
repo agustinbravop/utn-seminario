@@ -6,8 +6,8 @@ import { Button } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import Courts from "../../components/Courts/Courts";
 import Loading from "../../components/Loading";
-import ErrorPage from "../ErrorPage/ErrorPage";
 import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
+import Alerta from "../../components/Alerta/Alerta";
 
 export default function CourtPage() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ export default function CourtPage() {
       {isLoading ? (
         <Loading />
       ) : isError ? (
-        <ErrorPage />
+        <Alerta mensaje="Ha ocurrido un error inesperado" status='error' />
       ) : (
         <Courts canchas={data} />
       )}

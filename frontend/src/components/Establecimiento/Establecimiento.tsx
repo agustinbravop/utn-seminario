@@ -43,10 +43,11 @@ export default function CardEstablecimiento({
             {establecimiento.nombre}
           </Heading>
           <Text marginBottom="0">
-            <PhoneIcon boxSize={3.5} color="gray" /> {establecimiento.direccion}
+            <Icon as={MdPlace} boxSize={5} color="gray" />
+            {establecimiento.direccion}
           </Text>
           <Text>
-            <Icon as={MdPlace} boxSize={5} color="gray" />
+            <PhoneIcon boxSize={3.5} color="gray" />
             {establecimiento.telefono}
           </Text>
         </VStack>
