@@ -12,10 +12,11 @@ export type Administrador = {
 export type Cancha = {
   id: number;
   nombre: string;
-  descripcion?: string;
+  descripcion: string;
   estaHabilitada: boolean;
   urlImagen?: string;
   idEstablecimiento: number;
+  disciplinas: string[];
 };
 
 export type Establecimiento = {
@@ -52,12 +53,4 @@ export type Tarjeta = {
   numero: string;
   cvv: number;
   vencimiento: string;
-};
-
-
-
-export type Cancha = {
-  id?: number;
-  nombre: string;
-  descripcion: string;
 };

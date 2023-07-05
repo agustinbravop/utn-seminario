@@ -21,9 +21,13 @@ import {
   Button,
 } from "@chakra-ui/react";
 import SelectableButton from "../../components/SelectableButton/SelectableButton";
-import { getCanchaByID, modificarCancha } from "../../utils/api/canchas";
+import {
+  ModificarCanchaReq,
+  getCanchaByID,
+  modificarCancha,
+} from "../../utils/api/canchas";
 
-type FormState = Cancha & {
+type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
 };
 
@@ -49,13 +53,13 @@ function NewCourt() {
     nombre: "",
     descripcion: "",
     estaHabilitada: true,
-    urlImagen: "",
     idEstablecimiento: Number(idEst),
     imagen: undefined,
+    disciplinas: [],
   });
 
   const { mutate } = useMutation<Cancha, ApiError, FormState>({
-    mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen), //REVISAR
+    mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen), 
     onSuccess: () => navigate(-1),
   });
 
