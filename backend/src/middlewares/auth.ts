@@ -18,8 +18,8 @@ export class AuthMiddleware {
           .send(new ApiError(401, "Authorization header inválido"));
       }
 
-      const esValido = await this.service.verifyJWT(token);
-      if (!esValido) {
+      const jwtPayload = await this.service.verifyJWT(token);
+      if (jwtPayload == null) {
         return res.status(401).send(new ApiError(401, "Token inválido"));
       }
 
@@ -30,6 +30,8 @@ export class AuthMiddleware {
           .send(new ApiError(403, "No tiene los permisos necesarios"));
       }
 
+      // Los handlers subsiguientes tienen acceso al idAdmin que vino en el JWT.
+      res.locals.idAdmin = Number(jwtPayload.id);
       next();
     };
   }

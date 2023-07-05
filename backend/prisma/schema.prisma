@@ -27,9 +27,9 @@ model administrador {
 model cancha {
   id                Int              @id @default(autoincrement()) @map("idCancha")
   nombre            String           @db.VarChar
-  descripcion       String?          @db.VarChar
+  descripcion       String           @db.VarChar
   estaHabilitada    Boolean
-  urlImagen         String           @db.VarChar
+  urlImagen         String?          @db.VarChar
   idEstablecimiento Int
   establecimiento   establecimiento  @relation(fields: [idEstablecimiento], references: [id], onDelete: NoAction, onUpdate: NoAction)
   disciplinas       disciplina[]

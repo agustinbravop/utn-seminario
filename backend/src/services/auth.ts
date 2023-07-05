@@ -24,7 +24,7 @@ export interface AuthService {
     admin: Administrador,
     clave: string
   ): Promise<Result<Administrador, ApiError>>;
-  verifyJWT(token: string): Promise<boolean>;
+  verifyJWT(token: string): Promise<JWTPayload | null>;
   getRolesFromJWT(token: string): Rol[];
 }
 
@@ -80,15 +80,15 @@ export class AuthServiceImpl implements AuthService {
    * Valida un JWT. Un JWT es auténtico si fue firmado por la función signJWT.
    * @returns true si el JWT es válido. Retorna falso en caso contrario.
    */
-  async verifyJWT(token: string): Promise<boolean> {
+  async verifyJWT(token: string): Promise<JWTPayload | null> {
     try {
-      await jwtVerify(token, this.secretKey as Uint8Array, {
+      const jwt = await jwtVerify(token, this.secretKey as Uint8Array, {
         issuer: process.env.JWT_ISSUER,
       });
-      return true;
+      return jwt.payload;
     } catch (e) {
       // token verification failed
-      return false;
+      return null;
     }
   }
 
@@ -130,6 +130,33 @@ export class AuthServiceImpl implements AuthService {
     clave: string
   ): Promise<Result<Administrador, ApiError>> {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
-    return await this.repo.crearAdministrador(admin, hash);
+    let now = new Date();
+    const anioString = String(now.getUTCFullYear()).slice(-2);
+    const anioActual = Number(anioString);
+    const mesString = String(now.getUTCMonth() + 1);
+    const mesActual = Number(mesString);
+
+    const ArregloDigitos = admin.tarjeta.vencimiento.split("/");
+    const mesDigitos = Number(ArregloDigitos[0]);
+    const anioDigitos = Number(ArregloDigitos[1]);
+    if (anioActual <= anioDigitos) {
+      const dif = mesActual - mesDigitos;
+
+      if (dif >= 2) {
+        return await this.repo.crearAdministrador(admin, hash);
+      }
+      return err(
+        new ApiError(
+          400,
+          "La tarjeta ingresada esta vencida " + admin.tarjeta.vencimiento
+        )
+      );
+    }
+    return err(
+      new ApiError(
+        500,
+        "La tarjeta ingresada esta vencida " + admin.tarjeta.vencimiento
+      )
+    );
   }
 }

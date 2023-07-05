@@ -1,7 +1,8 @@
-import { Administrador, Establecimiento, Suscripcion } from "../../types";
+import { Administrador, Suscripcion } from "../../types";
 import jwtDecode from "jwt-decode";
 import { readLocalStorage, writeLocalStorage } from "../storage/localStorage";
-const API_URL = process.env.REACT_APP_API_BASE_URL;
+
+export const API_URL = process.env.REACT_APP_API_BASE_URL;
 
 export class ApiError extends Error {
   status: number;
@@ -48,48 +49,67 @@ async function reject(res: Response): Promise<ApiError> {
  * @param token JWT necesario para los endpoints protegidos
  * @returns el objeto Request que consume `fetch`, al hacer `fetch(request(...))`
  */
-function request(method: string, endpoint: string, token?: string): Request {
+function request(method: string, endpoint: string): Request {
+  const token = readLocalStorage<JWT>("token");
   return new Request(endpoint, {
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
+      Authorization: token ? `Bearer ${token.token}` : "",
     },
     mode: "cors" as RequestMode,
     cache: "default" as RequestCache,
   });
 }
 
-async function get<T>(endpoint: string, token?: string): Promise<T> {
-  return fetch(request("GET", endpoint, token))
+export async function get<T>(endpoint: string): Promise<T> {
+  return fetch(request("GET", endpoint))
     .then((res) => (res.ok ? res.json() : reject(res)))
     .then((data) => data as T);
 }
 
-async function post<T>(
+export async function post<T>(
   endpoint: string,
   body: object,
-  expectedStatus: number,
-  token?: string
+  expectedStatus: number
 ): Promise<T> {
   console.log(body);
-  return fetch(request("POST", endpoint, token), {
+  return fetch(request("POST", endpoint), {
     body: JSON.stringify(body),
   })
     .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
     .then((data) => data as T);
 }
 
-async function postFormData<T>(
+export async function postFormData<T>(
   endpoint: string,
   formData: FormData,
-  expectedStatus: number,
-  token?: string
+  expectedStatus: number
 ): Promise<T> {
+  const token = readLocalStorage<JWT>("token");
   return fetch(endpoint, {
     method: "POST",
     headers: {
-      Authorization: token ? `Bearer ${token}` : "",
+      Authorization: token ? `Bearer ${token.token}` : "",
+    },
+    body: formData,
+    mode: "cors" as RequestMode,
+    cache: "default" as RequestCache,
+  })
+    .then((res) => (res.status === expectedStatus ? res.json() : reject(res)))
+    .then((data) => data as T);
+}
+
+export async function putFormData<T>(
+  endpoint: string,
+  formData: FormData,
+  expectedStatus: number
+): Promise<T> {
+  const token = readLocalStorage<JWT>("token");
+  return fetch(endpoint, {
+    method: "PUT",
+    headers: {
+      Authorization: token ? `Bearer ${token.token}` : "",
     },
     body: formData,
     mode: "cors" as RequestMode,
@@ -135,30 +155,5 @@ export async function apiRegister(
       idSuscripcion: usuario.suscripcion?.id,
     },
     201
-  );
-}
-
-export async function crearEstablecimiento(
-  establecimiento: Establecimiento,
-  imagen?: File
-): Promise<Establecimiento> {
-  const formData = new FormData();
-  if (imagen) {
-    formData.append("imagen", imagen);
-  }
-  let key: keyof Establecimiento;
-  for (key in establecimiento) {
-    formData.append(key, String(establecimiento[key]));
-  }
-
-  const token = readLocalStorage<JWT>("token");
-  if (!token) {
-    return Promise.reject(new ApiError(403, "JWT inexistente"));
-  }
-  return postFormData<Establecimiento>(
-    `${API_URL}/establecimientos`,
-    formData,
-    201,
-    token.token
   );
 }
