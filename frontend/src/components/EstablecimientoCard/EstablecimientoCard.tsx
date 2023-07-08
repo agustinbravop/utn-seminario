@@ -1,4 +1,4 @@
-import "./Establecimiento.scss";
+import "./EstablecimientoCard.scss";
 import {
   Button,
   Card,
@@ -12,16 +12,16 @@ import {
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
-import { Establecimiento } from "../../types/index";
+import { Establecimiento } from "../../models/index";
 import { Link } from "react-router-dom";
 
-type CardEstablecimientoProps = {
+type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
 };
 
-export default function CardEstablecimiento({
+export default function EstablecimientoCard({
   establecimiento,
-}: CardEstablecimientoProps) {
+}: EstablecimientoCardProps) {
   return (
     <Card maxWidth="xs" height="450px">
       <Image
@@ -43,12 +43,11 @@ export default function CardEstablecimiento({
             {establecimiento.nombre}
           </Heading>
           <Text marginBottom="0">
-            <Icon as={MdPlace} boxSize={5} color="gray" />
+            <Icon as={MdPlace} boxSize={5} color="gray" />{" "}
             {establecimiento.direccion}
           </Text>
           <Text>
-            <PhoneIcon boxSize={3.5} color="gray" />
-            {establecimiento.telefono}
+            <PhoneIcon boxSize={3.5} color="gray" /> {establecimiento.telefono}
           </Text>
         </VStack>
       </CardBody>

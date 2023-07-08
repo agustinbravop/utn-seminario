@@ -2,213 +2,132 @@ import React from "react";
 import './NewCourt.css';
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import {  Cancha } from "../../types";
+import { Administrador, Cancha } from "../../models";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError, apiRegister } from "../../utils/api";
+import { ApiError } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import { Textarea } from '@chakra-ui/react'
 import {
+  Button,
   FormControl,
   FormLabel,
   Input,
+  Textarea,
   VStack,
-  Button,
 } from "@chakra-ui/react";
-import { crearCancha } from "../../utils/api/canchas";
-import Alerta from "../../components/Alerta/Alerta";
+import { Select } from "@chakra-ui/react";
+import { CrearCanchaReq, crearCancha } from "../../utils/api/canchas";
 
-type FormState = Cancha & {
+type FormState = CrearCanchaReq & {
   imagen: File | undefined;
 };
 
 function NewCourt() {
-  
-  const {idE} = useParams()
-
-    const [showModal, setShowModal] = useState(false);
-    const renderBackdrop = (
-      props: JSX.IntrinsicAttributes &
-        React.ClassAttributes<HTMLDivElement> &
-        React.HTMLAttributes<HTMLDivElement>
-    ) => <div className="backdrop" {...props} />;
-    var handleClose = () => setShowModal(false);
-    var handleSuccess = () => {
-      console.log(":)");
-    };
-
-    //Alerta con el resultado
-    const { mutate, isLoading } = useMutation<Cancha, ApiError, FormState>({
-      mutationFn: (cancha) => crearCancha({...cancha}),
-      onSuccess: (cancha) => {
-        <Alerta mensaje="Cancha creada con éxito!" status="success" descripcion= {`Se añadió la cancha ${cancha.nombre}`} />
-        navigate(-1)
-      },
-      onError: () => {
-        <Alerta mensaje="Ocurrio un error al intentar crear la cancha" status="error" />
-        navigate(-1)
-      },
-    });
-
-    const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const renderBackdrop = (
+    props: JSX.IntrinsicAttributes &
+      React.ClassAttributes<HTMLDivElement> &
+      React.HTMLAttributes<HTMLDivElement>
+  ) => <div className="backdrop" {...props} />;
+  var handleClose = () => setShowModal(false);
+  var handleSuccess = () => {
+    console.log(":)");
+  };
+  const { search } = useLocation();
+  const { idEst } = useParams();
+  const navigate = useNavigate();
 
     const [state, setState] = useState<FormState>({
-      id:0,
     nombre: "",
     descripcion: "",
     estaHabilitada: true,
-    urlImagen: undefined,
-    idEstablecimiento: Number(idE),
-      imagen: undefined,
+    idEstablecimiento: Number(idEst),
+    imagen: undefined,
+    disciplinas: [],
+  });
+
+  const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
+    mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
+    onSuccess: () => navigate("/landing"),
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    console.log(state);
+    setState({ ...state, [name]: value });
+  };
+
+  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      imagen: e.target.files ? e.target.files[0] : undefined,
     });
+  };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      console.log(state);
-      setState({ ...state, [name]: value });
-    };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutate(state);
+  };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      mutate(state)
-    };
-
-    const advertencia = (message: string) => {
-      toast.warning(message, {
-        position: "top-center",
-        autoClose: 5000,
-        progress: 1,
-        closeOnClick: true,
-        hideProgressBar: false,
-        draggable: true,
-      });
-    };
-    const validacion = () => {
-      let result = false;
-
-      if ((state.nombre === "" || state.nombre === null) && result === false) {
-        result = true;
-        advertencia("El campo nombre de la cancha no puede estar vacio");
-      }
-
-      if ((state.descripcion === "" || state.descripcion === null) && result === false) {
-        result = true;
-        advertencia("El campo descripcion no puede estar vacio");
-      }
-    };
-
-    const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setState({
-        ...state,
-        imagen: e.target.files ? e.target.files[0] : undefined,
-      });
-    };
-    
-    const horas = [
-      { value: 'option1', label: '1:00hs' },
-      { value: 'option2', label: '2:00hs' },
-      { value: 'option3', label: '3:00hs' },
-      { value: 'option4', label: '4:00hs' },
-      { value: 'option5', label: '5:00hs' },
-      { value: 'option6', label: '6:00hs' },
-      { value: 'option7', label: '7:00hs' },
-      { value: 'option8', label: '8:00hs' },
-      { value: 'option9', label: '9:00hs' },
-      { value: 'option10', label: '10:00hs' },
-      { value: 'option11', label: '11:00hs' },
-      { value: 'option12', label: '12:00hs' },
-      { value: 'option13', label: '13:00hs' },
-      { value: 'option14', label: '14:00hs' },
-      { value: 'option15', label: '15:00hs' },
-      { value: 'option16', label: '16:00hs' },
-      { value: 'option17', label: '17:00hs' },
-      { value: 'option18', label: '18:00hs' },
-      { value: 'option19', label: '19:00hs' },
-      { value: 'option20', label: '20:00hs' },
-      { value: 'option21', label: '21:00hs' },
-      { value: 'option22', label: '22:00hs' },
-      { value: 'option23', label: '23:00hs' },
-      { value: 'option24', label: '24:00hs' }
-    ];
-    
-    const disciplinas = [
-      { value: 'futbol', label: 'Fútbol' },
-      { value: 'basquetbol', label: 'Básquetbol' },
-      { value: 'tenis', label: 'Tenis' },
-      { value: 'natacion', label: 'Natación' },
-      { value: 'atletismo', label: 'Atletismo' },
-      { value: 'gimnasia', label: 'Gimnasia' },
-      { value: 'volleyball', label: 'Volleyball' },
-      { value: 'boxeo', label: 'Boxeo' },
-      { value: 'karate', label: 'Karate' },
-      { value: 'hockey', label: 'Hockey' },
-      { value: 'rugby', label: 'Rugby' },
-      { value: 'padel', label: 'Pádel' },
-      { value: 'squash', label: 'Squash' },
-      { value: 'beisbol', label: 'Béisbol' },
-      { value: 'softbol', label: 'Softbol' }
-    ];
-    
-    return (
-      <div className="page">
-        <TopMenu />
-          <div className="centrado">
-          <br/>
-            <h1>Nueva cancha</h1>
-            </div>
-            <br/>
-            <form onSubmit={handleSubmit}>
-            <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
-            <FormControl
-              variant="floating"
-              id="nombre-cancha"
-              isRequired
-              onChange={handleChange}>
-              <Input placeholder="Cancha1" name="nombre-cancha" />
-              <FormLabel>Nombre de cancha</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="descripcion"
-              isRequired
-              onChange={handleChange}>
-              <Textarea placeholder=' ' />
-              <FormLabel>Descripción</FormLabel>
-            </FormControl>
-            <Input
-                  type="file"
-                  name="imagen"
-                  onChange={handleImagenChange}
-                  accept="image/*"
-                  sx={{
-                    "::file-selector-button": {
-                      height: 10,
-                      padding: 0,
-                      mr: 4,
-                      background: "none",
-                      border: "none",
-                      fontWeight: "bold",
-                    },
-                  }}
-            />
-          </VStack>
-          <div className="centrado">
-            <br/>
-            <Button
-                type="submit"
-                className="btn btn-danger"
-                onClick={validacion}>
-                  Crear cancha
-            </Button>
-          </div>
-        </form>
+  return (
+    <div className="page">
+      <TopMenu />
+      <div className="centrado">
+        <br />
+        <h1>Nueva cancha</h1>
       </div>
-    );
+      <br />
+      <form onSubmit={handleSubmit}>
+        <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
+          <FormControl
+            variant="floating"
+            id="nombre"
+            isRequired
+            onChange={handleChange}
+          >
+            <Input placeholder="Nombre" name="nombre" />
+            <FormLabel>Nombre de la cancha</FormLabel>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="descripcion"
+            isRequired
+            onChange={handleChange}
+          >
+            <Input placeholder="Descripción" name="descripcion" />
+            <FormLabel>Descripción</FormLabel>
+          </FormControl>
+          <Input
+            type="file"
+            name="imagen"
+            onChange={handleImagenChange}
+            accept="image/*"
+            sx={{
+              "::file-selector-button": {
+                height: 10,
+                padding: 0,
+                mr: 4,
+                background: "none",
+                border: "none",
+                fontWeight: "bold",
+              },
+            }}
+          />
+        </VStack>
+        <div className="centrado">
+          <br />
+          <Button type="submit" className="btn btn-danger">
+            Crear cancha
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 }
-export default NewCourt;
 
+export default NewCourt;
 
 /*
 <div className="margen">

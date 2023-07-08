@@ -1,7 +1,7 @@
 import Cards, { Focused } from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import { useState } from "react";
-import { Tarjeta } from "../../types";
+import { Tarjeta } from "../../models";
 import {
   FormControl,
   FormErrorMessage,

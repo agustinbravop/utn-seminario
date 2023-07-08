@@ -1,11 +1,12 @@
 import { useEffect, useContext, createContext, useState } from "react";
-import { Administrador } from "../types";
+import { Administrador } from "../models";
 import {
   readLocalStorage,
   writeLocalStorage,
 } from "../utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
-import { JWT, apiLogin } from "../utils/api";
+import { JWT } from "../utils/api";
+import { apiLogin } from "../utils/api/auth";
 
 interface ICurrentAdminContext {
   currentAdmin?: Administrador;
@@ -17,24 +18,25 @@ interface CurrentAdminProviderProps {
   children?: React.ReactNode;
 }
 
-const CurrentAdminContext = createContext<ICurrentAdminContext>({
-  login: (correoOUsuario, clave) => Promise.reject(),
-  logout: () => {},
-});
+const CurrentAdminContext = createContext<ICurrentAdminContext | undefined>(
+  undefined
+);
+
+function readAdminFromStorage(): Administrador | undefined {
+  const token = readLocalStorage<JWT>("token");
+  return token
+    ? (jwtDecode(token.token) as { usuario: Administrador }).usuario
+    : undefined;
+}
 
 export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   const [currentAdmin, setCurrentAdmin] = useState<Administrador | undefined>(
-    undefined
+    readAdminFromStorage()
   );
 
   const updateCurrentAdmin = () => {
-    const token = readLocalStorage<JWT>("token");
-    if (token) {
-      const { usuario } = jwtDecode(token.token) as { usuario: Administrador };
-      setCurrentAdmin(usuario);
-    } else {
-      setCurrentAdmin(undefined);
-    }
+    const usuario = readAdminFromStorage();
+    setCurrentAdmin(usuario);
   };
 
   useEffect(() => {
@@ -71,4 +73,10 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   );
 }
 
-export const useCurrentAdmin = () => useContext(CurrentAdminContext);
+export function useCurrentAdmin() {
+  const context = useContext(CurrentAdminContext);
+  if (context === undefined) {
+    throw new Error("Usar context dentro de un CurrentAdminProvider");
+  }
+  return context;
+}

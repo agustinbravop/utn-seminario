@@ -1,5 +1,5 @@
 export type Administrador = {
-  id?: number;
+  id: number;
   nombre: string;
   apellido: string;
   telefono: string;
@@ -12,10 +12,11 @@ export type Administrador = {
 export type Cancha = {
   id: number;
   nombre: string;
-  descripcion?: string;
+  descripcion: string;
   estaHabilitada: boolean;
-  urlImagen?: string | null;
+  urlImagen?: string;
   idEstablecimiento: number;
+  disciplinas: string[];
 };
 
 export type Establecimiento = {
@@ -25,7 +26,7 @@ export type Establecimiento = {
   direccion: string;
   localidad: string;
   provincia: string;
-  urlImagen: string | null;
+  urlImagen?: string;
   correo: string;
   idAdministrador: number;
   horariosDeAtencion: string;

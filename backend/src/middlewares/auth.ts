@@ -31,7 +31,7 @@ export class AuthMiddleware {
       }
 
       // Los handlers subsiguientes tienen acceso al idAdmin que vino en el JWT.
-      res.locals.idAdmin = Number(jwtPayload.id);
+      res.locals.idAdmin = Number(jwtPayload.usuario.id);
       next();
     };
   }

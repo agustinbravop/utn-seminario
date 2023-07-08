@@ -5,15 +5,27 @@ import {
   establecimientoSchema,
 } from "../models/establecimiento.js";
 import { ApiError } from "../utils/apierrors.js";
+import { z } from "zod";
 
-export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
-  id: true,
-  urlImagen: true,
-});
+export const crearEstablecimientoReqSchema = establecimientoSchema
+  .omit({
+    id: true,
+    urlImagen: true,
+  })
+  .extend({
+    idAdministrador: z.string().transform((str) => {
+      console.log(typeof str, str, Number(str));
+      return Number(str);
+    }),
+  });
 
-export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
-  urlImagen: true,
-});
+export const modificarEstablecimientoReqSchema = establecimientoSchema
+  .omit({
+    urlImagen: true,
+  })
+  .extend({
+    idAdministrador: z.string().transform((str) => Number(str)),
+  });
 
 export class EstablecimientoHandler {
   private service: EstablecimientoService;
@@ -23,9 +35,11 @@ export class EstablecimientoHandler {
 
   postEstablecimiento(): RequestHandler {
     return async (req, res) => {
+      console.log(res.locals);
+
       const est: Establecimiento = {
         ...res.locals.body,
-        idAdministrador: res.locals.idAdmin,
+        idAdministrador: Number(res.locals.idAdmin),
         id: 0,
       };
       const imagen = req.file;
@@ -92,6 +106,8 @@ export class EstablecimientoHandler {
           .status(404)
           .json(new ApiError(404, `No existe establecimiento con id ${idEst}`));
       }
+
+      console.log(est.idAdministrador, res.locals, typeof res.locals.idAdmin);
 
       if (est.idAdministrador !== res.locals.idAdmin) {
         return res

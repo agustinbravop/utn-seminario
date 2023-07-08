@@ -3,6 +3,9 @@ import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
 import { Button, HStack, Icon, Tag } from "@chakra-ui/react";
 import TennisIcon from "../../assets/svg/TennisIcon";
+import { InfoIcon } from "@chakra-ui/icons";
+import {AiOutlineUser} from 'react-icons/ai'
+
 
 export default function TopMenu() {
   return (
@@ -57,6 +60,14 @@ function Nav() {
   return (
     <nav>
       <HStack>
+        <Link to={'/perfil'}>
+        <Tag>
+          <AiOutlineUser size='20' />
+          Perfil
+          </Tag>
+        </Link>
+      
+          
         <Link to={`/administrador/${currentAdmin.id}`}>
           <Tag>{currentAdmin.usuario}</Tag>
         </Link>

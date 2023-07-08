@@ -1,0 +1,36 @@
+.cancha {
+  padding: 0;
+
+  .card {
+    margin: 15px;
+
+    .card-title {
+      height: 50px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: transparent;
+      color: #0098d3;
+      border-color: #0098d3;
+      border-radius: 50px;
+
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: #0098d3 !important;
+        border-color: #0098d3;
+        color: #fff;
+        box-shadow: none !important;
+      }
+    }
+
+    .image-size {
+      float: left;
+      height: 200px;
+      width: 100%;
+      background-size: cover;
+    }
+  }
+}
