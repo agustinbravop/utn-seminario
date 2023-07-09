@@ -58,8 +58,8 @@ function LoginPage() {
           <Heading textAlign="center" size="2xl" margin={[0, "60px"]}>
             Bienvenido a CANCHAS.NET
           </Heading>
-          <form className="formulario" onSubmit={handleSubmit}>
-            <VStack spacing="24px" width="400px">
+          <form className="formulario" onSubmit={handleSubmit} style={{paddingLeft:'0'}}>
+            <VStack spacing="24px" width="400px" >
               <FormControl
                 variant="floating"
                 id="correoOUsuario"

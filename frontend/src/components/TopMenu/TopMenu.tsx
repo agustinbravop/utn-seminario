@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, HStack, Icon, Tag } from "@chakra-ui/react";
 import TennisIcon from "../../assets/svg/TennisIcon";
 import { InfoIcon } from "@chakra-ui/icons";
-import {AiOutlineUser} from 'react-icons/ai'
-
+import { AiOutlineUser } from "react-icons/ai";
 
 export default function TopMenu() {
   return (
@@ -46,7 +45,7 @@ function Nav() {
             <Button
               variant="outline"
               size="sm"
-              color="whiteAlpha.800"
+              color="#ff5d3d"
               borderColor="tomato"
             >
               Iniciar Sesión
@@ -60,14 +59,13 @@ function Nav() {
   return (
     <nav>
       <HStack>
-        <Link to={'/perfil'}>
-        <Tag>
-          <AiOutlineUser size='20' />
-          Perfil
+        <Link to={"/perfil"}>
+          <Tag>
+            <AiOutlineUser size="20" />
+            Perfil
           </Tag>
         </Link>
-      
-          
+
         <Link to={`/administrador/${currentAdmin.id}`}>
           <Tag>{currentAdmin.usuario}</Tag>
         </Link>

@@ -61,7 +61,7 @@ export default function PerfilPage() {
                 <Heading size="xs" textTransform="uppercase">
                   Tarjeta
                 </Heading>
-                <Text fontSize="sm">{currentAdmin?.tarjeta.numero}</Text>
+                <Text fontSize="sm">{currentAdmin?.tarjeta.numero.replace(/.(?=.{4})/g, '*')}</Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">

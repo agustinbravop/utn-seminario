@@ -5,6 +5,7 @@ import { Box, Button, Heading, Card, CardBody, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
 import { getEstablecimientoByID } from "../../utils/api/establecimientos";
+import { useState } from "react";
 
 interface CanchaListProps {
   idEst: number;
@@ -14,6 +15,8 @@ function CanchaList({ idEst }: CanchaListProps) {
   const { data: canchas } = useQuery(["canchas"], () =>
     getCanchasByEstablecimientoID(Number(idEst))
   );
+
+  
 
   return <Canchas canchas={canchas || []} />;
 }

@@ -15,7 +15,6 @@ import { Suscripcion } from "../../models";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-//revisar iconos
 const iconos = [
   <Icon as={BsShop} fill="#47A992" fontSize={90} />,
   <Icon as={BsBuildings} fill="#47A992" fontSize={90} />,
@@ -63,7 +62,8 @@ function SuscriptionOptionPage() {
           </Text>
           <Button
             type="button"
-            className="btn btn-outline-danger"
+            colorScheme='teal'
+            variant='outline'
             style={{ marginLeft: "10px" }}
             onClick={() => navigate(`/register?idSuscripcion=${s.id}`)}
           >
