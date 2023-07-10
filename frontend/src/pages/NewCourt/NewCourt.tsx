@@ -191,6 +191,7 @@ export default NewCourt;
 
 
 /*
+  Para el siguiente Sprint
 <div className="margen">
             <h3>Disponibilidad horaria</h3>
             <p> En qué rangos horarios la cancha estará disponible y para qué disciplinas.</p>
