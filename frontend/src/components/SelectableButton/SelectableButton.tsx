@@ -1,9 +1,11 @@
-import "./SelectableButton.css";
-
 import { Button, Checkbox } from "@chakra-ui/react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
-function SelectableButton({ children }) {
+interface SelectableButtonProps {
+  children?: ReactNode;
+}
+
+function SelectableButton({ children }: SelectableButtonProps) {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleButtonClick = () => {

@@ -1,4 +1,3 @@
-import "./EstablecimientoCard.scss";
 import {
   Button,
   Card,
@@ -25,7 +24,6 @@ export default function EstablecimientoCard({
   return (
     <Card maxWidth="xs" height="450px">
       <Image
-        className="image-size"
         src={
           establecimiento.urlImagen !== null
             ? establecimiento.urlImagen
@@ -39,7 +37,7 @@ export default function EstablecimientoCard({
       />
       <CardBody height="300px">
         <VStack spacing="0">
-          <Heading className="card-title" size="md" marginBottom="10px">
+          <Heading size="md" marginBottom="10px">
             {establecimiento.nombre}
           </Heading>
           <Text marginBottom="0">

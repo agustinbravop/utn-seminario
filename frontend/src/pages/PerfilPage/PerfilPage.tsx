@@ -17,7 +17,7 @@ export default function PerfilPage() {
   return (
     <>
       <TopMenu />
-      <div className="container" style={{ marginTop: "2rem" }}>
+      <div style={{ marginTop: "2rem" }}>
         <Card
           boxSize="40rem"
           style={{ marginLeft: "27%", marginBottom: "1rem" }}
@@ -61,7 +61,9 @@ export default function PerfilPage() {
                 <Heading size="xs" textTransform="uppercase">
                   Tarjeta
                 </Heading>
-                <Text fontSize="sm">{currentAdmin?.tarjeta.numero}</Text>
+                <Text fontSize="sm">
+                  {currentAdmin?.tarjeta.numero.replace(/.(?=.{4})/g, "*")}
+                </Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
