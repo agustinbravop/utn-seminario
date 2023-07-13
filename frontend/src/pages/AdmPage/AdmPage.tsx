@@ -45,7 +45,7 @@ function AdmPage() {
         status: "success",
         isClosable: true,
       });
-      navigate(-1);
+      navigate("/login");
     },
     onError: () => {
       toast({
