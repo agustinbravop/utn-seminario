@@ -3,7 +3,6 @@ import { Cancha } from "../../models";
 import { useNavigate, useParams } from "react-router";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
-import { SettingsIcon } from "@chakra-ui/icons";
 import Courts from "../../components/Courts/Courts";
 import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
@@ -18,29 +17,28 @@ export default function CourtPage() {
     ["canchas", idEst],
     () => getCanchasByEstablecimientoID(Number(idEst))
   );
-  console.log(data);
 
-  const [filtro, setFiltro] = useState('')
-  const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-    setFiltro(e.target.value)
-    console.log(filtro)
-  }
+  const [filtro, setFiltro] = useState("");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiltro(e.target.value);
+    console.log(filtro);
+  };
 
   return (
     <div>
       <TopMenu />
+      <Heading textAlign="center" paddingBottom="2" mt="40px">
+        Mis Canchas
+      </Heading>
       <HStack spacing={4}>
         <Button
-          className="btn-agregarestablecimiento"
           onClick={() => navigate("nuevaCancha")}
           variant="outline"
           leftIcon={<Icon as={GrAddCircle} />}
         >
-          Cancha
+          Agregar Cancha
         </Button>
-        <Text mb="0" mt="15px">
-          {data?.length} canchas
-        </Text>
+        <Text mb="0">{data?.length} canchas</Text>
         <Input
           focusBorderColor="lightblue"
           placeholder="Número de la Cancha"
@@ -49,9 +47,6 @@ export default function CourtPage() {
           onChange={handleChange}
         />
       </HStack>
-      <Heading textAlign='center' paddingBottom='2'>
-         Mis Canchas
-      </Heading>
       {isLoading ? (
         <LoadingSpinner />
       ) : isError ? (

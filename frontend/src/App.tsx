@@ -16,7 +16,6 @@ import EditEstab from "./pages/EditEstab/EditEstab";
 import PerfilPage from "./pages/PerfilPage/PerfilPage";
 import NewCourt from "./pages/NewCourt/NewCourt";
 import CourtPage from "./pages/CourtPage/CourtPage";
-import CanchasPage from "./pages/CanchasPage/CanchasPage";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import EditCourt from "./pages/EditCourt/EditCourt";
 
@@ -72,10 +71,6 @@ const routes = [
   {
     path: "/establecimiento/:idEst/canchas/:idCancha", //provisorio
     element: <EditCourt />,
-  },
-  {
-    path: "/canchas",
-    element: <CanchasPage />,
   },
 ];
 

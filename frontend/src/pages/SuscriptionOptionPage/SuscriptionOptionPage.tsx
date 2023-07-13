@@ -42,13 +42,7 @@ function SuscriptionOptionPage() {
     .map((s, idx) => ({ icono: iconos[idx], ...s }));
   cards = suscripciones?.map((s) => {
     return (
-      <Card
-        bg="light"
-        key="light"
-        color="dark"
-        width="14rem"
-        className="mb-2 mt-4 pt-2"
-      >
+      <Card bg="light" key="light" color="dark" width="14rem">
         <CardHeader margin="auto">{s.icono}</CardHeader>
         <CardBody style={{ textAlign: "center" }}>
           <Heading size="md">{s.nombre}</Heading>
@@ -62,8 +56,8 @@ function SuscriptionOptionPage() {
           </Text>
           <Button
             type="button"
-            colorScheme='teal'
-            variant='outline'
+            colorScheme="teal"
+            variant="outline"
             style={{ marginLeft: "10px" }}
             onClick={() => navigate(`/register?idSuscripcion=${s.id}`)}
           >
@@ -80,7 +74,6 @@ function SuscriptionOptionPage() {
       <HStack justifyContent="space-around">{cards}</HStack>
 
       <div
-        className="row"
         style={{
           display: "flex",
           justifyContent: "space-around",

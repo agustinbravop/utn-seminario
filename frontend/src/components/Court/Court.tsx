@@ -8,9 +8,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { PhoneIcon } from "@chakra-ui/icons";
 import { Cancha } from "../../models/index";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type estabProps = {
   cancha: Cancha;
@@ -18,13 +17,9 @@ type estabProps = {
 };
 
 export default function Court({ cancha, key }: estabProps) {
-
-  const navigate = useNavigate()
-
   return (
-    <Card maxWidth="xs" height="450px">
+    <Card maxWidth="xs" height="450px" width="300px">
       <Image
-        className="image-size"
         src={cancha.urlImagen !== null ? cancha.urlImagen : undefined}
         borderRadius="lg"
         alt={`Imagen del cancha ${cancha.nombre}`}
@@ -34,12 +29,10 @@ export default function Court({ cancha, key }: estabProps) {
       />
       <CardBody height="300px">
         <VStack spacing="0">
-          <Heading className="card-title" size="md" marginBottom="10px">
+          <Heading size="md" marginBottom="10px">
             {cancha.nombre}
           </Heading>
-          <Text marginBottom="0">
-            {cancha.descripcion}
-          </Text>
+          <Text marginBottom="0">{cancha.descripcion}</Text>
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">

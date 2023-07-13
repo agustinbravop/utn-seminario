@@ -1,11 +1,10 @@
-import { Spinner } from "@chakra-ui/react";
-import "./LoadingSpinner.scss";
+import { Container, Spinner, Text } from "@chakra-ui/react";
 
 export default function LoadingSpinner() {
   return (
-    <div className="loading">
+    <Container centerContent>
       <Spinner size="lg" />
-      <h5>Cargando...</h5>
-    </div>
+      <Text>Cargando...</Text>
+    </Container>
   );
 }
