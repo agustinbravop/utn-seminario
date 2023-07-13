@@ -26,7 +26,6 @@ export default function EstablecimientosPage() {
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
-    console.log(filtro);
   };
 
   const { data, isLoading, isError } = useQuery<Establecimiento[]>(
@@ -39,7 +38,7 @@ export default function EstablecimientosPage() {
   }
 
   return (
-    <>
+    <div>
       <TopMenu />
       <Heading textAlign="center" paddingBottom="2" mt="40px">
         Mis Establecimientos
@@ -64,11 +63,24 @@ export default function EstablecimientosPage() {
           onChange={handleChange}
         />
       </HStack>
-      <EstablecimientosList
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-      />
-    </>
+      <Heading textAlign="center" paddingBottom="2">
+        Mis Establecimientos
+      </Heading>
+      {filtro === "" ? (
+        <EstablecimientosList
+          data={data}
+          isLoading={isLoading}
+          isError={isError}
+        />
+      ) : (
+        <EstablecimientosList
+          data={data?.filter((est) => {
+            return est.nombre.toLocaleLowerCase().includes(filtro.toLocaleLowerCase());
+          })}
+          isLoading={isLoading}
+          isError={isError}
+        />
+      )}
+    </div>
   );
 }
