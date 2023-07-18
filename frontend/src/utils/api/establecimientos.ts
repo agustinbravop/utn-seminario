@@ -20,11 +20,7 @@ export async function crearEstablecimiento(
 
   console.log(est, formData);
 
-  return postFormData<Establecimiento>(
-    `${API_URL}/establecimientos`,
-    formData,
-    201
-  );
+  return postFormData<Establecimiento>(`${API_URL}/establecimientos`, formData);
 }
 
 export async function modificarEstablecimiento(
@@ -42,11 +38,7 @@ export async function modificarEstablecimiento(
     formData.append(key, String(establecimiento[key]));
   }
 
-  return putFormData<Establecimiento>(
-    `${API_URL}/establecimientos`,
-    formData,
-    200
-  );
+  return putFormData<Establecimiento>(`${API_URL}/establecimientos`, formData);
 }
 
 export async function getEstablecimientosByAdminID(

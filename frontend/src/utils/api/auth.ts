@@ -9,35 +9,26 @@ export async function apiLogin(
   correoOUsuario: string,
   clave: string
 ): Promise<Administrador> {
-  return post<JWT>(
-    `${API_URL}/auth/login`,
-    {
-      correoOUsuario: correoOUsuario,
-      clave: clave,
-    },
-    200
-  )
+  return post<JWT>(`${API_URL}/auth/login`, {
+    correoOUsuario: correoOUsuario,
+    clave: clave,
+  })
     .then((data) => {
       writeLocalStorage("token", data);
       return jwtDecode(data.token) as { usuario: Administrador };
     })
-    .then((payload) => payload.usuario)
-    .then((data) => data as Administrador);
+    .then((payload) => payload.usuario);
 }
 
 export async function apiRegister(
   usuario: RegistrarAdminReq,
   clave: string
 ): Promise<Administrador> {
-  return post<Administrador>(
-    `${API_URL}/auth/register`,
-    {
-      ...usuario,
-      clave,
-      idSuscripcion: usuario.suscripcion?.id,
-    },
-    201
-  );
+  return post<Administrador>(`${API_URL}/auth/register`, {
+    ...usuario,
+    clave,
+    idSuscripcion: usuario.suscripcion?.id,
+  });
 }
 
 export async function getSuscripciones(): Promise<Suscripcion[]> {
