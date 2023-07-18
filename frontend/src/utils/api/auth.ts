@@ -1,9 +1,14 @@
 import jwtDecode from "jwt-decode";
 import { post, JWT, API_URL, get } from ".";
-import { Administrador, Suscripcion } from "../../models";
+import { Administrador, Suscripcion, Tarjeta } from "../../models";
 import { writeLocalStorage } from "../storage/localStorage";
 
-export type RegistrarAdminReq = Omit<Administrador, "id">;
+export interface RegistrarAdmin
+  extends Omit<Administrador, "id" | "tarjeta" | "suscripcion"> {
+  idSuscripcion: number;
+  tarjeta: Omit<Tarjeta, "id">;
+  clave: string;
+}
 
 export async function apiLogin(
   correoOUsuario: string,
@@ -21,13 +26,10 @@ export async function apiLogin(
 }
 
 export async function apiRegister(
-  usuario: RegistrarAdminReq,
-  clave: string
+  registrarAdmin: RegistrarAdmin
 ): Promise<Administrador> {
   return post<Administrador>(`${API_URL}/auth/register`, {
-    ...usuario,
-    clave,
-    idSuscripcion: usuario.suscripcion?.id,
+    ...registrarAdmin,
   });
 }
 

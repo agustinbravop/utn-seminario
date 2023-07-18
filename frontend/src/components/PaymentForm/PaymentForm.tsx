@@ -1,107 +1,74 @@
 import Cards, { Focused } from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import { useState } from "react";
-import { Tarjeta } from "../../models";
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  HStack,
-  Input,
-  VStack,
-} from "@chakra-ui/react";
-import { FormikErrors } from "formik";
+import { Box, HStack, VStack } from "@chakra-ui/react";
+import InputControl from "../forms/InputControl";
+import { Control, useWatch } from "react-hook-form";
 
 interface PaymentFormProps {
-  tarjeta: Tarjeta;
-  setTarjeta: (t: Tarjeta) => void;
-  errors?: FormikErrors<Tarjeta>;
+  control?: Control<any, any>;
 }
-export default function PaymentForm({
-  tarjeta,
-  setTarjeta,
-  errors,
-}: PaymentFormProps) {
-  const [focused, setFocused] = useState<Focused | undefined>(undefined);
-  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    setFocused(e.target.name as unknown as Focused);
-  };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const t: Tarjeta = {
-      nombre: name === "name" ? value : tarjeta.nombre,
-      vencimiento: name === "expiry" ? value : tarjeta.vencimiento,
-      cvv: name === "cvc" ? Number(value) : tarjeta.cvv,
-      numero: name === "number" ? value : tarjeta.numero,
-    };
-    setTarjeta(t);
+/*
+ Tanto react-hook-form como react-credit-cards usan el 'name' del input. Priorizamos
+ respetar el 'name' que react-hook-form necesita, asi que este diccionario 
+ traduce el 'name' del input al valor que el tipo `Focused` de react-credit-cards espera. 
+*/
+const map: Record<string, Focused> = {
+  "tarjeta.numero": "number",
+  "tarjeta.nombre": "name",
+  "tarjeta.vencimiento": "expiry",
+  "tarjeta.cvv": "cvc",
+};
+
+export default function PaymentForm({ control }: PaymentFormProps) {
+  const [focused, setFocused] = useState<Focused | undefined>(undefined);
+  const values = useWatch({ name: "tarjeta", control });
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    setFocused(map[e.target.name]);
   };
 
   return (
     <HStack spacing="4" justifyContent="center">
       <VStack spacing="4" minWidth="150px" maxWidth="300px">
-        <FormControl
-          variant="floating"
-          id="number"
-          isRequired
-          onChange={handleInputChange}
+        <InputControl
+          name="tarjeta.numero"
+          label="Numero de tarjeta"
+          placeholder=" "
           onFocus={handleInputFocus}
-          isInvalid={errors && !!errors.numero && !!tarjeta.numero}
-        >
-          <Input placeholder=" " name="number" />
-          <FormLabel>Numero de tarjeta</FormLabel>
-          <FormErrorMessage>{errors?.numero}</FormErrorMessage>
-        </FormControl>
-        <FormControl
-          variant="floating"
-          id="name"
-          isRequired
-          onChange={handleInputChange}
+        />
+        <InputControl
+          name="tarjeta.nombre"
+          label="Nombre del dueño"
+          placeholder="Nombre"
           onFocus={handleInputFocus}
-          isInvalid={errors && !!errors.nombre && !!tarjeta.nombre}
-        >
-          <Input placeholder="Nombre" name="name" />
-          <FormLabel>Nombre del dueño</FormLabel>
-          <FormErrorMessage>{errors?.nombre}</FormErrorMessage>
-        </FormControl>
+        />
 
         <HStack spacing="20px">
-          <FormControl
-            variant="floating"
-            id="expiry"
-            isRequired
-            onChange={handleInputChange}
+          <InputControl
+            placeholder="00/00"
+            name="tarjeta.vencimiento"
+            label="Vencimiento"
             onFocus={handleInputFocus}
-            isInvalid={errors && !!errors.vencimiento && !!tarjeta.vencimiento}
-          >
-            <Input placeholder="00/00" name="expiry" />
-            <FormLabel>Vencimiento</FormLabel>
-            <FormErrorMessage>{errors?.vencimiento}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            variant="floating"
-            id="cvc"
-            isRequired
-            onChange={handleInputChange}
+          />
+          <InputControl
+            placeholder="000"
+            name="tarjeta.cvv"
+            label="CVV"
+            type="number"
             onFocus={handleInputFocus}
-            isInvalid={errors && !!errors.cvv && !!tarjeta.cvv}
-          >
-            <Input placeholder="000" name="cvc" type="number" />
-            <FormLabel>CVV</FormLabel>
-            <FormErrorMessage>{errors?.cvv}</FormErrorMessage>
-          </FormControl>
+          />
         </HStack>
       </VStack>
 
       <Box m="0">
         <Cards
-          cvc={tarjeta.cvv}
-          expiry={tarjeta.vencimiento}
+          cvc={values.cvv}
+          expiry={values.vencimiento}
+          name={values.nombre}
+          number={values.numero}
           focused={focused}
-          name={tarjeta.nombre}
-          number={tarjeta.numero}
         />
       </Box>
     </HStack>

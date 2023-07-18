@@ -5,10 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import {
   Alert,
-  Button,
   Container,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Heading,
@@ -16,78 +14,72 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
   CrearEstablecimientoReq,
   crearEstablecimiento,
 } from "../../utils/api/establecimientos";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { FormProvider, useForm } from "react-hook-form";
+import InputControl from "../../components/forms/InputControl";
+import SubmitButton from "../../components/forms/SubmitButton";
 
 type FormState = CrearEstablecimientoReq & {
-  imagen?: File;
+  imagen: File | undefined;
 };
 
 function NewEstab() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
-  const { mutate, isLoading, isError } = useMutation<
-    Establecimiento,
-    ApiError,
-    FormState
-  >({
-    mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
-    onSuccess: () => {
-      toast({
-        title: "Establecimiento creado.",
-        description: `Establecimiento registrado correctamente.`,
-        status: "success",
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: () => {
-      toast({
-        title: "Error al crear el establecimiento.",
-        description: `Intente de nuevo.`,
-        status: "error",
-        isClosable: true,
-      });
-    },
+  const { mutate, isError } = useMutation<Establecimiento, ApiError, FormState>(
+    {
+      mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
+      onSuccess: () => {
+        toast({
+          title: "Establecimiento creado.",
+          description: `Establecimiento registrado correctamente.`,
+          status: "success",
+          isClosable: true,
+        });
+        navigate(-1);
+      },
+      onError: () => {
+        toast({
+          title: "Error al crear el establecimiento.",
+          description: `Intente de nuevo.`,
+          status: "error",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  const validationSchema = Yup.object({
+    nombre: Yup.string().required("Obligatorio"),
+    telefono: Yup.string().required("Obligatorio"),
+    direccion: Yup.string().required("Obligatorio"),
+    localidad: Yup.string().required("Obligatorio"),
+    provincia: Yup.string().required("Obligatorio"),
+    correo: Yup.string()
+      .email("Formato de correo inválido")
+      .required("Obligatorio"),
+    idAdministrador: Yup.number().required(),
+    horariosDeAtencion: Yup.string().optional(),
+    imagen: Yup.mixed<File>().optional(),
   });
 
-  const { values, setValues, errors, handleSubmit, handleChange } =
-    useFormik<FormState>({
-      initialValues: {
-        nombre: "",
-        telefono: "",
-        direccion: "",
-        localidad: "",
-        provincia: "",
-        correo: "",
-        idAdministrador: Number(currentAdmin?.id),
-        horariosDeAtencion: "",
-        imagen: undefined,
-      },
-      onSubmit: (values) => mutate(values),
-      validationSchema: Yup.object({
-        nombre: Yup.string().required("Obligatorio"),
-        telefono: Yup.string().required("Obligatorio"),
-        direccion: Yup.string().required("Obligatorio"),
-        localidad: Yup.string().required("Obligatorio"),
-        provincia: Yup.string().required("Obligatorio"),
-        correo: Yup.string()
-          .email("Formato de correo inválido")
-          .required("Obligatorio"),
-      }),
-    });
+  const methods = useForm<FormState>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      idAdministrador: Number(currentAdmin?.id),
+    },
+    mode: "onTouched",
+  });
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({
-      ...values,
-      imagen: e.target.files ? e.target.files[0] : undefined,
-    });
+    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
   return (
@@ -97,115 +89,55 @@ function NewEstab() {
         Nuevo Establecimiento
       </Heading>
 
-      <form onSubmit={handleSubmit}>
-        <Container centerContent gap="25px">
-          <VStack spacing="4">
-            <FormControl
-              variant="floating"
-              id="nombre"
-              isRequired
-              isInvalid={!!errors.nombre && !!values.nombre}
-            >
-              <Input
-                onChange={handleChange}
-                value={values.nombre}
-                name="nombre"
-                placeholder="Nombre"
-              />
-              <FormLabel>Nombre del establecimiento</FormLabel>
-              <FormErrorMessage>{errors.nombre}</FormErrorMessage>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="correo"
-              isRequired
-              isInvalid={!!errors.correo && !!values.correo}
-            >
-              <Input
-                onChange={handleChange}
-                value={values.correo}
-                name="correo"
-                type="email"
-                placeholder="abc@ejemplo.com"
-              />
-              <FormLabel>Correo del establecimiento</FormLabel>
-              <FormErrorMessage>{errors.correo}</FormErrorMessage>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="direccion"
-              isRequired
-              isInvalid={!!errors.direccion && !!values.direccion}
-            >
-              <Input
-                onChange={handleChange}
-                value={values.direccion}
-                name="direccion"
-                placeholder="Dirección"
-              />
-              <FormLabel>Dirección</FormLabel>
-              <FormErrorMessage>{errors.direccion}</FormErrorMessage>
-            </FormControl>
+      <Container centerContent gap="25px">
+        <FormProvider {...methods}>
+          <VStack
+            as="form"
+            onSubmit={methods.handleSubmit((values) => mutate(values))}
+            spacing="24px"
+            width="400px"
+            m="auto"
+          >
+            <InputControl
+              name="nombre"
+              label="Nombre del establecimiento"
+              placeholder="Nombre"
+            />
+            <InputControl
+              name="correo"
+              type="email"
+              label="Correo del establecimiento"
+              placeholder="abc@ejemplo.com"
+            />
+            <InputControl
+              name="direccion"
+              label="Dirección"
+              placeholder="Dirección"
+            />
             <HStack>
-              <FormControl
-                variant="floating"
-                id="localidad"
-                isRequired
-                isInvalid={!!errors.localidad && !!values.localidad}
-              >
-                <Input
-                  onChange={handleChange}
-                  value={values.localidad}
-                  name="localidad"
-                  placeholder="Localidad"
-                />
-                <FormLabel>Localidad</FormLabel>
-                <FormErrorMessage>{errors.localidad}</FormErrorMessage>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="provincia"
-                isRequired
-                isInvalid={!!errors.provincia && !!values.provincia}
-              >
-                <Input
-                  onChange={handleChange}
-                  value={values.provincia}
-                  name="provincia"
-                  placeholder="Provincia"
-                />
-                <FormLabel>Provincia</FormLabel>
-                <FormErrorMessage>{errors.provincia}</FormErrorMessage>
-              </FormControl>
-            </HStack>
-            <FormControl
-              variant="floating"
-              id="telefono"
-              isRequired
-              isInvalid={!!errors.telefono && !!values.telefono}
-            >
-              <Input
-                onChange={handleChange}
-                value={values.telefono}
-                name="telefono"
-                placeholder="Teléfono"
-                type="tel"
+              <InputControl
+                name="localidad"
+                label="Localidad"
+                placeholder="Localidad"
               />
-              <FormLabel>Teléfono</FormLabel>
-              <FormErrorMessage>{errors.telefono}</FormErrorMessage>
-            </FormControl>
+              <InputControl
+                name="provincia"
+                label="Provincia"
+                placeholder="Provincia"
+              />
+            </HStack>
+            <InputControl
+              name="telefono"
+              label="Teléfono"
+              placeholder="0..."
+              type="tel"
+            />
+            <InputControl
+              name="horariosDeAtencion"
+              label="Horarios de Atención"
+              placeholder="8:00-12:00"
+            />
             <FormControl>
-              <FormControl variant="floating" id="horariosDeAtencion">
-                <Input
-                  onChange={handleChange}
-                  value={values.horariosDeAtencion}
-                  name="horariosDeAtencion"
-                  placeholder="8:00-12:00"
-                  type="text"
-                />
-                <FormLabel>Horarios de Atención</FormLabel>
-                <FormErrorMessage>{errors.horariosDeAtencion}</FormErrorMessage>
-              </FormControl>
               <FormLabel marginTop="10px" marginLeft="10px">
                 Imagen
               </FormLabel>
@@ -227,17 +159,15 @@ function NewEstab() {
               />
             </FormControl>
 
-            <Button type="submit" isLoading={isLoading}>
-              Crear
-            </Button>
+            <SubmitButton>Crear</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar su cuenta. Intente de nuevo
               </Alert>
             )}
           </VStack>
-        </Container>
-      </form>
+        </FormProvider>
+      </Container>
     </div>
   );
 }

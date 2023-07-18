@@ -5,7 +5,7 @@ import { AuthService } from "../services/auth.js";
 import { SuscripcionService } from "../services/suscripciones.js";
 import { z } from "zod";
 
-export const registroReqSchema = z.object({
+export const registrarAdminSchema = z.object({
   nombre: z.string().nonempty(),
   apellido: z.string().nonempty(),
   telefono: z.string().nonempty(),
@@ -13,7 +13,7 @@ export const registroReqSchema = z.object({
   usuario: z.string().nonempty(),
   clave: z.string().nonempty(),
   idSuscripcion: z.number().positive().int(),
-  tarjeta: tarjetaSchema.partial({ id: true }),
+  tarjeta: tarjetaSchema.omit({ id: true }),
 });
 
 // Se puede iniciar sesión o con usuario o con correo.
@@ -24,7 +24,7 @@ export const loginReqSchema = z.object({
 
 type LoginReq = z.infer<typeof loginReqSchema>;
 
-type RegistroReq = z.infer<typeof registroReqSchema>;
+type RegistroReq = z.infer<typeof registrarAdminSchema>;
 
 export class AuthHandler {
   private service: AuthService;
