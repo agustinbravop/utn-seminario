@@ -1,15 +1,12 @@
 import { Cancha } from "../models/cancha.js";
 import { ApiError } from "../utils/apierrors.js";
-import { Result, ok, err } from "neverthrow";
 import { PrismaClient, cancha, disciplina } from "@prisma/client";
 
 export interface CanchaRepository {
-  getCanchasByEstablecimientoID(
-    idEst: number
-  ): Promise<Result<Cancha[], ApiError>>;
-  getCanchaByID(idCancha: number): Promise<Result<Cancha, ApiError>>;
-  crearCancha(cancha: Cancha): Promise<Result<Cancha, ApiError>>;
-  modificarCancha(canchaUpdate: Cancha): Promise<Result<Cancha, ApiError>>;
+  getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
+  getCanchaByID(idCancha: number): Promise<Cancha>;
+  crearCancha(cancha: Cancha): Promise<Cancha>;
+  modificarCancha(canchaUpdate: Cancha): Promise<Cancha>;
 }
 
 export class PrismaCanchaRepository implements CanchaRepository {
@@ -19,9 +16,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     this.prisma = prismaClient;
   }
 
-  async getCanchasByEstablecimientoID(
-    idEst: number
-  ): Promise<Result<Cancha[], ApiError>> {
+  async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {
     try {
       const canchas = await this.prisma.cancha.findMany({
         where: {
@@ -36,14 +31,14 @@ export class PrismaCanchaRepository implements CanchaRepository {
           disciplinas: true,
         },
       });
-      return ok(canchas.map((c) => toModel(c)));
+      return canchas.map((c) => toModel(c));
     } catch (e) {
       console.error(e);
-      return err(new ApiError(500, "Error al intentar listar las canchas"));
+      throw new ApiError(500, "Error al intentar listar las canchas");
     }
   }
 
-  async getCanchaByID(idCancha: number): Promise<Result<Cancha, ApiError>> {
+  async getCanchaByID(idCancha: number): Promise<Cancha> {
     return awaitQuery(
       this.prisma.cancha.findUniqueOrThrow({
         where: {
@@ -58,9 +53,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     );
   }
 
-  async crearCancha(cancha: Cancha): Promise<Result<Cancha, ApiError>> {
-    console.log(cancha);
-
+  async crearCancha(cancha: Cancha): Promise<Cancha> {
     try {
       const canchaCreada = await this.prisma.cancha.create({
         data: {
@@ -80,16 +73,14 @@ export class PrismaCanchaRepository implements CanchaRepository {
           disciplinas: true,
         },
       });
-      return ok(toModel(canchaCreada));
+      return toModel(canchaCreada);
     } catch (e) {
       console.error(e);
-      return err(
-        new ApiError(500, "Error interno al intentar cargar la cancha")
-      );
+      throw new ApiError(500, "Error interno al intentar cargar la cancha");
     }
   }
 
-  async modificarCancha(cancha: Cancha): Promise<Result<Cancha, ApiError>> {
+  async modificarCancha(cancha: Cancha): Promise<Cancha> {
     return awaitQuery(
       this.prisma.cancha.update({
         where: {
@@ -130,16 +121,16 @@ async function awaitQuery(
   promise: Promise<canchaDB | null>,
   notFoundMsg: string,
   errorMsg: string
-): Promise<Result<Cancha, ApiError>> {
+): Promise<Cancha> {
   try {
     const cancha = await promise;
 
-    if (cancha === null) {
-      return err(new ApiError(404, notFoundMsg));
+    if (cancha) {
+      return toModel(cancha);
     }
-    return ok(toModel(cancha));
   } catch (e) {
     console.error(e);
-    return err(new ApiError(500, errorMsg));
+    throw new ApiError(500, errorMsg);
   }
+  throw new ApiError(404, notFoundMsg);
 }

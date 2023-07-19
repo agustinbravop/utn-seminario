@@ -39,15 +39,11 @@ export class AuthHandler {
     return async (_req, res) => {
       const loginReq: LoginReq = res.locals.body;
 
-      const loginResult = await this.service.loginUsuario(
+      const token = await this.service.loginUsuario(
         loginReq.correoOUsuario,
         loginReq.clave
       );
-
-      loginResult.match(
-        (token) => res.status(200).json({ token }),
-        (err) => res.status(err.status).json(err)
-      );
+      res.status(200).json({ token });
     };
   }
 
@@ -57,11 +53,6 @@ export class AuthHandler {
 
       // Se obtiene la suscripcion mediante el idSuscripcion.
       const sus = await this.susService.getSuscripcionByID(body.idSuscripcion);
-      if (sus.isErr()) {
-        const err = sus._unsafeUnwrapErr();
-        res.status(err.status).json(err);
-        return;
-      }
 
       // Se construye el Administrador del modelo.
       const admin: Administrador = {
@@ -71,18 +62,14 @@ export class AuthHandler {
           ...body.tarjeta,
         },
         id: 0,
-        suscripcion: sus._unsafeUnwrap(),
+        suscripcion: sus,
       };
 
-      const regResult = await this.service.registrarAdministrador(
+      const adminCreado = await this.service.registrarAdministrador(
         admin,
         body.clave
       );
-
-      regResult.match(
-        (admin) => res.status(201).json(admin),
-        (err) => res.status(err.status).json(err)
-      );
+      res.status(201).json(adminCreado);
     };
   }
 }

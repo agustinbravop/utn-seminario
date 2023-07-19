@@ -1,5 +1,4 @@
 import { EstablecimientoRepository } from "../repositories/establecimientos.js";
-import { Result, err } from "neverthrow";
 import { Establecimiento } from "../models/establecimiento.js";
 import { ApiError } from "../utils/apierrors.js";
 import { subirImagen } from "../utils/imagenes.js";
@@ -9,13 +8,13 @@ export interface EstablecimientoService {
   crear(
     establecimiento: Establecimiento,
     imagen?: Express.Multer.File
-  ): Promise<Result<Establecimiento, ApiError>>;
-  getByAdminID(idAdmin: number): Promise<Result<Establecimiento[], ApiError>>;
-  getByID(idEst: number): Promise<Result<Establecimiento, ApiError>>;
+  ): Promise<Establecimiento>;
+  getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
+  getByID(idEst: number): Promise<Establecimiento>;
   modificar(
     est: Establecimiento,
     imagen?: Express.Multer.File
-  ): Promise<Result<Establecimiento, ApiError>>;
+  ): Promise<Establecimiento>;
 }
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
@@ -30,26 +29,19 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     this.adminService = adminService;
   }
 
-  async getByID(idEst: number): Promise<Result<Establecimiento, ApiError>> {
+  async getByID(idEst: number): Promise<Establecimiento> {
     return await this.repo.getByID(idEst);
   }
 
-  async getByAdminID(
-    idAdmin: number
-  ): Promise<Result<Establecimiento[], ApiError>> {
+  async getByAdminID(idAdmin: number): Promise<Establecimiento[]> {
     return await this.repo.getByAdminID(idAdmin);
   }
 
   async crear(
     est: Establecimiento,
     imagen?: Express.Multer.File
-  ): Promise<Result<Establecimiento, ApiError>> {
-    const validacionErr = await this.validarLimiteEstablecimientos(
-      est.idAdministrador
-    );
-    if (validacionErr) {
-      return err(validacionErr);
-    }
+  ): Promise<Establecimiento> {
+    await this.validarLimiteEstablecimientos(est.idAdministrador);
 
     let urlImagen = null;
     if (imagen) {
@@ -57,8 +49,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
         urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-
-        return err(new ApiError(500, "Error al subir la imagen"));
+        throw new ApiError(500, "Error al subir la imagen");
       }
     }
     est.urlImagen = urlImagen;
@@ -69,37 +60,26 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   async modificar(
     est: Establecimiento,
     imagen?: Express.Multer.File
-  ): Promise<Result<Establecimiento, ApiError>> {
+  ): Promise<Establecimiento> {
     if (imagen) {
       try {
         est.urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-        return err(new ApiError(500, "Error al actualizar la imagen"));
+        throw new ApiError(500, "Error al actualizar la imagen");
       }
     }
 
     return await this.repo.modificar(est);
   }
 
-  async validarLimiteEstablecimientos(
-    idAdmin: number
-  ): Promise<ApiError | null> {
-    const adminRes = await this.adminService.getAdministradorByID(idAdmin);
-    const admin = adminRes.unwrapOr(null);
-    if (!admin) {
-      return adminRes._unsafeUnwrapErr();
-    }
+  async validarLimiteEstablecimientos(idAdmin: number): Promise<void> {
+    const admin = await this.adminService.getAdministradorByID(idAdmin);
 
-    const adminEstsRes = await this.repo.getByAdminID(admin.id);
-    const adminEsts = adminEstsRes.unwrapOr(null);
-    if (!adminEsts) {
-      return adminEstsRes._unsafeUnwrapErr();
-    }
+    const ests = await this.repo.getByAdminID(admin.id);
 
-    if (admin.suscripcion.limiteEstablecimientos === adminEsts.length) {
-      return new ApiError(409, "Limite de establecimientos alcanzado");
+    if (admin.suscripcion.limiteEstablecimientos >= ests.length) {
+      throw new ApiError(409, "Limite de establecimientos alcanzado");
     }
-    return null;
   }
 }

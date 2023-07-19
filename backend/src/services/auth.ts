@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import { AuthRepository } from "../repositories/auth.js";
-import { Result, ok, err } from "neverthrow";
 import { Administrador } from "../models/administrador.js";
 import { ApiError } from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
@@ -16,14 +15,11 @@ export enum Rol {
 }
 
 export interface AuthService {
-  loginUsuario(
-    correoOUsuario: string,
-    clave: string
-  ): Promise<Result<string, ApiError>>;
+  loginUsuario(correoOUsuario: string, clave: string): Promise<string>;
   registrarAdministrador(
     admin: Administrador,
     clave: string
-  ): Promise<Result<Administrador, ApiError>>;
+  ): Promise<Administrador>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(token: string): Rol[];
 }
@@ -100,25 +96,19 @@ export class AuthServiceImpl implements AuthService {
    * @param clave la contraseña en texto plano del usuario.
    * @returns el JWT de la sesión si los datos son correctos. ApiError si alguna validación falla.
    */
-  async loginUsuario(
-    correoOUsuario: string,
-    clave: string
-  ): Promise<Result<string, ApiError>> {
-    const adminConClaveResult = await this.repo.getAdministradorYClave(
+  async loginUsuario(correoOUsuario: string, clave: string): Promise<string> {
+    const adminConClave = await this.repo.getAdministradorYClave(
       correoOUsuario
     );
-    if (adminConClaveResult.isErr()) {
-      return err(adminConClaveResult._unsafeUnwrapErr());
-    }
 
-    const { admin, clave: hash } = adminConClaveResult._unsafeUnwrap();
+    const { admin, clave: hash } = adminConClave;
     const esValido = await bcrypt.compare(clave, hash);
     if (!esValido) {
-      return err(new ApiError(401, "Contraseña incorrecta"));
+      throw new ApiError(401, "Contraseña incorrecta");
     }
 
     const jwt = await this.signJWT(admin);
-    return ok(jwt);
+    return jwt;
   }
 
   /**
@@ -130,21 +120,18 @@ export class AuthServiceImpl implements AuthService {
   async registrarAdministrador(
     admin: Administrador,
     clave: string
-  ): Promise<Result<Administrador, ApiError>> {
+  ): Promise<Administrador> {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
 
     const now = new Date();
     const anioActual = String(now.getUTCFullYear()).slice(-2);
     const mesActual = String(now.getUTCMonth() + 1);
     const [mes, anio] = admin.tarjeta.vencimiento.split("/");
-    console.log(anioActual, mesActual, anio, mes, admin.tarjeta.vencimiento);
 
     if (anioActual > anio || (anioActual === anio && mesActual > mes + 1)) {
-      return err(
-        new ApiError(
-          400,
-          "La tarjeta no puede estar vencida o próxima a vencer"
-        )
+      throw new ApiError(
+        400,
+        "La tarjeta no puede estar vencida o próxima a vencer"
       );
     }
 

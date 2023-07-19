@@ -1,22 +1,16 @@
-import { Result, err } from "neverthrow";
 import { Cancha } from "../models/cancha.js";
 import { ApiError } from "../utils/apierrors.js";
 import { CanchaRepository } from "../repositories/canchas.js";
 import { subirImagen } from "../utils/imagenes.js";
 
 export interface CanchaService {
-  getCanchasByEstablecimientoID(
-    idEst: number
-  ): Promise<Result<Cancha[], ApiError>>;
-  getCanchaByID(idCancha: number): Promise<Result<Cancha, ApiError>>;
-  crearCancha(
-    cancha: Cancha,
-    imagen?: Express.Multer.File
-  ): Promise<Result<Cancha, ApiError>>;
+  getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
+  getCanchaByID(idCancha: number): Promise<Cancha>;
+  crearCancha(cancha: Cancha, imagen?: Express.Multer.File): Promise<Cancha>;
   modificarCancha(
     cancha: Cancha,
     imagen?: Express.Multer.File
-  ): Promise<Result<Cancha, ApiError>>;
+  ): Promise<Cancha>;
 }
 
 export class CanchaServiceimpl implements CanchaService {
@@ -26,27 +20,25 @@ export class CanchaServiceimpl implements CanchaService {
     this.repo = service;
   }
 
-  async getCanchasByEstablecimientoID(
-    idEst: number
-  ): Promise<Result<Cancha[], ApiError>> {
+  async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {
     return await this.repo.getCanchasByEstablecimientoID(idEst);
   }
 
-  async getCanchaByID(idCancha: number): Promise<Result<Cancha, ApiError>> {
+  async getCanchaByID(idCancha: number): Promise<Cancha> {
     return await this.repo.getCanchaByID(idCancha);
   }
 
   async crearCancha(
     cancha: Cancha,
     imagen?: Express.Multer.File
-  ): Promise<Result<Cancha, ApiError>> {
+  ): Promise<Cancha> {
     cancha.urlImagen = null;
     if (imagen) {
       try {
         cancha.urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-        return err(new ApiError(500, "Error al subir la imagen"));
+        throw new ApiError(500, "Error al subir la imagen");
       }
     }
 
@@ -56,13 +48,13 @@ export class CanchaServiceimpl implements CanchaService {
   async modificarCancha(
     cancha: Cancha,
     imagen?: Express.Multer.File
-  ): Promise<Result<Cancha, ApiError>> {
+  ): Promise<Cancha> {
     if (imagen && imagen.mimetype.startsWith("image/")) {
       try {
         cancha.urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-        return err(new ApiError(500, "Error al actualizar la imagen"));
+        throw new ApiError(500, "Error al actualizar la imagen");
       }
     }
 

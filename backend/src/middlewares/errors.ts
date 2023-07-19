@@ -6,7 +6,14 @@ export function handleApiErrors(): ErrorRequestHandler {
     if (err instanceof ApiError) {
       res.status(err.status).json(err);
     } else {
-      res.status(500).json(new ApiError(500, "Algo sucedió mal"));
+      res
+        .status(500)
+        .json(
+          new ApiError(
+            500,
+            "Sucedió un error inesperado y desconocido: " + err.message
+          )
+        );
     }
 
     next();

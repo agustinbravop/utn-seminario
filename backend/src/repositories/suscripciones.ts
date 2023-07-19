@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { ApiError } from "../utils/apierrors.js";
-import { Result, err, ok } from "neverthrow";
 import { Suscripcion } from "../models/suscripcion.js";
 
 export interface SuscripcionRepository {
-  getSuscripcionByID(id: number): Promise<Result<Suscripcion, ApiError>>;
-  getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>>;
+  getSuscripcionByID(id: number): Promise<Suscripcion>;
+  getAllSuscripciones(): Promise<Suscripcion[]>;
 }
 
 export class PrismaSuscripcionRepository implements SuscripcionRepository {
@@ -15,28 +14,30 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
     this.prisma = client;
   }
 
-  async getSuscripcionByID(id: number): Promise<Result<Suscripcion, ApiError>> {
+  async getSuscripcionByID(id: number): Promise<Suscripcion> {
     try {
-      const suscripcion: Suscripcion =
-        await this.prisma.suscripcion.findUniqueOrThrow({
-          where: {
-            id: id,
-          },
-        });
-      return ok(suscripcion);
+      const suscripcion = await this.prisma.suscripcion.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (suscripcion) {
+        return suscripcion;
+      }
     } catch (e) {
       console.error(e);
-      return err(new ApiError(404, "No existe suscripcion con ese id"));
+      throw new ApiError(500, "Error al buscar la suscripcion");
     }
+    throw new ApiError(404, "No existe suscripcion con ese id");
   }
 
-  async getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>> {
+  async getAllSuscripciones(): Promise<Suscripcion[]> {
     try {
       const suscripciones = await this.prisma.suscripcion.findMany();
-      return ok(suscripciones);
+      return suscripciones;
     } catch (e) {
       console.error(e);
-      return err(new ApiError(500, "No se pudo obtener las suscripciones"));
+      throw new ApiError(500, "No se pudo obtener las suscripciones");
     }
   }
 }
