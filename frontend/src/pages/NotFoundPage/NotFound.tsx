@@ -1,4 +1,3 @@
-import React from "react";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { Heading } from "@chakra-ui/layout";
 

@@ -122,9 +122,12 @@ export const theme: Partial<Theme> = extendTheme({
   },
 });
 
-const router = createBrowserRouter(routes);
+const router = createBrowserRouter(routes, {
+  basename: "/",
+});
 const queryClient = new QueryClient();
-function App() {
+
+export default function App() {
   return (
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
@@ -135,5 +138,3 @@ function App() {
     </ChakraProvider>
   );
 }
-
-export default App;

@@ -1,6 +1,6 @@
 import { readLocalStorage, writeLocalStorage } from "../storage/localStorage";
 
-export const API_URL = process.env.REACT_APP_API_BASE_URL;
+export const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 export class ApiError extends Error {
   status: number;

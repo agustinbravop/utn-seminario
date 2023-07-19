@@ -4,7 +4,6 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/alert";
-import React from "react";
 
 type alertaProps = {
   mensaje: string;
