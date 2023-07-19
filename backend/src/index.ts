@@ -4,6 +4,7 @@ import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import { createRouter } from "./router.js";
 import { handleApiErrors } from "./middlewares/errors.js";
+import "express-async-errors";
 
 const prismaClient = new PrismaClient();
 prismaClient

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
-import { ApiError } from "../utils/apierrors";
+import { ApiError } from "../utils/apierrors.js";
 
 export function handleApiErrors(): ErrorRequestHandler {
   return (err: Error, _req: Request, res: Response, next: NextFunction) => {
@@ -16,6 +16,6 @@ export function handleApiErrors(): ErrorRequestHandler {
         );
     }
 
-    next();
+    next(err);
   };
 }
