@@ -1,5 +1,5 @@
 import { Cancha } from "../models/cancha.js";
-import { ApiError } from "../utils/apierrors.js";
+import { InternalServerError } from "../utils/apierrors.js";
 import { CanchaRepository } from "../repositories/canchas.js";
 import { subirImagen } from "../utils/imagenes.js";
 
@@ -38,7 +38,7 @@ export class CanchaServiceimpl implements CanchaService {
         cancha.urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-        throw new ApiError(500, "Error al subir la imagen");
+        throw new InternalServerError("Error al subir la imagen");
       }
     }
 
@@ -54,7 +54,7 @@ export class CanchaServiceimpl implements CanchaService {
         cancha.urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-        throw new ApiError(500, "Error al actualizar la imagen");
+        throw new InternalServerError("Error al actualizar la imagen");
       }
     }
 

@@ -1,5 +1,5 @@
 import { Cancha } from "../models/cancha.js";
-import { ApiError } from "../utils/apierrors.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, cancha, disciplina } from "@prisma/client";
 
 export interface CanchaRepository {
@@ -34,7 +34,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       return canchas.map((c) => toModel(c));
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "Error al intentar listar las canchas");
+      throw new InternalServerError("Error al intentar listar las canchas");
     }
   }
 
@@ -76,7 +76,9 @@ export class PrismaCanchaRepository implements CanchaRepository {
       return toModel(canchaCreada);
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "Error interno al intentar cargar la cancha");
+      throw new InternalServerError(
+        "Error interno al intentar cargar la cancha"
+      );
     }
   }
 
@@ -130,7 +132,7 @@ async function awaitQuery(
     }
   } catch (e) {
     console.error(e);
-    throw new ApiError(500, errorMsg);
+    throw new InternalServerError(errorMsg);
   }
-  throw new ApiError(404, notFoundMsg);
+  throw new NotFoundError(notFoundMsg);
 }

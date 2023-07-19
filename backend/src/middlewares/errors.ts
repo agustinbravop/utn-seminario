@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
-import { ApiError } from "../utils/apierrors.js";
+import { ApiError, InternalServerError } from "../utils/apierrors.js";
 
 export function handleApiErrors(): ErrorRequestHandler {
   return (err: Error, _req: Request, res: Response, next: NextFunction) => {
@@ -9,8 +9,7 @@ export function handleApiErrors(): ErrorRequestHandler {
       res
         .status(500)
         .json(
-          new ApiError(
-            500,
+          new InternalServerError(
             "Sucedió un error inesperado y desconocido: " + err.message
           )
         );

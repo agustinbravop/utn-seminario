@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { ApiError } from "../utils/apierrors.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Administrador } from "../models/administrador.js";
 
 export interface AdministradorRepository {
@@ -29,8 +29,8 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
       }
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "No se pudo buscar el administrador");
+      throw new InternalServerError("No se pudo buscar el administrador");
     }
-    throw new ApiError(404, "No existe administrador con id " + id);
+    throw new NotFoundError("No existe administrador con id " + id);
   }
 }

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { ApiError } from "../utils/apierrors.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Suscripcion } from "../models/suscripcion.js";
 
 export interface SuscripcionRepository {
@@ -26,9 +26,9 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
       }
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "Error al buscar la suscripcion");
+      throw new InternalServerError("Error al buscar la suscripcion");
     }
-    throw new ApiError(404, "No existe suscripcion con ese id");
+    throw new NotFoundError("No existe suscripcion con ese id");
   }
 
   async getAllSuscripciones(): Promise<Suscripcion[]> {
@@ -37,7 +37,7 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
       return suscripciones;
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "No se pudo obtener las suscripciones");
+      throw new InternalServerError("No se pudo obtener las suscripciones");
     }
   }
 }

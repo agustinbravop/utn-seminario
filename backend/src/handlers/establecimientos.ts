@@ -4,7 +4,7 @@ import {
   Establecimiento,
   establecimientoSchema,
 } from "../models/establecimiento.js";
-import { ApiError } from "../utils/apierrors.js";
+import { ForbiddenError } from "../utils/apierrors.js";
 import { z } from "zod";
 
 export const crearEstablecimientoReqSchema = establecimientoSchema
@@ -95,8 +95,7 @@ export class EstablecimientoHandler {
         return res
           .status(403)
           .json(
-            new ApiError(
-              403,
+            new ForbiddenError(
               "No puede alterar establecimientos de otro administrador"
             )
           );

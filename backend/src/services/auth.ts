@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { AuthRepository } from "../repositories/auth.js";
 import { Administrador } from "../models/administrador.js";
-import { ApiError } from "../utils/apierrors.js";
+import { BadRequestError, UnauthorizedError } from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
 
@@ -104,7 +104,7 @@ export class AuthServiceImpl implements AuthService {
     const { admin, clave: hash } = adminConClave;
     const esValido = await bcrypt.compare(clave, hash);
     if (!esValido) {
-      throw new ApiError(401, "Contraseña incorrecta");
+      throw new UnauthorizedError("Contraseña incorrecta");
     }
 
     const jwt = await this.signJWT(admin);
@@ -129,8 +129,7 @@ export class AuthServiceImpl implements AuthService {
     const [mes, anio] = admin.tarjeta.vencimiento.split("/");
 
     if (anioActual > anio || (anioActual === anio && mesActual > mes + 1)) {
-      throw new ApiError(
-        400,
+      throw new BadRequestError(
         "La tarjeta no puede estar vencida o próxima a vencer"
       );
     }

@@ -1,6 +1,6 @@
 import { EstablecimientoRepository } from "../repositories/establecimientos.js";
 import { Establecimiento } from "../models/establecimiento.js";
-import { ApiError } from "../utils/apierrors.js";
+import { ConflictError, InternalServerError } from "../utils/apierrors.js";
 import { subirImagen } from "../utils/imagenes.js";
 import { AdministradorService } from "./administrador.js";
 
@@ -49,7 +49,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
         urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-        throw new ApiError(500, "Error al subir la imagen");
+        throw new InternalServerError("Error al subir la imagen");
       }
     }
     est.urlImagen = urlImagen;
@@ -66,7 +66,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
         est.urlImagen = await subirImagen(imagen);
       } catch (e) {
         console.error(e);
-        throw new ApiError(500, "Error al actualizar la imagen");
+        throw new InternalServerError("Error al actualizar la imagen");
       }
     }
 
@@ -79,7 +79,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     const ests = await this.repo.getByAdminID(admin.id);
 
     if (admin.suscripcion.limiteEstablecimientos >= ests.length) {
-      throw new ApiError(409, "Limite de establecimientos alcanzado");
+      throw new ConflictError("Limite de establecimientos alcanzado");
     }
   }
 }

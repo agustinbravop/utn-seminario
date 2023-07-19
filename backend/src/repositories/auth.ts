@@ -5,7 +5,11 @@ import {
   tarjeta,
 } from "@prisma/client";
 import { Administrador } from "../models/administrador.js";
-import { ApiError } from "../utils/apierrors.js";
+import {
+  InternalServerError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../utils/apierrors.js";
 import { Rol } from "../services/auth.js";
 
 export type AdministradorConClave = {
@@ -66,8 +70,7 @@ export class PrismaAuthRepository implements AuthRepository {
       };
     } catch (e) {
       console.error(e);
-      throw new ApiError(
-        404,
+      throw new NotFoundError(
         "No existe administrador con ese correo o usuario"
       );
     }
@@ -100,9 +103,9 @@ export class PrismaAuthRepository implements AuthRepository {
       }
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "Error interno con la base de datos");
+      throw new InternalServerError("Error interno con la base de datos");
     }
-    throw new ApiError(401, "Correo o usuario incorrecto");
+    throw new UnauthorizedError("Correo o usuario incorrecto");
   }
 
   async crearAdministrador(
@@ -135,7 +138,7 @@ export class PrismaAuthRepository implements AuthRepository {
       return this.toModel(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta);
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "No se pudo registrar al administrador");
+      throw new InternalServerError("No se pudo registrar al administrador");
     }
   }
 }

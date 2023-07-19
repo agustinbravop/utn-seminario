@@ -1,5 +1,5 @@
 import { PrismaClient, establecimiento } from "@prisma/client";
-import { ApiError } from "../utils/apierrors.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Establecimiento } from "../models/establecimiento.js";
 
 export interface EstablecimientoRepository {
@@ -41,7 +41,7 @@ export class PrismaEstablecimientoRepository
       return this.toModel(dbEst);
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "No se pudo crear el establecimiento");
+      throw new InternalServerError("No se pudo crear el establecimiento");
     }
   }
 
@@ -66,7 +66,7 @@ export class PrismaEstablecimientoRepository
       return estsDB.map((estDB) => this.toModel(estDB));
     } catch (e) {
       console.error(e);
-      throw new ApiError(500, "No se pudo obtener los establecimientos");
+      throw new InternalServerError("No se pudo obtener los establecimientos");
     }
   }
 
@@ -106,8 +106,8 @@ async function awaitQuery(
     }
   } catch (e) {
     console.error(e);
-    throw new ApiError(500, errorMsg);
+    throw new InternalServerError(errorMsg);
   }
 
-  throw new ApiError(404, notFoundMsg);
+  throw new NotFoundError(notFoundMsg);
 }
