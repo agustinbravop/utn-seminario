@@ -2,7 +2,8 @@ import express, { Application } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import { router } from "./router.js";
+import { createRouter } from "./router.js";
+import { handleApiErrors } from "./middlewares/errors.js";
 
 const prismaClient = new PrismaClient();
 prismaClient
@@ -15,7 +16,8 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use("/", router(prismaClient));
+app.use("/", createRouter(prismaClient));
+app.use(handleApiErrors());
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Servidor desplegado en el puerto " + process.env.PORT || 3000);
