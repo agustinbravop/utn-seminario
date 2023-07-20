@@ -67,7 +67,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
           nombre: cancha.nombre,
           descripcion: cancha.descripcion,
           estaHabilitada: Boolean(cancha.estaHabilitada),
-          urlImagen: cancha.urlImagen,
+          urlImagen: String(cancha.urlImagen),
           idEstablecimiento: Number(cancha.idEstablecimiento),
           // disciplinas: {
           //   connectOrCreate: cancha.disciplinas.map((d) => ({
@@ -101,7 +101,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         data: {
           nombre: cancha.nombre,
           descripcion: cancha.descripcion,
-          urlImagen: cancha.urlImagen,
+          urlImagen: String(cancha.urlImagen),
           estaHabilitada: cancha.estaHabilitada,
           // disciplinas: {
           //   connectOrCreate: cancha.disciplinas.map((d) => ({
