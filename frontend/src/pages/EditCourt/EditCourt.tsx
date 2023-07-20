@@ -7,9 +7,7 @@ import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import { Box, Container, Heading, Textarea } from "@chakra-ui/react";
+import { Box, Container, Heading, Textarea, useToast } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
 import {
   FormControl,
@@ -46,6 +44,7 @@ function EditCourt() {
 
   const { idEst, idCancha } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [state, setState] = useState<FormState>({
     id: Number(idCancha),
@@ -74,13 +73,11 @@ function EditCourt() {
   };
 
   const advertencia = (message: string) => {
-    toast.warning(message, {
-      position: "top-center",
-      autoClose: 5000,
-      progress: 1,
-      closeOnClick: true,
-      hideProgressBar: false,
-      draggable: true,
+    toast({
+      title: message,
+      status: "warning",
+      duration: 9000,
+      isClosable: true,
     });
   };
   const validacion = () => {
@@ -319,7 +316,6 @@ function EditCourt() {
             </Button>
           </Container>
         </form>
-        <ToastContainer />
 
         <Modal
           className="modal"

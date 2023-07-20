@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
-import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   FormControl,

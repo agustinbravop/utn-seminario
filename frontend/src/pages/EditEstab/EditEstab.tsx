@@ -3,7 +3,6 @@ import { Establecimiento } from "../../models";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
-import "react-toastify/dist/ReactToastify.css";
 import Modal from "react-overlays/Modal";
 import { JSX } from "react/jsx-runtime";
 import {

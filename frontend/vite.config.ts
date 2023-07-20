@@ -12,6 +12,7 @@ const unsplittedVendors: (keyof typeof dependencies)[] = [
   "react-dom",
   "@chakra-ui/icons",
   "@chakra-ui/react",
+  "@tanstack/react-query",
 ];
 
 // Code-splitting en 'vite build' genera un chunk distinto para cada dependencia.
