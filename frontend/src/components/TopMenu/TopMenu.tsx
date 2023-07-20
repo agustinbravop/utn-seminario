@@ -8,10 +8,10 @@ export default function TopMenu() {
   return (
     <HStack
       className="top-menu"
-      backgroundColor="blackAlpha.800"
+      backgroundColor="#F2EDE3 "
       justifyContent="space-between"
       padding="0 30px 0 30px"
-      height="50px"
+      height="60px"
     >
       <BrandNav />
       <Nav />
@@ -35,7 +35,7 @@ function Nav() {
       <nav>
         <HStack>
           <Link to="/suscripciones">
-            <Button variant="ghost" size="sm" color="whiteAlpha.800">
+            <Button variant="ghost" size="sm" color="black">
               Suscripciones
             </Button>
           </Link>
@@ -43,8 +43,8 @@ function Nav() {
             <Button
               variant="outline"
               size="sm"
-              color="whiteAlpha.800"
-              borderColor="tomato"
+              color="black"
+              borderColor="black"
             >
               Iniciar Sesión
             </Button>
