@@ -1,24 +1,19 @@
 import React from "react";
-import "./NewCourt.css";
-import Modal from "react-overlays/Modal";
 import { useState } from "react";
-import { JSX } from "react/jsx-runtime";
-import { Administrador, Cancha } from "../../models";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { Cancha } from "../../models";
+import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
 import {
   Button,
   FormControl,
   FormLabel,
+  Heading,
   Input,
-  Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/react";
 import { CrearCanchaReq, crearCancha } from "../../utils/api/canchas";
 
 type FormState = CrearCanchaReq & {
@@ -26,17 +21,6 @@ type FormState = CrearCanchaReq & {
 };
 
 function NewCourt() {
-  const [showModal, setShowModal] = useState(false);
-  const renderBackdrop = (
-    props: JSX.IntrinsicAttributes &
-      React.ClassAttributes<HTMLDivElement> &
-      React.HTMLAttributes<HTMLDivElement>
-  ) => <div className="backdrop" {...props} />;
-  var handleClose = () => setShowModal(false);
-  var handleSuccess = () => {
-    console.log(":)");
-  };
-  const { search } = useLocation();
   const { idEst } = useParams();
   const navigate = useNavigate();
 
@@ -49,7 +33,7 @@ function NewCourt() {
     disciplinas: [],
   });
 
-  const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
     onSuccess: () => navigate("/landing"),
   });
@@ -73,12 +57,11 @@ function NewCourt() {
   };
 
   return (
-    <div className="page">
+    <div>
       <TopMenu />
-      <div className="centrado">
-        <br />
-        <h1>Nueva cancha</h1>
-      </div>
+      <Heading textAlign="center" mt="40px">
+        Nueva cancha
+      </Heading>
       <br />
       <form onSubmit={handleSubmit}>
         <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
@@ -116,13 +99,8 @@ function NewCourt() {
               },
             }}
           />
+          <Button type="submit">Crear cancha</Button>
         </VStack>
-        <div className="centrado">
-          <br />
-          <Button type="submit" className="btn btn-danger">
-            Crear cancha
-          </Button>
-        </div>
       </form>
     </div>
   );
@@ -177,64 +155,61 @@ export default NewCourt;
                 {horas.map((hora) => (
                   <option key={hora.value} value={hora.value}>
                     {hora.label}
-                  </option>
-                ))}
-              </Select>
-              <FormLabel>Hora inicio</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="reserva"
-              isRequired
-              onChange={handleChange}
-            >
-              <Input placeholder=" " name="reserva" />
-              <FormLabel>Precio de la reserva</FormLabel>
-            </FormControl>
-          </HStack>
-
-          <HStack width="600px">
-            <FormControl
-              variant="floating"
-              id="hora-fin"
-              isRequired
-              onChange={handleChange}
-            >
-              <Select placeholder="Seleccione una opcion">
+                  </option>))
+                  }
+                </Select>
+                <FormLabel>Hora inicio</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="reserva"
+                isRequired
+                onChange={handleChange}>
+                <Input placeholder=" " name="reserva" />
+                <FormLabel>Precio de la reserva</FormLabel>
+              </FormControl>
+            </HStack>
+          
+            <HStack width="600px">
+              <FormControl
+                variant="floating"
+                id="hora-fin"
+                isRequired
+                onChange={handleChange}>
+                <Select placeholder='Seleccione una opcion'>
                 {horas.map((hora) => (
                   <option key={hora.value} value={hora.value}>
                     {hora.label}
-                  </option>
-                ))}
+                  </option>))
+                }
               </Select>
-              <FormLabel>Hora fin</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="precioseña"
-              isRequired
-              onChange={handleChange}
-            >
-              <Input placeholder=" " name="precioseña" />
-              <FormLabel>Precio de la seña</FormLabel>
-            </FormControl>
-          </HStack>
-        </VStack>
-        <div className="margen">
-          <p> Seleccionar los días para la disponibilidad.</p>
-        </div>
-        <br />
-        <div className="centrado2">
-          <SelectableButton children="Lunes" />
-          <SelectableButton children="Martes" />
-          <SelectableButton children="Miercoles" />
-          <SelectableButton children="Jueves" />
-          <SelectableButton children="Viernes" />
-          <SelectableButton children="Sabado" />
-          <SelectableButton children="Domingo" />
-        </div>
-        <br />
-        <br />
+                <FormLabel>Hora fin</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="precioseña"
+                isRequired
+                onChange={handleChange}>
+                <Input placeholder=" " name="precioseña" />
+                <FormLabel>Precio de la seña</FormLabel>
+              </FormControl>
+            </HStack>
+          </VStack>
+          <div className="margen">
+            <p> Seleccionar los días para  la disponibilidad.</p>
+          </div>
+            <br/>
+          <div className="centrado2">
+            <SelectableButton children= 'Lunes'/>
+            <SelectableButton children= 'Martes'/>
+            <SelectableButton children= 'Miercoles'/>
+            <SelectableButton children= 'Jueves'/>
+            <SelectableButton children= 'Viernes'/>
+            <SelectableButton children= 'Sabado'/>
+            <SelectableButton children= 'Domingo'/>
+          </div>
+            <br/>
+            <br/>
 
           <div className="centrado">
           */

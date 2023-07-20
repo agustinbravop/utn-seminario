@@ -1,0 +1,8 @@
+/* 
+ ESLint es un linter de JavaScript. Nos señala errores como variables
+ o imports sin usar. También sirve para React, para indicar problemas como un array de dependencias incompleto en un `useEffect()`.
+*/
+{
+  // Hereda una configuración por defecto para React.
+  "extends": ["react-app"]
+}

@@ -38,11 +38,7 @@ export class CanchaHandler {
       const idEst = Number(req.params["idEst"]);
 
       const cancha = await this.service.getCanchasByEstablecimientoID(idEst);
-
-      cancha.match(
-        (cancha) => res.status(200).json(cancha),
-        (err) => res.status(err.status).json(err)
-      );
+      res.status(200).json(cancha);
     };
   }
 
@@ -52,10 +48,7 @@ export class CanchaHandler {
 
       const cancha = await this.service.getCanchaByID(idCancha);
 
-      cancha.match(
-        (cancha) => res.status(200).json(cancha),
-        (err) => res.status(err.status).json(err)
-      );
+      res.status(200).json(cancha);
     };
   }
 
@@ -70,11 +63,7 @@ export class CanchaHandler {
         cancha,
         imagen
       );
-
-      canchaActualizada.match(
-        (canchaAct) => res.status(200).json(canchaAct),
-        (err) => res.status(err.status).json(err)
-      );
+      res.status(200).json(canchaActualizada);
     };
   }
 
@@ -85,11 +74,8 @@ export class CanchaHandler {
       };
 
       const imagen = req.file;
-      const canchaResult = await this.service.crearCancha(cancha, imagen);
-      canchaResult.match(
-        (nuevaCancha) => res.status(201).json(nuevaCancha),
-        (err) => res.status(err.status).json(err)
-      );
+      const canchaCreada = await this.service.crearCancha(cancha, imagen);
+      res.status(201).json(canchaCreada);
     };
   }
 }
