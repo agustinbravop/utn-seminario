@@ -1,4 +1,3 @@
-import "./LogIn.css";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
@@ -53,64 +52,57 @@ function LoginPage() {
     <>
       <TopMenu />
 
-      <div className="page">
-        <div className="contenedor">
-          <Heading textAlign="center" size="2xl" margin={[0, "60px"]}>
-            Bienvenido a CANCHAS.NET
-          </Heading>
-          <form className="formulario" onSubmit={handleSubmit}>
-            <VStack spacing="24px" width="400px">
-              <FormControl
-                variant="floating"
-                id="correoOUsuario"
-                isRequired
-                isInvalid={!!errors.correoOUsuario && !!values.correoOUsuario}
-              >
-                <Input
-                  name="correoOUsuario"
-                  value={values.correoOUsuario}
-                  onChange={handleChange}
-                  placeholder="Correo o usuario"
-                />
-                <FormLabel>Correo o usuario</FormLabel>
-                <FormErrorMessage>{errors.correoOUsuario}</FormErrorMessage>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="clave"
-                isRequired
-                isInvalid={!!errors.clave && !!values.clave}
-              >
-                <Input
-                  name="clave"
-                  value={values.clave}
-                  onChange={handleChange}
-                  placeholder="Contraseña"
-                  type="password"
-                />
-                <FormLabel>Contraseña</FormLabel>
-                <FormErrorMessage>{errors.clave}</FormErrorMessage>
-              </FormControl>
+      <Heading textAlign="center" size="2xl" margin={[0, "60px"]}>
+        Bienvenido a CANCHAS.NET
+      </Heading>
+      <form onSubmit={handleSubmit} style={{ paddingLeft: "0" }}>
+        <VStack spacing="24px" width="400px" m="auto">
+          <FormControl
+            variant="floating"
+            id="correoOUsuario"
+            isRequired
+            isInvalid={!!errors.correoOUsuario && !!values.correoOUsuario}
+          >
+            <Input
+              name="correoOUsuario"
+              value={values.correoOUsuario}
+              onChange={handleChange}
+              placeholder="Correo o usuario"
+            />
+            <FormLabel>Correo o usuario</FormLabel>
+            <FormErrorMessage>{errors.correoOUsuario}</FormErrorMessage>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="clave"
+            isRequired
+            isInvalid={!!errors.clave && !!values.clave}
+          >
+            <Input
+              name="clave"
+              value={values.clave}
+              onChange={handleChange}
+              placeholder="Contraseña"
+              type="password"
+            />
+            <FormLabel>Contraseña</FormLabel>
+            <FormErrorMessage>{errors.clave}</FormErrorMessage>
+          </FormControl>
 
-              <div className="centrado">
-                <Button
-                  type="submit"
-                  className="btn btn-danger"
-                  style={{ backgroundColor: "#FF604F" }}
-                  isLoading={isLoading}
-                >
-                  Iniciar Sesión
-                </Button>
-                {isError && (
-                  <Alert status="error" margin="20px">
-                    Error al intentar iniciar sesión. Intente de nuevo
-                  </Alert>
-                )}
-              </div>
-            </VStack>
-          </form>
-        </div>
-      </div>
+          <Button
+            type="submit"
+            style={{ backgroundColor: "#FF604F" }}
+            isLoading={isLoading}
+          >
+            Iniciar Sesión
+          </Button>
+          {isError && (
+            <Alert status="error" margin="20px">
+              Error al intentar iniciar sesión. Intente de nuevo
+            </Alert>
+          )}
+        </VStack>
+      </form>
     </>
   );
 }

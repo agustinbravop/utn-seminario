@@ -1,4 +1,3 @@
-import "./NewEstab.css";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { ApiError } from "../../utils/api";
 import { Establecimiento } from "../../models";
@@ -92,13 +91,11 @@ function NewEstab() {
   };
 
   return (
-    <div className="page">
+    <div>
       <TopMenu />
-      <div className="centrado">
-        <Heading size="xl" margin="50px">
-          Nuevo Establecimiento
-        </Heading>
-      </div>
+      <Heading size="xl" margin="50px" textAlign="center">
+        Nuevo Establecimiento
+      </Heading>
 
       <form onSubmit={handleSubmit}>
         <Container centerContent gap="25px">
@@ -230,11 +227,7 @@ function NewEstab() {
               />
             </FormControl>
 
-            <Button
-              type="submit"
-              className="btn btn-danger"
-              isLoading={isLoading}
-            >
+            <Button type="submit" isLoading={isLoading}>
               Crear
             </Button>
             {isError && (
