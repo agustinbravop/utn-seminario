@@ -102,28 +102,33 @@ function NewEstab() {
               name="nombre"
               label="Nombre del establecimiento"
               placeholder="Nombre"
+              isRequired
             />
             <InputControl
               name="correo"
               type="email"
               label="Correo del establecimiento"
               placeholder="abc@ejemplo.com"
+              isRequired
             />
             <InputControl
               name="direccion"
               label="Dirección"
               placeholder="Dirección"
+              isRequired
             />
             <HStack>
               <InputControl
                 name="localidad"
                 label="Localidad"
                 placeholder="Localidad"
+                isRequired
               />
               <InputControl
                 name="provincia"
                 label="Provincia"
                 placeholder="Provincia"
+                isRequired
               />
             </HStack>
             <InputControl
@@ -131,6 +136,7 @@ function NewEstab() {
               label="Teléfono"
               placeholder="0..."
               type="tel"
+              isRequired
             />
             <InputControl
               name="horariosDeAtencion"

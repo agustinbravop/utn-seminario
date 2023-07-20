@@ -37,12 +37,14 @@ export default function PaymentForm({ control }: PaymentFormProps) {
           label="Numero de tarjeta"
           placeholder=" "
           onFocus={handleInputFocus}
+          isRequired
         />
         <InputControl
           name="tarjeta.nombre"
           label="Nombre del dueño"
           placeholder="Nombre"
           onFocus={handleInputFocus}
+          isRequired
         />
 
         <HStack spacing="20px">
@@ -51,6 +53,7 @@ export default function PaymentForm({ control }: PaymentFormProps) {
             name="tarjeta.vencimiento"
             label="Vencimiento"
             onFocus={handleInputFocus}
+            isRequired
           />
           <InputControl
             placeholder="000"
@@ -58,6 +61,7 @@ export default function PaymentForm({ control }: PaymentFormProps) {
             label="CVV"
             type="number"
             onFocus={handleInputFocus}
+            isRequired
           />
         </HStack>
       </VStack>

@@ -38,7 +38,6 @@ function LoginPage() {
     defaultValues: { correoOUsuario: "", clave: "" },
     mode: "onTouched",
   });
-
   return (
     <>
       <TopMenu />
@@ -57,12 +56,14 @@ function LoginPage() {
             name="correoOUsuario"
             label="Correo o usuario"
             placeholder="Correo o usuario"
+            isRequired
           />
           <InputControl
             name="clave"
             type="password"
             label="Contraseña"
             placeholder="Contraseña"
+            isRequired
           />
           <SubmitButton>Iniciar Sesión</SubmitButton>
 

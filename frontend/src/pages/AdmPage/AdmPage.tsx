@@ -119,11 +119,17 @@ function AdmPage() {
             margin="auto"
           >
             <HStack>
-              <InputControl label="Nombre" placeholder="Nombre" name="nombre" />
+              <InputControl
+                label="Nombre"
+                placeholder="Nombre"
+                name="nombre"
+                isRequired
+              />
               <InputControl
                 label="Apellido"
                 placeholder="Apellido"
                 name="apellido"
+                isRequired
               />
             </HStack>
             <InputControl
@@ -131,23 +137,27 @@ function AdmPage() {
               placeholder="..."
               name="telefono"
               type="tel"
+              isRequired
             />
             <InputControl
               label="Nombre de usuario"
               placeholder="usuario"
               name="usuario"
+              isRequired
             />
             <InputControl
               label="Correo electrónico"
               placeholder="abc@ejemplo.com"
               name="correo"
               type="email"
+              isRequired
             />
             <InputControl
               label="Contraseña"
               placeholder=" "
               name="clave"
               type="password"
+              isRequired
             />
 
             <SubmitButton>Registrarse</SubmitButton>
