@@ -3,6 +3,7 @@ import "react-credit-cards/es/styles-compiled.css";
 import { useState } from "react";
 import { Tarjeta } from "../../models";
 import {
+  Box,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -49,7 +50,7 @@ export default function PaymentForm({
           onFocus={handleInputFocus}
           isInvalid={errors && !!errors.numero && !!tarjeta.numero}
         >
-          <Input placeholder="Contraseña" name="number" />
+          <Input placeholder=" " name="number" />
           <FormLabel>Numero de tarjeta</FormLabel>
           <FormErrorMessage>{errors?.numero}</FormErrorMessage>
         </FormControl>
@@ -93,13 +94,16 @@ export default function PaymentForm({
           </FormControl>
         </HStack>
       </VStack>
-      <Cards
-        cvc={tarjeta.cvv}
-        expiry={tarjeta.vencimiento}
-        focused={focused}
-        name={tarjeta.nombre}
-        number={tarjeta.numero}
-      />
+
+      <Box m="0">
+        <Cards
+          cvc={tarjeta.cvv}
+          expiry={tarjeta.vencimiento}
+          focused={focused}
+          name={tarjeta.nombre}
+          number={tarjeta.numero}
+        />
+      </Box>
     </HStack>
   );
 }

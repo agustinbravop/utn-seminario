@@ -1,13 +1,12 @@
-import "./TopMenu.scss";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
 import { Button, HStack, Icon, Tag } from "@chakra-ui/react";
 import TennisIcon from "../../assets/svg/TennisIcon";
+import { AiOutlineUser } from "react-icons/ai";
 
 export default function TopMenu() {
   return (
     <HStack
-      className="top-menu"
       backgroundColor="blackAlpha.800"
       justifyContent="space-between"
       padding="0 30px 0 30px"
@@ -43,7 +42,7 @@ function Nav() {
             <Button
               variant="outline"
               size="sm"
-              color="whiteAlpha.800"
+              color="#ff5d3d"
               borderColor="tomato"
             >
               Iniciar Sesión
@@ -57,16 +56,22 @@ function Nav() {
   return (
     <nav>
       <HStack>
-        <Link to={`/administrador/${currentAdmin.id}`}>
-          <Tag>{currentAdmin.usuario}</Tag>
+        <Link to={`/perfil`}>
+          <Tag>
+            <AiOutlineUser size="20" />
+            {currentAdmin.usuario}
+          </Tag>
         </Link>
         <Link to="/landing">
-          <button
-            className="btn btn-danger rounded-pill btn-sm"
+          <Button
+            borderRadius="2xl"
+            size="sm"
+            variant="outline"
+            colorScheme="red"
             onClick={logout}
           >
             Cerrar Sesión
-          </button>
+          </Button>
         </Link>
       </HStack>
     </nav>
