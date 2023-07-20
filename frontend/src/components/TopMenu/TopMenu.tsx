@@ -43,13 +43,8 @@ function Nav() {
             <Button
               variant="outline"
               size="sm"
-<<<<<<< HEAD
               color="black"
               borderColor="black"
-=======
-              color="#ff5d3d"
-              borderColor="tomato"
->>>>>>> main
             >
               Iniciar Sesión
             </Button>
