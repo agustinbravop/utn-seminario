@@ -25,9 +25,10 @@ function SuscriptionOptionPage() {
   const { data, isLoading, isError } = useQuery<Suscripcion[]>(
     ["suscripciones"],
     getSuscripciones
+    
   );
   const navigate = useNavigate();
-
+ 
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {
