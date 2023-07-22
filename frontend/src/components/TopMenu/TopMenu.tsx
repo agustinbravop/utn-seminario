@@ -17,25 +17,21 @@ export default function TopMenu() {
       padding="0 30px 0 30px"
       height="60px"
     >
-      <BrandNav />
       <Nav />
     </HStack>
   );
 }
 
-function BrandNav() {
-  return (
-    <Link to="/landing">
-      <img src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png" width={177}/>
-    </Link>
-  );
-}
 
 function Nav() {
   const { currentAdmin, logout } = useCurrentAdmin();
 
   if (!currentAdmin) {
     return (
+      <>
+      <Link to="/landing">
+      <img src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png" width={177}/>
+    </Link>
       <nav>
         <HStack>
           <Link to="/suscripciones">
@@ -55,10 +51,15 @@ function Nav() {
           </Link>
         </HStack>
       </nav>
+      </>
     );
   }
 
   return (
+    <>
+    <Link to={`/administrador/${currentAdmin.id}`}>
+      <img src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png" width={177}/>
+    </Link>
     <nav style={{paddingRight:"15px"}}>
       <HStack>
       <Menu>
@@ -76,6 +77,7 @@ function Nav() {
       </Menu>
       </HStack>
     </nav>
+    </>
   );
 }
 
