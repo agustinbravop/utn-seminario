@@ -1,8 +1,12 @@
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
-import { Button, HStack, Icon, Tag } from "@chakra-ui/react";
+import { Button, HStack, Icon, MenuItem, MenuList, Tag } from "@chakra-ui/react";
 import TennisIcon from "../../assets/svg/TennisIcon";
 import { AiOutlineUser } from "react-icons/ai";
+import { useEffect, useRef, useState } from "react";
+import { Box } from "react-bootstrap-icons";
+import { Menu, MenuButton } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 export default function TopMenu() {
   return (
@@ -55,26 +59,23 @@ function Nav() {
   }
 
   return (
-    <nav>
+    <nav style={{paddingRight:"15px"}}>
       <HStack>
-        <Link to={`/perfil`}>
-          <Tag>
-            <AiOutlineUser size="20" />
-            {currentAdmin.usuario}
-          </Tag>
-        </Link>
-        <Link to="/landing">
-          <Button
-            borderRadius="2xl"
-            size="sm"
-            variant="outline"
-            colorScheme="red"
-            onClick={logout}
-          >
-            Cerrar Sesión
-          </Button>
-        </Link>
+      <Menu>
+        <MenuButton as={Button} rightIcon={<ChevronDownIcon />} leftIcon={<AiOutlineUser size="20" />}>
+          {currentAdmin.usuario}
+        </MenuButton>
+        <MenuList>
+          <Link to={`/perfil`}>
+            <MenuItem> Mi perfil </MenuItem>
+          </Link> 
+          <Link to={`/landing`}>
+            <MenuItem  onClick={logout} > Logout </MenuItem>
+          </Link> 
+        </MenuList>
+      </Menu>
       </HStack>
     </nav>
   );
 }
+

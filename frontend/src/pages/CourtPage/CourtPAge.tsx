@@ -5,6 +5,7 @@ import TopMenu from "../../components/TopMenu/TopMenu";
 import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
 import Courts from "../../components/Courts/Courts";
 import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
+import { getEstablecimientoByID } from "../../utils/api/establecimientos";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
 import Alerta from "../../components/Alerta/Alerta";

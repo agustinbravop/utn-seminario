@@ -15,11 +15,11 @@ function HomePage() {
     <div>
       <TopMenu />
 
-      <Box m="100px">
+      <Box marginLeft="120px">
         <Heading
           style={{
             width: "500px",
-            marginTop: "20px",
+            marginTop: "35px",
             display: "flex",
             fontSize: "40px",
             alignContent: "center",
@@ -36,7 +36,7 @@ function HomePage() {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginTop: "100px",
+            marginTop: "63px",
           }}
         >
 
