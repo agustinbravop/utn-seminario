@@ -26,7 +26,6 @@ export default function EstablecimientosPage() {
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
-    console.log(filtro);
   };
 
   const { data, isLoading, isError } = useQuery<Establecimiento[]>(
@@ -37,6 +36,10 @@ export default function EstablecimientosPage() {
   if (!currentAdmin) {
     return <Navigate to="/login" />;
   }
+
+  const establecimientosFiltrados = data?.filter((establecimiento) =>
+    establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   return (
     <>
@@ -62,10 +65,11 @@ export default function EstablecimientosPage() {
           size="md"
           width="35%"
           onChange={handleChange}
+          value={filtro}
         />
       </HStack>
       <EstablecimientosList
-        data={data}
+        data={filtro ? establecimientosFiltrados : data}
         isLoading={isLoading}
         isError={isError}
       />
