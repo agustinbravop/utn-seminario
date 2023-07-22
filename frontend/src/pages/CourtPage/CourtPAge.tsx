@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cancha } from "../../models";
+import { Cancha, Establecimiento } from "../../models";
 import { useNavigate, useParams } from "react-router";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
@@ -19,6 +19,13 @@ export default function CourtPage() {
     () => getCanchasByEstablecimientoID(Number(idEst))
   );
 
+
+  const { data: establecimientoData, isLoading: establecimientoLoading, isError: establecimientoError } = useQuery<Establecimiento>(
+    ["establecimiento", idEst],
+    () => getEstablecimientoByID(Number(idEst))
+  );
+
+
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
@@ -28,9 +35,13 @@ export default function CourtPage() {
   return (
     <div>
       <TopMenu />
-      <Heading textAlign="center" paddingBottom="2" mt="40px">
-        Mis Canchas
-      </Heading>
+        {establecimientoLoading ? (
+          <LoadingSpinner />
+        ) : establecimientoError ? (
+          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+        ) : (
+          <Heading textAlign="center" paddingBottom="2" mt="40px"> {establecimientoData.nombre} </Heading>
+        )}
       <HStack spacing={4}>
         <Button
           onClick={() => navigate("nuevaCancha")}
