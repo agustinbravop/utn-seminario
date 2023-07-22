@@ -6,7 +6,15 @@ import { ApiError } from "../../utils/api";
 import { RegistrarAdmin, apiRegister } from "../../utils/api/auth";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import * as Yup from "yup";
-import { HStack, VStack, Alert, useToast, Box } from "@chakra-ui/react";
+import {
+  HStack,
+  VStack,
+  Alert,
+  useToast,
+  Box,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SubmitButton from "../../components/forms/SubmitButton";
@@ -40,6 +48,7 @@ const validationSchema = Yup.object({
       .matches(/[0-9]+/, "Debe ser un número")
       .min(15, "Deben ser entre 15 y 19 dígitos")
       .max(19, "Deben ser entre 15 y 19 dígitos")
+      .nullable()
       .required("Obligatorio"),
   }),
   idSuscripcion: Yup.number().required(),
@@ -100,15 +109,15 @@ function AdmPage() {
       <TopMenu />
       <Box m="50px">
         <FormProvider {...methods}>
-          <h2>Tarjeta de crédito</h2>
-          <p>
-            Se factura una cuota cada 30 días. Se puede dar de baja en cualquier
-            momento.
-          </p>
+          <Heading size="md">Tarjeta de crédito</Heading>
+          <Text>
+            Se le facturará una cuota cada 30 días, desde el momento en el que
+            se registra su cuenta. Se puede dar de baja en cualquier momento.
+          </Text>
           <PaymentForm />
 
-          <h2>Cuenta</h2>
-          <p> Ingrese sus datos a usar para iniciar sesión.</p>
+          <Heading size="md">Cuenta</Heading>
+          <Text> Ingrese sus datos. Los usará para iniciar sesión.</Text>
 
           <VStack
             as="form"
@@ -117,6 +126,7 @@ function AdmPage() {
             width="400px"
             justifyContent="center"
             margin="auto"
+            my="20px"
           >
             <HStack>
               <InputControl
@@ -132,19 +142,21 @@ function AdmPage() {
                 isRequired
               />
             </HStack>
-            <InputControl
-              label="Teléfono"
-              placeholder="..."
-              name="telefono"
-              type="tel"
-              isRequired
-            />
-            <InputControl
-              label="Nombre de usuario"
-              placeholder="usuario"
-              name="usuario"
-              isRequired
-            />
+            <HStack>
+              <InputControl
+                label="Nombre de usuario"
+                placeholder="usuario"
+                name="usuario"
+                isRequired
+              />
+              <InputControl
+                label="Teléfono"
+                placeholder="..."
+                name="telefono"
+                type="tel"
+                isRequired
+              />
+            </HStack>
             <InputControl
               label="Correo electrónico"
               placeholder="abc@ejemplo.com"

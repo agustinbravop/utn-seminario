@@ -12,8 +12,8 @@ import TopMenu from "../../components/TopMenu/TopMenu";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { getSuscripciones } from "../../utils/api/auth";
 import { Suscripcion } from "../../models";
-import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 const iconos = [
   <Icon as={BsShop} fill="#47A992" fontSize={90} />,
@@ -26,7 +26,6 @@ function SuscriptionOptionPage() {
     ["suscripciones"],
     getSuscripciones
   );
-  const navigate = useNavigate();
 
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
@@ -44,43 +43,45 @@ function SuscriptionOptionPage() {
     return (
       <Card bg="light" key="light" color="dark" width="14rem">
         <CardHeader margin="auto">{s.icono}</CardHeader>
-        <CardBody style={{ textAlign: "center" }}>
+        <CardBody textAlign="center">
           <Heading size="md">{s.nombre}</Heading>
           <Text fontSize="30px" marginBottom="0px">
             ${s.costoMensual}
           </Text>
           <Text>por mes</Text>
-          <Text>
+          <Text my="10px">
             {s.limiteEstablecimientos} establecimiento
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
-          <Button
-            type="button"
-            colorScheme="teal"
-            variant="outline"
-            style={{ marginLeft: "10px" }}
-            onClick={() => navigate(`/register?idSuscripcion=${s.id}`)}
-          >
-            Continuar
-          </Button>
+          <Link to={`/register?idSuscripcion=${s.id}`}>
+            <Button
+              mt="10px"
+              type="button"
+              colorScheme="teal"
+              variant="outline"
+            >
+              Continuar
+            </Button>
+          </Link>
         </CardBody>
       </Card>
     );
   });
 
   return (
-    <div>
+    <>
       <TopMenu />
-      <HStack justifyContent="space-around">{cards}</HStack>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-around",
-          marginTop: "5px",
-        }}
-      ></div>
-    </div>
+      <Heading size="md">Elija una suscripción</Heading>
+      <Text>
+        Nos ajustamos a las necesidades de cada negocio. La puede modificar en
+        cualquier momento.
+      </Text>
+
+      <HStack justifyContent="center" gap="60px" my="50px">
+        {cards}
+      </HStack>
+    </>
   );
 }
 

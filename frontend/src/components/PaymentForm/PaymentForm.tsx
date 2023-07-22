@@ -30,7 +30,7 @@ export default function PaymentForm({ control }: PaymentFormProps) {
   };
 
   return (
-    <HStack spacing="4" justifyContent="center">
+    <HStack spacing="4" justifyContent="center" my="20px">
       <VStack spacing="4" minWidth="150px" maxWidth="300px">
         <InputControl
           name="tarjeta.numero"
