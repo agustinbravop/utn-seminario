@@ -2,9 +2,14 @@ import { Button } from "@chakra-ui/button";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { useNavigate } from "react-router-dom";
 import { Box, Heading, Text, VStack } from "@chakra-ui/layout";
+import "./HomePage.css";
+import Carousel from "../../components/Carousel/Carousel";
 
 function HomePage() {
   const navigate = useNavigate();
+  const images = ["https://civideportes.com.co/wp-content/uploads/2020/08/asphalt-tennis-court-5354328_640.jpg", 
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg9EYl19BXQYmaEzbShr_6C-2gk-z-9CHNew&usqp=CAU",
+     "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/PETRTNQVQBHJRCDS3B6RF7IJK4.jpg"];
 
   return (
     <div>
@@ -34,11 +39,14 @@ function HomePage() {
             marginTop: "100px",
           }}
         >
+
+        <Carousel images={images} autoPlay={true} showButtons={true} />
+          
           <Heading style={{ fontSize: "20px" }}>
             ¿Queres publicitar tu Establecimiento?
           </Heading>
           <p>
-            Campo de Juego te permite administrar las reservas de <br /> tus
+            Play Finder te permite administrar las reservas de <br /> tus
             canchas, aceptar pagos a través de Mercado Pago,
             <br /> ver reportes de ingresos y mucho más.{" "}
           </p>

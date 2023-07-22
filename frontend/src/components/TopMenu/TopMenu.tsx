@@ -22,7 +22,7 @@ export default function TopMenu() {
 function BrandNav() {
   return (
     <Link to="/landing">
-      <Icon as={TennisIcon} fill="whiteAlpha.800" fontSize="40px" />
+      <img src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png" width={177}/>
     </Link>
   );
 }
