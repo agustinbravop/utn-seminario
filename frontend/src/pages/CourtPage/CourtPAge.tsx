@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Cancha, Establecimiento } from "../../models";
 import { useNavigate, useParams } from "react-router";
 import TopMenu from "../../components/TopMenu/TopMenu";
-import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
+import { Button, HStack, Heading, Icon, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
 import Courts from "../../components/Courts/Courts";
 import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
 import { getEstablecimientoByID } from "../../utils/api/establecimientos";
@@ -10,6 +10,7 @@ import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
 import Alerta from "../../components/Alerta/Alerta";
 import { useState } from "react";
+import { SearchIcon } from "@chakra-ui/icons";
 
 export default function CourtPage() {
   const navigate = useNavigate();
@@ -34,38 +35,74 @@ export default function CourtPage() {
 
   return (
     <div>
-      <TopMenu />
-        {establecimientoLoading ? (
-          <LoadingSpinner />
-        ) : establecimientoError ? (
-          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-        ) : (
-          <Heading textAlign="center" paddingBottom="2" mt="40px"> {establecimientoData.nombre} </Heading>
-        )}
-      <HStack spacing={4}>
-        <Button
-          onClick={() => navigate("nuevaCancha")}
-          variant="outline"
-          leftIcon={<Icon as={GrAddCircle} />}
-        >
-          Agregar Cancha
-        </Button>
-        <Text mb="0">{data?.length} canchas</Text>
-        <Input
+    <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
+          <InputGroup width="18%">
+            <InputRightElement pointerEvents='none'>
+              <SearchIcon color='gray.300' />
+            </InputRightElement>
+            <Input
           focusBorderColor="lightblue"
-          placeholder="Número de la Cancha"
+          placeholder="Nombre de la cancha"
           size="md"
-          width="35%"
+          width="100%"
           onChange={handleChange}
         />
+          </InputGroup>
+        <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
+          <Text mb="0">{data?.length} canchas</Text>
+          <Button
+            onClick={() => navigate("nuevaCancha")}
+            variant="outline"
+            leftIcon={<Icon as={GrAddCircle} />}
+          >
+            Agregar Cancha
+          </Button>
+        </HStack>
       </HStack>
-      {isLoading ? (
+      <HStack marginLeft="18%">
+        {isLoading ? (
         <LoadingSpinner />
       ) : isError ? (
         <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
       ) : (
         <Courts canchas={data || []} />
       )}
+      </HStack>
     </div>
   );
 }
+
+
+/*
+
+<HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
+        <Input
+          focusBorderColor="lightblue"
+          placeholder="Nombre de la cancha"
+          size="md"
+          width="18%"
+          onChange={handleChange}
+        />
+        <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
+          <Text mb="0">{data?.length} canchas</Text>
+          <Button
+            onClick={() => navigate("nuevaCancha")}
+            variant="outline"
+            leftIcon={<Icon as={GrAddCircle} />}
+          >
+            Agregar Establecimiento
+          </Button>
+        </HStack>
+      </HStack>
+      <HStack marginLeft="18%">
+        {isLoading ? (
+        <LoadingSpinner />
+      ) : isError ? (
+        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+      ) : (
+        <Courts canchas={data || []} />
+      )}
+      </HStack>
+    </>
+
+    */

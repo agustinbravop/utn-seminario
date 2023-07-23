@@ -27,7 +27,7 @@ function HomePage() {
         >
           Reserva una cancha desde donde quieras
         </Heading>
-        <Text>
+        <Text  >
           Encontrá tu cancha preferida para jugar con tus amigos de entre más de
           mil establecimientos
         </Text>
@@ -43,7 +43,7 @@ function HomePage() {
             <Box width="65%" display="flex" justifyContent="center">
               <Carousel images={images} autoPlay={true} showButtons={true} />
             </Box>
-            <Box marginTop="90px" marginLeft="30px" justifyContent="center"  width="35%">
+            <Box marginTop="100px" marginLeft="30px" justifyContent="center"  width="35%">
               <Heading style={{ fontSize: "20px" }}>
                 ¿Queres publicitar tu Establecimiento?
               </Heading>

@@ -1,13 +1,14 @@
 import TopMenu from "../../components/TopMenu/TopMenu";
 import EstablecimientoCardList from "../../components/EstablecimientoCardList/EstablecimientoCardList";
 import { Navigate, useNavigate } from "react-router";
-import { Box, Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Heading, Icon, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "../../models";
 import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
 import { GrAddCircle } from "react-icons/gr";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { useState } from "react";
+import { SearchIcon } from "@chakra-ui/icons";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -45,13 +46,18 @@ export default function EstablecimientosPage() {
         Mis Establecimientos
       </Heading>
       <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
-        <Input
+      <InputGroup width="18%">
+            <InputRightElement pointerEvents='none'>
+              <SearchIcon color='gray.300' />
+            </InputRightElement>
+            <Input
           focusBorderColor="lightblue"
-          placeholder="Nombre del Establecimiento"
+          placeholder="Nombre del establecimiento"
           size="md"
-          width="18%"
+          width="100%"
           onChange={handleChange}
         />
+        </InputGroup>
         <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
           <Text mb="0"> 
             {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}

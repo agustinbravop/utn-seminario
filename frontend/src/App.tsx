@@ -19,6 +19,7 @@ import CourtPage from "./pages/CourtPage/CourtPage";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import EditCourt from "./pages/EditCourt/EditCourt";
 import { theme } from "./themes";
+import EstabPage from "./pages/EstabPage/EstabPage";
 
 const routes = [
   {
@@ -63,7 +64,7 @@ const routes = [
   },
   {
     path: "/establecimiento/:idEst/canchas", //provisorio
-    element: <CourtPage />,
+    element: <EstabPage />,
   },
   {
     path: "/establecimiento/:idEst/canchas/nuevaCancha", //provisorio
