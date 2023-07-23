@@ -8,7 +8,6 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import Alerta from "../../components/Alerta/Alerta";
-import CourtPage from "../CourtPage/CourtPage";
 
 
 export default function EstabPage() {
@@ -47,11 +46,6 @@ const { data: establecimientoData, isLoading: establecimientoLoading, isError: e
             onClick={() => setSection("canchas")}
             variant="outline"
           >  Canchas </Button>
-
-      {section==="canchas" ? ( <CourtPage/>):
-      (<div> Informacion</div>)
-      }
-
 
     </>
   );

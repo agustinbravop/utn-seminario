@@ -18,7 +18,6 @@ import NewCourt from "./pages/NewCourt/NewCourt";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import EditCourt from "./pages/EditCourt/EditCourt";
 import { theme } from "./themes";
-import EstabPage from "./pages/EstabPage/EstabPage";
 import CourtPage from "./pages/CourtPage/CourtPage";
 
 const routes = [

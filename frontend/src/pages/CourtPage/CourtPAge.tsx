@@ -11,6 +11,7 @@ import { GrAddCircle } from "react-icons/gr";
 import Alerta from "../../components/Alerta/Alerta";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
+import EstabPage from "../EstabPage/EstabPage";
 
 export default function CourtPage() {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export default function CourtPage() {
 
   return (
     <div>
+      <EstabPage/>
     <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
           <InputGroup width="18%">
             <InputRightElement pointerEvents='none'>
