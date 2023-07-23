@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useParams } from "react-router";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import Alerta from "../../components/Alerta/Alerta";
+import { Link } from "react-router-dom";
 
 
 export default function EstabPage() {
@@ -28,6 +29,7 @@ const { data: establecimientoData, isLoading: establecimientoLoading, isError: e
   };
 
 
+
   return (
     <>
       <TopMenu />
@@ -38,15 +40,14 @@ const { data: establecimientoData, isLoading: establecimientoLoading, isError: e
         ) : (
           <Heading textAlign="left" marginLeft="25%" paddingBottom="2" mt="40px"> {establecimientoData.nombre} </Heading>
         )}
-        <Button
-            onClick={() => setSection("info")}
-            variant="outline"
-          >  Info </Button>
-           <Button
-            onClick={() => setSection("canchas")}
-            variant="outline"
-          >  Canchas </Button>
-
+        <HStack gap="50px" alignContent="center" justifyContent="center" >
+        <Link  to={`/establecimiento/${establecimientoData?.id}/info`}>
+              Info
+          </Link>
+          <Link to={`/establecimiento/${establecimientoData?.id}/canchas`}>
+              Canchas
+          </Link>
+        </HStack>
     </>
   );
 }

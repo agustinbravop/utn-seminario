@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFoundPage/NotFound";
 import EditCourt from "./pages/EditCourt/EditCourt";
 import { theme } from "./themes";
 import CourtPage from "./pages/CourtPage/CourtPage";
+import InfoEstab from "./pages/InfoEstab/InfoEstab"
 
 const routes = [
   {
@@ -56,6 +57,10 @@ const routes = [
   {
     path: "/administrador/:idAdmin/establecimiento/:idCancha/editar",
     element: <EditEstab />,
+  },
+  {
+    path: "/establecimiento/:idEst/info",
+    element: <InfoEstab/>,
   },
   {
     path: "/perfil", //provisorio
