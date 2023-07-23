@@ -79,7 +79,7 @@ export default function Carousel(props: Props) {
     <CarouselImageContainer>
         <CarouselImg
             src={selectedImage}
-            alt="Gentleman"
+            alt="ImagenCarousel"
             className={loaded ? "loaded" : ""}
             onLoad={() => setLoaded(true)}
         />

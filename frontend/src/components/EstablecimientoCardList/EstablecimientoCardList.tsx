@@ -10,7 +10,7 @@ export default function EstablecimientoCardList({
   establecimientos,
 }: EstablecimientoCardListProps) {
   return (
-    <HStack display="flex" flexWrap="wrap" justifyContent="center">
+    <HStack display="flex" flexWrap="wrap" justifyContent="left">
       {establecimientos.map((est) => (
         <EstablecimientoCard key={est.id} establecimiento={est} />
       ))}

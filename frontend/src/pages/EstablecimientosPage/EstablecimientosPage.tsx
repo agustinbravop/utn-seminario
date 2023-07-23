@@ -1,7 +1,7 @@
 import TopMenu from "../../components/TopMenu/TopMenu";
 import EstablecimientoCardList from "../../components/EstablecimientoCardList/EstablecimientoCardList";
 import { Navigate, useNavigate } from "react-router";
-import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "../../models";
 import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
@@ -41,34 +41,38 @@ export default function EstablecimientosPage() {
   return (
     <>
       <TopMenu />
-      <Heading textAlign="center" paddingBottom="2" mt="40px">
+      <Heading textAlign="left" marginLeft="25%" paddingBottom="2" mt="40px">
         Mis Establecimientos
       </Heading>
-      <HStack align="center" spacing={4} m="20px">
-        <Button
-          onClick={() => navigate("nuevoEstablecimiento")}
-          variant="outline"
-          leftIcon={<Icon as={GrAddCircle} />}
-        >
-          Agregar Establecimiento
-        </Button>
-        <Text mb="0">
-          {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
-          establecimientos
-        </Text>
+      <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
         <Input
           focusBorderColor="lightblue"
           placeholder="Nombre del Establecimiento"
           size="md"
-          width="35%"
+          width="18%"
           onChange={handleChange}
         />
+        <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
+          <Text mb="0"> 
+            {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
+            establecimientos
+          </Text>
+          <Button
+            onClick={() => navigate("nuevoEstablecimiento")}
+            variant="outline"
+            leftIcon={<Icon as={GrAddCircle} />}
+          >
+            Agregar Establecimiento
+          </Button>
+        </HStack>
       </HStack>
-      <EstablecimientosList
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-      />
+      <HStack marginLeft="18%">
+        <EstablecimientosList
+          data={data}
+          isLoading={isLoading}
+          isError={isError}
+        />
+      </HStack>
     </>
   );
 }

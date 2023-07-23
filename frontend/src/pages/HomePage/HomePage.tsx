@@ -43,7 +43,7 @@ function HomePage() {
             <Box width="65%" display="flex" justifyContent="center">
               <Carousel images={images} autoPlay={true} showButtons={true} />
             </Box>
-            <Box marginTop="80px" marginLeft="30px" justifyContent="center"  width="35%">
+            <Box marginTop="90px" marginLeft="30px" justifyContent="center"  width="35%">
               <Heading style={{ fontSize: "20px" }}>
                 ¿Queres publicitar tu Establecimiento?
               </Heading>

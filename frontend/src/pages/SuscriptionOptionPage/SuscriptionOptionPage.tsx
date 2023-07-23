@@ -71,15 +71,13 @@ function SuscriptionOptionPage() {
   return (
     <div>
       <TopMenu />
-      <HStack justifyContent="space-around">{cards}</HStack>
-
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-around",
-          marginTop: "5px",
+          marginTop: "120px",
         }}
-      ></div>
+      >
+         <HStack justifyContent="space-around">{cards}</HStack>
+      </div>
     </div>
   );
 }

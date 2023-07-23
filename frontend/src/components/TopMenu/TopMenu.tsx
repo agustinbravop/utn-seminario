@@ -12,7 +12,7 @@ export default function TopMenu() {
   return (
     <HStack
       className="top-menu"
-      backgroundColor="#F2EDE3 "
+      backgroundColor="#D5DFE6"
       justifyContent="space-between"
       padding="0 30px 0 30px"
       height="60px"
