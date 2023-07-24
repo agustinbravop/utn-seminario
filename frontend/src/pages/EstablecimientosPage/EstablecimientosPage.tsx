@@ -88,23 +88,19 @@ export default function EstablecimientosPage() {
         </HStack>
       </HStack>
       <HStack marginLeft="18%">
-        <EstablecimientosList
-          data={data}
-          isLoading={isLoading}
-          isError={isError}
-        />
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : isError ? (
+          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+        ) : (
+          <EstablecimientosList
+            data={filtro ? establecimientosFiltrados : data}
+            isLoading={isLoading}
+            isError={isError}
+          />
+        )}
+      
       </HStack>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : isError ? (
-        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-      ) : (
-        <EstablecimientosList
-          data={filtro ? establecimientosFiltrados : data}
-          isLoading={isLoading}
-          isError={isError}
-        />
-      )}
     </>
   );
 }

@@ -65,15 +65,18 @@ export default function CourtPage() {
       </HStack>
       <HStack marginLeft="18%">
         {isLoading ? (
-        <LoadingSpinner />
-      ) : isError ? (
-        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-      ) : (canchasFiltradas && canchasFiltradas.length > 0) ? (
-          <Courts canchas={(filtro ? canchasFiltradas : data) || []} />
-        ) : (
-          <Text textAlign="center">No se encontraron canchas</Text>
-        )
-      }
+          <LoadingSpinner />
+        ) : isError ? (
+          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+        ) : (canchasFiltradas && canchasFiltradas.length > 0) ? (
+            <Courts canchas={(filtro ? canchasFiltradas : data) || []} />
+          ) : (
+            <Text textAlign="center">No se encontraron canchas</Text>
+          )
+        }
+
+      </HStack>
+
     </div>
   );
 }

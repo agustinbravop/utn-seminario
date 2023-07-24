@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Box, Heading, Text, VStack } from "@chakra-ui/layout";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { useEffect } from "react";
-import { Box, Heading, Text, VStack} from "@chakra-ui/layout";
 import Carousel from "../../components/Carousel/Carousel";
 
 function HomePage() {
