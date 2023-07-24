@@ -2,9 +2,17 @@ import { Button } from "@chakra-ui/button";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { useNavigate } from "react-router-dom";
 import { Box, Heading, Text, VStack } from "@chakra-ui/layout";
+import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { useEffect } from "react";
 
 function HomePage() {
   const navigate = useNavigate();
+  const { logout } = useCurrentAdmin();
+  
+  useEffect(() => {
+    logout()
+  }, [])
+  
 
   return (
     <div>
