@@ -54,6 +54,6 @@ export async function modificarCancha(
   return putFormData<Cancha>(
     `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
     formData,
-    201
+    200
   );
 }

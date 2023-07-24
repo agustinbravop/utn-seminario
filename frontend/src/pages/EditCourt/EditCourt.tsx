@@ -18,6 +18,7 @@ import {
   Input,
   VStack,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import SelectableButton from "../../components/SelectableButton/SelectableButton";
 import {
@@ -27,6 +28,7 @@ import {
 } from "../../utils/api/canchas";
 import { readLocalStorage } from "../../utils/storage/localStorage";
 import { JWT } from "../../utils/api";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -46,6 +48,8 @@ function EditCourt() {
     console.log(":)");
   };
 
+  const toastC = useToast()
+
   const { idEst, idCancha } = useParams();
   const navigate = useNavigate();
 
@@ -62,9 +66,25 @@ function EditCourt() {
   console.log("idCancha:", Number(idCancha), typeof(Number(idCancha)));
   console.log("idEst:", Number(idEst), typeof(Number(idEst)));
 
-  const { mutate } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate, isLoading } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
-    onSuccess: () => navigate(-1),
+    onSuccess: () => {
+      toastC({
+        title: "Cancha modificada",
+        description: `Cancha modificada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toastC({
+        title: "Error al modificar la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -323,8 +343,10 @@ function EditCourt() {
 
           <Container centerContent mt="20px">
             <Button type="submit" /*onClick={validacion}*/>
-              Guardar cambios
+              {!isLoading ? "Guardar cambios" : "Guardando..."}
             </Button>
+            <br />
+            {isLoading && (<LoadingSpinner />)}
           </Container>
           `Bearer ${token?.token}`
         </form>

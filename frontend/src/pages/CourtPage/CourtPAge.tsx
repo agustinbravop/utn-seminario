@@ -37,22 +37,22 @@ export default function CourtPage() {
 
   return (
     <div>
-      <EstabPage/>
-    <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" mt="20px"> Canchas </Heading>
-    <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
-          <InputGroup width="18%">
-            <InputRightElement pointerEvents='none'>
-              <SearchIcon color='gray.300' />
-            </InputRightElement>
-            <Input
-          focusBorderColor="lightblue"
-          placeholder="Nombre de la cancha"
-          size="md"
-          width="100%"
-          onChange={handleChange}
-          value={filtro}
-        />
-          </InputGroup>
+      <EstabPage />
+      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" mt="20px"> Canchas </Heading>
+      <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
+        <InputGroup width="18%">
+          <InputRightElement pointerEvents='none'>
+            <SearchIcon color='gray.300' />
+          </InputRightElement>
+          <Input
+            focusBorderColor="lightblue"
+            placeholder="Nombre de la cancha"
+            size="md"
+            width="100%"
+            onChange={handleChange}
+            value={filtro}
+          />
+        </InputGroup>
         <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
           <Text mb="0">{data?.length} canchas</Text>
           <Button
@@ -69,10 +69,10 @@ export default function CourtPage() {
         ) : isError ? (
           <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
         ) : (canchasFiltradas && canchasFiltradas.length > 0) ? (
-            <Courts canchas={(filtro ? canchasFiltradas : data) || []} />
-          ) : (
-            <Text textAlign="center">No se encontraron canchas</Text>
-          )
+          <Courts canchas={(filtro ? canchasFiltradas : data) || []} />
+        ) : (
+          <Text textAlign="center">No se encontraron canchas</Text>
+        )
         }
 
       </HStack>
