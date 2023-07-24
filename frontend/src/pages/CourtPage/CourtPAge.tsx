@@ -21,8 +21,11 @@ export default function CourtPage() {
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
-    console.log(filtro);
   };
+
+  const canchasFiltradas = data?.filter((cancha) =>
+    cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   return (
     <div>
@@ -30,7 +33,7 @@ export default function CourtPage() {
       <Heading textAlign="center" paddingBottom="2" mt="40px">
         Mis Canchas
       </Heading>
-      <HStack spacing={4}>
+      <HStack align="center" spacing={4} m="20px">
         <Button
           onClick={() => navigate("nuevaCancha")}
           variant="outline"
@@ -41,19 +44,23 @@ export default function CourtPage() {
         <Text mb="0">{data?.length} canchas</Text>
         <Input
           focusBorderColor="lightblue"
-          placeholder="Número de la Cancha"
+          placeholder="Nombre de la Cancha"
           size="md"
           width="35%"
           onChange={handleChange}
+          value={filtro}
         />
       </HStack>
       {isLoading ? (
         <LoadingSpinner />
       ) : isError ? (
         <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-      ) : (
-        <Courts canchas={data || []} />
-      )}
+      ) : (canchasFiltradas && canchasFiltradas.length > 0) ? (
+          <Courts canchas={(filtro ? canchasFiltradas : data) || []} />
+        ) : (
+          <Text textAlign="center">No se encontraron canchas</Text>
+        )
+      }
     </div>
   );
 }
