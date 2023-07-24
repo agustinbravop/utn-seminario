@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Modal from "react-overlays/Modal"; //AGREGAR EL MODAL DE "¿SEGURO?"
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
 import { Cancha } from "../../models";
@@ -9,7 +8,7 @@ import { ApiError } from "../../utils/api";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import { Box, Container, Heading, Textarea } from "@chakra-ui/react";
+import { Box, Container, Heading, Textarea, useDisclosure } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
 import {
   FormControl,
@@ -19,6 +18,13 @@ import {
   VStack,
   Button,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import SelectableButton from "../../components/SelectableButton/SelectableButton";
 import {
@@ -35,18 +41,8 @@ type FormState = ModificarCanchaReq & {
 };
 
 function EditCourt() {
-  //ACA TA EL MODAL :)
 
-  const [showModal, setShowModal] = useState(false);
-  const renderBackdrop = (
-    props: JSX.IntrinsicAttributes &
-      React.ClassAttributes<HTMLDivElement> &
-      React.HTMLAttributes<HTMLDivElement>
-  ) => <div className="backdrop" {...props} />;
-  var handleClose = () => setShowModal(false);
-  var handleSuccess = () => {
-    console.log(":)");
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toastC = useToast()
 
@@ -63,8 +59,8 @@ function EditCourt() {
     disciplinas: [],
   });
 
-  console.log("idCancha:", Number(idCancha), typeof(Number(idCancha)));
-  console.log("idEst:", Number(idEst), typeof(Number(idEst)));
+  console.log("idCancha:", Number(idCancha), typeof (Number(idCancha)));
+  console.log("idEst:", Number(idEst), typeof (Number(idEst)));
 
   const { mutate, isLoading } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
@@ -93,10 +89,28 @@ function EditCourt() {
     setState({ ...state, [name]: value });
   };
 
+  const validacion = () => {
+    let result = false;
+
+    if ((state.nombre.replace(/\s/g, "") === "" || state.nombre === null) && result === false) {
+      result = true;
+      advertencia("El campo Nombre no puede estar vacio");
+    }
+
+    if ((state.descripcion.replace(/\s/g, "") === "" || state.descripcion === null) && result === false) {
+      result = true;
+      advertencia("El campo Descripción no puede estar vacio");
+    }
+
+    return result
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form State:", state);
-    mutate(state);
+    if (!validacion()) {
+      mutate(state);
+    }
   };
 
   const advertencia = (message: string) => {
@@ -109,14 +123,6 @@ function EditCourt() {
       draggable: true,
     });
   };
-  const validacion = () => {
-    let result = false;
-
-    if ((state.nombre === "" || state.nombre === null) && result === false) {
-      result = true;
-      advertencia("El campo Nombre no puede estar vacio");
-    }
-  };
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -124,6 +130,11 @@ function EditCourt() {
       imagen: e.target.files ? e.target.files[0] : undefined,
     });
   };
+
+  const handleEliminar = () => {
+    onClose();
+    
+  }
 
   useEffect(() => {
     const cargarCancha = async () => {
@@ -342,7 +353,7 @@ function EditCourt() {
           </HStack> */}
 
           <Container centerContent mt="20px">
-            <Button type="submit" /*onClick={validacion}*/>
+            <Button type="submit">
               {!isLoading ? "Guardar cambios" : "Guardando..."}
             </Button>
             <br />
@@ -350,60 +361,33 @@ function EditCourt() {
           </Container>
           `Bearer ${token?.token}`
         </form>
+        <Container centerContent mt="20px">
+          <Button colorScheme='red' onClick={onOpen}>
+            Eliminar
+          </Button>
+          <br />
+          {isLoading && (<LoadingSpinner />)}
+        </Container>
         <ToastContainer />
 
-        <Modal
-          className="modal"
-          show={showModal}
-          onHide={handleClose}
-          renderBackdrop={renderBackdrop}
-        >
-          <div>
-            <div className="modal-header">
-              <div className="modal-title">Confirmar Cancelación</div>
-              <div>
-                <span className="close-button" onClick={handleClose}>
-                  x
-                </span>
-              </div>
-            </div>
-            <div className="modal-desc">
-              <p>¿Desea cancelar?</p>
-            </div>
-            <div className="modal-footer">
-              <button className="secondary-button" onClick={handleClose}>
-                Cancelar
-              </button>
-              <button className="primary-button" onClick={handleSuccess}>
-                Aceptar
-              </button>
-            </div>
-          </div>
-        </Modal>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Eliminar cancha</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              ¿Seguro que desea eliminar la cancha?
+            </ModalBody>
 
-        <Modal
-          className="modal"
-          show={showModal}
-          onHide={handleClose}
-          renderBackdrop={renderBackdrop}
-        >
-          <div>
-            <div className="modal-header">
-              <div className="modal-title">Confirmar Modificación</div>
-              <div>
-                <span className="close-button" onClick={handleClose}>
-                  x
-                </span>
-              </div>
-            </div>
-            <div className="modal-desc">
-              <p>¿Desea guardar los cambios?</p>
-            </div>
-            <div className="modal-footer">
-              <button onClick={handleClose}>Cancelar</button>
-              <Button onClick={handleSuccess}>Aceptar</Button>
-            </div>
-          </div>
+            <ModalFooter>
+              <Button colorScheme='gray' mr={3} onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button colorScheme='blackAlpha' backgroundColor='black' onClick={handleEliminar}>
+                Aceptar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
         </Modal>
       </Box>
     </>
