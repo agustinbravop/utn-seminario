@@ -8,6 +8,8 @@ import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
 import { GrAddCircle } from "react-icons/gr";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { useState } from "react";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import Alerta from "../../components/Alerta/Alerta";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -68,11 +70,18 @@ export default function EstablecimientosPage() {
           value={filtro}
         />
       </HStack>
-      <EstablecimientosList
-        data={filtro ? establecimientosFiltrados : data}
-        isLoading={isLoading}
-        isError={isError}
-      />
+
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : isError ? (
+        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+      ) : (
+        <EstablecimientosList
+          data={filtro ? establecimientosFiltrados : data}
+          isLoading={isLoading}
+          isError={isError}
+        />
+      )}
     </>
   );
 }
