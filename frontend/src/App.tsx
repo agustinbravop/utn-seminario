@@ -55,7 +55,7 @@ const routes = [
     element: <AdmPage />,
   },
   {
-    path: "/administrador/:idAdmin/establecimiento/:idCancha/editar",
+    path: "/establecimiento/:idEst/info/editar",
     element: <EditEstab />,
   },
   {
