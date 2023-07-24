@@ -18,7 +18,16 @@ interface EstablecimientosListProps {
 }
 
 function EstablecimientosList({ data }: EstablecimientosListProps) {
-  return <EstablecimientoCardList establecimientos={data || []} />;
+  // return <EstablecimientoCardList establecimientos={data || []} />;
+  return (
+    <>
+      {data && data.length > 0 ? (
+        <EstablecimientoCardList establecimientos={data} />
+      ) : (
+        <Text textAlign="center">No se encontraron establecimientos</Text>
+      )}
+    </>
+  );
 }
 
 export default function EstablecimientosPage() {
