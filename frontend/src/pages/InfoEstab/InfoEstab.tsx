@@ -9,6 +9,7 @@ import Alerta from "../../components/Alerta/Alerta";
 import { useState } from "react";
 import EstabPage from "../EstabPage/EstabPage";
 import { Image } from "@chakra-ui/react";
+import { CopyIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
 
 export default function CourtPage() {
   const navigate = useNavigate();
@@ -23,8 +24,29 @@ export default function CourtPage() {
 
   return (
     <div>
-      <EstabPage/>
+      <EstabPage/>            
       <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" marginTop="20px" > Información </Heading>
+      <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
+            <InputGroup width="18%">
+            <InputRightElement pointerEvents='none'>
+                <SearchIcon color='gray.300' />
+            </InputRightElement>
+            <Input
+            focusBorderColor="lightblue"
+            placeholder="Nombre de la cancha"
+            size="md"
+            width="100%"
+            />
+            </InputGroup>
+            <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
+                <Button
+                onClick={() => navigate("editar")}
+                leftIcon={ <EditIcon/>}
+                >
+                Editar Info
+                </Button>
+            </HStack> 
+            </HStack>
       <Box
       display="flex"
       marginLeft="18%" 
@@ -48,7 +70,7 @@ export default function CourtPage() {
                             <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                                 <Box>
                                 <Heading size="xs" textTransform="uppercase">
-                                    Direccion
+                                    Dirección
                                 </Heading>
                                 <Text fontSize="sm">
                                     {establecimientoData?.direccion}
@@ -90,4 +112,5 @@ export default function CourtPage() {
     </div>
   );
 }
+
 

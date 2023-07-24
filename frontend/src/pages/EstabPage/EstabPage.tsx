@@ -45,7 +45,7 @@ const { data: establecimientoData, isLoading: establecimientoLoading, isError: e
           <Text  textDecoration={sub ? "underline" : "none"} textDecorationThickness="3px" marginBottom="0px" textUnderlineOffset="7px" > Información </Text>
           </Link>
           <Link to={`/establecimiento/${establecimientoData?.id}/canchas`}>
-            <Text  textDecoration={!sub ? "underline" : "none"} textDecorationThickness="3px" marginBottom="0px" textUnderlineOffset="7px" > Canchas </Text>
+            <Text textDecoration={!sub ? "underline" : "none"} textDecorationThickness="3px" marginBottom="0px" textUnderlineOffset="7px" transition="texDecoration 1s ease-in-out" > Canchas </Text>
           </Link>
           <Link to={`/establecimiento/${establecimientoData?.id}/canchas`}>
               Reservas

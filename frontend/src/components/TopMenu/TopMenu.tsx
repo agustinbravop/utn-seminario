@@ -6,7 +6,8 @@ import { AiOutlineUser } from "react-icons/ai";
 import { useEffect, useRef, useState } from "react";
 import { Box } from "react-bootstrap-icons";
 import { Menu, MenuButton } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, ChevronDownIcon, EditIcon, InfoIcon } from "@chakra-ui/icons";
+import { Text } from "@chakra-ui/react";
 
 export default function TopMenu() {
   return (
@@ -68,10 +69,10 @@ function Nav() {
         </MenuButton>
         <MenuList>
           <Link to={`/perfil`}>
-            <MenuItem> Mi perfil </MenuItem>
+            <MenuItem > <InfoIcon mr="20px" />   Mi perfil </MenuItem>
           </Link> 
           <Link to={`/landing`}>
-            <MenuItem  onClick={logout} > Logout </MenuItem>
+            <MenuItem onClick={logout} > <ArrowForwardIcon mr="20px" /> Logout </MenuItem>
           </Link> 
         </MenuList>
       </Menu>
