@@ -21,18 +21,19 @@ export default function CourtPage() {
     () => getCanchasByEstablecimientoID(Number(idEst))
   );
 
-
   const { data: establecimientoData, isLoading: establecimientoLoading, isError: establecimientoError } = useQuery<Establecimiento>(
     ["establecimiento", idEst],
     () => getEstablecimientoByID(Number(idEst))
   );
 
-
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
-    console.log(filtro);
   };
+
+  const canchasFiltradas = data?.filter((cancha) =>
+    cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   return (
     <div>
@@ -49,6 +50,7 @@ export default function CourtPage() {
           size="md"
           width="100%"
           onChange={handleChange}
+          value={filtro}
         />
           </InputGroup>
         <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
@@ -66,45 +68,13 @@ export default function CourtPage() {
         <LoadingSpinner />
       ) : isError ? (
         <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-      ) : (
-        <Courts canchas={data || []} />
-      )}
-      </HStack>
+      ) : (canchasFiltradas && canchasFiltradas.length > 0) ? (
+          <Courts canchas={(filtro ? canchasFiltradas : data) || []} />
+        ) : (
+          <Text textAlign="center">No se encontraron canchas</Text>
+        )
+      }
     </div>
   );
 }
 
-
-/*
-
-<HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
-        <Input
-          focusBorderColor="lightblue"
-          placeholder="Nombre de la cancha"
-          size="md"
-          width="18%"
-          onChange={handleChange}
-        />
-        <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
-          <Text mb="0">{data?.length} canchas</Text>
-          <Button
-            onClick={() => navigate("nuevaCancha")}
-            variant="outline"
-            leftIcon={<Icon as={GrAddCircle} />}
-          >
-            Agregar Establecimiento
-          </Button>
-        </HStack>
-      </HStack>
-      <HStack marginLeft="18%">
-        {isLoading ? (
-        <LoadingSpinner />
-      ) : isError ? (
-        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-      ) : (
-        <Courts canchas={data || []} />
-      )}
-      </HStack>
-    </>
-
-    */

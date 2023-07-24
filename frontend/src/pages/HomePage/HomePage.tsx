@@ -1,6 +1,9 @@
 import { Button } from "@chakra-ui/button";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { useNavigate } from "react-router-dom";
+import { Box, Heading, Text, VStack } from "@chakra-ui/layout";
+import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { useEffect } from "react";
 import { Box, Heading, Text, VStack} from "@chakra-ui/layout";
 import Carousel from "../../components/Carousel/Carousel";
 
@@ -10,6 +13,11 @@ function HomePage() {
     "https://lh3.googleusercontent.com/p/AF1QipMxtsQ0kqDdux6pRQCFKd61np6gDpx44KFx4UTq=w1080-h608-p-no-v0",
      "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/PETRTNQVQBHJRCDS3B6RF7IJK4.jpg",
     "https://www.sportcourts.gt/wp-content/uploads/2016/10/unnamed-file.jpg"];
+    const { logout } = useCurrentAdmin();
+
+    useEffect(() => {
+    logout()
+  }, [])
 
   return (
     <div>

@@ -8,7 +8,10 @@ import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
 import { GrAddCircle } from "react-icons/gr";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { useState } from "react";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import Alerta from "../../components/Alerta/Alerta";
 import { SearchIcon } from "@chakra-ui/icons";
+
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -17,7 +20,16 @@ interface EstablecimientosListProps {
 }
 
 function EstablecimientosList({ data }: EstablecimientosListProps) {
-  return <EstablecimientoCardList establecimientos={data || []} />;
+  // return <EstablecimientoCardList establecimientos={data || []} />;
+  return (
+    <>
+      {data && data.length > 0 ? (
+        <EstablecimientoCardList establecimientos={data} />
+      ) : (
+        <Text textAlign="center">No se encontraron establecimientos</Text>
+      )}
+    </>
+  );
 }
 
 export default function EstablecimientosPage() {
@@ -27,7 +39,6 @@ export default function EstablecimientosPage() {
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
-    console.log(filtro);
   };
 
   const { data, isLoading, isError } = useQuery<Establecimiento[]>(
@@ -38,6 +49,10 @@ export default function EstablecimientosPage() {
   if (!currentAdmin) {
     return <Navigate to="/login" />;
   }
+
+  const establecimientosFiltrados = data?.filter((establecimiento) =>
+    establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   return (
     <>
@@ -56,6 +71,7 @@ export default function EstablecimientosPage() {
           size="md"
           width="100%"
           onChange={handleChange}
+          value={filtro}
         />
         </InputGroup>
         <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
@@ -78,6 +94,17 @@ export default function EstablecimientosPage() {
           isError={isError}
         />
       </HStack>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : isError ? (
+        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+      ) : (
+        <EstablecimientosList
+          data={filtro ? establecimientosFiltrados : data}
+          isLoading={isLoading}
+          isError={isError}
+        />
+      )}
     </>
   );
 }

@@ -1,0 +1,15 @@
+PUT http://localhost:3001/establecimientos/2/canchas/2 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjo0LCJ1c3VhcmlvIjoiY2hhbm8iLCJjb3JyZW8iOiJjaGFub0BzaXh0by5jb20iLCJub21icmUiOiJTaXh0byIsImFwZWxsaWRvIjoiQXJyZWppbiIsInRlbGVmb25vIjoiMzc5NDc4OTU0NiIsInN1c2NyaXBjaW9uIjp7ImlkIjoyLCJub21icmUiOiJQcmVtaXVtIiwibGltaXRlRXN0YWJsZWNpbWllbnRvcyI6MTAsImNvc3RvTWVuc3VhbCI6IjMwMDAifSwidGFyamV0YSI6eyJpZCI6NCwibm9tYnJlIjoiQXJyZWppbiBTaXh0byBGZWxpY2lhbm8iLCJudW1lcm8iOiI1NjY0MTI1NDc4NzY1NDU2IiwiY3Z2IjozMjEsInZlbmNpbWllbnRvIjoiMDQvNzgifX0sInJvbGVzIjpbIkFkbWluaXN0cmFkb3IiXSwiaWF0IjoxNjkwMTk2OTY4LCJzdWIiOiI0IiwiaXNzIjoiY2FuY2hhcy1hcGkiLCJleHAiOjE2OTAyMDA1Njh9.eXmMCy495d5UBxfY6DPuzwYmwZ2HgKS0m98XKYa_KGY
+
+{
+    "id": 2,
+    "nombre": "Cancha 1 modificada",
+    "descripcion": "Cancha de futbol 5",
+    "estaHabilitada": "true",
+    "idEstablecimiento": "2",
+    "disciplinas": "futbol"
+}
+
+###
+GET http://localhost:3001/establecimientos/2/canchas

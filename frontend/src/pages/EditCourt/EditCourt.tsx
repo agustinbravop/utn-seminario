@@ -25,6 +25,8 @@ import {
   getCanchaByID,
   modificarCancha,
 } from "../../utils/api/canchas";
+import { readLocalStorage } from "../../utils/storage/localStorage";
+import { JWT } from "../../utils/api";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -57,6 +59,9 @@ function EditCourt() {
     disciplinas: [],
   });
 
+  console.log("idCancha:", Number(idCancha), typeof(Number(idCancha)));
+  console.log("idEst:", Number(idEst), typeof(Number(idEst)));
+
   const { mutate } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
     onSuccess: () => navigate(-1),
@@ -70,6 +75,7 @@ function EditCourt() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Form State:", state);
     mutate(state);
   };
 
@@ -108,6 +114,8 @@ function EditCourt() {
     };
     cargarCancha();
   }, [idEst, idCancha]);
+
+  const token = readLocalStorage<JWT>("token");
 
   const horas = [
     { value: "option1", label: "1:00hs" },
@@ -170,25 +178,25 @@ function EditCourt() {
           >
             <FormControl
               variant="floating"
-              id="telefono"
+              id="nombre"
               isRequired
               onChange={handleChange}
             >
               <Input
                 value={state.nombre}
                 placeholder="Cancha"
-                name="telefono"
-                type="tel"
+                name="nombre"
+                type="text"
               />
               <FormLabel>Nombre de cancha</FormLabel>
             </FormControl>
             <FormControl
               variant="floating"
-              id="usuario"
+              id="descripcion"
               isRequired
               onChange={handleChange}
             >
-              <Textarea value={state.descripcion} placeholder=" " />
+              <Textarea name="descripcion" value={state.descripcion} placeholder=" " />
               <FormLabel>Descripción</FormLabel>
             </FormControl>
             <Input
@@ -215,7 +223,7 @@ function EditCourt() {
             En qué rangos horarios la cancha estará disponible y para qué
             disciplinas.
           </p>
-          <Button> Agregar disponibilidad +</Button>
+          {/* <Button> Agregar disponibilidad +</Button>
           <VStack
             spacing="4"
             width="900px"
@@ -225,11 +233,11 @@ function EditCourt() {
             <HStack width="600px">
               <FormControl
                 variant="floating"
-                id="nombre"
+                id="disciplinas"
                 isRequired
                 onChange={handleChange}
               >
-                <Select placeholder="Seleccione una opcion">
+                <Select name="disciplinas" placeholder="Seleccione una opcion">
                   {disciplinas.map((disciplina) => (
                     <option key={disciplina.value} value={disciplina.value}>
                       {disciplina.label}
@@ -311,13 +319,14 @@ function EditCourt() {
             <SelectableButton children="Viernes" />
             <SelectableButton children="Sabado" />
             <SelectableButton children="Domingo" />
-          </HStack>
+          </HStack> */}
 
           <Container centerContent mt="20px">
-            <Button type="submit" onClick={validacion}>
+            <Button type="submit" /*onClick={validacion}*/>
               Guardar cambios
             </Button>
           </Container>
+          `Bearer ${token?.token}`
         </form>
         <ToastContainer />
 
