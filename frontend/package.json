@@ -26,7 +26,8 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "theme": "npx chakra-cli tokens src/themes/index.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^2.4.1",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",

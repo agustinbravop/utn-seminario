@@ -7,10 +7,10 @@ import { AiOutlineUser } from "react-icons/ai";
 export default function TopMenu() {
   return (
     <HStack
-      backgroundColor="blackAlpha.800"
       justifyContent="space-between"
-      padding="0 30px 0 30px"
-      height="50px"
+      shadow="md"
+      padding="0 2rem 0 2rem"
+      height="4rem"
     >
       <BrandNav />
       <Nav />
@@ -21,7 +21,7 @@ export default function TopMenu() {
 function BrandNav() {
   return (
     <Link to="/landing">
-      <Icon as={TennisIcon} fill="whiteAlpha.800" fontSize="40px" />
+      <Icon as={TennisIcon} fill="blackAlpha.800" fontSize="40px" />
     </Link>
   );
 }
@@ -34,17 +34,12 @@ function Nav() {
       <nav>
         <HStack>
           <Link to="/suscripciones">
-            <Button variant="ghost" size="sm" color="whiteAlpha.800">
+            <Button variant="ghost" size="sm" color="blackAlpha.800">
               Suscripciones
             </Button>
           </Link>
           <Link to="/login">
-            <Button
-              variant="outline"
-              size="sm"
-              color="#ff5d3d"
-              borderColor="tomato"
-            >
+            <Button variant="outline" size="sm">
               Iniciar Sesión
             </Button>
           </Link>

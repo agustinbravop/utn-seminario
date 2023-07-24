@@ -23,7 +23,12 @@ export default function SubmitButton(props: SubmitButtonProps) {
   });
 
   return (
-    <Button type="submit" isLoading={isSubmitting} {...rest}>
+    <Button
+      type="submit"
+      colorScheme="brand"
+      isLoading={isSubmitting}
+      {...rest}
+    >
       {children}
     </Button>
   );

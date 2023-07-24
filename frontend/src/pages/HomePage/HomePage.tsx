@@ -16,7 +16,9 @@ function HomePage() {
           Encontrá tu cancha preferida para jugar con tus amigos de entre más de
           mil establecimientos.
         </Text>
-        <Button type="button">Buscar</Button>
+        <Button type="button" colorScheme="brand">
+          Buscar
+        </Button>
 
         <VStack marginTop="100px" gap="20px">
           <Heading size="md">¿Quisieras publicitar tu establecimiento?</Heading>
