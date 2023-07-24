@@ -44,7 +44,7 @@ export default function CourtPage() {
                             <Image src={establecimientoData?.urlImagen} width="1000px"  height="400px" objectFit="cover" borderRadius="10px"/>
                         </Box>
                         
-                        <Box marginTop="50px" marginLeft=" 50px" height="100%">
+                        <Box marginTop="55px" marginLeft=" 50px" height="100%">
                             <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                                 <Box>
                                 <Heading size="xs" textTransform="uppercase">
