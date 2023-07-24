@@ -35,52 +35,54 @@ export default function CourtPage() {
         justifyContent="center"
         display="flex"
         style={{ marginTop:"10px", marginBottom: "1rem" }}
-        height="70%"
+        height="75%"
+        width="73%"
         >
-            <CardBody height="100%" marginTop="30px">
-            <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
-                <Box display="grid" gridTemplateColumns="1fr 1fr" >
+            <CardBody height="100%" marginTop="0px">
+                <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
                         <Box >
-                            <Image src={establecimientoData?.urlImagen} width="900px"  height="400px" borderRadius="10px"/>
+                            <Image src={establecimientoData?.urlImagen} width="1000px"  height="400px" objectFit="cover" borderRadius="10px"/>
                         </Box>
-                        <Box marginLeft="40px">
-                        <Box>
-                        <Heading size="xs" textTransform="uppercase">
-                            Direccion
-                        </Heading>
-                        <Text fontSize="sm">
-                            {establecimientoData?.direccion}
-                        </Text>
-                        </Box>
-                        <Box>
-                        <Heading size="xs" textTransform="uppercase">
-                            Horario atencion
-                        </Heading>
-                        <Text fontSize="sm">{establecimientoData?.horariosDeAtencion}</Text>
-                        </Box>
-                        <Box>
-                        <Heading size="xs" textTransform="uppercase">
-                            Correo de contacto
-                        </Heading>
-                        <Text fontSize="sm">{establecimientoData?.correo}</Text>
-                        </Box>
-                        <Box>
-                        <Heading size="xs" textTransform="uppercase">
-                            Numero de teléfono
-                        </Heading>
-                        <Text fontSize="sm">{establecimientoData?.telefono}</Text>
-                        </Box>
-                        <Box>
-                        <Heading size="xs" textTransform="uppercase">
-                        Localidad
-                        </Heading>
-                        <Text fontSize="sm">
-                            {establecimientoData?.localidad}, {establecimientoData?.provincia}
-                        </Text>
-                        </Box>
+                        
+                        <Box marginTop="50px" marginLeft=" 50px" height="100%">
+                            <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
+                                <Box>
+                                <Heading size="xs" textTransform="uppercase">
+                                    Direccion
+                                </Heading>
+                                <Text fontSize="sm">
+                                    {establecimientoData?.direccion}
+                                </Text>
+                                </Box>
+                                <Box>
+                                <Heading size="xs" textTransform="uppercase">
+                                    Horario atencion
+                                </Heading>
+                                <Text fontSize="sm">{establecimientoData?.horariosDeAtencion}</Text>
+                                </Box>
+                                <Box>
+                                <Heading size="xs" textTransform="uppercase">
+                                    Correo de contacto
+                                </Heading>
+                                <Text fontSize="sm">{establecimientoData?.correo}</Text>
+                                </Box>
+                                <Box>
+                                <Heading size="xs" textTransform="uppercase">
+                                    Numero de teléfono
+                                </Heading>
+                                <Text fontSize="sm">{establecimientoData?.telefono}</Text>
+                                </Box>
+                                <Box>
+                                <Heading size="xs" textTransform="uppercase">
+                                Localidad
+                                </Heading>
+                                <Text fontSize="sm">
+                                    {establecimientoData?.localidad}, {establecimientoData?.provincia}
+                                </Text>
+                                </Box>
+                            </Stack>
                         </Box>
                 </Box>
-            </Stack>
             </CardBody>
             </Card>
     </Box>
