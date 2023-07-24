@@ -52,8 +52,8 @@ function LoginPage() {
     <>
       <TopMenu />
 
-      <Heading textAlign="center" size="2xl" margin={[0, "60px"]}>
-        Bienvenido a CANCHAS.NET
+      <Heading textAlign="center" size="2xl" fontSize="40px" marginTop="100px" marginBottom="60px">
+        ¡Bienvenido a Play Finder!
       </Heading>
       <form onSubmit={handleSubmit} style={{ paddingLeft: "0" }}>
         <VStack spacing="24px" width="400px" m="auto">
@@ -91,7 +91,6 @@ function LoginPage() {
 
           <Button
             type="submit"
-            style={{ backgroundColor: "#FF604F" }}
             isLoading={isLoading}
           >
             Iniciar Sesión
