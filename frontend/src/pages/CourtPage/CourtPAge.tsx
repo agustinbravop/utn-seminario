@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cancha } from "../../models";
+import { Cancha, Establecimiento } from "../../models";
 import { useNavigate, useParams } from "react-router";
 import TopMenu from "../../components/TopMenu/TopMenu";
 import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
 import Courts from "../../components/Courts/Courts";
 import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
+import { getEstablecimientoByID } from "../../utils/api/establecimientos";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
 import Alerta from "../../components/Alerta/Alerta";
@@ -16,6 +17,11 @@ export default function CourtPage() {
   const { data, isLoading, isError } = useQuery<Cancha[]>(
     ["canchas", idEst],
     () => getCanchasByEstablecimientoID(Number(idEst))
+  );
+
+  const { data: dataE, isLoading: isLoadingE, isError: isErrorE } = useQuery<Establecimiento>(
+    ["establecimiento"],
+    () => getEstablecimientoByID(Number(idEst))
   );
 
   const [filtro, setFiltro] = useState("");
@@ -31,7 +37,7 @@ export default function CourtPage() {
     <div>
       <TopMenu />
       <Heading textAlign="center" paddingBottom="2" mt="40px">
-        Mis Canchas
+        Canchas de {dataE?.nombre}
       </Heading>
       <HStack align="center" spacing={4} m="20px">
         <Button
