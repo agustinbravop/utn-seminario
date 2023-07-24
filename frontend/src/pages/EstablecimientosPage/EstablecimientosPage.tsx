@@ -65,7 +65,6 @@ export default function EstablecimientosPage() {
           </Text>
           <Button
             onClick={() => navigate("nuevoEstablecimiento")}
-            variant="outline"
             leftIcon={<Icon as={GrAddCircle} />}
           >
             Agregar Establecimiento

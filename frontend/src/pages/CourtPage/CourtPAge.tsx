@@ -37,6 +37,7 @@ export default function CourtPage() {
   return (
     <div>
       <EstabPage/>
+    <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" mt="20px"> Canchas </Heading>
     <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
           <InputGroup width="18%">
             <InputRightElement pointerEvents='none'>
@@ -54,7 +55,6 @@ export default function CourtPage() {
           <Text mb="0">{data?.length} canchas</Text>
           <Button
             onClick={() => navigate("nuevaCancha")}
-            variant="outline"
             leftIcon={<Icon as={GrAddCircle} />}
           >
             Agregar Cancha

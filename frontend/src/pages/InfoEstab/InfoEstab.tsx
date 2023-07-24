@@ -24,57 +24,61 @@ export default function CourtPage() {
   return (
     <div>
       <EstabPage/>
+      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" marginTop="20px" > Información </Heading>
       <Box
       display="flex"
-      justifyContent="center" 
-      alignItems="center" 
+      marginLeft="18%" 
       height="70%" 
     >
         <Card
         boxSize="43rem"
         justifyContent="center"
         display="flex"
-        style={{ marginTop:"100px", marginBottom: "1rem" }}
+        style={{ marginTop:"10px", marginBottom: "1rem" }}
         height="70%"
         >
             <CardBody height="100%" marginTop="30px">
             <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
-                <Box>
-                    <Image src={establecimientoData?.urlImagen} width="400px" borderRadius="10px"/>
-                </Box>
-                <Box>
-                <Heading size="xs" textTransform="uppercase">
-                    Direccion
-                </Heading>
-                <Text fontSize="sm">
-                    {establecimientoData?.direccion}
-                </Text>
-                </Box>
-                <Box>
-                <Heading size="xs" textTransform="uppercase">
-                    Horario atencion
-                </Heading>
-                <Text fontSize="sm">{establecimientoData?.horariosDeAtencion}</Text>
-                </Box>
-                <Box>
-                <Heading size="xs" textTransform="uppercase">
-                    Correo de contacto
-                </Heading>
-                <Text fontSize="sm">{establecimientoData?.correo}</Text>
-                </Box>
-                <Box>
-                <Heading size="xs" textTransform="uppercase">
-                    Numero de teléfono
-                </Heading>
-                <Text fontSize="sm">{establecimientoData?.telefono}</Text>
-                </Box>
-                <Box>
-                <Heading size="xs" textTransform="uppercase">
-                   Localidad
-                </Heading>
-                <Text fontSize="sm">
-                    {establecimientoData?.localidad}, {establecimientoData?.provincia}
-                </Text>
+                <Box display="grid" gridTemplateColumns="1fr 1fr" >
+                        <Box >
+                            <Image src={establecimientoData?.urlImagen} width="900px"  height="400px" borderRadius="10px"/>
+                        </Box>
+                        <Box marginLeft="40px">
+                        <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                            Direccion
+                        </Heading>
+                        <Text fontSize="sm">
+                            {establecimientoData?.direccion}
+                        </Text>
+                        </Box>
+                        <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                            Horario atencion
+                        </Heading>
+                        <Text fontSize="sm">{establecimientoData?.horariosDeAtencion}</Text>
+                        </Box>
+                        <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                            Correo de contacto
+                        </Heading>
+                        <Text fontSize="sm">{establecimientoData?.correo}</Text>
+                        </Box>
+                        <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                            Numero de teléfono
+                        </Heading>
+                        <Text fontSize="sm">{establecimientoData?.telefono}</Text>
+                        </Box>
+                        <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                        Localidad
+                        </Heading>
+                        <Text fontSize="sm">
+                            {establecimientoData?.localidad}, {establecimientoData?.provincia}
+                        </Text>
+                        </Box>
+                        </Box>
                 </Box>
             </Stack>
             </CardBody>

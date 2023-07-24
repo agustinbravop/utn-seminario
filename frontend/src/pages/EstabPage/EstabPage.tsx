@@ -33,21 +33,24 @@ const { data: establecimientoData, isLoading: establecimientoLoading, isError: e
   return (
     <>
       <TopMenu />
-      {establecimientoLoading ? (
-          <LoadingSpinner />
-        ) : establecimientoError ? (
-          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-        ) : (
-          <Heading textAlign="left" marginLeft="25%" paddingBottom="2" mt="40px"> {establecimientoData.nombre} </Heading>
-        )}
-        <HStack gap="50px" alignContent="center" justifyContent="center" >
+      <HStack gap="30px" marginLeft="32%" marginTop="20px">
         <Link  to={`/establecimiento/${establecimientoData?.id}/info`}>
               Info
           </Link>
           <Link to={`/establecimiento/${establecimientoData?.id}/canchas`}>
               Canchas
           </Link>
+          <Link to={`/establecimiento/${establecimientoData?.id}/canchas`}>
+              Reservas
+          </Link>
         </HStack>
+      {establecimientoLoading ? (
+          <LoadingSpinner />
+        ) : establecimientoError ? (
+          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+        ) : (
+          <Heading textAlign="left" marginLeft="25%" paddingBottom="7" mt="40px"> {establecimientoData.nombre} </Heading>
+        )}
     </>
   );
 }
