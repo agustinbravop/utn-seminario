@@ -16,7 +16,6 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import TopMenu from "../../components/TopMenu/TopMenu";
 import {
   ModificarEstablecimientoReq,
   getEstablecimientoByID,
@@ -152,7 +151,6 @@ function EditEstab() {
 
   return (
     <div className="page">
-      <TopMenu />
       <div className="centrado">
         <Heading size="xl" margin="50px">
           Editar Establecimiento

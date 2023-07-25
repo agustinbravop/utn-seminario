@@ -1,5 +1,4 @@
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
-import TopMenu from "../../components/TopMenu/TopMenu";
 import {
   Card,
   CardHeader,
@@ -15,66 +14,63 @@ export default function PerfilPage() {
   const { currentAdmin } = useCurrentAdmin();
 
   return (
-    <>
-      <TopMenu />
-      <div style={{ marginTop: "2rem" }}>
-        <Card
-          boxSize="40rem"
-          style={{ marginLeft: "27%", marginBottom: "1rem" }}
-          height="31rem"
-        >
-          <CardHeader>
-            <Heading size="lg" textAlign="center">
-              Sobre Mi
-            </Heading>
-          </CardHeader>
+    <div style={{ marginTop: "2rem" }}>
+      <Card
+        boxSize="40rem"
+        style={{ marginLeft: "27%", marginBottom: "1rem" }}
+        height="31rem"
+      >
+        <CardHeader>
+          <Heading size="lg" textAlign="center">
+            Sobre Mi
+          </Heading>
+        </CardHeader>
 
-          <CardBody>
-            <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Nombre
-                </Heading>
-                <Text fontSize="sm">
-                  {currentAdmin?.nombre} {currentAdmin?.apellido}
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  usuario
-                </Heading>
-                <Text fontSize="sm">{currentAdmin?.usuario}</Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  correo
-                </Heading>
-                <Text fontSize="sm">{currentAdmin?.correo}</Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  telefono
-                </Heading>
-                <Text fontSize="sm">{currentAdmin?.telefono}</Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Tarjeta
-                </Heading>
-                <Text fontSize="sm">
-                  {currentAdmin?.tarjeta.numero.replace(/.(?=.{4})/g, "*")}
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Suscripcion
-                </Heading>
-                <Text fontSize="sm">{currentAdmin?.suscripcion.nombre}</Text>
-              </Box>
-            </Stack>
-          </CardBody>
-        </Card>
-      </div>
-    </>
+        <CardBody>
+          <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                Nombre
+              </Heading>
+              <Text fontSize="sm">
+                {currentAdmin?.nombre} {currentAdmin?.apellido}
+              </Text>
+            </Box>
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                usuario
+              </Heading>
+              <Text fontSize="sm">{currentAdmin?.usuario}</Text>
+            </Box>
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                correo
+              </Heading>
+              <Text fontSize="sm">{currentAdmin?.correo}</Text>
+            </Box>
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                telefono
+              </Heading>
+              <Text fontSize="sm">{currentAdmin?.telefono}</Text>
+            </Box>
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                Tarjeta
+              </Heading>
+              <Text fontSize="sm">
+                {currentAdmin?.tarjeta.numero.replace(/.(?=.{4})/g, "*")}
+              </Text>
+            </Box>
+            <Box>
+              <Heading size="xs" textTransform="uppercase">
+                Suscripcion
+              </Heading>
+              <Text fontSize="sm">{currentAdmin?.suscripcion.nombre}</Text>
+            </Box>
+          </Stack>
+        </CardBody>
+      </Card>
+    </div>
   );
 }

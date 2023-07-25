@@ -19,6 +19,7 @@ import CourtPage from "./pages/CourtPage/CourtPage";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import EditCourt from "./pages/EditCourt/EditCourt";
 import { theme } from "./themes";
+import Layout from "./pages/Layout/Layout";
 
 const routes = [
   {
@@ -36,10 +37,6 @@ const routes = [
   {
     path: "/login",
     element: <LoginPage />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
   },
   {
     path: "/administrador/:idAdmin",
@@ -73,9 +70,19 @@ const routes = [
     path: "/establecimiento/:idEst/canchas/:idCancha", //provisorio
     element: <EditCourt />,
   },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
 ];
 
-const router = createBrowserRouter(routes);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: routes,
+  },
+]);
 const queryClient = new QueryClient();
 
 export default function App() {

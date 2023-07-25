@@ -14,9 +14,7 @@ interface CheckboxSingleControlProps
   extends NoVariantBaseFormControlProps,
     Omit<CheckboxProps, keyof NoVariantBaseFormControlProps> {}
 
-export function CheckboxSingleControl(
-  props: CheckboxSingleControlProps
-) {
+export function CheckboxSingleControl(props: CheckboxSingleControlProps) {
   const { name, control, children, icon, ...rest } = props;
   const { field } = useController({ name, control });
 

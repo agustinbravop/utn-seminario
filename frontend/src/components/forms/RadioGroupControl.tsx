@@ -2,7 +2,7 @@ import { RadioGroup, RadioGroupProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
 
- interface RadioGroupControlProps
+interface RadioGroupControlProps
   extends BaseFormControlProps,
     Omit<RadioGroupProps, keyof BaseFormControlProps> {}
 

@@ -4,7 +4,6 @@ import { Cancha } from "../../models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
-import TopMenu from "../../components/TopMenu/TopMenu";
 import {
   Button,
   FormControl,
@@ -57,11 +56,9 @@ function NewCourt() {
 
   return (
     <div>
-      <TopMenu />
       <Heading textAlign="center" mt="40px">
         Nueva cancha
       </Heading>
-      <br />
       <form onSubmit={handleSubmit}>
         <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
           <FormControl

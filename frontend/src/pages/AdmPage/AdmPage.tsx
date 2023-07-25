@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
 import { RegistrarAdmin, apiRegister } from "../../utils/api/auth";
-import TopMenu from "../../components/TopMenu/TopMenu";
 import * as Yup from "yup";
 import {
   HStack,
@@ -105,7 +104,6 @@ function AdmPage() {
 
   return (
     <>
-      <TopMenu />
       <Box m="50px">
         <FormProvider {...methods}>
           <Heading size="md">Tarjeta de crédito</Heading>

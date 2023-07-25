@@ -1,4 +1,3 @@
-import TopMenu from "../../components/TopMenu/TopMenu";
 import { ApiError } from "../../utils/api";
 import { Establecimiento } from "../../models";
 import { useMutation } from "@tanstack/react-query";
@@ -83,7 +82,6 @@ function NewEstab() {
 
   return (
     <div>
-      <TopMenu />
       <Heading size="xl" margin="50px" textAlign="center">
         Nuevo Establecimiento
       </Heading>

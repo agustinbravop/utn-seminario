@@ -1,4 +1,3 @@
-import TopMenu from "../../components/TopMenu/TopMenu";
 import EstablecimientoCardList from "../../components/EstablecimientoCardList/EstablecimientoCardList";
 import { Navigate, useNavigate } from "react-router";
 import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
@@ -40,7 +39,6 @@ export default function EstablecimientosPage() {
 
   return (
     <>
-      <TopMenu />
       <Heading textAlign="center" paddingBottom="2" mt="40px">
         Mis Establecimientos
       </Heading>

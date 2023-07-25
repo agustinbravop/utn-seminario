@@ -1,4 +1,3 @@
-import TopMenu from "../../components/TopMenu/TopMenu";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
 import { Administrador } from "../../models";
@@ -39,7 +38,6 @@ function LoginPage() {
   });
   return (
     <>
-      <TopMenu />
       <Heading textAlign="center" size="2xl" margin={[0, "60px"]}>
         Bienvenido a CANCHAS.NET
       </Heading>

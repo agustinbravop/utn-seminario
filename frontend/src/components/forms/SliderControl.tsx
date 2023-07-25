@@ -8,7 +8,7 @@ import {
 import { useController } from "react-hook-form";
 import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
 
- interface SliderControlProps
+interface SliderControlProps
   extends BaseFormControlProps,
     Omit<SliderProps, keyof BaseFormControlProps> {}
 
@@ -19,7 +19,7 @@ import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
  *
  * https://chakra-ui.com/docs/components/slider
  */
-export  function SliderControl(props: SliderControlProps) {
+export function SliderControl(props: SliderControlProps) {
   const { name, control, direction, max, min, step, children, ...rest } = props;
   const { field } = useController({
     name,

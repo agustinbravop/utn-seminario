@@ -8,7 +8,6 @@ import {
   Icon,
   Text,
 } from "@chakra-ui/react";
-import TopMenu from "../../components/TopMenu/TopMenu";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { getSuscripciones } from "../../utils/api/auth";
 import { Suscripcion } from "../../models";
@@ -16,9 +15,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 const iconos = [
-  <Icon as={BsShop} fill="#47A992" fontSize={90} />,
-  <Icon as={BsBuildings} fill="#47A992" fontSize={90} />,
-  <Icon as={BsRocket} fill="#47A992" fontSize={90} />,
+  <Icon as={BsShop} fill="brand.500" fontSize={90} />,
+  <Icon as={BsBuildings} fill="brand.500" fontSize={90} />,
+  <Icon as={BsRocket} fill="brand.500" fontSize={90} />,
 ];
 
 function SuscriptionOptionPage() {
@@ -57,8 +56,8 @@ function SuscriptionOptionPage() {
             <Button
               mt="10px"
               type="button"
-              colorScheme="teal"
               variant="outline"
+              colorScheme="brand"
             >
               Continuar
             </Button>
@@ -70,8 +69,6 @@ function SuscriptionOptionPage() {
 
   return (
     <>
-      <TopMenu />
-
       <Heading size="md">Elija una suscripción</Heading>
       <Text>
         Nos ajustamos a las necesidades de cada negocio. La puede modificar en

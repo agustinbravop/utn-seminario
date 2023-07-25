@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Cancha } from "../../models";
 import { useNavigate, useParams } from "react-router";
-import TopMenu from "../../components/TopMenu/TopMenu";
 import { Button, HStack, Heading, Icon, Input, Text } from "@chakra-ui/react";
 import Courts from "../../components/Courts/Courts";
 import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
@@ -26,7 +25,6 @@ export default function CourtPage() {
 
   return (
     <div>
-      <TopMenu />
       <Heading textAlign="center" paddingBottom="2" mt="40px">
         Mis Canchas
       </Heading>

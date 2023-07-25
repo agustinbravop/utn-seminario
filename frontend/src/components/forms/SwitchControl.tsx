@@ -2,7 +2,7 @@ import { Flex, Switch, SwitchProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
 
- interface SwitchControlProps
+interface SwitchControlProps
   extends BaseFormControlProps,
     Omit<SwitchProps, keyof BaseFormControlProps> {}
 
@@ -11,7 +11,7 @@ import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
  *
  * https://chakra-ui.com/docs/components/switch
  */
-export  function SwitchControl(props: SwitchControlProps) {
+export function SwitchControl(props: SwitchControlProps) {
   const { name, control, label, ...rest } = props;
 
   const { field } = useController({

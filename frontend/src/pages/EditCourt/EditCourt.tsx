@@ -6,8 +6,7 @@ import { Cancha } from "../../models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "../../utils/api";
-import TopMenu from "../../components/TopMenu/TopMenu";
-import { Box, Container, Heading, Textarea, useToast } from "@chakra-ui/react";
+import { Container, Heading, Textarea, useToast } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
 import {
   FormControl,
@@ -153,224 +152,216 @@ function EditCourt() {
 
   return (
     <>
-      <TopMenu />
-      <Box m="40px">
-        <Heading m="40px" textAlign="center">
-          Editar Cancha
-        </Heading>
-        <form onSubmit={handleSubmit}>
-          <VStack
-            spacing="4"
-            width="500px"
-            justifyContent="center"
-            margin="auto"
+      <Heading m="40px" textAlign="center">
+        Editar Cancha
+      </Heading>
+      <form onSubmit={handleSubmit}>
+        <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
+          <FormControl
+            variant="floating"
+            id="telefono"
+            isRequired
+            onChange={handleChange}
           >
-            <FormControl
-              variant="floating"
-              id="telefono"
-              isRequired
-              onChange={handleChange}
-            >
-              <Input
-                value={state.nombre}
-                placeholder="Cancha"
-                name="telefono"
-                type="tel"
-              />
-              <FormLabel>Nombre de cancha</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="usuario"
-              isRequired
-              onChange={handleChange}
-            >
-              <Textarea value={state.descripcion} placeholder=" " />
-              <FormLabel>Descripción</FormLabel>
-            </FormControl>
             <Input
-              type="file"
-              name="imagen"
-              onChange={handleImagenChange}
-              accept="image/*"
-              sx={{
-                "::file-selector-button": {
-                  height: 10,
-                  padding: 0,
-                  mr: 4,
-                  background: "none",
-                  border: "none",
-                  fontWeight: "bold",
-                },
-              }}
+              value={state.nombre}
+              placeholder="Cancha"
+              name="telefono"
+              type="tel"
             />
-          </VStack>
-          <Heading size="md" mt="20px">
-            Disponibilidad horaria
-          </Heading>
-          <p>
-            En qué rangos horarios la cancha estará disponible y para qué
-            disciplinas.
-          </p>
-          <Button> Agregar disponibilidad +</Button>
-          <VStack
-            spacing="4"
-            width="900px"
-            justifyContent="center"
-            margin="20px auto"
+            <FormLabel>Nombre de cancha</FormLabel>
+          </FormControl>
+          <FormControl
+            variant="floating"
+            id="usuario"
+            isRequired
+            onChange={handleChange}
           >
-            <HStack width="600px">
-              <FormControl
-                variant="floating"
-                id="nombre"
-                isRequired
-                onChange={handleChange}
-              >
-                <Select placeholder="Seleccione una opcion">
-                  {disciplinas.map((disciplina) => (
-                    <option key={disciplina.value} value={disciplina.value}>
-                      {disciplina.label}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>Disciplina</FormLabel>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="duracionreserva"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input placeholder=" " name="duracionreserva" />
-                <FormLabel>Duracion de la reserva</FormLabel>
-              </FormControl>
-            </HStack>
-            <HStack width="600px">
-              <FormControl
-                variant="floating"
-                id="hora-inicio"
-                isRequired
-                onChange={handleChange}
-              >
-                <Select placeholder="Seleccione una opcion">
-                  {horas.map((hora) => (
-                    <option key={hora.value} value={hora.value}>
-                      {hora.label}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>Hora inicio</FormLabel>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="reserva"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input placeholder=" " name="reserva" />
-                <FormLabel>Precio de la reserva</FormLabel>
-              </FormControl>
-            </HStack>
-
-            <HStack width="600px">
-              <FormControl
-                variant="floating"
-                id="hora-fin"
-                isRequired
-                onChange={handleChange}
-              >
-                <Select placeholder="Seleccione una opcion">
-                  {horas.map((hora) => (
-                    <option key={hora.value} value={hora.value}>
-                      {hora.label}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>Hora fin</FormLabel>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="precioseña"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input placeholder=" " name="precioseña" />
-                <FormLabel>Precio de la seña</FormLabel>
-              </FormControl>
-            </HStack>
-          </VStack>
-          <p> Seleccionar los días para la disponibilidad.</p>
-          <HStack spacing={1} justify="center">
-            <SelectableButton children="Lunes" />
-            <SelectableButton children="Martes" />
-            <SelectableButton children="Miercoles" />
-            <SelectableButton children="Jueves" />
-            <SelectableButton children="Viernes" />
-            <SelectableButton children="Sabado" />
-            <SelectableButton children="Domingo" />
+            <Textarea value={state.descripcion} placeholder=" " />
+            <FormLabel>Descripción</FormLabel>
+          </FormControl>
+          <Input
+            type="file"
+            name="imagen"
+            onChange={handleImagenChange}
+            accept="image/*"
+            sx={{
+              "::file-selector-button": {
+                height: 10,
+                padding: 0,
+                mr: 4,
+                background: "none",
+                border: "none",
+                fontWeight: "bold",
+              },
+            }}
+          />
+        </VStack>
+        <Heading size="md" mt="20px">
+          Disponibilidad horaria
+        </Heading>
+        <p>
+          En qué rangos horarios la cancha estará disponible y para qué
+          disciplinas.
+        </p>
+        <Button> Agregar disponibilidad +</Button>
+        <VStack
+          spacing="4"
+          width="900px"
+          justifyContent="center"
+          margin="20px auto"
+        >
+          <HStack width="600px">
+            <FormControl
+              variant="floating"
+              id="nombre"
+              isRequired
+              onChange={handleChange}
+            >
+              <Select placeholder="Seleccione una opcion">
+                {disciplinas.map((disciplina) => (
+                  <option key={disciplina.value} value={disciplina.value}>
+                    {disciplina.label}
+                  </option>
+                ))}
+              </Select>
+              <FormLabel>Disciplina</FormLabel>
+            </FormControl>
+            <FormControl
+              variant="floating"
+              id="duracionreserva"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input placeholder=" " name="duracionreserva" />
+              <FormLabel>Duracion de la reserva</FormLabel>
+            </FormControl>
+          </HStack>
+          <HStack width="600px">
+            <FormControl
+              variant="floating"
+              id="hora-inicio"
+              isRequired
+              onChange={handleChange}
+            >
+              <Select placeholder="Seleccione una opcion">
+                {horas.map((hora) => (
+                  <option key={hora.value} value={hora.value}>
+                    {hora.label}
+                  </option>
+                ))}
+              </Select>
+              <FormLabel>Hora inicio</FormLabel>
+            </FormControl>
+            <FormControl
+              variant="floating"
+              id="reserva"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input placeholder=" " name="reserva" />
+              <FormLabel>Precio de la reserva</FormLabel>
+            </FormControl>
           </HStack>
 
-          <Container centerContent mt="20px">
-            <Button type="submit" onClick={validacion}>
-              Guardar cambios
-            </Button>
-          </Container>
-        </form>
+          <HStack width="600px">
+            <FormControl
+              variant="floating"
+              id="hora-fin"
+              isRequired
+              onChange={handleChange}
+            >
+              <Select placeholder="Seleccione una opcion">
+                {horas.map((hora) => (
+                  <option key={hora.value} value={hora.value}>
+                    {hora.label}
+                  </option>
+                ))}
+              </Select>
+              <FormLabel>Hora fin</FormLabel>
+            </FormControl>
+            <FormControl
+              variant="floating"
+              id="precioseña"
+              isRequired
+              onChange={handleChange}
+            >
+              <Input placeholder=" " name="precioseña" />
+              <FormLabel>Precio de la seña</FormLabel>
+            </FormControl>
+          </HStack>
+        </VStack>
+        <p> Seleccionar los días para la disponibilidad.</p>
+        <HStack spacing={1} justify="center">
+          <SelectableButton children="Lunes" />
+          <SelectableButton children="Martes" />
+          <SelectableButton children="Miercoles" />
+          <SelectableButton children="Jueves" />
+          <SelectableButton children="Viernes" />
+          <SelectableButton children="Sabado" />
+          <SelectableButton children="Domingo" />
+        </HStack>
 
-        <Modal
-          className="modal"
-          show={showModal}
-          onHide={handleClose}
-          renderBackdrop={renderBackdrop}
-        >
-          <div>
-            <div className="modal-header">
-              <div className="modal-title">Confirmar Cancelación</div>
-              <div>
-                <span className="close-button" onClick={handleClose}>
-                  x
-                </span>
-              </div>
-            </div>
-            <div className="modal-desc">
-              <p>¿Desea cancelar?</p>
-            </div>
-            <div className="modal-footer">
-              <button className="secondary-button" onClick={handleClose}>
-                Cancelar
-              </button>
-              <button className="primary-button" onClick={handleSuccess}>
-                Aceptar
-              </button>
+        <Container centerContent mt="20px">
+          <Button type="submit" onClick={validacion}>
+            Guardar cambios
+          </Button>
+        </Container>
+      </form>
+
+      <Modal
+        className="modal"
+        show={showModal}
+        onHide={handleClose}
+        renderBackdrop={renderBackdrop}
+      >
+        <div>
+          <div className="modal-header">
+            <div className="modal-title">Confirmar Cancelación</div>
+            <div>
+              <span className="close-button" onClick={handleClose}>
+                x
+              </span>
             </div>
           </div>
-        </Modal>
+          <div className="modal-desc">
+            <p>¿Desea cancelar?</p>
+          </div>
+          <div className="modal-footer">
+            <button className="secondary-button" onClick={handleClose}>
+              Cancelar
+            </button>
+            <button className="primary-button" onClick={handleSuccess}>
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </Modal>
 
-        <Modal
-          className="modal"
-          show={showModal}
-          onHide={handleClose}
-          renderBackdrop={renderBackdrop}
-        >
-          <div>
-            <div className="modal-header">
-              <div className="modal-title">Confirmar Modificación</div>
-              <div>
-                <span className="close-button" onClick={handleClose}>
-                  x
-                </span>
-              </div>
-            </div>
-            <div className="modal-desc">
-              <p>¿Desea guardar los cambios?</p>
-            </div>
-            <div className="modal-footer">
-              <button onClick={handleClose}>Cancelar</button>
-              <Button onClick={handleSuccess}>Aceptar</Button>
+      <Modal
+        className="modal"
+        show={showModal}
+        onHide={handleClose}
+        renderBackdrop={renderBackdrop}
+      >
+        <div>
+          <div className="modal-header">
+            <div className="modal-title">Confirmar Modificación</div>
+            <div>
+              <span className="close-button" onClick={handleClose}>
+                x
+              </span>
             </div>
           </div>
-        </Modal>
-      </Box>
+          <div className="modal-desc">
+            <p>¿Desea guardar los cambios?</p>
+          </div>
+          <div className="modal-footer">
+            <button onClick={handleClose}>Cancelar</button>
+            <Button onClick={handleSuccess}>Aceptar</Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

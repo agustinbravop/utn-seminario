@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "@chakra-ui/react";
 import { Control } from "react-hook-form";
 import { useFormState } from "react-hook-form";
 
- interface SubmitButtonProps extends ButtonProps {
+interface SubmitButtonProps extends ButtonProps {
   /**
    * El control de react-hook-form pasado por FormProvider.
    * Solo se requiere si no se usa FormProvider.
@@ -16,7 +16,7 @@ import { useFormState } from "react-hook-form";
  *
  * https://chakra-ui.com/docs/components/button
  */
-export  function SubmitButton(props: SubmitButtonProps) {
+export function SubmitButton(props: SubmitButtonProps) {
   const { control, children, ...rest } = props;
   const { isSubmitting } = useFormState({
     control,
