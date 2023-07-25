@@ -10,9 +10,11 @@ import {
   FormLabel,
   Heading,
   Input,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { CrearCanchaReq, crearCancha } from "../../utils/api/canchas";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
@@ -21,6 +23,8 @@ type FormState = CrearCanchaReq & {
 function NewCourt() {
   const { idEst } = useParams();
   const navigate = useNavigate();
+
+  const toast = useToast();
 
   const [state, setState] = useState<FormState>({
     nombre: "",
@@ -31,9 +35,25 @@ function NewCourt() {
     disciplinas: [],
   });
 
-  const { mutate } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate, isLoading } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
-    onSuccess: () => navigate("/landing"),
+    onSuccess: () => {
+      toast({
+        title: "Cancha creada",
+        description: `Cancha creada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +115,9 @@ function NewCourt() {
               },
             }}
           />
-          <Button type="submit">Crear cancha</Button>
+          <Button type="submit" disabled >{isLoading ? 'Creando...' : 'Crear cancha'}</Button>
+          <br />
+          {isLoading && (<LoadingSpinner />)}
         </VStack>
       </form>
     </div>

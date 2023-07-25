@@ -22,6 +22,8 @@ import {
   getCanchaByID,
   modificarCancha,
 } from "../../utils/api/canchas";
+import { readLocalStorage } from "../../utils/storage/localStorage";
+import { JWT } from "../../utils/api";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -55,6 +57,9 @@ function EditCourt() {
     disciplinas: [],
   });
 
+  console.log("idCancha:", Number(idCancha), typeof Number(idCancha));
+  console.log("idEst:", Number(idEst), typeof Number(idEst));
+
   const { mutate } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
     onSuccess: () => navigate(-1),
@@ -68,6 +73,7 @@ function EditCourt() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Form State:", state);
     mutate(state);
   };
 
@@ -104,6 +110,8 @@ function EditCourt() {
     };
     cargarCancha();
   }, [idEst, idCancha]);
+
+  const token = readLocalStorage<JWT>("token");
 
   const horas = [
     { value: "option1", label: "1:00hs" },
@@ -218,95 +226,155 @@ function EditCourt() {
               isRequired
               onChange={handleChange}
             >
-              <Select placeholder="Seleccione una opcion">
-                {disciplinas.map((disciplina) => (
-                  <option key={disciplina.value} value={disciplina.value}>
-                    {disciplina.label}
-                  </option>
-                ))}
-              </Select>
-              <FormLabel>Disciplina</FormLabel>
+              <Input
+                value={state.nombre}
+                placeholder="Cancha"
+                name="nombre"
+                type="text"
+              />
+              <FormLabel>Nombre de cancha</FormLabel>
             </FormControl>
             <FormControl
               variant="floating"
-              id="duracionreserva"
+              id="descripcion"
               isRequired
               onChange={handleChange}
             >
-              <Input placeholder=" " name="duracionreserva" />
-              <FormLabel>Duracion de la reserva</FormLabel>
+              <Textarea
+                name="descripcion"
+                value={state.descripcion}
+                placeholder=" "
+              />
+              <FormLabel>Descripción</FormLabel>
             </FormControl>
-          </HStack>
-          <HStack width="600px">
-            <FormControl
-              variant="floating"
-              id="hora-inicio"
-              isRequired
-              onChange={handleChange}
-            >
-              <Select placeholder="Seleccione una opcion">
-                {horas.map((hora) => (
-                  <option key={hora.value} value={hora.value}>
-                    {hora.label}
-                  </option>
-                ))}
-              </Select>
-              <FormLabel>Hora inicio</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="reserva"
-              isRequired
-              onChange={handleChange}
-            >
-              <Input placeholder=" " name="reserva" />
-              <FormLabel>Precio de la reserva</FormLabel>
-            </FormControl>
-          </HStack>
-
-          <HStack width="600px">
-            <FormControl
-              variant="floating"
-              id="hora-fin"
-              isRequired
-              onChange={handleChange}
-            >
-              <Select placeholder="Seleccione una opcion">
-                {horas.map((hora) => (
-                  <option key={hora.value} value={hora.value}>
-                    {hora.label}
-                  </option>
-                ))}
-              </Select>
-              <FormLabel>Hora fin</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="precioseña"
-              isRequired
-              onChange={handleChange}
-            >
-              <Input placeholder=" " name="precioseña" />
-              <FormLabel>Precio de la seña</FormLabel>
-            </FormControl>
+            <Input
+              type="file"
+              name="imagen"
+              onChange={handleImagenChange}
+              accept="image/*"
+              sx={{
+                "::file-selector-button": {
+                  height: 10,
+                  padding: 0,
+                  mr: 4,
+                  background: "none",
+                  border: "none",
+                  fontWeight: "bold",
+                },
+              }}
+            />
           </HStack>
         </VStack>
-        <p> Seleccionar los días para la disponibilidad.</p>
-        <HStack spacing={1} justify="center">
-          <SelectableButton children="Lunes" />
-          <SelectableButton children="Martes" />
-          <SelectableButton children="Miercoles" />
-          <SelectableButton children="Jueves" />
-          <SelectableButton children="Viernes" />
-          <SelectableButton children="Sabado" />
-          <SelectableButton children="Domingo" />
-        </HStack>
+        <Heading size="md" mt="20px">
+          Disponibilidad horaria
+        </Heading>
+        <p>
+          En qué rangos horarios la cancha estará disponible y para qué
+          disciplinas.
+        </p>
+        {/* <Button> Agregar disponibilidad +</Button>
+          <VStack
+            spacing="4"
+            width="900px"
+            justifyContent="center"
+            margin="20px auto"
+          >
+            <HStack width="600px">
+              <FormControl
+                variant="floating"
+                id="disciplinas"
+                isRequired
+                onChange={handleChange}
+              >
+                <Select name="disciplinas" placeholder="Seleccione una opcion">
+                  {disciplinas.map((disciplina) => (
+                    <option key={disciplina.value} value={disciplina.value}>
+                      {disciplina.label}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Disciplina</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="duracionreserva"
+                isRequired
+                onChange={handleChange}
+              >
+                <Input placeholder=" " name="duracionreserva" />
+                <FormLabel>Duracion de la reserva</FormLabel>
+              </FormControl>
+            </HStack>
+            <HStack width="600px">
+              <FormControl
+                variant="floating"
+                id="hora-inicio"
+                isRequired
+                onChange={handleChange}
+              >
+                <Select placeholder="Seleccione una opcion">
+                  {horas.map((hora) => (
+                    <option key={hora.value} value={hora.value}>
+                      {hora.label}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Hora inicio</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="reserva"
+                isRequired
+                onChange={handleChange}
+              >
+                <Input placeholder=" " name="reserva" />
+                <FormLabel>Precio de la reserva</FormLabel>
+              </FormControl>
+            </HStack>
 
+            <HStack width="600px">
+              <FormControl
+                variant="floating"
+                id="hora-fin"
+                isRequired
+                onChange={handleChange}
+              >
+                <Select placeholder="Seleccione una opcion">
+                  {horas.map((hora) => (
+                    <option key={hora.value} value={hora.value}>
+                      {hora.label}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Hora fin</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="precioseña"
+                isRequired
+                onChange={handleChange}
+              >
+                <Input placeholder=" " name="precioseña" />
+                <FormLabel>Precio de la seña</FormLabel>
+              </FormControl>
+            </HStack>
+          </VStack>
+          <p> Seleccionar los días para la disponibilidad.</p>
+          <HStack spacing={1} justify="center">
+            <SelectableButton children="Lunes" />
+            <SelectableButton children="Martes" />
+            <SelectableButton children="Miercoles" />
+            <SelectableButton children="Jueves" />
+            <SelectableButton children="Viernes" />
+            <SelectableButton children="Sabado" />
+            <SelectableButton children="Domingo" />
+          </HStack> */}
         <Container centerContent mt="20px">
-          <Button type="submit" onClick={validacion}>
+          <Button type="submit" /*onClick={validacion}*/>
             Guardar cambios
           </Button>
         </Container>
+        `Bearer ${token?.token}`
       </form>
 
       <Modal
