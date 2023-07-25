@@ -90,9 +90,7 @@ export class EstablecimientoHandler {
         localidad: req.body.localidad,
         provincia: req.body.provincia,
         urlImagen: req.body.urlImagen,
-        horariosDeAtencion: req.body.horariosDeAtencion,
-
-
+        horariosDeAtencion: req.body.horariosDeAtencion, //cambiado :)
         // El `idAdministrador` es el `id` que recibimos en el JWT Payload.
         idAdministrador: res.locals.idAdmin,
       };
@@ -105,9 +103,6 @@ export class EstablecimientoHandler {
       );
     };
   }
-
-
-
 
   /**
    * Valida que el idEst de los params corresponda a un establecimiento del idAdmin del JWT.

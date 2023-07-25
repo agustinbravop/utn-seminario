@@ -20,16 +20,17 @@ export default function PerfilPage() {
       <div style={{ marginTop: "2rem" }}>
         <Card
           boxSize="40rem"
-          style={{ marginLeft: "27%", marginBottom: "1rem" }}
-          height="31rem"
+          width="36%"
+          height="70%"
+          marginLeft="32%"
+          marginTop="5%"
         >
-          <CardHeader>
-            <Heading size="lg" textAlign="center">
-              Sobre Mi
+          <CardHeader >
+            <Heading size="lg" textAlign="center" >
+              Mi perfil
             </Heading>
           </CardHeader>
-
-          <CardBody>
+          <CardBody marginTop="28px">
             <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
               <Box>
                 <Heading size="xs" textTransform="uppercase">

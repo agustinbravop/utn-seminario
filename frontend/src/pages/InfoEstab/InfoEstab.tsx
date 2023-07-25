@@ -26,18 +26,7 @@ export default function CourtPage() {
     <div>
       <EstabPage/>            
       <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" marginTop="20px" > Información </Heading>
-      <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
-            <InputGroup width="18%">
-            <InputRightElement pointerEvents='none'>
-                <SearchIcon color='gray.300' />
-            </InputRightElement>
-            <Input
-            focusBorderColor="lightblue"
-            placeholder="Nombre de la cancha"
-            size="md"
-            width="100%"
-            />
-            </InputGroup>
+      <HStack marginRight="auto" marginLeft="18%" marginBottom="1px" marginTop="20px" >
             <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
                 <Button
                 onClick={() => navigate("editar")}

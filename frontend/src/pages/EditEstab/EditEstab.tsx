@@ -45,7 +45,6 @@ function EditEstab() {
   });
 
  
-
   const toast = useToast();
   const advertencia = (message: string) => {
     toast({
@@ -142,10 +141,6 @@ function EditEstab() {
     cargarEstablecimiento();
   }, [idEst]);
 
-
-  
-
-
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
@@ -169,8 +164,8 @@ function EditEstab() {
   return (
     <div className="page">
       <TopMenu />
-      <div className="centrado">
-        <Heading size="xl" margin="50px">
+      <div>
+        <Heading size="xl" margin="50px" textAlign="center">
           Editar Establecimiento
         </Heading>
       </div>
