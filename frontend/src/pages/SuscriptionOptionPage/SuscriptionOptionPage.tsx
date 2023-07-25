@@ -9,8 +9,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
-import { getSuscripciones } from "../../utils/api/auth";
-import { Suscripcion } from "../../models";
+import { getSuscripciones } from "@utils/api/auth";
+import { Suscripcion } from "@models";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 

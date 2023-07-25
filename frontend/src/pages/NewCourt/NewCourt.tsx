@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import { Cancha } from "../../models";
+import { Cancha } from "@models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "../../utils/api";
+import { ApiError } from "@utils/api";
 import {
   Button,
   FormControl,
@@ -13,8 +13,8 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { CrearCanchaReq, crearCancha } from "../../utils/api/canchas";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import { CrearCanchaReq, crearCancha } from "@utils/api/canchas";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
@@ -115,9 +115,11 @@ function NewCourt() {
               },
             }}
           />
-          <Button type="submit" disabled >{isLoading ? 'Creando...' : 'Crear cancha'}</Button>
+          <Button type="submit" disabled>
+            {isLoading ? "Creando..." : "Crear cancha"}
+          </Button>
           <br />
-          {isLoading && (<LoadingSpinner />)}
+          {isLoading && <LoadingSpinner />}
         </VStack>
       </form>
     </div>

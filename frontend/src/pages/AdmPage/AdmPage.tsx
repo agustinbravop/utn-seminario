@@ -1,9 +1,9 @@
-import PaymentForm from "../../components/PaymentForm/PaymentForm";
-import { Administrador } from "../../models";
+import PaymentForm from "@components/PaymentForm/PaymentForm";
+import { Administrador } from "@models";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "../../utils/api";
-import { RegistrarAdmin, apiRegister } from "../../utils/api/auth";
+import { ApiError } from "@utils/api";
+import { RegistrarAdmin, apiRegister } from "@utils/api/auth";
 import * as Yup from "yup";
 import {
   HStack,
@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { InputControl, SubmitButton } from "../../components/forms";
+import { InputControl, SubmitButton } from "@components/forms";
 
 type FormState = RegistrarAdmin & {
   clave: string;

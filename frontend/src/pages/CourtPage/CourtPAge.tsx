@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cancha, Establecimiento } from "../../models";
+import { Cancha, Establecimiento } from "@models";
 import { useNavigate, useParams } from "react-router";
 import {
   Button,
@@ -11,12 +11,12 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import Courts from "../../components/Courts/Courts";
-import { getCanchasByEstablecimientoID } from "../../utils/api/canchas";
-import { getEstablecimientoByID } from "../../utils/api/establecimientos";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import Courts from "@components/Courts/Courts";
+import { getCanchasByEstablecimientoID } from "@utils/api/canchas";
+import { getEstablecimientoByID } from "@utils/api/establecimientos";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
-import Alerta from "../../components/Alerta/Alerta";
+import Alerta from "@components/Alerta/Alerta";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import EstabPage from "../EstabPage/EstabPage";

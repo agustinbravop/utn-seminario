@@ -1,5 +1,5 @@
-import { ApiError } from "../../utils/api";
-import { Establecimiento } from "../../models";
+import { ApiError } from "@utils/api";
+import { Establecimiento } from "@models";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import {
@@ -17,11 +17,11 @@ import * as Yup from "yup";
 import {
   CrearEstablecimientoReq,
   crearEstablecimiento,
-} from "../../utils/api/establecimientos";
-import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+} from "@utils/api/establecimientos";
+import { useCurrentAdmin } from "@hooks/useCurrentAdmin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
-import { InputControl, SubmitButton } from "../../components/forms";
+import { InputControl, SubmitButton } from "@components/forms";
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;

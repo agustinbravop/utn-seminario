@@ -1,5 +1,5 @@
 import { postFormData, get, API_URL, putFormData } from ".";
-import { Establecimiento } from "../../models";
+import { Establecimiento } from "@models";
 
 export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
 

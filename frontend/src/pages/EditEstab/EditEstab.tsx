@@ -1,5 +1,5 @@
-import { ApiError } from "../../utils/api";
-import { Establecimiento } from "../../models";
+import { ApiError } from "@utils/api";
+import { Establecimiento } from "@models";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
@@ -20,7 +20,7 @@ import {
   ModificarEstablecimientoReq,
   getEstablecimientoByID,
   modificarEstablecimiento,
-} from "../../utils/api/establecimientos";
+} from "@utils/api/establecimientos";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen?: File;

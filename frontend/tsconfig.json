@@ -22,15 +22,21 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
-    // "baseUrl": "./",
-    // "paths": {
-    //   "@utils/*": ["src/utils/*"],
-    //   "@models/*": ["src/models/*"],
-    //   "@components/*": ["src/components/*"],
-    //   "@pages/*": ["src/pages/*"],
-    //   "@hooks/*": ["src/hooks/*"]
-    // }
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@models/*": ["src/models/*"],
+      /* para evitar agregar "index" en `import ... from "@models/index";` */
+      "@models": ["src/models"],
+      "@pages/*": ["src/pages/*"],
+      "@themes/*": ["src/themes/*"],
+      "@utils/*": ["src/utils/*"]
+    }
   },
   "include": ["src"]
 }

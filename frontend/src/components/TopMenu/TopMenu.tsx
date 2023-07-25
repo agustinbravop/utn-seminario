@@ -1,4 +1,4 @@
-import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -8,7 +8,7 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import TennisIcon from "../../assets/svg/TennisIcon";
+import TennisIcon from "@assets/svg/TennisIcon";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";

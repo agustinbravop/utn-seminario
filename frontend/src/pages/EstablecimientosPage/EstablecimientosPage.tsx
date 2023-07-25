@@ -1,4 +1,4 @@
-import EstablecimientoCardList from "../../components/EstablecimientoCardList/EstablecimientoCardList";
+import EstablecimientoCardList from "@components/EstablecimientoCardList/EstablecimientoCardList";
 import { Navigate, useNavigate } from "react-router";
 import {
   Button,
@@ -11,13 +11,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Establecimiento } from "../../models";
-import { getEstablecimientosByAdminID } from "../../utils/api/establecimientos";
+import { Establecimiento } from "@models";
+import { getEstablecimientosByAdminID } from "@utils/api/establecimientos";
 import { GrAddCircle } from "react-icons/gr";
-import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@hooks/useCurrentAdmin";
 import { useState } from "react";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import Alerta from "../../components/Alerta/Alerta";
+import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
+import Alerta from "@components/Alerta/Alerta";
 import { SearchIcon } from "@chakra-ui/icons";
 
 interface EstablecimientosListProps {

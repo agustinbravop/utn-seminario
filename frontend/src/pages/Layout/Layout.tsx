@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import TopMenu from "../../components/TopMenu/TopMenu";
+import TopMenu from "@components/TopMenu/TopMenu";
 
 export default function Layout() {
   return (

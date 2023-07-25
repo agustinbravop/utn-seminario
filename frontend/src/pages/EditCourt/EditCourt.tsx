@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import Modal from "react-overlays/Modal"; //AGREGAR EL MODAL DE "¿SEGURO?"
 import { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import { Cancha } from "../../models";
+import { Cancha } from "@models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "../../utils/api";
+import { ApiError } from "@utils/api";
 import { Container, Heading, Textarea, useToast } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
 import {
@@ -16,14 +16,14 @@ import {
   VStack,
   Button,
 } from "@chakra-ui/react";
-import SelectableButton from "../../components/SelectableButton/SelectableButton";
+import SelectableButton from "@components/SelectableButton/SelectableButton";
 import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
-} from "../../utils/api/canchas";
-import { readLocalStorage } from "../../utils/storage/localStorage";
-import { JWT } from "../../utils/api";
+} from "@utils/api/canchas";
+import { readLocalStorage } from "@utils/storage/localStorage";
+import { JWT } from "@utils/api";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;

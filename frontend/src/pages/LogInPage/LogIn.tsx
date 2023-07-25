@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "../../utils/api";
-import { Administrador } from "../../models";
+import { Administrador } from "@models/index";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
-import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@hooks/useCurrentAdmin";
 import { Heading, VStack, Alert } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { InputControl, SubmitButton } from "../../components/forms";
+import { InputControl, SubmitButton } from "@components/forms";
+import { ApiError } from "@utils/api";
 
 interface LoginState {
   correoOUsuario: string;
