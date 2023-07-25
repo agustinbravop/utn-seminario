@@ -17,8 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SubmitButton from "../../components/forms/SubmitButton";
-import InputControl from "../../components/forms/InputControl";
+import { InputControl, SubmitButton } from "../../components/forms";
 
 type FormState = RegistrarAdmin & {
   clave: string;

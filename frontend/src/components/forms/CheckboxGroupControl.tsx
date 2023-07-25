@@ -2,7 +2,7 @@ import { CheckboxGroupProps, CheckboxGroup } from "@chakra-ui/react";
 import { useController, useFieldArray } from "react-hook-form";
 import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
 
-export interface CheckboxGroupControlProps
+ interface CheckboxGroupControlProps
   extends BaseFormControlProps,
     Omit<CheckboxGroupProps, keyof BaseFormControlProps> {}
 
@@ -12,7 +12,7 @@ export interface CheckboxGroupControlProps
  *
  * https://chakra-ui.com/docs/components/checkbox#checkboxgroup
  */
-export default function CheckboxGroupControl(props: CheckboxGroupControlProps) {
+export function CheckboxGroupControl(props: CheckboxGroupControlProps) {
   const { name, control, children, ...rest } = props;
   const {
     field: { ref, onChange, ...restField },

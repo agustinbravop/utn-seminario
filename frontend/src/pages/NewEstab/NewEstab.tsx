@@ -22,8 +22,7 @@ import {
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
-import InputControl from "../../components/forms/InputControl";
-import SubmitButton from "../../components/forms/SubmitButton";
+import { InputControl, SubmitButton } from "../../components/forms";
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;

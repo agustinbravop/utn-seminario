@@ -2,8 +2,8 @@ import Cards, { Focused } from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import { useState } from "react";
 import { Box, HStack, VStack } from "@chakra-ui/react";
-import InputControl from "../forms/InputControl";
 import { Control, useWatch } from "react-hook-form";
+import { InputControl } from "../forms";
 
 interface PaymentFormProps {
   control?: Control<any, any>;

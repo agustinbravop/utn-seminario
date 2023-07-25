@@ -11,7 +11,7 @@ import {
   NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
-export interface PinInputControlProps
+ interface PinInputControlProps
   extends NoVariantBaseFormControlProps,
     Omit<PinInputProps, keyof NoVariantBaseFormControlProps> {
   /**
@@ -30,7 +30,7 @@ export interface PinInputControlProps
  *
  * https://chakra-ui.com/docs/components/pin-input
  */
-export default function PinInputControl(props: PinInputControlProps) {
+export  function PinInputControl(props: PinInputControlProps) {
   const {
     name,
     control,

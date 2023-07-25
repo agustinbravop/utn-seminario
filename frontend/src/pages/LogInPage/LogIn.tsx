@@ -7,9 +7,8 @@ import * as Yup from "yup";
 import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
 import { Heading, VStack, Alert } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import InputControl from "../../components/forms/InputControl";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SubmitButton from "../../components/forms/SubmitButton";
+import { InputControl, SubmitButton } from "../../components/forms";
 
 interface LoginState {
   correoOUsuario: string;

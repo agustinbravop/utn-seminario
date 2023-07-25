@@ -10,11 +10,11 @@ import {
  *
  * https://chakra-ui.com/docs/components/checkbox
  */
-export interface CheckboxSingleControlProps
+interface CheckboxSingleControlProps
   extends NoVariantBaseFormControlProps,
     Omit<CheckboxProps, keyof NoVariantBaseFormControlProps> {}
 
-export default function CheckboxSingleControl(
+export function CheckboxSingleControl(
   props: CheckboxSingleControlProps
 ) {
   const { name, control, children, icon, ...rest } = props;
