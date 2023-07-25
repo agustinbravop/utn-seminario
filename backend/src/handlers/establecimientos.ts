@@ -22,6 +22,7 @@ export const crearEstablecimientoReqSchema = establecimientoSchema
 export const modificarEstablecimientoReqSchema = establecimientoSchema
   .omit({
     urlImagen: true,
+    id: true, //agregado :(
   })
   .extend({
     idAdministrador: z.string().transform((str) => Number(str)),
@@ -32,6 +33,7 @@ export class EstablecimientoHandler {
   constructor(service: EstablecimientoService) {
     this.service = service;
   }
+
 
   postEstablecimiento(): RequestHandler {
     return async (req, res) => {
@@ -79,7 +81,18 @@ export class EstablecimientoHandler {
   putEstablecimiento(): RequestHandler {
     return async (req, res) => {
       const est: Establecimiento = {
-        ...res.locals.body,
+        // ...res.locals.body,
+        id: parseInt(req.body.id),
+        nombre: req.body.nombre,
+        correo: req.body.correo,
+        telefono: req.body.telefono,
+        direccion: req.body.direccion,
+        localidad: req.body.localidad,
+        provincia: req.body.provincia,
+        urlImagen: req.body.urlImagen,
+        horariosDeAtencion: req.body.horariosDeAtencion,
+
+
         // El `idAdministrador` es el `id` que recibimos en el JWT Payload.
         idAdministrador: res.locals.idAdmin,
       };
@@ -92,6 +105,9 @@ export class EstablecimientoHandler {
       );
     };
   }
+
+
+
 
   /**
    * Valida que el idEst de los params corresponda a un establecimiento del idAdmin del JWT.
