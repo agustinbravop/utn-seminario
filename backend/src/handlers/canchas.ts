@@ -17,6 +17,7 @@ export const crearCanchaReqSchema = canchaSchema
 
 export const modificarCanchaReqSchema = canchaSchema
   .omit({
+    id: true,
     urlImagen: true,
   })
   .extend({
@@ -55,9 +56,15 @@ export class CanchaHandler {
   putCancha(): RequestHandler {
     return async (req, res) => {
       const cancha: Cancha = {
-        ...req.body,
-      };
-
+        // ...req.body,  Acá se parsea los datos del body como debe ser ya que todos venía como string
+        id: parseInt(req.body.id),
+        nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
+        estaHabilitada: (req.body.estaHabilitada === "true"),
+        urlImagen: req.body.urlImagen,
+        idEstablecimiento: parseInt(req.body.idEstablecimiento),
+        disciplinas: req.body.disciplinas
+      }
       const imagen = req.file;
       const canchaActualizada = await this.service.modificarCancha(
         cancha,

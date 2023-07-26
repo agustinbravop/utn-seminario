@@ -3,8 +3,7 @@ import { Establecimiento } from "@models";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
-import Modal from "react-overlays/Modal";
-import { JSX } from "react/jsx-runtime";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Container,
@@ -21,13 +20,14 @@ import {
   getEstablecimientoByID,
   modificarEstablecimiento,
 } from "@utils/api/establecimientos";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen?: File;
 };
 
 function EditEstab() {
-  const { idAdmin, id: idEst } = useParams();
+  const { idAdmin, idEst } = useParams();
   const navigate = useNavigate();
 
   const [state, setState] = useState<FormState>({
@@ -43,17 +43,6 @@ function EditEstab() {
     imagen: undefined,
   });
 
-  const [showModal, setShowModal] = useState(false);
-  const renderBackdrop = (
-    props: JSX.IntrinsicAttributes &
-      React.ClassAttributes<HTMLDivElement> &
-      React.HTMLAttributes<HTMLDivElement>
-  ) => <div className="backdrop" {...props} />;
-  var handleClose = () => setShowModal(false);
-  var handleSuccess = () => {
-    console.log(":)");
-  };
-
   const toast = useToast();
   const advertencia = (message: string) => {
     toast({
@@ -65,12 +54,10 @@ function EditEstab() {
 
   const validacion = () => {
     let result = false;
-
     if ((state.nombre === "" || state.nombre === null) && result === false) {
       result = true;
       advertencia("El establecimiento debe tener un nombre");
     }
-
     if (
       (state.telefono === "" || state.telefono === null) &&
       result === false
@@ -78,7 +65,6 @@ function EditEstab() {
       result = true;
       advertencia("El establecimiento debe tener un telefono");
     }
-
     if (
       (state.direccion === "" || state.direccion === null) &&
       result === false
@@ -86,7 +72,6 @@ function EditEstab() {
       result = true;
       advertencia("El campo Dirección no puede estar vacio");
     }
-
     if (
       (state.provincia === "" || state.provincia === null) &&
       result === false
@@ -94,7 +79,6 @@ function EditEstab() {
       result = true;
       advertencia("El campo Provincia no puede estar vacio");
     }
-
     if (
       (state.localidad === "" || state.localidad === null) &&
       result === false
@@ -107,7 +91,6 @@ function EditEstab() {
       result = true;
       advertencia("El establecimiento debe tener correo electronico");
     }
-
     if (
       (state.horariosDeAtencion === "" || state.horariosDeAtencion === null) &&
       result === false
@@ -115,22 +98,49 @@ function EditEstab() {
       result = true;
       advertencia("Los horarios deben estar definidos");
     }
+
+    return result;
   };
 
-  const { mutate } = useMutation<Establecimiento, ApiError, FormState>({
+  const toastC = useToast();
+  const { mutate, isLoading } = useMutation<
+    Establecimiento,
+    ApiError,
+    FormState
+  >({
     mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
-    onSuccess: () => navigate(`/administrador/${idAdmin}`),
+    onSuccess: () => {
+      toastC({
+        title: "Cancha modificada",
+        description: `Cancha modificada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toastC({
+        title: "Error al modificar la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
   });
 
-  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
+  useQuery<Establecimiento>(["establecimientos", idEst], () =>
     getEstablecimientoByID(Number(idEst))
   );
 
   useEffect(() => {
-    if (data) {
-      setState({ ...data, imagen: state.imagen });
-    }
-  }, [data, state.imagen]);
+    const cargarEstablecimiento = async () => {
+      const e = await getEstablecimientoByID(Number(idEst));
+      console.log(e);
+
+      setState({ ...e, imagen: undefined });
+    };
+    cargarEstablecimiento();
+  }, [idEst]);
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -146,12 +156,15 @@ function EditEstab() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(state);
+    console.log("Form State:", state);
+    if (!validacion()) {
+      mutate(state);
+    }
   };
 
   return (
-    <div className="page">
-      <div className="centrado">
+    <div>
+      <div>
         <Heading size="xl" margin="50px">
           Editar Establecimiento
         </Heading>
@@ -166,7 +179,7 @@ function EditEstab() {
               isRequired
               onChange={handleChange}
             >
-              <Input name="nombre" placeholder="Nombre" />
+              <Input name="nombre" placeholder="Nombre" value={state.nombre} />
               <FormLabel>Nombre del establecimiento</FormLabel>
             </FormControl>
             <FormControl
@@ -175,7 +188,12 @@ function EditEstab() {
               isRequired
               onChange={handleChange}
             >
-              <Input name="correo" type="email" placeholder="abc@ejemplo.com" />
+              <Input
+                name="correo"
+                type="email"
+                placeholder="abc@ejemplo.com"
+                value={state.correo}
+              />
               <FormLabel>Correo del establecimiento</FormLabel>
             </FormControl>
             <FormControl
@@ -184,7 +202,11 @@ function EditEstab() {
               isRequired
               onChange={handleChange}
             >
-              <Input name="direccion" placeholder="Dirección" />
+              <Input
+                name="direccion"
+                placeholder="Dirección"
+                value={state.direccion}
+              />
               <FormLabel>Dirección</FormLabel>
             </FormControl>
             <HStack>
@@ -194,7 +216,11 @@ function EditEstab() {
                 isRequired
                 onChange={handleChange}
               >
-                <Input name="localidad" placeholder="Localidad" />
+                <Input
+                  name="localidad"
+                  placeholder="Localidad"
+                  value={state.localidad}
+                />
                 <FormLabel>Localidad</FormLabel>
               </FormControl>
               <FormControl
@@ -203,7 +229,11 @@ function EditEstab() {
                 isRequired
                 onChange={handleChange}
               >
-                <Input name="provincia" placeholder="Provincia" />
+                <Input
+                  name="provincia"
+                  placeholder="Provincia"
+                  value={state.provincia}
+                />
                 <FormLabel>Provincia</FormLabel>
               </FormControl>
             </HStack>
@@ -213,7 +243,12 @@ function EditEstab() {
               isRequired
               onChange={handleChange}
             >
-              <Input name="telefono" placeholder="Teléfono" type="tel" />
+              <Input
+                name="telefono"
+                placeholder="Teléfono"
+                type="tel"
+                value={state.telefono}
+              />
               <FormLabel>Teléfono</FormLabel>
             </FormControl>
             <FormControl>
@@ -226,6 +261,7 @@ function EditEstab() {
                   name="horariosDeAtencion"
                   placeholder="8:00-12:00"
                   type="text"
+                  value={state.horariosDeAtencion}
                 />
                 <FormLabel>Horarios de Atención</FormLabel>
               </FormControl>
@@ -251,75 +287,17 @@ function EditEstab() {
             </FormControl>
           </VStack>
 
-          <div className="centrado">
-            <Button
-              type="submit"
-              className="btn btn-danger"
-              onClick={validacion}
-            >
-              Guardar
-            </Button>
+          <div>
+            <Container centerContent mt="20px">
+              <Button type="submit">
+                {!isLoading ? "Guardar cambios" : "Guardando..."}
+              </Button>
+              <br />
+              {isLoading && <LoadingSpinner />}
+            </Container>
           </div>
         </Container>
       </form>
-
-      <Modal
-        className="modal"
-        show={showModal}
-        onHide={handleClose}
-        renderBackdrop={renderBackdrop}
-      >
-        <div>
-          <div className="modal-header">
-            <div className="modal-title">Confirmar Cancelación</div>
-            <div>
-              <span className="close-button" onClick={handleClose}>
-                x
-              </span>
-            </div>
-          </div>
-          <div className="modal-desc">
-            <p>¿Desea cancelar?</p>
-          </div>
-          <div className="modal-footer">
-            <button className="secondary-button" onClick={handleClose}>
-              Cancelar
-            </button>
-            <button className="primary-button" onClick={handleSuccess}>
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      <Modal
-        className="modal"
-        show={showModal}
-        onHide={handleClose}
-        renderBackdrop={renderBackdrop}
-      >
-        <div>
-          <div className="modal-header">
-            <div className="modal-title">Confirmar Cancelación</div>
-            <div>
-              <span className="close-button" onClick={handleClose}>
-                x
-              </span>
-            </div>
-          </div>
-          <div className="modal-desc">
-            <p>¿Desea cancelar?</p>
-          </div>
-          <div className="modal-footer">
-            <button className="secondary-button" onClick={handleClose}>
-              Cancelar
-            </button>
-            <button className="primary-button" onClick={handleSuccess}>
-              Aceptar
-            </button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }

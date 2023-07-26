@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "@models";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import {
   Box,
   Button,
@@ -8,7 +8,6 @@ import {
   CardBody,
   HStack,
   Heading,
-  Icon,
   Input,
   InputGroup,
   InputRightElement,
@@ -17,24 +16,17 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { getEstablecimientoByID } from "@utils/api/establecimientos";
-import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
-import { GrAddCircle } from "react-icons/gr";
-import Alerta from "@components/Alerta/Alerta";
-import { useState } from "react";
 import EstabPage from "../EstabPage/EstabPage";
 import { Image } from "@chakra-ui/react";
-import { CopyIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
 
 export default function CourtPage() {
-  const navigate = useNavigate();
   const { idEst } = useParams();
 
-  const {
-    data: establecimientoData,
-    isLoading: establecimientoLoading,
-    isError: establecimientoError,
-  } = useQuery<Establecimiento>(["establecimiento", idEst], () =>
-    getEstablecimientoByID(Number(idEst))
+  const { data: establecimientoData } = useQuery<Establecimiento>(
+    ["establecimiento", idEst],
+    () => getEstablecimientoByID(Number(idEst))
   );
 
   return (
@@ -47,8 +39,7 @@ export default function CourtPage() {
         marginLeft="18%"
         marginTop="20px"
       >
-        {" "}
-        Información{" "}
+        Información
       </Heading>
       <HStack
         marginRight="auto"
@@ -75,9 +66,9 @@ export default function CourtPage() {
           spacing={5}
           align="center"
         >
-          <Button onClick={() => navigate("editar")} leftIcon={<EditIcon />}>
-            Editar Info
-          </Button>
+          <Link to="editar">
+            <Button leftIcon={<EditIcon />}>Editar Info</Button>
+          </Link>
         </HStack>
       </HStack>
       <Box display="flex" marginLeft="18%" height="70%">

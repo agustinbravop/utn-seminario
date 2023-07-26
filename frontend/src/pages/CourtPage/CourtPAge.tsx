@@ -52,8 +52,7 @@ export default function CourtPage() {
         marginLeft="18%"
         mt="20px"
       >
-        {" "}
-        Canchas{" "}
+        Canchas
       </Heading>
       <HStack
         marginRight="auto"
