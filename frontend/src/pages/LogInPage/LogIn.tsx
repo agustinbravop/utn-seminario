@@ -14,6 +14,13 @@ interface LoginState {
   clave: string;
 }
 
+const validationSchema = Yup.object({
+  correoOUsuario: Yup.string().required("Obligatorio"),
+  clave: Yup.string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .required("Obligatorio"),
+});
+
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useCurrentAdmin();
@@ -22,13 +29,6 @@ function LoginPage() {
     onSuccess: (admin) => navigate(`/administrador/${admin.id}`),
     onError: (apiErr) =>
       console.log("onError", apiErr, apiErr.status, apiErr.message),
-  });
-
-  const validationSchema = Yup.object({
-    correoOUsuario: Yup.string().required("Obligatorio"),
-    clave: Yup.string()
-      .min(8, "La contraseña debe tener al menos 8 caracteres")
-      .required("Obligatorio"),
   });
 
   const methods = useForm<LoginState>({

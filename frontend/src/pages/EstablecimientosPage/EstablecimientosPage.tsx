@@ -1,5 +1,5 @@
 import EstablecimientoCardList from "@components/EstablecimientoCardList/EstablecimientoCardList";
-import { Navigate, useNavigate } from "react-router";
+import { Navigate } from "react-router";
 import {
   Button,
   HStack,
@@ -19,6 +19,7 @@ import { useState } from "react";
 import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
 import Alerta from "@components/Alerta/Alerta";
 import { SearchIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -27,20 +28,14 @@ interface EstablecimientosListProps {
 }
 
 function EstablecimientosList({ data }: EstablecimientosListProps) {
-  // return <EstablecimientoCardList establecimientos={data || []} />;
-  return (
-    <>
-      {data && data.length > 0 ? (
-        <EstablecimientoCardList establecimientos={data} />
-      ) : (
-        <Text textAlign="center">No se encontraron establecimientos</Text>
-      )}
-    </>
-  );
+  if (data && data.length > 0) {
+    return <EstablecimientoCardList establecimientos={data} />;
+  } else {
+    return <Text textAlign="center">No se encontraron establecimientos</Text>;
+  }
 }
 
 export default function EstablecimientosPage() {
-  const navigate = useNavigate();
   const { currentAdmin } = useCurrentAdmin();
 
   const [filtro, setFiltro] = useState("");
@@ -63,16 +58,11 @@ export default function EstablecimientosPage() {
 
   return (
     <>
-      <Heading textAlign="left" marginLeft="25%" paddingBottom="2" mt="40px">
+      <Heading textAlign="center" paddingBottom="2" mt="40px">
         Mis Establecimientos
       </Heading>
-      <HStack
-        marginRight="auto"
-        marginLeft="18%"
-        marginBottom="50px"
-        marginTop="20px"
-      >
-        <InputGroup width="18%">
+      <HStack ml="10%" marginBottom="50px" marginTop="20px">
+        <InputGroup width="25%">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>
@@ -97,12 +87,11 @@ export default function EstablecimientosPage() {
             {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
             establecimientos
           </Text>
-          <Button
-            onClick={() => navigate("nuevoEstablecimiento")}
-            leftIcon={<Icon as={GrAddCircle} />}
-          >
-            Agregar Establecimiento
-          </Button>
+          <Link to="nuevoEstablecimiento">
+            <Button leftIcon={<Icon as={GrAddCircle} />}>
+              Agregar Establecimiento
+            </Button>
+          </Link>
         </HStack>
       </HStack>
       <HStack marginLeft="18%">
@@ -117,7 +106,6 @@ export default function EstablecimientosPage() {
             isError={isError}
           />
         )}
-      
       </HStack>
     </>
   );

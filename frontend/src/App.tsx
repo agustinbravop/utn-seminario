@@ -19,60 +19,60 @@ import NotFound from "./pages/NotFoundPage/NotFound";
 import EditCourt from "./pages/EditCourt/EditCourt";
 import { theme } from "./themes";
 import Layout from "./pages/Layout/Layout";
-import CourtPage from "./pages/CourtPage/CourtPage";
-import InfoEstab from "./pages/InfoEstab/InfoEstab"
+import CourtPage from "./pages/CourtPage/CourtPAge";
+import InfoEstab from "./pages/InfoEstab/InfoEstab";
 
 const routes = [
   {
-    path: "/",
+    path: "",
     element: <Navigate to={"/landing"} />,
   },
   {
-    path: "/landing",
+    path: "landing",
     element: <HomePage />,
   },
   {
-    path: "/suscripciones",
+    path: "suscripciones",
     element: <SuscriptionOptionPage />,
   },
   {
-    path: "/login",
+    path: "login",
     element: <LoginPage />,
   },
   {
-    path: "/administrador/:idAdmin",
+    path: "administrador/:idAdmin",
     element: <EstablecimientosPage />,
   },
   {
-    path: "/administrador/:idAdmin/nuevoEstablecimiento",
+    path: "administrador/:idAdmin/nuevoEstablecimiento",
     element: <NewEstab />,
   },
   {
-    path: "/register",
+    path: "register",
     element: <AdmPage />,
   },
   {
-    path: "/establecimiento/:idEst/info/editar",
+    path: "establecimiento/:idEst/info/editar",
     element: <EditEstab />,
   },
   {
-    path: "/establecimiento/:idEst/info",
-    element: <InfoEstab/>,
+    path: "establecimiento/:idEst/info",
+    element: <InfoEstab />,
   },
   {
-    path: "/perfil", //provisorio
+    path: "perfil", //provisorio
     element: <PerfilPage />,
   },
   {
-    path: "/establecimiento/:idEst/canchas", //provisorio
+    path: "establecimiento/:idEst/canchas", //provisorio
     element: <CourtPage />,
   },
   {
-    path: "/establecimiento/:idEst/canchas/nuevaCancha", //provisorio
+    path: "establecimiento/:idEst/canchas/nuevaCancha", //provisorio
     element: <NewCourt />,
   },
   {
-    path: "/establecimiento/:idEst/canchas/:idCancha", //provisorio
+    path: "establecimiento/:idEst/canchas/:idCancha", //provisorio
     element: <EditCourt />,
   },
   {

@@ -53,12 +53,10 @@ const validationSchema = Yup.object({
 });
 
 function AdmPage() {
-  const { search } = useLocation();
-  const idSuscripcion = Number(
-    new URLSearchParams(search).get("idSuscripcion")
-  );
   const navigate = useNavigate();
   const toast = useToast();
+  const { search } = useLocation();
+  const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
   const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
     mutationFn: (registrarAdmin) => apiRegister(registrarAdmin),
@@ -96,7 +94,7 @@ function AdmPage() {
         nombre: "",
         numero: "",
       },
-      idSuscripcion: idSuscripcion,
+      idSuscripcion: Number(idSuscripcion),
     },
     mode: "onTouched",
   });

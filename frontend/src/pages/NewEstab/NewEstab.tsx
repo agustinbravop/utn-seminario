@@ -27,6 +27,20 @@ type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
 };
 
+const validationSchema = Yup.object({
+  nombre: Yup.string().required("Obligatorio"),
+  telefono: Yup.string().required("Obligatorio"),
+  direccion: Yup.string().required("Obligatorio"),
+  localidad: Yup.string().required("Obligatorio"),
+  provincia: Yup.string().required("Obligatorio"),
+  correo: Yup.string()
+    .email("Formato de correo inválido")
+    .required("Obligatorio"),
+  idAdministrador: Yup.number().required(),
+  horariosDeAtencion: Yup.string().optional(),
+  imagen: Yup.mixed<File>().optional(),
+});
+
 function NewEstab() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
@@ -54,20 +68,6 @@ function NewEstab() {
     }
   );
 
-  const validationSchema = Yup.object({
-    nombre: Yup.string().required("Obligatorio"),
-    telefono: Yup.string().required("Obligatorio"),
-    direccion: Yup.string().required("Obligatorio"),
-    localidad: Yup.string().required("Obligatorio"),
-    provincia: Yup.string().required("Obligatorio"),
-    correo: Yup.string()
-      .email("Formato de correo inválido")
-      .required("Obligatorio"),
-    idAdministrador: Yup.number().required(),
-    horariosDeAtencion: Yup.string().optional(),
-    imagen: Yup.mixed<File>().optional(),
-  });
-
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
@@ -91,7 +91,7 @@ function NewEstab() {
           <VStack
             as="form"
             onSubmit={methods.handleSubmit((values) => mutate(values))}
-            spacing="24px"
+            spacing="3"
             width="400px"
             m="auto"
           >
@@ -165,7 +165,7 @@ function NewEstab() {
             <SubmitButton>Crear</SubmitButton>
             {isError && (
               <Alert status="error">
-                Error al intentar registrar su cuenta. Intente de nuevo
+                Error al intentar registrar el establecimiento. Intente de nuevo
               </Alert>
             )}
           </VStack>

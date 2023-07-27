@@ -1,12 +1,9 @@
 import { ApiError } from "@utils/api";
 import { Establecimiento } from "@models";
-import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
-import "react-toastify/dist/ReactToastify.css";
 import {
-  Button,
-  Container,
+  Alert,
   FormControl,
   FormLabel,
   HStack,
@@ -20,146 +17,70 @@ import {
   getEstablecimientoByID,
   modificarEstablecimiento,
 } from "@utils/api/establecimientos";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import * as Yup from "yup";
+import { FormProvider, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { InputControl, SubmitButton } from "@components/forms";
 
 type FormState = ModificarEstablecimientoReq & {
-  imagen?: File;
+  imagen: File | undefined;
 };
 
+const validationSchema = Yup.object({
+  id: Yup.number().required("Obligatorio"),
+  nombre: Yup.string().required("Obligatorio"),
+  telefono: Yup.string().required("Obligatorio"),
+  direccion: Yup.string().required("Obligatorio"),
+  localidad: Yup.string().required("Obligatorio"),
+  provincia: Yup.string().required("Obligatorio"),
+  correo: Yup.string()
+    .email("Formato de correo inválido")
+    .required("Obligatorio"),
+  idAdministrador: Yup.number().required(),
+  horariosDeAtencion: Yup.string().optional(),
+  imagen: Yup.mixed<File>().optional(),
+});
+
 function EditEstab() {
-  const { idAdmin, idEst } = useParams();
+  const { idEst } = useParams();
   const navigate = useNavigate();
-
-  const [state, setState] = useState<FormState>({
-    id: Number(idEst),
-    nombre: "",
-    telefono: "",
-    direccion: "",
-    localidad: "",
-    provincia: "",
-    correo: "",
-    idAdministrador: Number(idAdmin),
-    horariosDeAtencion: "",
-    imagen: undefined,
-  });
-
   const toast = useToast();
-  const advertencia = (message: string) => {
-    toast({
-      title: message,
-      status: "success",
-      isClosable: true,
-    });
-  };
 
-  const validacion = () => {
-    let result = false;
-    if ((state.nombre === "" || state.nombre === null) && result === false) {
-      result = true;
-      advertencia("El establecimiento debe tener un nombre");
-    }
-    if (
-      (state.telefono === "" || state.telefono === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El establecimiento debe tener un telefono");
-    }
-    if (
-      (state.direccion === "" || state.direccion === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El campo Dirección no puede estar vacio");
-    }
-    if (
-      (state.provincia === "" || state.provincia === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El campo Provincia no puede estar vacio");
-    }
-    if (
-      (state.localidad === "" || state.localidad === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("El campo Localidad no puede estar vacio");
-    }
-
-    if ((state.correo === "" || state.correo === null) && result === false) {
-      result = true;
-      advertencia("El establecimiento debe tener correo electronico");
-    }
-    if (
-      (state.horariosDeAtencion === "" || state.horariosDeAtencion === null) &&
-      result === false
-    ) {
-      result = true;
-      advertencia("Los horarios deben estar definidos");
-    }
-
-    return result;
-  };
-
-  const toastC = useToast();
-  const { mutate, isLoading } = useMutation<
-    Establecimiento,
-    ApiError,
-    FormState
-  >({
-    mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
-    onSuccess: () => {
-      toastC({
-        title: "Cancha modificada",
-        description: `Cancha modificada exitosamente.`,
-        status: "success",
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: () => {
-      toastC({
-        title: "Error al modificar la cancha",
-        description: `Intente de nuevo.`,
-        status: "error",
-        isClosable: true,
-      });
-    },
-  });
-
-  useQuery<Establecimiento>(["establecimientos", idEst], () =>
+  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
     getEstablecimientoByID(Number(idEst))
   );
 
-  useEffect(() => {
-    const cargarEstablecimiento = async () => {
-      const e = await getEstablecimientoByID(Number(idEst));
-      console.log(e);
+  const methods = useForm<FormState>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: { ...data, imagen: undefined },
+    mode: "onTouched",
+  });
 
-      setState({ ...e, imagen: undefined });
-    };
-    cargarEstablecimiento();
-  }, [idEst]);
+  const { mutate, isError } = useMutation<Establecimiento, ApiError, FormState>(
+    {
+      mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
+      onSuccess: () => {
+        toast({
+          title: "Cancha modificada",
+          description: `Cancha modificada exitosamente.`,
+          status: "success",
+          isClosable: true,
+        });
+        navigate(-1);
+      },
+      onError: () => {
+        toast({
+          title: "Error al modificar la cancha",
+          description: `Intente de nuevo.`,
+          status: "error",
+          isClosable: true,
+        });
+      },
+    }
+  );
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      imagen: e.target.files ? e.target.files[0] : undefined,
-    });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setState({ ...state, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form State:", state);
-    if (!validacion()) {
-      mutate(state);
-    }
+    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
   return (
@@ -170,134 +91,88 @@ function EditEstab() {
         </Heading>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <Container centerContent gap="25px">
-          <VStack spacing="4">
-            <FormControl
-              variant="floating"
-              id="nombre"
+      <FormProvider {...methods}>
+        <VStack
+          as="form"
+          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          spacing="4"
+          width="400px"
+          m="auto"
+        >
+          <InputControl
+            name="nombre"
+            label="Nombre del establecimiento"
+            placeholder="Nombre"
+            isRequired
+          />
+          <InputControl
+            name="correo"
+            type="email"
+            label="Correo del establecimiento"
+            placeholder="abc@ejemplo.com"
+            isRequired
+          />
+          <InputControl
+            name="direccion"
+            label="Dirección"
+            placeholder="Dirección"
+            isRequired
+          />
+          <HStack>
+            <InputControl
+              name="localidad"
+              label="Localidad"
+              placeholder="Localidad"
               isRequired
-              onChange={handleChange}
-            >
-              <Input name="nombre" placeholder="Nombre" value={state.nombre} />
-              <FormLabel>Nombre del establecimiento</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="correo"
+            />
+            <InputControl
+              name="provincia"
+              label="Provincia"
+              placeholder="Provincia"
               isRequired
-              onChange={handleChange}
-            >
-              <Input
-                name="correo"
-                type="email"
-                placeholder="abc@ejemplo.com"
-                value={state.correo}
-              />
-              <FormLabel>Correo del establecimiento</FormLabel>
-            </FormControl>
-            <FormControl
-              variant="floating"
-              id="direccion"
-              isRequired
-              onChange={handleChange}
-            >
-              <Input
-                name="direccion"
-                placeholder="Dirección"
-                value={state.direccion}
-              />
-              <FormLabel>Dirección</FormLabel>
-            </FormControl>
-            <HStack>
-              <FormControl
-                variant="floating"
-                id="localidad"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input
-                  name="localidad"
-                  placeholder="Localidad"
-                  value={state.localidad}
-                />
-                <FormLabel>Localidad</FormLabel>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="provincia"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input
-                  name="provincia"
-                  placeholder="Provincia"
-                  value={state.provincia}
-                />
-                <FormLabel>Provincia</FormLabel>
-              </FormControl>
-            </HStack>
-            <FormControl
-              variant="floating"
-              id="telefono"
-              isRequired
-              onChange={handleChange}
-            >
-              <Input
-                name="telefono"
-                placeholder="Teléfono"
-                type="tel"
-                value={state.telefono}
-              />
-              <FormLabel>Teléfono</FormLabel>
-            </FormControl>
-            <FormControl>
-              <FormControl
-                variant="floating"
-                id="horariosDeAtencion"
-                onChange={handleChange}
-              >
-                <Input
-                  name="horariosDeAtencion"
-                  placeholder="8:00-12:00"
-                  type="text"
-                  value={state.horariosDeAtencion}
-                />
-                <FormLabel>Horarios de Atención</FormLabel>
-              </FormControl>
-              <FormLabel marginTop="10px" marginLeft="10px">
-                Imagen
-              </FormLabel>
-              <Input
-                type="file"
-                name="imagen"
-                onChange={handleImagenChange}
-                accept="image/*"
-                sx={{
-                  "::file-selector-button": {
-                    height: 10,
-                    padding: 0,
-                    mr: 4,
-                    background: "none",
-                    border: "none",
-                    fontWeight: "bold",
-                  },
-                }}
-              />
-            </FormControl>
-          </VStack>
-
-          <div>
-            <Container centerContent mt="20px">
-              <Button type="submit">
-                {!isLoading ? "Guardar cambios" : "Guardando..."}
-              </Button>
-              <br />
-              {isLoading && <LoadingSpinner />}
-            </Container>
-          </div>
-        </Container>
-      </form>
+            />
+          </HStack>
+          <InputControl
+            name="telefono"
+            label="Teléfono"
+            placeholder="0..."
+            type="tel"
+            isRequired
+          />
+          <InputControl
+            name="horariosDeAtencion"
+            label="Horarios de Atención"
+            placeholder="8:00-12:00"
+          />
+          <FormControl>
+            <FormLabel marginTop="10px" marginLeft="10px">
+              Imagen
+            </FormLabel>
+            <Input
+              type="file"
+              name="imagen"
+              onChange={handleImagenChange}
+              accept="image/*"
+              sx={{
+                "::file-selector-button": {
+                  height: 10,
+                  padding: 0,
+                  mr: 4,
+                  background: "none",
+                  border: "none",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          </FormControl>
+          <SubmitButton>Guardar cambios</SubmitButton>
+          {isError && (
+            <Alert status="error">
+              Error al intentar registrar el establecimiento. Intente de nuevo
+            </Alert>
+          )}
+        </VStack>
+      </FormProvider>
     </div>
   );
 }
