@@ -1,5 +1,5 @@
 import { postFormData, get, API_URL, putFormData } from ".";
-import { Establecimiento } from "../../models";
+import { Establecimiento } from "@/models";
 
 export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
 
@@ -18,13 +18,7 @@ export async function crearEstablecimiento(
     formData.append(key, String(est[key]));
   }
 
-  console.log(est, formData);
-
-  return postFormData<Establecimiento>(
-    `${API_URL}/establecimientos`,
-    formData,
-    201
-  );
+  return postFormData<Establecimiento>(`${API_URL}/establecimientos`, formData);
 }
 
 export async function modificarEstablecimiento(
@@ -42,11 +36,7 @@ export async function modificarEstablecimiento(
     formData.append(key, String(establecimiento[key]));
   }
 
-  return putFormData<Establecimiento>(
-    `${API_URL}/establecimientos/${establecimiento.id}`,
-    formData,
-    200
-  );
+  return putFormData<Establecimiento>(`${API_URL}/establecimientos`, formData);
 }
 
 export async function getEstablecimientosByAdminID(

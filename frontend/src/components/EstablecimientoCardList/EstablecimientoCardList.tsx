@@ -1,5 +1,5 @@
 import { HStack } from "@chakra-ui/react";
-import { Establecimiento } from "../../models";
+import { Establecimiento } from "@/models";
 import EstablecimientoCard from "../EstablecimientoCard/EstablecimientoCard";
 
 interface EstablecimientoCardListProps {

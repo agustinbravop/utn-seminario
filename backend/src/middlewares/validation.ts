@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AnyZodObject } from "zod";
-import { ApiError } from "../utils/apierrors.js";
+import { BadRequestError } from "../utils/apierrors.js";
 
 export function validateBody(schema: AnyZodObject) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +11,7 @@ export function validateBody(schema: AnyZodObject) {
       const msg = issues
         .map((issue) => `At ${issue.path}: ${issue.message}`)
         .join("; ");
-      return res.status(400).json(new ApiError(400, msg));
+      return res.status(400).json(new BadRequestError(msg));
     }
 
     res.locals.body = result.data;

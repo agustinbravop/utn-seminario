@@ -23,7 +23,7 @@ import { PrismaCanchaRepository } from "./repositories/canchas.js";
 import { CanchaServiceimpl } from "./services/canchas.js";
 import { CanchaHandler } from "./handlers/canchas.js";
 
-export function router(prismaClient: PrismaClient): Router {
+export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
 
   const suscripcionRepo = new PrismaSuscripcionRepository(prismaClient);

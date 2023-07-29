@@ -5,8 +5,11 @@ import {
   tarjeta,
 } from "@prisma/client";
 import { Administrador } from "../models/administrador.js";
-import { Result, err, ok } from "neverthrow";
-import { ApiError } from "../utils/apierrors.js";
+import {
+  InternalServerError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../utils/apierrors.js";
 import { Rol } from "../services/auth.js";
 
 export type AdministradorConClave = {
@@ -18,11 +21,11 @@ export interface AuthRepository {
   crearAdministrador(
     admin: Administrador,
     clave: string
-  ): Promise<Result<Administrador, ApiError>>;
+  ): Promise<Administrador>;
   getAdministradorYClave(
     correoOUsuario: string
-  ): Promise<Result<AdministradorConClave, ApiError>>;
-  getRoles(correoOUsuario: string): Promise<Result<Rol[], ApiError>>;
+  ): Promise<AdministradorConClave>;
+  getRoles(correoOUsuario: string): Promise<Rol[]>;
 }
 
 export class PrismaAuthRepository implements AuthRepository {
@@ -50,7 +53,7 @@ export class PrismaAuthRepository implements AuthRepository {
 
   async getAdministradorYClave(
     correoOUsuario: string
-  ): Promise<Result<AdministradorConClave, ApiError>> {
+  ): Promise<AdministradorConClave> {
     try {
       const dbAdmin = await this.prisma.administrador.findFirstOrThrow({
         where: {
@@ -61,14 +64,14 @@ export class PrismaAuthRepository implements AuthRepository {
           tarjeta: true,
         },
       });
-      return ok({
+      return {
         admin: this.toModel(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta),
         clave: dbAdmin.clave,
-      });
+      };
     } catch (e) {
       console.error(e);
-      return err(
-        new ApiError(404, "No existe administrador con ese correo o usuario")
+      throw new NotFoundError(
+        "No existe administrador con ese correo o usuario"
       );
     }
   }
@@ -79,7 +82,7 @@ export class PrismaAuthRepository implements AuthRepository {
    * @param correoOUsuario el correo/usuario guardado.
    * @returns los roles del usuario, o un `ApiError` si algo falla.
    */
-  async getRoles(correoOUsuario: string): Promise<Result<Rol[], ApiError>> {
+  async getRoles(correoOUsuario: string): Promise<Rol[]> {
     try {
       const dbAdmin = await this.prisma.administrador.findFirst({
         where: {
@@ -87,7 +90,7 @@ export class PrismaAuthRepository implements AuthRepository {
         },
       });
       if (dbAdmin) {
-        return ok([Rol.Administrador]);
+        return [Rol.Administrador];
       }
 
       const dbJugador = await this.prisma.jugador.findFirst({
@@ -96,20 +99,19 @@ export class PrismaAuthRepository implements AuthRepository {
         },
       });
       if (dbJugador) {
-        return ok([Rol.Jugador]);
+        return [Rol.Jugador];
       }
-
-      return err(new ApiError(401, "Correo o usuario incorrecto"));
     } catch (e) {
       console.error(e);
-      return err(new ApiError(500, "Error interno con la base de datos"));
+      throw new InternalServerError("Error interno con la base de datos");
     }
+    throw new UnauthorizedError("Correo o usuario incorrecto");
   }
 
   async crearAdministrador(
     admin: Administrador,
     clave: string
-  ): Promise<Result<Administrador, ApiError>> {
+  ): Promise<Administrador> {
     try {
       const dbAdmin = await this.prisma.administrador.create({
         data: {
@@ -133,10 +135,10 @@ export class PrismaAuthRepository implements AuthRepository {
           suscripcion: true,
         },
       });
-      return ok(this.toModel(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta));
+      return this.toModel(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta);
     } catch (e) {
       console.error(e);
-      return err(new ApiError(500, "No se pudo registrar al administrador"));
+      throw new InternalServerError("No se pudo registrar al administrador");
     }
   }
 }
