@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
-import { Establecimiento } from "@models/index";
+import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 
@@ -54,7 +54,7 @@ export default function EstablecimientoCard({
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">
-        <Link to={`/establecimiento/${establecimiento.id}/canchas`}>
+        <Link to={`/ests/${establecimiento.id}/canchas`}>
           <Button
             leftIcon={
               <svg

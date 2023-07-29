@@ -1,5 +1,5 @@
 import React from "react";
-import { Cancha } from "@models";
+import { Cancha } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -28,12 +28,12 @@ import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
-} from "../../utils/api/canchas";
-import { InputControl, SubmitButton } from "@components/forms";
+} from "@/utils/api/canchas";
+import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { ApiError } from "@utils/api";
+import { ApiError } from "@/utils/api";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -94,7 +94,7 @@ const validationSchema = Yup.object({
 //   { value: "softbol", label: "Softbol" },
 // ];
 
-function EditCourt() {
+export default function EditCourtPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { idEst, idCancha } = useParams();
   const navigate = useNavigate();
@@ -330,5 +330,3 @@ function EditCourt() {
     </>
   );
 }
-
-export default EditCourt;

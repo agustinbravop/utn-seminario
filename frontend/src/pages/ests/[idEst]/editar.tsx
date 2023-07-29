@@ -1,7 +1,7 @@
-import { ApiError } from "@utils/api";
-import { Establecimiento } from "@models";
+import { ApiError } from "@/utils/api";
+import { Establecimiento } from "@/models";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "@/router";
 import {
   Alert,
   FormControl,
@@ -16,11 +16,11 @@ import {
   ModificarEstablecimientoReq,
   getEstablecimientoByID,
   modificarEstablecimiento,
-} from "@utils/api/establecimientos";
+} from "@/utils/api/establecimientos";
 import * as Yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { InputControl, SubmitButton } from "@components/forms";
+import { InputControl, SubmitButton } from "@/components/forms";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -41,8 +41,8 @@ const validationSchema = Yup.object({
   imagen: Yup.mixed<File>().optional(),
 });
 
-function EditEstab() {
-  const { idEst } = useParams();
+export default function EditEstabPage() {
+  const { idEst } = useParams("/ests/:idEst/editar");
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -176,5 +176,3 @@ function EditEstab() {
     </div>
   );
 }
-
-export default EditEstab;

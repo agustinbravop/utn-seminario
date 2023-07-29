@@ -9,10 +9,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
-import { getSuscripciones } from "@utils/api/auth";
-import { Suscripcion } from "@models";
+import { getSuscripciones } from "@/utils/api/auth";
+import { Suscripcion } from "@/models";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link } from "@/router";
 
 const iconos = [
   <Icon as={BsShop} fill="brand.500" fontSize={90} />,
@@ -20,7 +20,7 @@ const iconos = [
   <Icon as={BsRocket} fill="brand.500" fontSize={90} />,
 ];
 
-function SuscriptionOptionPage() {
+export default function SuscripcionesPage() {
   const { data, isLoading, isError } = useQuery<Suscripcion[]>(
     ["suscripciones"],
     getSuscripciones
@@ -40,7 +40,7 @@ function SuscriptionOptionPage() {
     .map((s, idx) => ({ icono: iconos[idx], ...s }));
   cards = suscripciones?.map((s) => {
     return (
-      <Card bg="light" key="light" color="dark" width="14rem">
+      <Card bg="light" key={s.id} color="dark" width="14rem">
         <CardHeader margin="auto">{s.icono}</CardHeader>
         <CardBody textAlign="center">
           <Heading size="md">{s.nombre}</Heading>
@@ -52,7 +52,7 @@ function SuscriptionOptionPage() {
             {s.limiteEstablecimientos} establecimiento
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
-          <Link to={`/register?idSuscripcion=${s.id}`}>
+          <Link to={`/subscribe?idSuscripcion=${s.id}`}>
             <Button
               mt="10px"
               type="button"
@@ -81,5 +81,3 @@ function SuscriptionOptionPage() {
     </>
   );
 }
-
-export default SuscriptionOptionPage;

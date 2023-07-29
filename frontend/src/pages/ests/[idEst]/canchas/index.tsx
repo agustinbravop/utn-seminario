@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cancha, Establecimiento } from "@models";
-import { useNavigate, useParams } from "react-router";
+import { Cancha, Establecimiento } from "@/models";
+import { useParams } from "react-router";
 import {
   Button,
   HStack,
@@ -11,18 +11,18 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import Courts from "@components/Courts/Courts";
-import { getCanchasByEstablecimientoID } from "@utils/api/canchas";
-import { getEstablecimientoByID } from "@utils/api/establecimientos";
-import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
+import Courts from "@/components/Courts/Courts";
+import { getCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { getEstablecimientoByID } from "@/utils/api/establecimientos";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
-import Alerta from "@components/Alerta/Alerta";
+import Alerta from "@/components/Alerta/Alerta";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
-import EstabPage from "../EstabPage/EstabPage";
+import EstabPage from "../_estabPage";
+import { Link } from "react-router-dom";
 
-export default function CourtPage() {
-  const navigate = useNavigate();
+export default function CanchasPage() {
   const { idEst } = useParams();
   const { data, isLoading, isError } = useQuery<Cancha[]>(
     ["canchas", idEst],
@@ -82,12 +82,9 @@ export default function CourtPage() {
           align="center"
         >
           <Text mb="0">{data?.length} canchas</Text>
-          <Button
-            onClick={() => navigate("nuevaCancha")}
-            leftIcon={<Icon as={GrAddCircle} />}
-          >
-            Agregar Cancha
-          </Button>
+          <Link to="nueva">
+            <Button leftIcon={<Icon as={GrAddCircle} />}>Agregar Cancha</Button>
+          </Link>
         </HStack>
       </HStack>
       <HStack marginLeft="18%">

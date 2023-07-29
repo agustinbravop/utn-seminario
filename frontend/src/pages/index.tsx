@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/button";
-import { Link } from "react-router-dom";
 import { Box, Heading, Text, VStack } from "@chakra-ui/layout";
-import Carousel from "@components/Carousel/Carousel";
+import Carousel from "@/components/Carousel/Carousel";
+import { Link } from "@/router";
 
 const images = [
   "https://civideportes.com.co/wp-content/uploads/2020/08/asphalt-tennis-court-5354328_640.jpg",
@@ -10,7 +10,7 @@ const images = [
   "https://www.sportcourts.gt/wp-content/uploads/2016/10/unnamed-file.jpg",
 ];
 
-function HomePage() {
+export default function LandingPage() {
   return (
     <>
       <Heading maxWidth="600px" size="3xl">
@@ -48,5 +48,3 @@ function HomePage() {
     </>
   );
 }
-
-export default HomePage;

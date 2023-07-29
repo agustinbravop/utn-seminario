@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 import { post, JWT, API_URL, get } from ".";
-import { Administrador, Suscripcion, Tarjeta } from "@models";
+import { Administrador, Suscripcion, Tarjeta } from "@/models";
 import { writeLocalStorage } from "../storage/localStorage";
 
 export interface RegistrarAdmin

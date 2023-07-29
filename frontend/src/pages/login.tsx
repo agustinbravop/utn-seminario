@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
-import { Administrador } from "@models/index";
+import { Administrador } from "@/models/index";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
-import { useCurrentAdmin } from "@hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Heading, VStack, Alert } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { InputControl, SubmitButton } from "@components/forms";
-import { ApiError } from "@utils/api";
+import { InputControl, SubmitButton } from "@/components/forms";
+import { ApiError } from "@/utils/api";
 
 interface LoginState {
   correoOUsuario: string;
@@ -21,14 +21,12 @@ const validationSchema = Yup.object({
     .required("Obligatorio"),
 });
 
-function LoginPage() {
+export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useCurrentAdmin();
   const { mutate, isError } = useMutation<Administrador, ApiError, LoginState>({
     mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
-    onSuccess: (admin) => navigate(`/administrador/${admin.id}`),
-    onError: (apiErr) =>
-      console.log("onError", apiErr, apiErr.status, apiErr.message),
+    onSuccess: (admin) => navigate(`/admin/${admin.id}`),
   });
 
   const methods = useForm<LoginState>({
@@ -74,5 +72,3 @@ function LoginPage() {
     </>
   );
 }
-
-export default LoginPage;

@@ -34,7 +34,6 @@ export class EstablecimientoHandler {
     this.service = service;
   }
 
-
   postEstablecimiento(): RequestHandler {
     return async (req, res) => {
       console.log(res.locals);

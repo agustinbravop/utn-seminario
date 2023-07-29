@@ -1,6 +1,6 @@
 import { Heading } from "@chakra-ui/layout";
 
-function NotFound() {
+export default function NotFoundPage() {
   return (
     <div>
       <Heading style={{ textAlign: "center", marginTop: "10px", color: "red" }}>
@@ -9,5 +9,3 @@ function NotFound() {
     </div>
   );
 }
-
-export default NotFound;

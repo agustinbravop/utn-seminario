@@ -1,9 +1,9 @@
-import PaymentForm from "@components/PaymentForm/PaymentForm";
-import { Administrador } from "@models";
+import PaymentForm from "@/components/PaymentForm/PaymentForm";
+import { Administrador } from "@/models";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "@utils/api";
-import { RegistrarAdmin, apiRegister } from "@utils/api/auth";
+import { ApiError } from "@/utils/api";
+import { RegistrarAdmin, apiRegister } from "@/utils/api/auth";
 import * as Yup from "yup";
 import {
   HStack,
@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { InputControl, SubmitButton } from "@components/forms";
+import { InputControl, SubmitButton } from "@/components/forms";
 
 type FormState = RegistrarAdmin & {
   clave: string;
@@ -52,7 +52,7 @@ const validationSchema = Yup.object({
   idSuscripcion: Yup.number().required(),
 });
 
-function AdmPage() {
+export default function SubscribePage() {
   const navigate = useNavigate();
   const toast = useToast();
   const { search } = useLocation();
@@ -82,23 +82,16 @@ function AdmPage() {
   const methods = useForm<FormState>({
     resolver: yupResolver<FormState>(validationSchema),
     defaultValues: {
-      nombre: "",
-      apellido: "",
-      usuario: "",
-      telefono: "",
-      clave: "",
-      correo: "",
       tarjeta: {
-        cvv: NaN,
+        cvv: undefined,
         vencimiento: "",
-        nombre: "",
         numero: "",
+        nombre: "",
       },
       idSuscripcion: Number(idSuscripcion),
     },
     mode: "onTouched",
   });
-  console.log(methods.getValues());
 
   return (
     <>
@@ -179,4 +172,3 @@ function AdmPage() {
     </>
   );
 }
-export default AdmPage;

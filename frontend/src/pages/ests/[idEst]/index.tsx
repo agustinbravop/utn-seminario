@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Establecimiento } from "@models";
+import { Establecimiento } from "@/models";
 import { useParams } from "react-router";
 import {
   Box,
@@ -15,8 +15,8 @@ import {
   StackDivider,
   Text,
 } from "@chakra-ui/react";
-import { getEstablecimientoByID } from "@utils/api/establecimientos";
-import EstabPage from "../EstabPage/EstabPage";
+import { getEstablecimientoByID } from "@/utils/api/establecimientos";
+import EstabPage from "./_estabPage";
 import { Image } from "@chakra-ui/react";
 import { EditIcon, SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";

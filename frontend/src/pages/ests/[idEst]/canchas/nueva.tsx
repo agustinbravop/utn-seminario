@@ -1,8 +1,8 @@
 import React from "react";
-import { Cancha } from "@models";
+import { Cancha } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "@utils/api";
+import { ApiError } from "@/utils/api";
 import {
   Alert,
   FormControl,
@@ -12,8 +12,8 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { CrearCanchaReq, crearCancha } from "@utils/api/canchas";
-import { InputControl, SubmitButton } from "@components/forms";
+import { CrearCanchaReq, crearCancha } from "@/utils/api/canchas";
+import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";

@@ -1,4 +1,4 @@
-import { useCurrentAdmin } from "@hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import {
   Card,
   CardHeader,

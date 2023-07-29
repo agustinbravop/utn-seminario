@@ -60,11 +60,11 @@ export class CanchaHandler {
         id: parseInt(req.body.id),
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
-        estaHabilitada: (req.body.estaHabilitada === "true"),
+        estaHabilitada: req.body.estaHabilitada === "true",
         urlImagen: req.body.urlImagen,
         idEstablecimiento: parseInt(req.body.idEstablecimiento),
-        disciplinas: req.body.disciplinas
-      }
+        disciplinas: req.body.disciplinas,
+      };
       const imagen = req.file;
       const canchaActualizada = await this.service.modificarCancha(
         cancha,

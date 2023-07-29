@@ -1,12 +1,12 @@
 import { useLocation } from "react-router";
 import { HStack, Heading, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Establecimiento } from "@models";
-import { getEstablecimientoByID } from "@utils/api/establecimientos";
+import { Establecimiento } from "@/models";
+import { getEstablecimientoByID } from "@/utils/api/establecimientos";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import LoadingSpinner from "@components/LoadingSpinner/LoadingSpinner";
-import Alerta from "@components/Alerta/Alerta";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import Alerta from "@/components/Alerta/Alerta";
 import { Link } from "react-router-dom";
 
 export default function EstabPage() {
@@ -27,7 +27,7 @@ export default function EstabPage() {
 
   return (
     <HStack gap="30px" marginLeft="32%" marginTop="20px">
-      <Link to={`/establecimiento/${data?.id}/info`}>
+      <Link to={`/ests/${data?.id}/editar`}>
         <Text
           textDecoration={sub ? "underline" : "none"}
           textDecorationThickness="3px"
@@ -37,7 +37,7 @@ export default function EstabPage() {
           Información
         </Text>
       </Link>
-      <Link to={`/establecimiento/${data?.id}/canchas`}>
+      <Link to={`/ests/${data?.id}/canchas`}>
         <Text
           textDecoration={!sub ? "underline" : "none"}
           textDecorationThickness="3px"
@@ -48,7 +48,7 @@ export default function EstabPage() {
           Canchas
         </Text>
       </Link>
-      <Link to={`/establecimiento/${data?.id}/canchas`}>Reservas</Link>
+      <Link to={`/ests/${data?.id}/canchas`}>Reservas</Link>
       {isLoading ? (
         <LoadingSpinner />
       ) : isError ? (

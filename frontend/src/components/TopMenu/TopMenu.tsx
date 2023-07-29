@@ -1,4 +1,4 @@
-import { useCurrentAdmin } from "@hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -8,9 +8,10 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import TennisIcon from "@assets/svg/TennisIcon";
+import TennisIcon from "@/assets/svg/TennisIcon";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
+import { BsHouses } from "react-icons/bs";
 import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 
 export default function TopMenu() {
@@ -29,7 +30,7 @@ export default function TopMenu() {
 
 function BrandNav() {
   return (
-    <Link to="/landing">
+    <Link to="/">
       <Icon as={TennisIcon} fill="blackAlpha.800" fontSize="40px" />
     </Link>
   );
@@ -41,7 +42,7 @@ function Nav() {
   if (!currentAdmin) {
     return (
       <>
-        <Link to="/landing">
+        <Link to="/">
           <Image
             src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
             alt="logo"
@@ -68,7 +69,7 @@ function Nav() {
 
   return (
     <>
-      <Link to={`/administrador/${currentAdmin.id}`}>
+      <Link to={`/admin/${currentAdmin.id}`}>
         <Image
           src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
           alt="logo"
@@ -86,16 +87,19 @@ function Nav() {
               {currentAdmin.usuario}
             </MenuButton>
             <MenuList>
-              <Link to={`/perfil`}>
+              <Link to={`/admin/${currentAdmin.id}`}>
                 <MenuItem>
-                  {" "}
-                  <InfoIcon mr="20px" /> Mi perfil{" "}
+                  <Icon mr="20px" as={BsHouses} /> Mis establecimientos
                 </MenuItem>
               </Link>
-              <Link to={`/landing`}>
+              <Link to={`/admin/${currentAdmin.id}/perfil`}>
+                <MenuItem>
+                  <InfoIcon mr="20px" /> Mi perfil
+                </MenuItem>
+              </Link>
+              <Link to={`/`}>
                 <MenuItem onClick={logout}>
-                  {" "}
-                  <ArrowForwardIcon mr="20px" /> Logout{" "}
+                  <ArrowForwardIcon mr="20px" /> Logout
                 </MenuItem>
               </Link>
             </MenuList>
