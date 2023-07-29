@@ -1,11 +1,9 @@
 import { SuscripcionRepository } from "../repositories/suscripciones.js";
-import { Result } from "neverthrow";
-import { ApiError } from "../utils/apierrors.js";
 import { Suscripcion } from "../models/suscripcion.js";
 
 export interface SuscripcionService {
-  getSuscripcionByID(id: number): Promise<Result<Suscripcion, ApiError>>;
-  getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>>;
+  getSuscripcionByID(id: number): Promise<Suscripcion>;
+  getAllSuscripciones(): Promise<Suscripcion[]>;
 }
 
 export class SuscripcionServiceImpl implements SuscripcionService {
@@ -15,11 +13,11 @@ export class SuscripcionServiceImpl implements SuscripcionService {
     this.repo = repository;
   }
 
-  async getSuscripcionByID(id: number): Promise<Result<Suscripcion, ApiError>> {
+  async getSuscripcionByID(id: number): Promise<Suscripcion> {
     return await this.repo.getSuscripcionByID(id);
   }
 
-  async getAllSuscripciones(): Promise<Result<Suscripcion[], ApiError>> {
+  async getAllSuscripciones(): Promise<Suscripcion[]> {
     return await this.repo.getAllSuscripciones();
   }
 }

@@ -1,28 +1,34 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "types": ["vite/client"],
+
+    /* Bundler mode */
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    // "baseUrl": "./",
-    // "paths": {
-    //   "@utils/*": ["src/utils/*"],
-    //   "@models/*": ["src/models/*"],
-    //   "@components/*": ["src/components/*"],
-    //   "@pages/*": ["src/pages/*"],
-    //   "@hooks/*": ["src/hooks/*"]
-    // }
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"]
 }

@@ -8,15 +8,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Cancha } from "../../models/index";
+import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
 
 type estabProps = {
   cancha: Cancha;
-  key: number;
 };
 
-export default function Court({ cancha, key }: estabProps) {
+export default function Court({ cancha }: estabProps) {
   return (
     <Card maxWidth="xs" height="450px" width="300px">
       <Image
@@ -36,7 +35,7 @@ export default function Court({ cancha, key }: estabProps) {
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">
-        <Link to={`${cancha.id}`}>
+        <Link to={`${cancha.id}/editar`}>
           <Button
             leftIcon={
               <svg

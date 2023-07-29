@@ -1,5 +1,4 @@
-import React from "react";
-import { Cancha } from "../../models/index";
+import { Cancha } from "@/models/index";
 import { HStack } from "@chakra-ui/react";
 import Court from "../Court/Court";
 

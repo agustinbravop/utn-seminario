@@ -1,10 +1,8 @@
-import { Result } from "neverthrow";
-import { ApiError } from "../utils/apierrors.js";
 import { AdministradorRepository } from "../repositories/administrador.js";
 import { Administrador } from "../models/administrador.js";
 
 export interface AdministradorService {
-  getAdministradorByID(id: Number): Promise<Result<Administrador, ApiError>>;
+  getAdministradorByID(id: Number): Promise<Administrador>;
 }
 
 export class AdministradorServiceImpl implements AdministradorService {
@@ -14,9 +12,7 @@ export class AdministradorServiceImpl implements AdministradorService {
     this.repo = repository;
   }
 
-  async getAdministradorByID(
-    id: number
-  ): Promise<Result<Administrador, ApiError>> {
+  async getAdministradorByID(id: number): Promise<Administrador> {
     return await this.repo.getAdministradorByID(id);
   }
 }

@@ -4,7 +4,7 @@ import {
   Establecimiento,
   establecimientoSchema,
 } from "../models/establecimiento.js";
-import { ApiError } from "../utils/apierrors.js";
+import { ForbiddenError } from "../utils/apierrors.js";
 import { z } from "zod";
 
 export const crearEstablecimientoReqSchema = establecimientoSchema
@@ -22,6 +22,7 @@ export const crearEstablecimientoReqSchema = establecimientoSchema
 export const modificarEstablecimientoReqSchema = establecimientoSchema
   .omit({
     urlImagen: true,
+    id: true, //agregado :(
   })
   .extend({
     idAdministrador: z.string().transform((str) => Number(str)),
@@ -44,11 +45,8 @@ export class EstablecimientoHandler {
       };
       const imagen = req.file;
 
-      const estResult = await this.service.crear(est, imagen);
-      estResult.match(
-        (est) => res.status(201).json(est),
-        (err) => res.status(err.status).json(err)
-      );
+      const estCreado = await this.service.crear(est, imagen);
+      res.status(201).json(estCreado);
     };
   }
 
@@ -56,11 +54,8 @@ export class EstablecimientoHandler {
     return async (req, res) => {
       // TODO: mejorar input validation
       const id = Number(req.params.idEst);
-      const estResult = await this.service.getByID(id);
-      estResult.match(
-        (est) => res.status(200).json(est),
-        (err) => res.status(err.status).json(err)
-      );
+      const est = await this.service.getByID(id);
+      res.status(200).json(est);
     };
   }
 
@@ -68,53 +63,49 @@ export class EstablecimientoHandler {
     return async (req, res) => {
       // TODO: mejorar input validation
       const idAdmin = Number(req.params.idAdmin);
-      const estsResult = await this.service.getByAdminID(idAdmin);
-      estsResult.match(
-        (ests) => res.status(200).json(ests),
-        (err) => res.status(err.status).json(err)
-      );
+      const ests = await this.service.getByAdminID(idAdmin);
+      res.status(200).json(ests);
     };
   }
 
   putEstablecimiento(): RequestHandler {
     return async (req, res) => {
       const est: Establecimiento = {
-        ...res.locals.body,
+        // ...res.locals.body,
+        id: parseInt(req.body.id),
+        nombre: req.body.nombre,
+        correo: req.body.correo,
+        telefono: req.body.telefono,
+        direccion: req.body.direccion,
+        localidad: req.body.localidad,
+        provincia: req.body.provincia,
+        urlImagen: req.body.urlImagen,
+        horariosDeAtencion: req.body.horariosDeAtencion, //cambiado :)
         // El `idAdministrador` es el `id` que recibimos en el JWT Payload.
         idAdministrador: res.locals.idAdmin,
       };
       const imagen = req.file;
 
-      const estResult = await this.service.modificar(est, imagen);
-      estResult.match(
-        (est) => res.status(200).json(est),
-        (err) => res.status(err.status).json(err)
-      );
+      const estModificado = await this.service.modificar(est, imagen);
+      res.status(200).json(estModificado);
     };
   }
 
   /**
    * Valida que el idEst de los params corresponda a un establecimiento del idAdmin del JWT.
-   * Esto se usa para prevenir que un admin modifique un establecimiento que no es suyo.
+   * **Asume que el JWT del administrador ya fue autenticado.**
+   * Se usa para prevenir que un administrador modifique un establecimiento que no le pertenece.
    */
   validateAdminOwnsEstablecimiento(): RequestHandler {
     return async (req, res, next) => {
       const idEst = Number(req.params.idEst);
-      const est = (await this.service.getByID(idEst)).unwrapOr(null);
-      if (est === null) {
-        return res
-          .status(404)
-          .json(new ApiError(404, `No existe establecimiento con id ${idEst}`));
-      }
-
-      console.log(est.idAdministrador, res.locals, typeof res.locals.idAdmin);
+      const est = await this.service.getByID(idEst);
 
       if (est.idAdministrador !== res.locals.idAdmin) {
         return res
           .status(403)
           .json(
-            new ApiError(
-              403,
+            new ForbiddenError(
               "No puede alterar establecimientos de otro administrador"
             )
           );

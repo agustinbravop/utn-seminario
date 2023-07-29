@@ -29,7 +29,7 @@ export type Establecimiento = {
   urlImagen?: string;
   correo: string;
   idAdministrador: number;
-  horariosDeAtencion: string;
+  horariosDeAtencion: string | undefined;
 };
 
 export type HorarioDeAtencion = {
@@ -48,7 +48,7 @@ export type Suscripcion = {
 };
 
 export type Tarjeta = {
-  id?: number;
+  id: number;
   nombre: string;
   numero: string;
   cvv: number;

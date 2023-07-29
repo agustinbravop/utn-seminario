@@ -10,11 +10,8 @@ export class SuscripcionHandler {
 
   getAllSuscripciones(): RequestHandler {
     return async (_req, res) => {
-      const susResult = await this.service.getAllSuscripciones();
-      susResult.match(
-        (suscripciones) => res.status(200).json(suscripciones),
-        (err) => res.status(err.status).json(err)
-      );
+      const suscripciones = await this.service.getAllSuscripciones();
+      res.status(200).json(suscripciones);
     };
   }
 }

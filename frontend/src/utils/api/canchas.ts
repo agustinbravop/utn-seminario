@@ -1,5 +1,5 @@
 import { postFormData, API_URL, get, putFormData } from ".";
-import { Cancha } from "../../models";
+import { Cancha } from "@/models";
 
 export type CrearCanchaReq = Omit<Cancha, "id" | "urlImagen">;
 
@@ -20,8 +20,7 @@ export async function crearCancha(
 
   return postFormData<Cancha>(
     `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
-    formData,
-    201
+    formData
   );
 }
 
@@ -53,7 +52,6 @@ export async function modificarCancha(
 
   return putFormData<Cancha>(
     `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
-    formData,
-    201
+    formData
   );
 }
