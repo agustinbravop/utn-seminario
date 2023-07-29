@@ -15,10 +15,11 @@ import { ChakraProvider } from "@chakra-ui/react";
 import EditEstab from "./pages/EditEstab/EditEstab";
 import PerfilPage from "./pages/PerfilPage/PerfilPage";
 import NewCourt from "./pages/NewCourt/NewCourt";
-import CourtPage from "./pages/CourtPage/CourtPage";
 import NotFound from "./pages/NotFoundPage/NotFound";
 import EditCourt from "./pages/EditCourt/EditCourt";
 import { theme } from "./themes";
+import CourtPage from "./pages/CourtPage/CourtPage";
+import InfoEstab from "./pages/InfoEstab/InfoEstab"
 
 const routes = [
   {
@@ -54,8 +55,12 @@ const routes = [
     element: <AdmPage />,
   },
   {
-    path: "/administrador/:idAdmin/establecimiento/:idCancha/editar",
+    path: "/establecimiento/:idEst/info/editar",
     element: <EditEstab />,
+  },
+  {
+    path: "/establecimiento/:idEst/info",
+    element: <InfoEstab/>,
   },
   {
     path: "/perfil", //provisorio

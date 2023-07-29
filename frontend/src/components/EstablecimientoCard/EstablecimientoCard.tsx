@@ -13,6 +13,7 @@ import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "../../models/index";
 import { Link } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
@@ -22,19 +23,21 @@ export default function EstablecimientoCard({
   establecimiento,
 }: EstablecimientoCardProps) {
   return (
-    <Card maxWidth="xs" height="450px">
-      <Image
-        src={
-          establecimiento.urlImagen !== null
-            ? establecimiento.urlImagen
-            : undefined
-        }
-        borderRadius="lg"
-        alt={`Imagen del establecimiento ${establecimiento.nombre}`}
-        objectFit="cover"
-        maxWidth="100%"
-        height="200px"
-      />
+    <Card width="300px" height="450px" >
+      <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px" >
+        <Image
+          src={
+            establecimiento.urlImagen !== null
+              ? establecimiento.urlImagen
+              : undefined
+          }
+          borderTopRadius="lg"
+          alt={`Imagen del establecimiento ${establecimiento.nombre}`}
+          objectFit="cover"
+          height="100%"
+          width="100%"
+        />
+      </Box>
       <CardBody height="300px">
         <VStack spacing="0">
           <Heading size="md" marginBottom="10px">
@@ -46,6 +49,9 @@ export default function EstablecimientoCard({
           </Text>
           <Text>
             <PhoneIcon boxSize={3.5} color="gray" /> {establecimiento.telefono}
+          </Text>
+          <Text>
+            {establecimiento.horariosDeAtencion}
           </Text>
         </VStack>
       </CardBody>

@@ -43,7 +43,7 @@ export async function modificarEstablecimiento(
   }
 
   return putFormData<Establecimiento>(
-    `${API_URL}/establecimientos`,
+    `${API_URL}/establecimientos/${establecimiento.id}`,
     formData,
     200
   );
