@@ -7,7 +7,6 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Heading,
   Input,
   VStack,
   useToast,
@@ -21,6 +20,7 @@ import * as Yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputControl, SubmitButton } from "@/components/forms";
+import EstabPage from "./_estabPage";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -52,7 +52,12 @@ export default function EditEstabPage() {
 
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
-    defaultValues: { ...data, imagen: undefined },
+    defaultValues: async () => {
+      return Promise.resolve({
+        ...(data as Establecimiento),
+        imagen: undefined,
+      });
+    },
     mode: "onTouched",
   });
 
@@ -61,8 +66,8 @@ export default function EditEstabPage() {
       mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
       onSuccess: () => {
         toast({
-          title: "Cancha modificada",
-          description: `Cancha modificada exitosamente.`,
+          title: "Establecimiento modificado",
+          description: `Establecimiento modificado exitosamente.`,
           status: "success",
           isClosable: true,
         });
@@ -70,7 +75,7 @@ export default function EditEstabPage() {
       },
       onError: () => {
         toast({
-          title: "Error al modificar la cancha",
+          title: "Error al modificar el establecimiento",
           description: `Intente de nuevo.`,
           status: "error",
           isClosable: true,
@@ -85,11 +90,7 @@ export default function EditEstabPage() {
 
   return (
     <div>
-      <div>
-        <Heading size="xl" margin="50px">
-          Editar Establecimiento
-        </Heading>
-      </div>
+      <EstabPage />
 
       <FormProvider {...methods}>
         <VStack

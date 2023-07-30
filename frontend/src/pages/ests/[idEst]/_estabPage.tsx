@@ -27,7 +27,7 @@ export default function EstabPage() {
 
   return (
     <HStack gap="30px" marginLeft="32%" marginTop="20px">
-      <Link to={`/ests/${data?.id}/editar`}>
+      <Link to={`/ests/${data?.id}`}>
         <Text
           textDecoration={sub ? "underline" : "none"}
           textDecorationThickness="3px"

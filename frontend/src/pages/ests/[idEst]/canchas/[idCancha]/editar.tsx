@@ -100,13 +100,16 @@ export default function EditCourtPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { data } = useQuery<Cancha>(["canchas", idCancha], () =>
-    getCanchaByID(Number(idEst), Number(idCancha))
-  );
+  const { data } = useQuery<Cancha>({
+    queryKey: ["canchas", idCancha],
+    queryFn: () => getCanchaByID(Number(idEst), Number(idCancha)),
+  });
 
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
-    defaultValues: { ...data, imagen: undefined },
+    defaultValues: async () => {
+      return Promise.resolve({ ...(data as Cancha), imagen: undefined });
+    },
     mode: "onTouched",
   });
 

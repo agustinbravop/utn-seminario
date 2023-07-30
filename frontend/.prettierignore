@@ -1,4 +1,6 @@
+# autogenerados
 node_modules/*
+src/router.ts
 
 # artefactos
 dist/*

@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Establecimiento } from "@/models";
-import { useParams } from "react-router";
+import { Cancha } from "@/models";
 import {
   Box,
   Button,
@@ -8,6 +7,7 @@ import {
   CardBody,
   HStack,
   Heading,
+  Image,
   Input,
   InputGroup,
   InputRightElement,
@@ -15,22 +15,20 @@ import {
   StackDivider,
   Text,
 } from "@chakra-ui/react";
-import { getEstablecimientoByID } from "@/utils/api/establecimientos";
-import EstabPage from "./_estabPage";
-import { Image } from "@chakra-ui/react";
 import { EditIcon, SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
+import { getCanchaByID } from "@/utils/api/canchas";
+import { useParams } from "@/router";
 
-export default function CourtPage() {
-  const { idEst } = useParams();
+export default function CourtInfoPage() {
+  const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
-  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
-    getEstablecimientoByID(Number(idEst))
+  const { data } = useQuery<Cancha>(["canchas", idCancha], () =>
+    getCanchaByID(Number(idEst), Number(idCancha))
   );
 
   return (
     <div>
-      <EstabPage />
       <Heading
         size="md"
         fontSize="26px"
@@ -38,7 +36,7 @@ export default function CourtPage() {
         marginLeft="18%"
         marginTop="20px"
       >
-        Información
+        Información de {data?.nombre}
       </Heading>
       <HStack
         marginRight="auto"
@@ -95,35 +93,21 @@ export default function CourtPage() {
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Dirección
+                      Descripción
                     </Heading>
-                    <Text fontSize="sm">{data?.direccion}</Text>
+                    <Text fontSize="sm">{data?.descripcion}</Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Horario atencion
+                      Disciplinas
                     </Heading>
-                    <Text fontSize="sm">{data?.horariosDeAtencion}</Text>
+                    <Text fontSize="sm">{data?.disciplinas}</Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Correo de contacto
+                      Está habilitada
                     </Heading>
-                    <Text fontSize="sm">{data?.correo}</Text>
-                  </Box>
-                  <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Numero de teléfono
-                    </Heading>
-                    <Text fontSize="sm">{data?.telefono}</Text>
-                  </Box>
-                  <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Localidad
-                    </Heading>
-                    <Text fontSize="sm">
-                      {data?.localidad}, {data?.provincia}
-                    </Text>
+                    <Text fontSize="sm">{data?.estaHabilitada}</Text>
                   </Box>
                 </Stack>
               </Box>
