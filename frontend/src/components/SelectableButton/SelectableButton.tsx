@@ -3,13 +3,15 @@ import { ReactNode, useState } from "react";
 
 interface SelectableButtonProps {
   children?: ReactNode;
+  onButtonClick: Function;
 }
 
-function SelectableButton({ children }: SelectableButtonProps) {
+function SelectableButton({ children, onButtonClick }: SelectableButtonProps) {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleButtonClick = () => {
     setIsChecked(!isChecked);
+    onButtonClick(children as string);
   };
 
   return (

@@ -72,18 +72,30 @@ function NewCourt() {
   ];
 
   const [disp, setDisp] = useState({
-  horaInicio : '',
-  horaFin : '',
-  minutosReserva: '',
-  precioReserva: '',
-  precioSena: undefined ,
-  disciplina: '',
-  dias : [],
-  })
+    horaInicio: "",
+    horaFin: "",
+    minutosReserva: "",
+    precioReserva: "",
+    precioSena: undefined,
+    disciplina: "",
+    dias: [""],
+  });
 
-  const handleChange = (e : ChangeEvent<HTMLInputElement>) => {
-    setDisp({...disp, [e.target.name] : e.target.value})
-  }
+  const handleButtonSelection = (dia: string) => {
+    if (disp.dias.includes(dia)) {
+      const a = disp.dias.filter((e) => e !== dia);
+      setDisp({ ...disp, dias: a });
+    } else {
+      const a = disp.dias;
+      a.push(dia);
+      setDisp({ ...disp, dias: a });
+    }
+    console.log(disp);
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setDisp({ ...disp, [e.target.name]: e.target.value });
+  };
 
   const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, disp, imagen),
@@ -177,9 +189,6 @@ function NewCourt() {
           )}
         </VStack>
       </FormProvider>
-
-
-
       <div className="margen">
         <h3>Disponibilidad horaria</h3>
         <p>
@@ -196,7 +205,7 @@ function NewCourt() {
       </div>
       <br />
       <VStack spacing="4" width="900px" justifyContent="center" margin="auto">
-      <HStack width="600px">
+        <HStack width="600px">
           <FormControl
             variant="floating"
             id="hora-inicio"
@@ -205,14 +214,14 @@ function NewCourt() {
           >
             <Select placeholder="Seleccione una opcion" name="horaInicio">
               {horas.map((hora, i) => (
-                <option key={i} value={hora} >
+                <option key={i} value={hora}>
                   {hora}
                 </option>
               ))}
             </Select>
             <FormLabel>Hora inicio</FormLabel>
           </FormControl>
-          
+
           <FormControl
             variant="floating"
             id="hora-fin"
@@ -256,7 +265,7 @@ function NewCourt() {
           </FormControl>
         </HStack>
         <HStack width="600px">
-        <FormControl
+          <FormControl
             variant="floating"
             id="reserva"
             isRequired
@@ -280,13 +289,34 @@ function NewCourt() {
       </div>
       <br />
       <div className="centrado2">
-        <SelectableButton children="Lunes" />
-        <SelectableButton children="Martes" />
-        <SelectableButton children="Miercoles" />
-        <SelectableButton children="Jueves" />
-        <SelectableButton children="Viernes" />
-        <SelectableButton children="Sabado" />
-        <SelectableButton children="Domingo" />
+        <SelectableButton
+          children="Lunes"
+          onButtonClick={handleButtonSelection}
+        />
+        <SelectableButton
+          children="Martes"
+          onButtonClick={handleButtonSelection}
+        />
+        <SelectableButton
+          children="Miercoles"
+          onButtonClick={handleButtonSelection}
+        />
+        <SelectableButton
+          children="Jueves"
+          onButtonClick={handleButtonSelection}
+        />
+        <SelectableButton
+          children="Viernes"
+          onButtonClick={handleButtonSelection}
+        />
+        <SelectableButton
+          children="Sabado"
+          onButtonClick={handleButtonSelection}
+        />
+        <SelectableButton
+          children="Domingo"
+          onButtonClick={handleButtonSelection}
+        />
       </div>
       <br />
       <br />
