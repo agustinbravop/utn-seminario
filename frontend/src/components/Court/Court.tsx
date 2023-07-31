@@ -35,7 +35,7 @@ export default function Court({ cancha }: estabProps) {
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">
-        <Link to={`${cancha.id}/editar`}>
+        <Link to={`${cancha.id}`}>
           <Button
             leftIcon={
               <svg
@@ -51,7 +51,7 @@ export default function Court({ cancha }: estabProps) {
               </svg>
             }
           >
-            Editar
+            Detalles
           </Button>
         </Link>
       </CardFooter>

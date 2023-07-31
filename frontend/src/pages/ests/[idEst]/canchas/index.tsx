@@ -43,7 +43,7 @@ export default function CanchasPage() {
   );
 
   return (
-    <div>
+    <>
       <EstabPage />
       <Heading
         size="md"
@@ -98,6 +98,6 @@ export default function CanchasPage() {
           <Text textAlign="center">No se encontraron canchas</Text>
         )}
       </HStack>
-    </div>
+    </>
   );
 }
