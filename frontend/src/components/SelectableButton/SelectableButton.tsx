@@ -1,4 +1,4 @@
-import { Button, Checkbox } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
 
 interface SelectableButtonProps {
@@ -19,7 +19,6 @@ function SelectableButton({ children }: SelectableButtonProps) {
       onClick={handleButtonClick}
     >
       <span> {children} </span>
-      <Checkbox isChecked={isChecked} size="0" />
     </Button>
   );
 }
