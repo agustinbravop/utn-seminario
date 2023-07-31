@@ -20,6 +20,7 @@ export const modificarCanchaReqSchema = canchaSchema
     urlImagen: true,
   })
   .extend({
+    id:z.string().transform((str)=>Number(str)),
     idEstablecimiento: z.string().transform((str) => Number(str)),
     estaHabilitada: z.string().transform((str) => str === "true"),
     disciplinas: z.string().transform((_) => [""]),

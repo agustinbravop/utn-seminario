@@ -86,7 +86,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     return awaitQuery(
       this.prisma.cancha.update({
         where: {
-          id: cancha.id,
+          id: Number(cancha.id),
         },
         include: {
           disciplinas: true,
@@ -95,7 +95,8 @@ export class PrismaCanchaRepository implements CanchaRepository {
           nombre: cancha.nombre,
           descripcion: cancha.descripcion,
           urlImagen: String(cancha.urlImagen),
-          estaHabilitada: cancha.estaHabilitada,
+          estaHabilitada: Boolean(cancha.estaHabilitada),
+         
           // disciplinas: {
           //   connectOrCreate: cancha.disciplinas.map((d) => ({
           //     where: { disciplina: d },
@@ -106,6 +107,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       }),
       `No existe cancha con id ${cancha.id}`,
       "Error interno al intentar modificar la cancha"
+  
     );
   }
 }
@@ -120,7 +122,7 @@ function toModel(cancha: canchaDB): Cancha {
 }
 
 async function awaitQuery(
-  promise: Promise<canchaDB | null>,
+  promise: Promise<canchaDB>,
   notFoundMsg: string,
   errorMsg: string
 ): Promise<Cancha> {

@@ -62,6 +62,7 @@ export class EstablecimientoHandler {
     return async (req, res) => {
       // TODO: mejorar input validation
       const idAdmin = Number(req.params.idAdmin);
+      console.log(idAdmin)
       const ests = await this.service.getByAdminID(idAdmin);
       res.status(200).json(ests);
     };
