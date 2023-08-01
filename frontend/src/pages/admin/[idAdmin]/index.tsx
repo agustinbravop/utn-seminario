@@ -58,7 +58,7 @@ export default function EstablecimientosPage() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="2" mt="40px">
+      <Heading textAlign="center" paddingBottom="12" mt="40px">
         Mis Establecimientos
       </Heading>
       <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
@@ -75,7 +75,7 @@ export default function EstablecimientosPage() {
           value={filtro}
         />
         </InputGroup>
-        <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
+        <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
           <Text mb="0"> 
             {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
             establecimientos

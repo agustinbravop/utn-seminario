@@ -29,25 +29,25 @@ export default function CourtPage() {
     <>
       <SubMenu/>
       <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" marginTop="20px" > Información </Heading>
-      <HStack marginRight="auto" marginLeft="18%" marginBottom="1px" marginTop="20px" >
-            <HStack marginLeft="auto" marginRight="10%" display="flex" alignContent="column" spacing={5} align="center" >
+      <HStack marginRight="auto" marginLeft="18%" marginBottom="30px"marginTop="20px" >
+            <Text>Esta es la información que se muestra al usuario de su establecimiento.</Text>
+            <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
             <Link to="editar">
-              <Button leftIcon={<EditIcon />}>Editar Info</Button>
+              <Button leftIcon={<EditIcon />}>Editar Información</Button>
             </Link>
             </HStack> 
             </HStack>
       <Box
       display="flex"
-      marginLeft="18%" 
-      height="70%" 
+      justifyContent="center"
     >
         <Card
-        boxSize="43rem"
+        boxSize="10rem"
         justifyContent="center"
         display="flex"
         style={{ marginTop:"10px", marginBottom: "1rem" }}
         height="75%"
-        width="73%"
+        width="56%"
         >
             <CardBody height="100%" marginTop="0px">
                 <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
@@ -55,7 +55,7 @@ export default function CourtPage() {
                             <Image src={data?.urlImagen} width="1000px"  height="400px" objectFit="cover" borderRadius="10px"/>
                         </Box>
                         
-                        <Box marginTop="55px" marginLeft=" 50px" height="100%">
+                        <Box marginTop="70px" marginLeft=" 50px" height="100%">
                             <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                                 <Box>
                                 <Heading size="xs" textTransform="uppercase">

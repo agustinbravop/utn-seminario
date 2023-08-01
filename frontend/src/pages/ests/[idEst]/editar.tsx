@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Heading,
   Input,
   VStack,
   useToast,
@@ -20,7 +21,6 @@ import * as Yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputControl, SubmitButton } from "@/components/forms";
-import EstabPage from "./_estabPage";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -90,8 +90,9 @@ export default function EditEstabPage() {
 
   return (
     <div>
-      <EstabPage />
-
+      <Heading textAlign="center" mt="40px" paddingBottom="60px" >
+        Editar Establecimiento
+      </Heading>
       <FormProvider {...methods}>
         <VStack
           as="form"

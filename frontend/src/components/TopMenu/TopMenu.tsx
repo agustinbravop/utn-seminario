@@ -3,14 +3,12 @@ import { Link } from "react-router-dom";
 import {
   Button,
   HStack,
-  Icon,
   Image,
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
-import { Menu, MenuButton } from "@chakra-ui/react";
-import { BsHouses } from "react-icons/bs";
+import { Menu, MenuButton, Text } from "@chakra-ui/react";
 import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 
 export default function TopMenu() {
@@ -20,6 +18,7 @@ export default function TopMenu() {
       shadow="md"
       padding="0 2rem 0 2rem"
       height="3.6rem"
+      backgroundColor="#f8fafd"
     >
       <Nav />
     </HStack>
@@ -66,6 +65,11 @@ function Nav() {
           width={177}
         />
       </Link>
+      <HStack marginLeft="150px" marginRight="auto" >
+      <Link to={`/admin/${currentAdmin.id}`}>
+            <Text> Mis establecimientos </Text>
+      </Link>
+      </HStack>
       <nav style={{ paddingRight: "15px" }}>
         <HStack>
           <Menu>
@@ -77,11 +81,6 @@ function Nav() {
               {currentAdmin.usuario}
             </MenuButton>
             <MenuList>
-              <Link to={`/admin/${currentAdmin.id}`}>
-                <MenuItem>
-                  <Icon mr="20px" as={BsHouses} /> Mis establecimientos
-                </MenuItem>
-              </Link>
               <Link to={`/admin/${currentAdmin.id}/perfil`}>
                 <MenuItem>
                   <InfoIcon mr="20px" /> Mi perfil

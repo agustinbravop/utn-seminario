@@ -76,7 +76,7 @@ function NewCourt() {
 
   return (
     <div>
-      <Heading textAlign="center" mt="40px">
+      <Heading textAlign="center" mt="40px" paddingBottom="60px" >
         Nueva cancha
       </Heading>
       <FormProvider {...methods}>
