@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Cancha } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -28,6 +28,7 @@ import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
+  crearCancha,
 } from "@/utils/api/canchas";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
@@ -103,15 +104,12 @@ export default function EditCourtPage() {
   const { data } = useQuery<Cancha>({
     queryKey: ["canchas", idCancha],
     queryFn: () => getCanchaByID(Number(idEst), Number(idCancha)),
+    enabled: true,
   });
 
-  const methods = useForm<FormState>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: async () => {
-      return Promise.resolve({ ...(data as Cancha), imagen: undefined });
-    },
-    mode: "onTouched",
-  });
+  useEffect(() => {
+    console.log(data)
+  }, [data]);
 
   const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
@@ -133,6 +131,22 @@ export default function EditCourtPage() {
       });
     },
   });
+
+
+  const methods = useForm<FormState>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      id: data?.id,
+      nombre: data?.nombre,
+      descripcion: data?.descripcion,
+      estaHabilitada: data?.estaHabilitada,
+      idEstablecimiento: data?.idEstablecimiento,
+      imagen: undefined,
+      disciplinas: [],
+    },
+    mode: "onTouched",
+  });
+
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
@@ -188,16 +202,16 @@ export default function EditCourtPage() {
               }}
             />
           </FormControl>
-        </VStack>
-        <Heading size="md" mt="20px">
-          Disponibilidad horaria
-        </Heading>
-        <Text>
-          En qué rangos horarios la cancha estará disponible y para qué
-          disciplinas.
-        </Text>
-        <Button> Agregar disponibilidad +</Button>
-        {/* <Button> Agregar disponibilidad +</Button>
+
+          <Heading size="md" mt="20px">
+            Disponibilidad horaria
+          </Heading>
+          <Text>
+            En qué rangos horarios la cancha estará disponible y para qué
+            disciplinas.
+          </Text>
+          <Button> Agregar disponibilidad +</Button>
+          {/* <Button> Agregar disponibilidad +</Button>
           <VStack
             spacing="4"
             width="900px"
@@ -294,14 +308,15 @@ export default function EditCourtPage() {
             <SelectableButton children="Sabado" />
             <SelectableButton children="Domingo" />
           </HStack> */}
-        <Container centerContent mt="20px">
-          <SubmitButton>Crear</SubmitButton>
-          {isError && (
-            <Alert status="error">
-              Error al intentar registrar el establecimiento. Intente de nuevo
-            </Alert>
-          )}
-        </Container>
+          <Container centerContent mt="20px">
+            <SubmitButton>Modificar</SubmitButton>
+            {isError && (
+              <Alert status="error">
+                Error al intentar registrar el establecimiento. Intente de nuevo
+              </Alert>
+            )}
+          </Container>
+        </VStack>
       </FormProvider>
       <Container centerContent mt="20px">
         <Button colorScheme="red" onClick={onOpen}>
