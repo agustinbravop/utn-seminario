@@ -135,14 +135,8 @@ export default function EditCourtPage() {
 
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      id: data?.id,
-      nombre: data?.nombre,
-      descripcion: data?.descripcion,
-      estaHabilitada: data?.estaHabilitada,
-      idEstablecimiento: data?.idEstablecimiento,
-      imagen: undefined,
-      disciplinas: [],
+    defaultValues: async () => {
+      return Promise.resolve({ ...(data as Cancha), imagen: undefined });
     },
     mode: "onTouched",
   });
@@ -204,7 +198,7 @@ export default function EditCourtPage() {
           </FormControl>
 
           <Heading size="md" mt="20px">
-            Disponibilidad horaria
+            Disponibilidad horarias
           </Heading>
           <Text>
             En qué rangos horarios la cancha estará disponible y para qué
