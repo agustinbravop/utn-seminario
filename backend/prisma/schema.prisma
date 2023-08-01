@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  /7previewFeatures = ["multiSchema"]
+ 
 
 }
 
@@ -73,6 +73,7 @@ model establecimiento {
   direccion          String         @db.VarChar
   urlImagen          String?        @db.VarChar
   correo             String         @unique @db.VarChar
+  estaEliminada      Boolean
   horariosDeAtencion String?
   localidad          String         @db.VarChar 
   provincia          String         @db.VarChar
