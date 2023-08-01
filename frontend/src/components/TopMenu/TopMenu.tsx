@@ -8,7 +8,6 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import TennisIcon from "@/assets/svg/TennisIcon";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import { BsHouses } from "react-icons/bs";
@@ -20,25 +19,16 @@ export default function TopMenu() {
       justifyContent="space-between"
       shadow="md"
       padding="0 2rem 0 2rem"
-      height="4rem"
+      height="3.6rem"
     >
-      <BrandNav />
       <Nav />
     </HStack>
   );
 }
 
-function BrandNav() {
-  return (
-    <Link to="/">
-      <Icon as={TennisIcon} fill="blackAlpha.800" fontSize="40px" />
-    </Link>
-  );
-}
 
 function Nav() {
   const { currentAdmin, logout } = useCurrentAdmin();
-
   if (!currentAdmin) {
     return (
       <>

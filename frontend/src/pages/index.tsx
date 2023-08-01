@@ -7,7 +7,7 @@ const images = [
   "https://civideportes.com.co/wp-content/uploads/2020/08/asphalt-tennis-court-5354328_640.jpg",
   "https://lh3.googleusercontent.com/p/AF1QipMxtsQ0kqDdux6pRQCFKd61np6gDpx44KFx4UTq=w1080-h608-p-no-v0",
   "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/PETRTNQVQBHJRCDS3B6RF7IJK4.jpg",
-  "https://www.sportcourts.gt/wp-content/uploads/2016/10/unnamed-file.jpg",
+  "https://media.istockphoto.com/id/183064576/es/foto/voleibol-en-un-gimnasio-de-vac%C3%ADo.jpg?s=612x612&w=0&k=20&c=TS3CIvJBhSTacaWRCMjcphi8B95yVlG1ELTwor1mYHw=",
 ];
 
 export default function LandingPage() {
@@ -35,14 +35,14 @@ export default function LandingPage() {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginTop: "55px",
+            marginTop: "40px",
           }}
         >
           <Box display="flex" alignContent="column" width="100%">
             <Box width="65%" display="flex" justifyContent="center">
               <Carousel images={images} autoPlay={true} showButtons={true} />
             </Box>
-            <Box marginTop="100px" marginLeft="30px" justifyContent="center" width="35%">
+            <Box marginTop="100px" marginLeft="20px" justifyContent="center" width="35%">
               <Heading  style={{ fontSize: "20px" }}>
                 ¿Queres publicitar tu Establecimiento?
               </Heading>
