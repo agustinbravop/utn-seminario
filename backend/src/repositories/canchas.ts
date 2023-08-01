@@ -7,6 +7,7 @@ export interface CanchaRepository {
   getCanchaByID(idCancha: number): Promise<Cancha>;
   crearCancha(cancha: Cancha): Promise<Cancha>;
   modificarCancha(canchaUpdate: Cancha): Promise<Cancha>;
+  eliminarCancha(idCancha:number):Promise<Cancha>
 }
 
 export class PrismaCanchaRepository implements CanchaRepository {
@@ -39,18 +40,31 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 
   async getCanchaByID(idCancha: number): Promise<Cancha> {
-    return awaitQuery(
-      this.prisma.cancha.findUniqueOrThrow({
-        where: {
-          id: idCancha,
-        },
-        include: {
-          disciplinas: true,
-        },
-      }),
-      `No existe cancha con id ${idCancha}`,
-      "Error interno al intentar buscar la cancha"
-    );
+    const resultCancha= this.prisma.cancha.findUniqueOrThrow({
+      where: {
+        id:idCancha
+      },
+      include: {
+        disciplinas: true,
+      }, 
+    })
+    try { 
+      if ((await resultCancha).estaEliminada===true) { 
+        throw new InternalServerError(`la cancha con el identificador ${idCancha} no existe intente de nuevo`)
+       }
+
+    } catch(e) { 
+      throw new InternalServerError(`La cancha con el identificador ${idCancha} no existe intente de nuevo`)
+    }
+ 
+   return awaitQuery(resultCancha,
+    `Cancha con id ${idCancha}`,
+    " "
+  )
+
+   
+   
+    
   }
 
   async crearCancha(cancha: Cancha): Promise<Cancha> {
@@ -60,6 +74,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
           nombre: cancha.nombre,
           descripcion: cancha.descripcion,
           estaHabilitada: Boolean(cancha.estaHabilitada),
+          estaEliminada:false,
           urlImagen: String(cancha.urlImagen),
           idEstablecimiento: Number(cancha.idEstablecimiento),
           // disciplinas: {
@@ -74,7 +89,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         },
       });
       return toModel(canchaCreada);
-    } catch (e) {
+    } catch (e) { 
       console.error(e);
       throw new InternalServerError(
         "Error interno al intentar cargar la cancha"
@@ -110,6 +125,26 @@ export class PrismaCanchaRepository implements CanchaRepository {
   
     );
   }
+
+  async eliminarCancha(idCancha:number):Promise<Cancha> { 
+    return awaitQuery(
+      this.prisma.cancha.update({
+        where: { 
+          id: Number(idCancha),
+        },
+        include: {
+          disciplinas: true,
+        },
+        data: {
+          estaEliminada:true
+        },
+      }),
+      `No existe cancha con id ${idCancha}`,
+      "Error interno al intentar modificar la cancha"
+  
+    );
+   
+  }
 }
 
 type canchaDB = cancha & { disciplinas: disciplina[] };
@@ -122,7 +157,7 @@ function toModel(cancha: canchaDB): Cancha {
 }
 
 async function awaitQuery(
-  promise: Promise<canchaDB>,
+  promise: Promise<canchaDB | null>,
   notFoundMsg: string,
   errorMsg: string
 ): Promise<Cancha> {
@@ -130,6 +165,7 @@ async function awaitQuery(
     const cancha = await promise;
 
     if (cancha) {
+      
       return toModel(cancha);
     }
   } catch (e) {

@@ -79,4 +79,12 @@ export class CanchaHandler {
       res.status(201).json(canchaCreada);
     };
   }
+
+  eliminarCancha():RequestHandler{ 
+    return async (req, res)=> { 
+      const idCancha=Number(req.params['idCancha'])
+      const eliminarCancha=await this.service.eliminarCancha(idCancha)
+      res.status(200).json(eliminarCancha)
+    }; 
+  }
 }
