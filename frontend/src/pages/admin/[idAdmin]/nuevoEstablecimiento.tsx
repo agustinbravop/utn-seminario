@@ -1,6 +1,5 @@
-import TopMenu from "../../components/TopMenu/TopMenu";
-import { ApiError } from "../../utils/api";
-import { Establecimiento } from "../../models";
+import { ApiError } from "@/utils/api";
+import { Establecimiento } from "@/models";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import {
@@ -18,17 +17,30 @@ import * as Yup from "yup";
 import {
   CrearEstablecimientoReq,
   crearEstablecimiento,
-} from "../../utils/api/establecimientos";
-import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+} from "@/utils/api/establecimientos";
+import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
-import InputControl from "../../components/forms/InputControl";
-import SubmitButton from "../../components/forms/SubmitButton";
+import { InputControl, SubmitButton } from "@/components/forms";
 
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
 };
+
+const validationSchema = Yup.object({
+  nombre: Yup.string().required("Obligatorio"),
+  telefono: Yup.string().required("Obligatorio"),
+  direccion: Yup.string().required("Obligatorio"),
+  localidad: Yup.string().required("Obligatorio"),
+  provincia: Yup.string().required("Obligatorio"),
+  correo: Yup.string()
+    .email("Formato de correo inválido")
+    .required("Obligatorio"),
+  idAdministrador: Yup.number().required(),
+  horariosDeAtencion: Yup.string().optional(),
+  imagen: Yup.mixed<File>().optional(),
+});
 
 function NewEstab() {
  
@@ -58,20 +70,6 @@ function NewEstab() {
     }
   );
 
-  const validationSchema = Yup.object({
-    nombre: Yup.string().required("Obligatorio"),
-    telefono: Yup.string().required("Obligatorio"),
-    direccion: Yup.string().required("Obligatorio"),
-    localidad: Yup.string().required("Obligatorio"),
-    provincia: Yup.string().required("Obligatorio"),
-    correo: Yup.string()
-      .email("Formato de correo inválido")
-      .required("Obligatorio"),
-    idAdministrador: Yup.number().required(),
-    horariosDeAtencion: Yup.string().optional(),
-    imagen: Yup.mixed<File>().optional(),
-  });
-
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
@@ -86,8 +84,11 @@ function NewEstab() {
 
   return (
     <div>
+<<<<<<< HEAD:frontend/src/pages/NewEstab/NewEstab.tsx
      
       <TopMenu />
+=======
+>>>>>>> cb21ec71928a91a894bf903e885b7ac2e93d2196:frontend/src/pages/admin/[idAdmin]/nuevoEstablecimiento.tsx
       <Heading size="xl" margin="50px" textAlign="center">
         Nuevo Establecimiento
       </Heading>
@@ -97,7 +98,7 @@ function NewEstab() {
           <VStack
             as="form"
             onSubmit={methods.handleSubmit((values) => mutate(values))}
-            spacing="24px"
+            spacing="3"
             width="400px"
             m="auto"
           >
@@ -105,28 +106,33 @@ function NewEstab() {
               name="nombre"
               label="Nombre del establecimiento"
               placeholder="Nombre"
+              isRequired
             />
             <InputControl
               name="correo"
               type="email"
               label="Correo del establecimiento"
               placeholder="abc@ejemplo.com"
+              isRequired
             />
             <InputControl
               name="direccion"
               label="Dirección"
               placeholder="Dirección"
+              isRequired
             />
             <HStack>
               <InputControl
                 name="localidad"
                 label="Localidad"
                 placeholder="Localidad"
+                isRequired
               />
               <InputControl
                 name="provincia"
                 label="Provincia"
                 placeholder="Provincia"
+                isRequired
               />
             </HStack>
             <InputControl
@@ -134,6 +140,7 @@ function NewEstab() {
               label="Teléfono"
               placeholder="0..."
               type="tel"
+              isRequired
             />
             <InputControl
               name="horariosDeAtencion"
@@ -165,7 +172,7 @@ function NewEstab() {
             <SubmitButton>Crear</SubmitButton>
             {isError && (
               <Alert status="error">
-                Error al intentar registrar su cuenta. Intente de nuevo
+                Error al intentar registrar el establecimiento. Intente de nuevo
               </Alert>
             )}
           </VStack>

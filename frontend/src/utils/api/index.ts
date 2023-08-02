@@ -1,6 +1,7 @@
 import { readLocalStorage, writeLocalStorage } from "../storage/localStorage";
 
-export const API_URL = import.meta.env.VITE_API_BASE_URL;
+export const API_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
 
 export class ApiError extends Error {
   status: number;
@@ -44,26 +45,28 @@ async function reject(res: Response): Promise<ApiError> {
  * Helper function que construye una petición HTTP.
  * @param method el verbo HTTP de la petición.
  * @param endpoint el endpoint de la API.
- * @param token JWT, necesario para endpoints protegidos.
+ * @param body el body tal cual a enviar en la request (opcional).
+ * @param headers headers a agregar (opcional). Por defecto se setean 'Authorization' al Bearer JWT y el 'Content-Type' a application/json.
  * @returns una promesa cumplida con el body esperado de tipo `T` si fue exitosa, o rechazada con un `ApiError` como 'reason' si hubo un error.
  */
 async function request<T>(
   method: string,
   endpoint: string,
-  body?: object
+  body?: BodyInit,
+  headers: HeadersInit = {}
 ): Promise<T> {
   const token = readLocalStorage<JWT>("token");
 
   try {
     const res = await fetch(endpoint, {
       method,
+      body,
       headers: {
-        "Content-Type": "application/json",
         Authorization: token ? `Bearer ${token.token}` : "",
+        ...headers,
       },
       mode: "cors",
       cache: "default",
-      body: JSON.stringify(body),
     });
 
     if (res.ok) {
@@ -84,38 +87,22 @@ export async function get<T>(endpoint: string): Promise<T> {
   return request("GET", endpoint);
 }
 
-export async function post<T>(endpoint: string, body: object): Promise<T> {
-  return request("POST", endpoint, body);
+export async function post<T>(endpoint: string, body: any): Promise<T> {
+  return request("POST", endpoint, JSON.stringify(body), {
+    "Content-Type": "application/json",
+  });
 }
 
 export async function postFormData<T>(
   endpoint: string,
   formData: FormData
 ): Promise<T> {
-  const token = readLocalStorage<JWT>("token");
-  return fetch(endpoint, {
-    method: "POST",
-    headers: {
-      Authorization: token ? `Bearer ${token.token}` : "",
-    },
-    body: formData,
-    mode: "cors" as RequestMode,
-    cache: "default" as RequestCache,
-  }).then<T>((res) => (res.ok ? res.json() : reject(res)));
+  return request("POST", endpoint, formData);
 }
 
 export async function putFormData<T>(
   endpoint: string,
   formData: FormData
 ): Promise<T> {
-  const token = readLocalStorage<JWT>("token");
-  return fetch(endpoint, {
-    method: "PUT",
-    headers: {
-      Authorization: token ? `Bearer ${token.token}` : "",
-    },
-    body: formData,
-    mode: "cors" as RequestMode,
-    cache: "default" as RequestCache,
-  }).then<T>((res) => (res.ok ? res.json() : reject(res)));
+  return request("PUT", endpoint, formData);
 }

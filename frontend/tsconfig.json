@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -22,15 +22,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
-    // "baseUrl": "./",
-    // "paths": {
-    //   "@utils/*": ["src/utils/*"],
-    //   "@models/*": ["src/models/*"],
-    //   "@components/*": ["src/components/*"],
-    //   "@pages/*": ["src/pages/*"],
-    //   "@hooks/*": ["src/hooks/*"]
-    // }
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"]
 }

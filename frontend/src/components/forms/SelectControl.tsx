@@ -5,7 +5,7 @@ import {
   NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
-export interface SelectControlProps
+interface SelectControlProps
   extends NoVariantBaseFormControlProps,
     Omit<SelectProps, keyof NoVariantBaseFormControlProps> {}
 
@@ -14,7 +14,7 @@ export interface SelectControlProps
  *
  * https://chakra-ui.com/docs/components/select
  */
-export default function SelectControl(props: SelectControlProps) {
+export function SelectControl(props: SelectControlProps) {
   const { name, control, icon, variant, children, ...rest } = props;
   const { field } = useController({
     name,

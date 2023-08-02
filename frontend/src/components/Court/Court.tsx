@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Cancha } from "../../models/index";
+import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
 
 type estabProps = {
@@ -51,7 +51,7 @@ export default function Court({ cancha }: estabProps) {
               </svg>
             }
           >
-            Editar
+            Detalles
           </Button>
         </Link>
       </CardFooter>

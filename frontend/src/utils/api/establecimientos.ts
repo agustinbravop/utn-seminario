@@ -1,5 +1,5 @@
 import { postFormData, get, API_URL, putFormData } from ".";
-import { Establecimiento } from "../../models";
+import { Establecimiento } from "@/models";
 
 export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
 
@@ -17,8 +17,6 @@ export async function crearEstablecimiento(
   for (key in est) {
     formData.append(key, String(est[key]));
   }
-
-  console.log(est, formData);
 
   return postFormData<Establecimiento>(`${API_URL}/establecimientos`, formData);
 }

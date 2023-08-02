@@ -1,16 +1,22 @@
-import PaymentForm from "../../components/PaymentForm/PaymentForm";
-import { Administrador } from "../../models";
+import PaymentForm from "@/components/PaymentForm/PaymentForm";
+import { Administrador } from "@/models";
 import { useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "../../utils/api";
-import { RegistrarAdmin, apiRegister } from "../../utils/api/auth";
-import TopMenu from "../../components/TopMenu/TopMenu";
+import { ApiError } from "@/utils/api";
+import { RegistrarAdmin, apiRegister } from "@/utils/api/auth";
 import * as Yup from "yup";
-import { HStack, VStack, Alert, useToast, Box } from "@chakra-ui/react";
+import {
+  HStack,
+  VStack,
+  Alert,
+  useToast,
+  Box,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SubmitButton from "../../components/forms/SubmitButton";
-import InputControl from "../../components/forms/InputControl";
+import { InputControl, SubmitButton } from "@/components/forms";
 
 type FormState = RegistrarAdmin & {
   clave: string;
@@ -40,18 +46,17 @@ const validationSchema = Yup.object({
       .matches(/[0-9]+/, "Debe ser un número")
       .min(15, "Deben ser entre 15 y 19 dígitos")
       .max(19, "Deben ser entre 15 y 19 dígitos")
+      .nullable()
       .required("Obligatorio"),
   }),
   idSuscripcion: Yup.number().required(),
 });
 
-function AdmPage() {
-  const { search } = useLocation();
-  const idSuscripcion = Number(
-    new URLSearchParams(search).get("idSuscripcion")
-  );
+export default function SubscribePage() {
   const navigate = useNavigate();
   const toast = useToast();
+  const { search } = useLocation();
+  const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
   const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
     mutationFn: (registrarAdmin) => apiRegister(registrarAdmin),
@@ -77,38 +82,30 @@ function AdmPage() {
   const methods = useForm<FormState>({
     resolver: yupResolver<FormState>(validationSchema),
     defaultValues: {
-      nombre: "",
-      apellido: "",
-      usuario: "",
-      telefono: "",
-      clave: "",
-      correo: "",
       tarjeta: {
-        cvv: NaN,
+        cvv: undefined,
         vencimiento: "",
-        nombre: "",
         numero: "",
+        nombre: "",
       },
-      idSuscripcion: idSuscripcion,
+      idSuscripcion: Number(idSuscripcion),
     },
     mode: "onTouched",
   });
-  console.log(methods.getValues());
 
   return (
     <>
-      <TopMenu />
       <Box m="50px">
         <FormProvider {...methods}>
-          <h2>Tarjeta de crédito</h2>
-          <p>
-            Se factura una cuota cada 30 días. Se puede dar de baja en cualquier
-            momento.
-          </p>
+          <Heading size="md">Tarjeta de crédito</Heading>
+          <Text>
+            Se le facturará una cuota cada 30 días, desde el momento en el que
+            se registra su cuenta. Se puede dar de baja en cualquier momento.
+          </Text>
           <PaymentForm />
 
-          <h2>Cuenta</h2>
-          <p> Ingrese sus datos a usar para iniciar sesión.</p>
+          <Heading size="md">Cuenta</Heading>
+          <Text> Ingrese sus datos. Los usará para iniciar sesión.</Text>
 
           <VStack
             as="form"
@@ -117,37 +114,50 @@ function AdmPage() {
             width="400px"
             justifyContent="center"
             margin="auto"
+            my="20px"
           >
             <HStack>
-              <InputControl label="Nombre" placeholder="Nombre" name="nombre" />
+              <InputControl
+                label="Nombre"
+                placeholder="Nombre"
+                name="nombre"
+                isRequired
+              />
               <InputControl
                 label="Apellido"
                 placeholder="Apellido"
                 name="apellido"
+                isRequired
               />
             </HStack>
-            <InputControl
-              label="Teléfono"
-              placeholder="..."
-              name="telefono"
-              type="tel"
-            />
-            <InputControl
-              label="Nombre de usuario"
-              placeholder="usuario"
-              name="usuario"
-            />
+            <HStack>
+              <InputControl
+                label="Nombre de usuario"
+                placeholder="usuario"
+                name="usuario"
+                isRequired
+              />
+              <InputControl
+                label="Teléfono"
+                placeholder="..."
+                name="telefono"
+                type="tel"
+                isRequired
+              />
+            </HStack>
             <InputControl
               label="Correo electrónico"
               placeholder="abc@ejemplo.com"
               name="correo"
               type="email"
+              isRequired
             />
             <InputControl
               label="Contraseña"
               placeholder=" "
               name="clave"
               type="password"
+              isRequired
             />
 
             <SubmitButton>Registrarse</SubmitButton>
@@ -162,4 +172,3 @@ function AdmPage() {
     </>
   );
 }
-export default AdmPage;

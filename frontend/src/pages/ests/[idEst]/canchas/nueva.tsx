@@ -1,107 +1,137 @@
 import React from "react";
-import { useState } from "react";
-import { Cancha } from "../../models";
+import { Cancha } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "../../utils/api";
-import TopMenu from "../../components/TopMenu/TopMenu";
-import "react-toastify/dist/ReactToastify.css";
+import { ApiError } from "@/utils/api";
 import {
-  Button,
+  Alert,
   FormControl,
   FormLabel,
   Heading,
   Input,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import { CrearCanchaReq, crearCancha } from "../../utils/api/canchas";
+import { CrearCanchaReq, crearCancha } from "@/utils/api/canchas";
+import { InputControl, SubmitButton } from "@/components/forms";
+import { FormProvider, useForm } from "react-hook-form";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
 };
 
+const validationSchema = Yup.object({
+  nombre: Yup.string().required("Obligatorio"),
+  descripcion: Yup.string().required("Obligatorio"),
+  estaHabilitada: Yup.bool().default(true),
+  idEstablecimiento: Yup.number().required(),
+  imagen: Yup.mixed<File>().optional(),
+  disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
+});
+
 function NewCourt() {
   const { idEst } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
 
-  const [state, setState] = useState<FormState>({
-    nombre: "",
-    descripcion: "",
-    estaHabilitada: true,
-    idEstablecimiento: Number(idEst),
-    imagen: undefined,
-    disciplinas: [],
-  });
-
-  const { mutate } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
+<<<<<<< HEAD:frontend/src/pages/NewCourt/NewCourt.tsx
     onSuccess: () => navigate(-1),
+=======
+    onSuccess: () => {
+      toast({
+        title: "Cancha creada",
+        description: `Cancha creada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+>>>>>>> cb21ec71928a91a894bf903e885b7ac2e93d2196:frontend/src/pages/ests/[idEst]/canchas/nueva.tsx
   });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    console.log(state);
-    setState({ ...state, [name]: value });
-  };
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      imagen: e.target.files ? e.target.files[0] : undefined,
-    });
+    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate(state);
-  };
+  const methods = useForm<FormState>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      nombre: "",
+      descripcion: "",
+      estaHabilitada: true,
+      idEstablecimiento: Number(idEst),
+      imagen: undefined,
+      disciplinas: [],
+    },
+    mode: "onTouched",
+  });
 
   return (
     <div>
-      <TopMenu />
       <Heading textAlign="center" mt="40px">
         Nueva cancha
       </Heading>
-      <br />
-      <form onSubmit={handleSubmit}>
-        <VStack spacing="4" width="500px" justifyContent="center" margin="auto">
-          <FormControl
-            variant="floating"
-            id="nombre"
+      <FormProvider {...methods}>
+        <VStack
+          as="form"
+          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          spacing="24px"
+          width="400px"
+          m="auto"
+        >
+          <InputControl
+            name="nombre"
+            label="Nombre de la cancha"
+            placeholder="Nombre"
             isRequired
-            onChange={handleChange}
-          >
-            <Input placeholder="Nombre" name="nombre" />
-            <FormLabel>Nombre de la cancha</FormLabel>
-          </FormControl>
-          <FormControl
-            variant="floating"
-            id="descripcion"
-            isRequired
-            onChange={handleChange}
-          >
-            <Input placeholder="Descripción" name="descripcion" />
-            <FormLabel>Descripción</FormLabel>
-          </FormControl>
-          <Input
-            type="file"
-            name="imagen"
-            onChange={handleImagenChange}
-            accept="image/*"
-            sx={{
-              "::file-selector-button": {
-                height: 10,
-                padding: 0,
-                mr: 4,
-                background: "none",
-                border: "none",
-                fontWeight: "bold",
-              },
-            }}
           />
-          <Button type="submit">Crear cancha</Button>
+          <InputControl
+            name="descripcion"
+            label="Descripción"
+            placeholder="Descripción"
+            isRequired
+          />
+          <FormControl>
+            <FormLabel marginTop="10px" marginLeft="10px">
+              Imagen
+            </FormLabel>
+            <Input
+              type="file"
+              name="imagen"
+              onChange={handleImagenChange}
+              accept="image/*"
+              sx={{
+                "::file-selector-button": {
+                  height: 10,
+                  padding: 0,
+                  mr: 4,
+                  background: "none",
+                  border: "none",
+                  fontWeight: "bold",
+                },
+              }}
+            />
+          </FormControl>
+          <SubmitButton>Crear</SubmitButton>
+          {isError && (
+            <Alert status="error">
+              Error al intentar registrar el establecimiento. Intente de nuevo
+            </Alert>
+          )}
         </VStack>
-      </form>
+      </FormProvider>
     </div>
   );
 }

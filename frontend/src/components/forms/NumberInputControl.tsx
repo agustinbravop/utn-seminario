@@ -14,7 +14,7 @@ import {
   NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
-export interface NumberInputControlProps
+interface NumberInputControlProps
   extends NoVariantBaseFormControlProps,
     Omit<NumberInputProps, keyof NoVariantBaseFormControlProps> {
   /**
@@ -29,7 +29,7 @@ export interface NumberInputControlProps
  *
  * https://chakra-ui.com/docs/components/number-input
  */
-export default function NumberInputControl(props: NumberInputControlProps) {
+export function NumberInputControl(props: NumberInputControlProps) {
   const {
     name,
     control,

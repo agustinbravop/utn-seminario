@@ -5,7 +5,7 @@ import {
   NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
-export interface TextareaControlProps
+interface TextareaControlProps
   extends NoVariantBaseFormControlProps,
     Omit<TextareaProps, keyof NoVariantBaseFormControlProps> {}
 
@@ -14,7 +14,7 @@ export interface TextareaControlProps
  *
  * https://chakra-ui.com/docs/components/textarea
  */
-export default function TextareaControl(props: TextareaControlProps) {
+export function TextareaControl(props: TextareaControlProps) {
   const { name, control, resize, variant, ...rest } = props;
 
   const { field } = useController({

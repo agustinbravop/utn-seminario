@@ -1,36 +1,32 @@
-import TopMenu from "../../components/TopMenu/TopMenu";
 import { useMutation } from "@tanstack/react-query";
-import { ApiError } from "../../utils/api";
-import { Administrador } from "../../models";
+import { Administrador } from "@/models/index";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
-import { useCurrentAdmin } from "../../hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Heading, VStack, Alert } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import InputControl from "../../components/forms/InputControl";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SubmitButton from "../../components/forms/SubmitButton";
+import { InputControl, SubmitButton } from "@/components/forms";
+import { ApiError } from "@/utils/api";
 
 interface LoginState {
   correoOUsuario: string;
   clave: string;
 }
 
-function LoginPage() {
+const validationSchema = Yup.object({
+  correoOUsuario: Yup.string().required("Obligatorio"),
+  clave: Yup.string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .required("Obligatorio"),
+});
+
+export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useCurrentAdmin();
   const { mutate, isError } = useMutation<Administrador, ApiError, LoginState>({
     mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
-    onSuccess: (admin) => navigate(`/administrador/${admin.id}`),
-    onError: (apiErr) =>
-      console.log("onError", apiErr, apiErr.status, apiErr.message),
-  });
-
-  const validationSchema = Yup.object({
-    correoOUsuario: Yup.string().required("Obligatorio"),
-    clave: Yup.string()
-      .min(8, "La contraseña debe tener al menos 8 caracteres")
-      .required("Obligatorio"),
+    onSuccess: (admin) => navigate(`/admin/${admin.id}`),
   });
 
   const methods = useForm<LoginState>({
@@ -38,10 +34,8 @@ function LoginPage() {
     defaultValues: { correoOUsuario: "", clave: "" },
     mode: "onTouched",
   });
-
   return (
     <>
-      <TopMenu />
       <Heading textAlign="center" size="2xl" margin={[0, "60px"]}>
         Bienvenido a CANCHAS.NET
       </Heading>
@@ -57,12 +51,14 @@ function LoginPage() {
             name="correoOUsuario"
             label="Correo o usuario"
             placeholder="Correo o usuario"
+            isRequired
           />
           <InputControl
             name="clave"
             type="password"
             label="Contraseña"
             placeholder="Contraseña"
+            isRequired
           />
           <SubmitButton>Iniciar Sesión</SubmitButton>
 
@@ -76,5 +72,3 @@ function LoginPage() {
     </>
   );
 }
-
-export default LoginPage;

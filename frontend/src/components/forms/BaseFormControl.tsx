@@ -60,7 +60,6 @@ export function BaseFormControl(props: BaseFormControlProps) {
     fieldState: { error, invalid },
     formState: { isSubmitting },
   } = useController({ name, control });
-
   return (
     <ChakraFormControl
       isInvalid={invalid}
