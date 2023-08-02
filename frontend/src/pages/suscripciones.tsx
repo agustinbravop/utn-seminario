@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardBody,
@@ -69,13 +70,14 @@ export default function SuscripcionesPage() {
 
   return (
     <>
-      <Heading size="md">Elija una suscripción</Heading>
-      <Text>
-        Nos ajustamos a las necesidades de cada negocio. La puede modificar en
-        cualquier momento.
-      </Text>
-
-      <HStack justifyContent="center" gap="60px" my="50px">
+      <Box marginBottom="110px" marginLeft="12%">
+        <Heading size="md">Elija una suscripción</Heading>
+        <Text >
+          Nos ajustamos a las necesidades de cada negocio. La puede modificar en
+          cualquier momento.
+        </Text>
+      </Box>
+      <HStack justifyContent="center" gap="95px" my="50px">
         {cards}
       </HStack>
     </>

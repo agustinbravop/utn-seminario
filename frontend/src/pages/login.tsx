@@ -36,8 +36,8 @@ export default function LoginPage() {
   });
   return (
     <>
-      <Heading textAlign="center" size="2xl" margin={[0, "60px"]}>
-        Bienvenido a CANCHAS.NET
+      <Heading textAlign="center" size="2xl" fontSize="40px" marginTop="100px" marginBottom="60px">
+        ¡Bienvenido a Play Finder!
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -61,10 +61,9 @@ export default function LoginPage() {
             isRequired
           />
           <SubmitButton>Iniciar Sesión</SubmitButton>
-
           {isError && (
             <Alert status="error" margin="20px">
-              Error al intentar iniciar sesión. Intente de nuevo
+              Error al intentar iniciar sesión. Contrsaseña o usuario incorrecto.
             </Alert>
           )}
         </VStack>

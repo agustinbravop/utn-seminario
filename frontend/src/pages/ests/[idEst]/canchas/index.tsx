@@ -19,8 +19,8 @@ import { GrAddCircle } from "react-icons/gr";
 import Alerta from "@/components/Alerta/Alerta";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
-import EstabPage from "../_estabPage";
 import { Link } from "react-router-dom";
+import SubMenu from "@/components/SubMenu/SubMenu";
 
 export default function CanchasPage() {
   const { idEst } = useParams();
@@ -44,7 +44,7 @@ export default function CanchasPage() {
 
   return (
     <>
-      <EstabPage />
+      <SubMenu/>
       <Heading
         size="md"
         fontSize="26px"
@@ -75,7 +75,7 @@ export default function CanchasPage() {
         </InputGroup>
         <HStack
           marginLeft="auto"
-          marginRight="10%"
+          marginRight="15%"
           display="flex"
           alignContent="column"
           spacing={5}

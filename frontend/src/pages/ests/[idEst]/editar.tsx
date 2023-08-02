@@ -7,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Heading,
   Input,
   VStack,
   useToast,
@@ -20,7 +21,7 @@ import * as Yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputControl, SubmitButton } from "@/components/forms";
-import EstabPage from "./_estabPage";
+import { useEffect } from "react";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -42,13 +43,19 @@ const validationSchema = Yup.object({
 });
 
 export default function EditEstabPage() {
-  const { idEst } = useParams("/ests/:idEst/editar");
   const navigate = useNavigate();
+  const {idEst} = useParams("/ests/:idEst");
   const toast = useToast();
 
-  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
-    getEstablecimientoByID(Number(idEst))
-  );
+   const { data } = useQuery<Establecimiento>({
+    queryKey: ["establecimientos", idEst],
+    queryFn: () => getEstablecimientoByID(Number(idEst)),
+    enabled: true,
+  });
+
+  useEffect(() => {
+    console.log(data)
+  }, [data]);
 
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
@@ -90,8 +97,9 @@ export default function EditEstabPage() {
 
   return (
     <div>
-      <EstabPage />
-
+      <Heading textAlign="center" mt="40px" paddingBottom="60px" >
+        Editar Establecimiento
+      </Heading>
       <FormProvider {...methods}>
         <VStack
           as="form"
