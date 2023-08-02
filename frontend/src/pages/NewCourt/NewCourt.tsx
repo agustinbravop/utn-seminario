@@ -35,7 +35,7 @@ function NewCourt() {
 
   const { mutate } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
-    onSuccess: () => navigate("/landing"),
+    onSuccess: () => navigate(-1),
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

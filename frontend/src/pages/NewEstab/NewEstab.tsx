@@ -25,11 +25,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import InputControl from "../../components/forms/InputControl";
 import SubmitButton from "../../components/forms/SubmitButton";
 
+
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
 };
 
 function NewEstab() {
+ 
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
@@ -84,6 +86,7 @@ function NewEstab() {
 
   return (
     <div>
+     
       <TopMenu />
       <Heading size="xl" margin="50px" textAlign="center">
         Nuevo Establecimiento
