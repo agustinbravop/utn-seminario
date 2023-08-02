@@ -36,7 +36,7 @@ export async function modificarEstablecimiento(
     formData.append(key, String(establecimiento[key]));
   }
 
-  return putFormData<Establecimiento>(`${API_URL}/establecimientos`, formData);
+  return putFormData<Establecimiento>(`${API_URL}/establecimientos/${establecimiento.id}`, formData);
 }
 
 export async function getEstablecimientosByAdminID(
