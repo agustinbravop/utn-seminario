@@ -43,9 +43,9 @@ export type HorarioDeAtencion = {
 export type Disponibilidad = {
   horaInicio : string;
   horaFin : string;
-  minutosReserva: string;
-  precioReserva: string;
-  precioSena?: string;
+  minutosReserva: number;
+  precioReserva: number;
+  precioSena?: number;
   disciplina: string;
   dias : string[];
 };

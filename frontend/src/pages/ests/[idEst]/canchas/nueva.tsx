@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "@/utils/api";
 import {
-  Alert,
   Button,
   FormControl,
   FormLabel,
@@ -31,8 +30,8 @@ const validationSchema = Yup.object({
   descripcion: Yup.string().required("Obligatorio"),
   estaHabilitada: Yup.bool().default(true),
   idEstablecimiento: Yup.number().required(),
-  imagen: Yup.mixed<File>().optional(),
   disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
+  imagen: Yup.mixed<File>().optional(),
 });
 
 function NewCourt() {
@@ -40,10 +39,10 @@ function NewCourt() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  // Aca vendrian las disciplinas desde el back directamente
+  // Aca dejo hardcodeadas algunas disciplinas :|
   const disciplinas = ["Basket", "Futbol", "Tenis", "Padel"];
 
-  //Estos horarios los hardcodee, no se si seria lo mejor
+  //Horarios hardcodeados, no se si seria lo mejor
   //Si igual lo dejamos asi, mejor armar un for
   const horas = [
     "1:00",
@@ -74,14 +73,14 @@ function NewCourt() {
   const [disp, setDisp] = useState({
     horaInicio: "",
     horaFin: "",
-    minutosReserva: "",
-    precioReserva: "",
-    precioSena: undefined,
+    minutosReserva: 0,
+    precioReserva: 0,
+    precioSena: 0,
     disciplina: "",
     dias: [""],
   });
 
-  const handleButtonSelection = (dia: string) => {
+  const handleDiaSelect = (dia: string) => {
     if (disp.dias.includes(dia)) {
       const a = disp.dias.filter((e) => e !== dia);
       setDisp({ ...disp, dias: a });
@@ -97,7 +96,7 @@ function NewCourt() {
     setDisp({ ...disp, [e.target.name]: e.target.value });
   };
 
-  const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, disp, imagen),
     onSuccess: () => {
       toast({
@@ -129,15 +128,15 @@ function NewCourt() {
       descripcion: "",
       estaHabilitada: true,
       idEstablecimiento: Number(idEst),
-      imagen: undefined,
       disciplinas: [],
+      imagen: undefined,
     },
     mode: "onTouched",
   });
 
   return (
     <div>
-      <Heading textAlign="center" mt="40px">
+      <Heading textAlign="center" mt="-20px" mb="20px">
         Nueva cancha
       </Heading>
       <FormProvider {...methods}>
@@ -180,146 +179,135 @@ function NewCourt() {
                 },
               }}
             />
-          </FormControl>
+          </FormControl> 
+          
+          <div className="margen">
+            <h3>Disponibilidad horaria</h3>
+            <p>
+              {" "}
+              En qué rangos horarios la cancha estará disponible y para qué
+              disciplinas.
+            </p>
+            <Button> Agregar disponibilidad + </Button>
+          </div>
+          <br />
+          
+            <HStack width="600px">
+              <FormControl
+                variant="floating"
+                id="hora-inicio"
+                isRequired
+                onChange={handleChange}
+              >
+                <Select placeholder="Elegir Horario" name="horaInicio">
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Hora inicio</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="hora-fin"
+                isRequired
+                onChange={handleChange}
+              >
+                <Select placeholder="Elegir Horario" name="horaFin">
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Hora fin</FormLabel>
+              </FormControl>
+            </HStack>
+            <HStack width="600px">
+              <FormControl
+                variant="floating"
+                id="nombre"
+                isRequired
+                onChange={handleChange}
+              >
+                <Select placeholder="Seleccione una opcion" name="disciplina">
+                  {disciplinas.map((disciplina, i) => (
+                    <option key={i} value={disciplina}>
+                      {disciplina}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Disciplina</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="duracionReserva"
+                isRequired
+                onChange={handleChange}
+              >
+                <Input placeholder=" " name="minutosReserva" />
+                <FormLabel>Duracion de una reserva</FormLabel>
+              </FormControl>
+            </HStack>
+            <HStack width="600px">
+              <FormControl
+                variant="floating"
+                id="reserva"
+                isRequired
+                onChange={handleChange}
+              >
+                <Input placeholder=" " name="precioReserva" />
+                <FormLabel>Precio de la reserva</FormLabel>
+              </FormControl>
+              <FormControl
+                variant="floating"
+                id="precioSena"
+                onChange={handleChange}
+              >
+                <Input placeholder=" " name="precioSena" />
+                <FormLabel>Precio de la seña</FormLabel>
+              </FormControl>
+            </HStack>
+          
+          <div>
+            <p> Seleccionar los días para la disponibilidad.</p>
+          </div>
+          <br />
+          <div className="centrado2">
+            <SelectableButton
+              children="Lunes"
+              onButtonClick={handleDiaSelect}
+            />
+            <SelectableButton
+              children="Martes"
+              onButtonClick={handleDiaSelect}
+            />
+            <SelectableButton
+              children="Miercoles"
+              onButtonClick={handleDiaSelect}
+            />
+            <SelectableButton
+              children="Jueves"
+              onButtonClick={handleDiaSelect}
+            />
+            <SelectableButton
+              children="Viernes"
+              onButtonClick={handleDiaSelect}
+            />
+            <SelectableButton
+              children="Sabado"
+              onButtonClick={handleDiaSelect}
+            />
+            <SelectableButton
+              children="Domingo"
+              onButtonClick={handleDiaSelect}
+            />
+          </div>
+          <br />
           <SubmitButton>Crear</SubmitButton>
-          {isError && (
-            <Alert status="error">
-              Error al intentar registrar el establecimiento. Intente de nuevo
-            </Alert>
-          )}
         </VStack>
       </FormProvider>
-      <div className="margen">
-        <h3>Disponibilidad horaria</h3>
-        <p>
-          {" "}
-          En qué rangos horarios la cancha estará disponible y para qué
-          disciplinas.
-        </p>
-        {isError && (
-          <Alert status="error" margin="20px">
-            Datos incorrectos. Intente de nuevo
-          </Alert>
-        )}
-        <Button> Agregar disponibilidad + </Button>
-      </div>
-      <br />
-      <VStack spacing="4" width="900px" justifyContent="center" margin="auto">
-        <HStack width="600px">
-          <FormControl
-            variant="floating"
-            id="hora-inicio"
-            isRequired
-            onChange={handleChange}
-          >
-            <Select placeholder="Seleccione una opcion" name="horaInicio">
-              {horas.map((hora, i) => (
-                <option key={i} value={hora}>
-                  {hora}
-                </option>
-              ))}
-            </Select>
-            <FormLabel>Hora inicio</FormLabel>
-          </FormControl>
-
-          <FormControl
-            variant="floating"
-            id="hora-fin"
-            isRequired
-            onChange={handleChange}
-          >
-            <Select placeholder="Seleccione una opcion" name="horaFin">
-              {horas.map((hora, i) => (
-                <option key={i} value={hora}>
-                  {hora}
-                </option>
-              ))}
-            </Select>
-            <FormLabel>Hora fin</FormLabel>
-          </FormControl>
-        </HStack>
-        <HStack width="600px">
-          <FormControl
-            variant="floating"
-            id="nombre"
-            isRequired
-            onChange={handleChange}
-          >
-            <Select placeholder="Seleccione una opcion" name="disciplina">
-              {disciplinas.map((disciplina, i) => (
-                <option key={i} value={disciplina}>
-                  {disciplina}
-                </option>
-              ))}
-            </Select>
-            <FormLabel>Disciplina</FormLabel>
-          </FormControl>
-          <FormControl
-            variant="floating"
-            id="duracionReserva"
-            isRequired
-            onChange={handleChange}
-          >
-            <Input placeholder=" " name="minutosReserva" />
-            <FormLabel>Duracion de una reserva</FormLabel>
-          </FormControl>
-        </HStack>
-        <HStack width="600px">
-          <FormControl
-            variant="floating"
-            id="reserva"
-            isRequired
-            onChange={handleChange}
-          >
-            <Input placeholder=" " name="precioReserva" />
-            <FormLabel>Precio de la reserva</FormLabel>
-          </FormControl>
-          <FormControl
-            variant="floating"
-            id="precioseña"
-            onChange={handleChange}
-          >
-            <Input placeholder=" " name="precioSena" />
-            <FormLabel>Precio de la seña</FormLabel>
-          </FormControl>
-        </HStack>
-      </VStack>
-      <div className="margen">
-        <p> Seleccionar los días para la disponibilidad.</p>
-      </div>
-      <br />
-      <div className="centrado2">
-        <SelectableButton
-          children="Lunes"
-          onButtonClick={handleButtonSelection}
-        />
-        <SelectableButton
-          children="Martes"
-          onButtonClick={handleButtonSelection}
-        />
-        <SelectableButton
-          children="Miercoles"
-          onButtonClick={handleButtonSelection}
-        />
-        <SelectableButton
-          children="Jueves"
-          onButtonClick={handleButtonSelection}
-        />
-        <SelectableButton
-          children="Viernes"
-          onButtonClick={handleButtonSelection}
-        />
-        <SelectableButton
-          children="Sabado"
-          onButtonClick={handleButtonSelection}
-        />
-        <SelectableButton
-          children="Domingo"
-          onButtonClick={handleButtonSelection}
-        />
-      </div>
-      <br />
-      <br />
     </div>
   );
 }
