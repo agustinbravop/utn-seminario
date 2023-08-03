@@ -25,8 +25,14 @@ export default function SuscripcionesPage() {
   const { data, isLoading, isError } = useQuery<Suscripcion[]>(
     ["suscripciones"],
     getSuscripciones
+    
   );
+<<<<<<< HEAD:frontend/src/pages/SuscriptionOptionPage/SuscriptionOptionPage.tsx
+  const navigate = useNavigate();
+ 
+=======
 
+>>>>>>> cb21ec71928a91a894bf903e885b7ac2e93d2196:frontend/src/pages/suscripciones.tsx
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {

@@ -7,6 +7,7 @@ export const canchaSchema = z.object({
   nombre: z.string().nonempty(),
   descripcion: z.string().default(""),
   estaHabilitada: z.boolean().default(true),
+  estaEliminada:z.boolean().default(false),
   urlImagen: z.string().nonempty().nullable(),
   idEstablecimiento: z.number().positive().int(),
   disciplinas: z.array(z.string().nonempty()),

@@ -23,6 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 
+
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
 };
@@ -42,6 +43,7 @@ const validationSchema = Yup.object({
 });
 
 function NewEstab() {
+ 
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
@@ -82,6 +84,11 @@ function NewEstab() {
 
   return (
     <div>
+<<<<<<< HEAD:frontend/src/pages/NewEstab/NewEstab.tsx
+     
+      <TopMenu />
+=======
+>>>>>>> cb21ec71928a91a894bf903e885b7ac2e93d2196:frontend/src/pages/admin/[idAdmin]/nuevoEstablecimiento.tsx
       <Heading size="xl" margin="50px" textAlign="center">
         Nuevo Establecimiento
       </Heading>

@@ -63,6 +63,7 @@ export class EstablecimientoHandler {
     return async (req, res) => {
       // TODO: mejorar input validation
       const idAdmin = Number(req.params.idAdmin);
+      console.log(idAdmin)
       const ests = await this.service.getByAdminID(idAdmin);
       res.status(200).json(ests);
     };
@@ -89,6 +90,15 @@ export class EstablecimientoHandler {
       const estModificado = await this.service.modificar(est, imagen);
       res.status(200).json(estModificado);
     };
+
+  }
+
+  eliminarEstablecimiento():RequestHandler { 
+    return async (req, res)=> { 
+      const idEst=Number(req.params['idEst']) 
+      const eliminarEst=await this.service.eliminar(idEst); 
+      res.status(200).json(eliminarEst)
+    }
   }
 
   /**
