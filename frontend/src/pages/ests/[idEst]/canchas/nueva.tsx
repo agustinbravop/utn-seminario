@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Cancha } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
@@ -89,10 +89,32 @@ function NewCourt() {
       a.push(dia);
       setDisp({ ...disp, dias: a });
     }
-    console.log(disp);
+    // console.log(disp);
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const [state, setState] = useState<FormState>({
+    nombre: "",
+    descripcion: "",
+    estaHabilitada: true,
+    idEstablecimiento: Number(idEst),
+    imagen: undefined,
+    disciplinas: [],
+  });
+
+  const handleChangeState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setState({ ...state, [name]: value });
+  };
+
+  useEffect(() => {
+    console.log(state)
+  }, [state]);
+
+  useEffect(() => {
+    console.log(disp)
+  }, [disp]);
+
+  const handleChangeDisp = (e: ChangeEvent<HTMLInputElement>) => {
     setDisp({ ...disp, [e.target.name]: e.target.value });
   };
 
@@ -142,7 +164,7 @@ function NewCourt() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          onSubmit={methods.handleSubmit((values) => console.log(values))}
           spacing="24px"
           width="400px"
           m="auto"
@@ -197,7 +219,6 @@ function NewCourt() {
                 variant="floating"
                 id="hora-inicio"
                 isRequired
-                onChange={handleChange}
               >
                 <Select placeholder="Elegir Horario" name="horaInicio">
                   {horas.map((hora, i) => (
@@ -212,7 +233,6 @@ function NewCourt() {
                 variant="floating"
                 id="hora-fin"
                 isRequired
-                onChange={handleChange}
               >
                 <Select placeholder="Elegir Horario" name="horaFin">
                   {horas.map((hora, i) => (
@@ -229,7 +249,6 @@ function NewCourt() {
                 variant="floating"
                 id="nombre"
                 isRequired
-                onChange={handleChange}
               >
                 <Select placeholder="Seleccione una opcion" name="disciplina">
                   {disciplinas.map((disciplina, i) => (
@@ -244,7 +263,6 @@ function NewCourt() {
                 variant="floating"
                 id="duracionReserva"
                 isRequired
-                onChange={handleChange}
               >
                 <Input placeholder=" " name="minutosReserva" />
                 <FormLabel>Duracion de una reserva</FormLabel>
@@ -255,7 +273,6 @@ function NewCourt() {
                 variant="floating"
                 id="reserva"
                 isRequired
-                onChange={handleChange}
               >
                 <Input placeholder=" " name="precioReserva" />
                 <FormLabel>Precio de la reserva</FormLabel>
@@ -263,7 +280,6 @@ function NewCourt() {
               <FormControl
                 variant="floating"
                 id="precioSena"
-                onChange={handleChange}
               >
                 <Input placeholder=" " name="precioSena" />
                 <FormLabel>Precio de la seña</FormLabel>
