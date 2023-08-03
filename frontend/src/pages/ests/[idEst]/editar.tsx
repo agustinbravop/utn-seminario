@@ -7,20 +7,32 @@ import {
   FormControl,
   FormLabel,
   HStack,
+  Heading,
   Input,
   VStack,
   useToast,
+  Container,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   ModificarEstablecimientoReq,
   getEstablecimientoByID,
   modificarEstablecimiento,
+  deleteEstablecimientoByID
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { InputControl, SubmitButton } from "@/components/forms";
-import EstabPage from "./_estabPage";
+import { useEffect } from "react";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -42,13 +54,20 @@ const validationSchema = Yup.object({
 });
 
 export default function EditEstabPage() {
-  const { idEst } = useParams("/ests/:idEst/editar");
   const navigate = useNavigate();
+  const { idEst } = useParams("/ests/:idEst");
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
-    getEstablecimientoByID(Number(idEst))
-  );
+  const { data } = useQuery<Establecimiento>({
+    queryKey: ["establecimientos", idEst],
+    queryFn: () => getEstablecimientoByID(Number(idEst)),
+    enabled: true,
+  });
+
+  useEffect(() => {
+    console.log(data)
+  }, [data]);
 
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
@@ -88,10 +107,42 @@ export default function EditEstabPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
+  const { mutate: mutateDelete } = useMutation<Establecimiento, ApiError, FormState>({
+    mutationFn: () => deleteEstablecimientoByID(data?.id),
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento eliminado.",
+        description: `Establecimiento eliminado exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-3);
+    },
+    onError: () => {
+      toast({
+        title: "Error al eliminar el establecimiento",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const handleEliminar = () => {
+    console.log("hola")
+    console.log("Eliminar establecimiento")
+    // deleteEstablecimientoByID(data?.idEstablecimiento, data?.id)
+    // navigate("www.google.com")
+    mutateDelete();
+    onClose();
+  };
+
+
   return (
     <div>
-      <EstabPage />
-
+      <Heading textAlign="center" mt="40px" paddingBottom="60px" >
+        Editar Establecimiento
+      </Heading>
       <FormProvider {...methods}>
         <VStack
           as="form"
@@ -172,6 +223,33 @@ export default function EditEstabPage() {
               Error al intentar registrar el establecimiento. Intente de nuevo
             </Alert>
           )}
+          <Container centerContent mt="20px">
+            <Button colorScheme="red" onClick={onOpen}>
+              Eliminar
+            </Button>
+          </Container>
+
+          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Eliminar establecimiento</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>¿Está seguro de eliminar el establecimiento?</ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="gray" mr={3} onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  colorScheme="blackAlpha"
+                  backgroundColor="black"
+                  onClick={handleEliminar}
+                >
+                  Aceptar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </VStack>
       </FormProvider>
     </div>

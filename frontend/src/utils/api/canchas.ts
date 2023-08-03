@@ -1,3 +1,4 @@
+
 import { postFormData, API_URL, get, putFormData } from ".";
 import { Cancha, Disponibilidad } from "@/models";
 
@@ -56,4 +57,12 @@ export async function modificarCancha(
     `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
     formData
   );
+}
+
+
+export async function deleteCanchaByID(
+  idEst: number | undefined,
+  idCancha: number| undefined
+) {
+  return del(`${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`);
 }

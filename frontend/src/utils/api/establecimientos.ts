@@ -1,4 +1,4 @@
-import { postFormData, get, API_URL, putFormData } from ".";
+import { postFormData, get, API_URL, putFormData, del } from ".";
 import { Establecimiento } from "@/models";
 
 export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
@@ -36,7 +36,7 @@ export async function modificarEstablecimiento(
     formData.append(key, String(establecimiento[key]));
   }
 
-  return putFormData<Establecimiento>(`${API_URL}/establecimientos`, formData);
+  return putFormData<Establecimiento>(`${API_URL}/establecimientos/${establecimiento.id}`, formData);
 }
 
 export async function getEstablecimientosByAdminID(
@@ -49,4 +49,11 @@ export async function getEstablecimientoByID(
   id: number
 ): Promise<Establecimiento> {
   return get(`${API_URL}/establecimientos/${id}`);
+}
+
+
+export async function deleteEstablecimientoByID(
+  idEst: number | undefined,
+) {
+  return del(`${API_URL}/establecimientos/${idEst}`);
 }

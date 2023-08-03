@@ -17,7 +17,7 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
     try {
       const dbAdmin = await this.prisma.administrador.findUnique({
         where: {
-          id: id,
+          id: Number(id),
         },
         include: {
           tarjeta: true,
