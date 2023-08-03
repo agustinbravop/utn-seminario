@@ -12,7 +12,7 @@ import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { getSuscripciones } from "@/utils/api/auth";
 import { Suscripcion } from "@/models";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@/router";
+import { Link } from "react-router-dom";
 
 const iconos = [
   <Icon as={BsShop} fill="brand.500" fontSize={90} />,
