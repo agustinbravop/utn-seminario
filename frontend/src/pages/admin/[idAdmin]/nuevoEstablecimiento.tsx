@@ -23,6 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 
+
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
 };
@@ -42,6 +43,7 @@ const validationSchema = Yup.object({
 });
 
 function NewEstab() {
+ 
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();

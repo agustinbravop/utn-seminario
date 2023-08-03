@@ -28,6 +28,7 @@ import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
+  deleteCanchaByID
 } from "@/utils/api/canchas";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
@@ -145,14 +146,37 @@ export default function EditCourtPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
+  const { mutate: mutateDelete } = useMutation<Cancha, ApiError, FormState>({
+    mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
+    onSuccess: () => {
+      toast({
+        title: "Cancha Eliminada.",
+        description: `Cancha Eliminada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-2);
+    },
+    onError: () => {
+      toast({
+        title: "Error al eliminar la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
   const handleEliminar = () => {
+    console.log("hola")
+    mutateDelete()
     onClose();
   };
 
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha
+        Editar Cancha 
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -317,7 +341,7 @@ export default function EditCourtPage() {
         </Button>
       </Container>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Eliminar cancha</ModalHeader>

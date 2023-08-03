@@ -25,8 +25,8 @@ export default function SuscripcionesPage() {
   const { data, isLoading, isError } = useQuery<Suscripcion[]>(
     ["suscripciones"],
     getSuscripciones
+    
   );
-
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {

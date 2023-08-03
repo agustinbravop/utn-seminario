@@ -1,5 +1,7 @@
 generator client {
   provider = "prisma-client-js"
+ 
+
 }
 
 datasource db {
@@ -31,6 +33,7 @@ model cancha {
   estaHabilitada    Boolean
   urlImagen         String?          @db.VarChar
   idEstablecimiento Int
+  estaEliminada     Boolean
   establecimiento   establecimiento  @relation(fields: [idEstablecimiento], references: [id], onDelete: NoAction, onUpdate: NoAction)
   disciplinas       disciplina[]
   disponibilidades  disponibilidad[]
@@ -68,15 +71,17 @@ model establecimiento {
   nombre             String         @db.VarChar
   telefono           String
   direccion          String         @db.VarChar
-  localidad          String         @db.VarChar
-  provincia          String         @db.VarChar
   urlImagen          String?        @db.VarChar
   correo             String         @unique @db.VarChar
+  estaEliminada      Boolean
   horariosDeAtencion String?
+  localidad          String         @db.VarChar 
+  provincia          String         @db.VarChar
   idAdministrador    Int
   administrador      administrador  @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
   canchas            cancha[]
   metodosDePago      metodoDePago[]
+
 }
 
 model metodoDePago {
@@ -137,6 +142,7 @@ model reserva {
   fechaReserva         DateTime    @db.Date
   horaInicio           DateTime    @db.Time(6)
   horaFin              DateTime    @db.Time(6)
+  precio               Float
   idCancha             Int
   cancha               cancha?     @relation(fields: [idCancha], references: [id], onDelete: NoAction, onUpdate: NoAction)
   idPagoReserva        Int

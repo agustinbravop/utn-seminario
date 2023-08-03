@@ -36,6 +36,11 @@ export function canchasRouter(
     validateBody(modificarCanchaReqSchema),
     handler.putCancha()
   );
+  router.delete("/:idEst/canchas/:idCancha", 
+  authMiddle.isAdmin(),
+  estHandler.validateAdminOwnsEstablecimiento(),
+  handler.eliminarCancha()
+  )
 
   return router;
 }
