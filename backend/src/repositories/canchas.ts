@@ -22,6 +22,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       const canchas = await this.prisma.cancha.findMany({
         where: {
           idEstablecimiento: idEst,
+          estaEliminada: false,
         },
         orderBy: [
           {

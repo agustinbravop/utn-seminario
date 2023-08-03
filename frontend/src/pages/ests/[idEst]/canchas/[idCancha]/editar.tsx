@@ -28,6 +28,7 @@ import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
+  deleteCanchaByID
 } from "@/utils/api/canchas";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
@@ -146,13 +147,16 @@ export default function EditCourtPage() {
   };
 
   const handleEliminar = () => {
+    console.log("hola")
+    deleteCanchaByID(data?.idEstablecimiento, data?.id)
+    navigate("www.google.com")
     onClose();
   };
 
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha
+        Editar Cancha 
       </Heading>
       <FormProvider {...methods}>
         <VStack
