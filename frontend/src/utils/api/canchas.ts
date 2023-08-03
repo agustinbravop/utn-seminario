@@ -1,5 +1,6 @@
-import { postFormData, API_URL, get, putFormData, del } from ".";
-import { Cancha } from "@/models";
+
+import { postFormData, API_URL, get, putFormData } from ".";
+import { Cancha, Disponibilidad } from "@/models";
 
 export type CrearCanchaReq = Omit<Cancha, "id" | "urlImagen">;
 
@@ -7,6 +8,7 @@ export type ModificarCanchaReq = Omit<Cancha, "urlImagen">;
 
 export async function crearCancha(
   cancha: CrearCanchaReq,
+  disp : Disponibilidad,
   imagen?: File
 ): Promise<Cancha> {
   const formData = new FormData();
@@ -17,6 +19,7 @@ export async function crearCancha(
   for (key in cancha) {
     formData.append(key, String(cancha[key]));
   }
+  console.log(disp)
 
   return postFormData<Cancha>(
     `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
