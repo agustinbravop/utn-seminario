@@ -19,6 +19,7 @@ export const modificarCanchaReqSchema = canchaSchema
   .omit({
     id: true,
     urlImagen: true,
+    estaEliminada:true,
   })
   .extend({
     id:z.string().transform((str)=>Number(str)),
