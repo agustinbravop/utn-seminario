@@ -26,6 +26,7 @@ import {
   ModificarEstablecimientoReq,
   getEstablecimientoByID,
   modificarEstablecimiento,
+  deleteEstablecimientoByID
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
@@ -106,8 +107,8 @@ export default function EditEstabPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const { mutate: mutateDelete } = useMutation<Cancha, ApiError, FormState>({
-    mutationFn: () => deleteEstablecimientoByID(data?.idEstablecimiento),
+  const { mutate: mutateDelete } = useMutation<Establecimiento, ApiError, FormState>({
+    mutationFn: () => deleteEstablecimientoByID(data?.id),
     onSuccess: () => {
       toast({
         title: "Establecimiento eliminado.",
@@ -115,7 +116,7 @@ export default function EditEstabPage() {
         status: "success",
         isClosable: true,
       });
-      navigate(-2);
+      navigate(-3);
     },
     onError: () => {
       toast({
@@ -132,7 +133,7 @@ export default function EditEstabPage() {
     console.log("Eliminar establecimiento")
     // deleteEstablecimientoByID(data?.idEstablecimiento, data?.id)
     // navigate("www.google.com")
-    // mutateDelete();
+    mutateDelete();
     onClose();
   };
 
