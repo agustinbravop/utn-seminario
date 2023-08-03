@@ -23,6 +23,7 @@ export const modificarEstablecimientoReqSchema = establecimientoSchema
   .omit({
     urlImagen: true,
     id: true, //agregado :(
+    estaEliminada: true, //ver si se puede solucionar.
   })
   .extend({
     idAdministrador: z.string().transform((str) => Number(str)),
@@ -79,6 +80,7 @@ export class EstablecimientoHandler {
         telefono: req.body.telefono,
         direccion: req.body.direccion,
         localidad: req.body.localidad,
+        estaEliminada: req.body.estaEliminada === "true", //analizar req.body.estaHabilitada === "true"
         provincia: req.body.provincia,
         urlImagen: req.body.urlImagen,
         horariosDeAtencion: req.body.horariosDeAtencion, //cambiado :)

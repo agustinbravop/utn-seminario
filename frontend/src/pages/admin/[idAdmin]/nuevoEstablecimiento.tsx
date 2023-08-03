@@ -84,11 +84,6 @@ function NewEstab() {
 
   return (
     <div>
-<<<<<<< HEAD:frontend/src/pages/NewEstab/NewEstab.tsx
-     
-      <TopMenu />
-=======
->>>>>>> cb21ec71928a91a894bf903e885b7ac2e93d2196:frontend/src/pages/admin/[idAdmin]/nuevoEstablecimiento.tsx
       <Heading size="xl" margin="50px" textAlign="center">
         Nuevo Establecimiento
       </Heading>

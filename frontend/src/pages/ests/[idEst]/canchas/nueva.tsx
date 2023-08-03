@@ -38,9 +38,6 @@ function NewCourt() {
 
   const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
-<<<<<<< HEAD:frontend/src/pages/NewCourt/NewCourt.tsx
-    onSuccess: () => navigate(-1),
-=======
     onSuccess: () => {
       toast({
         title: "Cancha creada",
@@ -58,7 +55,6 @@ function NewCourt() {
         isClosable: true,
       });
     },
->>>>>>> cb21ec71928a91a894bf903e885b7ac2e93d2196:frontend/src/pages/ests/[idEst]/canchas/nueva.tsx
   });
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
