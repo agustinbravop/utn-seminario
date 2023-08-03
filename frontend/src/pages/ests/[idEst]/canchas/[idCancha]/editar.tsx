@@ -146,10 +146,30 @@ export default function EditCourtPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
+  const { mutate: mutateDelete } = useMutation<Cancha, ApiError, FormState>({
+    mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
+    onSuccess: () => {
+      toast({
+        title: "Cancha Eliminada.",
+        description: `Cancha Eliminada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-2);
+    },
+    onError: () => {
+      toast({
+        title: "Error al eliminar la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
   const handleEliminar = () => {
     console.log("hola")
-    deleteCanchaByID(data?.idEstablecimiento, data?.id)
-    navigate("www.google.com")
+    mutateDelete()
     onClose();
   };
 
@@ -321,7 +341,7 @@ export default function EditCourtPage() {
         </Button>
       </Container>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Eliminar cancha</ModalHeader>
