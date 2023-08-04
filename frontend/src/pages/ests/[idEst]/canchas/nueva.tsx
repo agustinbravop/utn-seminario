@@ -156,6 +156,13 @@ function NewCourt() {
     mode: "onTouched",
   });
 
+  const handleAdd= () => {
+    disponibilidad.push("juan")
+    console.log(disponibilidad)
+  }
+
+  const disponibilidad = ["hector"]
+
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px" >
@@ -210,7 +217,7 @@ function NewCourt() {
               En qué rangos horarios la cancha estará disponible y para qué
               disciplinas.
             </p>
-            <Button> Agregar disponibilidad + </Button>
+            <Button onClick={() => handleAdd()} > Agregar disponibilidad + </Button>
           </div>
           <br />
           
