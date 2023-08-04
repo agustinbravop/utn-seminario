@@ -1,5 +1,4 @@
-
-import { postFormData, API_URL, get, putFormData, del} from ".";
+import { postFormData, API_URL, get, putFormData, del } from ".";
 import { Cancha, Disponibilidad } from "@/models";
 
 export type CrearCanchaReq = Omit<Cancha, "id" | "urlImagen">;

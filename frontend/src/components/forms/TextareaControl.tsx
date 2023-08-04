@@ -1,8 +1,8 @@
-import { Textarea, TextareaProps } from "@chakra-ui/react";
+import { Textarea, type TextareaProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import {
   BaseFormControl,
-  NoVariantBaseFormControlProps,
+  type NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 interface TextareaControlProps

@@ -1,8 +1,8 @@
-import { Checkbox, CheckboxProps } from "@chakra-ui/react";
+import { Checkbox, type CheckboxProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import {
   BaseFormControl,
-  NoVariantBaseFormControlProps,
+  type NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 /**

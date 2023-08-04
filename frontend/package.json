@@ -22,11 +22,10 @@
     "react-router": "^6.11.2",
     "react-router-dom": "^6.12.0",
     "styled-components": "^6.0.5",
-    "web-vitals": "^2.1.0",
     "yup": "^1.2.0"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite dev",
     "build": "tsc && vite build",
     "format": "npx prettier --write .",
     "theme": "npx chakra-cli tokens src/themes/index.ts"
@@ -48,7 +47,6 @@
     "eslint-config-react-app": "^7.0.1",
     "sass": "^1.62.1",
     "typescript": "^5.1.6",
-    "vite": "^4.4.4",
-    "vite-plugin-eslint": "^1.8.1"
+    "vite": "^4.4.4"
   }
 }

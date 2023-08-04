@@ -196,7 +196,7 @@ function NewCourt() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => console.log(values))}
+          onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="24px"
           width="400px"
           m="auto"
