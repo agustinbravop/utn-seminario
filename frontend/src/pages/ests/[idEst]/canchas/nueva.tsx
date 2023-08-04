@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Cancha } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
@@ -149,10 +149,16 @@ function NewCourt() {
   /*
   const values = useWatch({ control: methods.control });
   console.log(values);
-   */
+   */ 
+  const {control} = methods
 
-  const { fields, append, remove } = useFieldArray({
+  useEffect(() => {
+
+  }, [control]);
+ 
+  const { fields, append } = useFieldArray({
     name: "disponibilidades",
+    control,
   });
 
   const agregarHorario = () => {
@@ -232,9 +238,9 @@ function NewCourt() {
           </div>
           <br />
 
-          {fields.map((horario, index) => (
+          {fields.map((_h, index) => (
             <>
-              <HStack key={horario.id} width="600px">
+              <HStack width="600px">
                 <SelectControl
                   placeholder="Elegir horario"
                   label="Horario de Inicio"
@@ -260,7 +266,7 @@ function NewCourt() {
                   ))}
                 </SelectControl>
               </HStack>
-              <HStack key={horario.id} width="600px">
+              <HStack width="600px">
                 <SelectControl
                   placeholder="Seleccionar disciplina"
                   label=""
@@ -275,22 +281,22 @@ function NewCourt() {
                 </SelectControl>
                 <InputControl
                   isRequired
-                  placeholder=""
+                  placeholder=" "
                   name={`disponibilidades[${index}].minutosReserva`}
                   type="number"
                   label="Duración de la reserva"
                 ></InputControl>
               </HStack>
-              <HStack key={horario.id} width="600px">
+              <HStack width="600px">
                 <InputControl
-                  placeholder=""
+                  placeholder=" "
                   name={`disponibilidades[${index}].precioReserva`}
                   type="number"
                   label="Precio de reserva"
                   isRequired
                 ></InputControl>
                 <InputControl
-                  placeholder=""
+                  placeholder=" "
                   name={`disponibilidades[${index}].precioSena`}
                   type="number"
                   label="Seña de reserva"
@@ -300,7 +306,7 @@ function NewCourt() {
                 <p> Seleccionar los días para la disponibilidad.</p>
               </div>
               <br />
-              <HStack key={horario.id}>
+              <HStack>
                 <CheckboxGroupControl name={`disponibilidades[${index}].dias`}>
                   <HStack>
                     <Checkbox value="Lunes">Lunes</Checkbox>
@@ -325,87 +331,3 @@ function NewCourt() {
 }
 
 export default NewCourt;
-
-/* 
-            --------------------DE ACA PARA ABAJO ANDA BIEN
-
-            <HStack width="600px">
-            <SelectControl
-              placeholder="Elegir horario"
-              label="Horario de Inicio"
-              name="disponibilidades.horaInicio"
-              isRequired
-            >
-              {horas.map((hora, i) => (
-                <option key={i} value={hora}>
-                  {hora}
-                </option>
-              ))}
-            </SelectControl>
-            <SelectControl 
-              placeholder="Elegir horario"
-              label="Horario de Fin"
-              name="disponibilidades.horaFin"
-              isRequired
-            >
-              {horas.map((hora, i) => (
-                <option key={i} value={hora}>
-                  {hora}
-                </option>
-              ))}
-            </SelectControl> 
-          </HStack>
-          <HStack width="600px">
-            <SelectControl
-              placeholder="Seleccionar disciplina"
-              label=""
-              name="disponibilidades.disciplina"
-              isRequired
-            >
-              {disciplinas.map((disciplina, i) => (
-                <option key={i} value={disciplina}>
-                  {disciplina}
-                </option>
-              ))}
-            </SelectControl>
-            <InputControl
-              isRequired
-              placeholder=""
-              name="disponibilidades.minutosReserva"
-              type="number"
-              label="Duración de la reserva"
-            ></InputControl>
-          </HStack>
-          <HStack width="600px">
-            <InputControl
-              placeholder=""
-              name="disponibilidades.precioReserva"
-              type="number"
-              label="Precio de reserva"
-              isRequired
-            ></InputControl>
-            <InputControl
-              placeholder=""
-              name="disponibilidades.precioSena"
-              type="number"
-              label="Seña de reserva"
-            ></InputControl>
-          </HStack>
-          <div> 
-            <p> Seleccionar los días para la disponibilidad.</p>
-          </div>
-          <br />
-          <HStack>
-            <CheckboxGroupControl name="disponibilidades.dias">
-              <HStack>
-                <Checkbox value="Lunes">Lunes</Checkbox>
-                <Checkbox value="Martes">Martes</Checkbox>
-                <Checkbox value="Miercoles">Miercoles</Checkbox>
-                <Checkbox value="Jueves">Jueves</Checkbox>
-                <Checkbox value="Viernes">Viernes</Checkbox>
-                <Checkbox value="Sabado">Sabado</Checkbox>
-                <Checkbox value="Domingo">Domingo</Checkbox>
-              </HStack>
-            </CheckboxGroupControl>
-          </HStack>
-*/
