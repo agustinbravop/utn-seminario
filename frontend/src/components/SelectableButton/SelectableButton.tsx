@@ -1,15 +1,17 @@
-import { Button, Checkbox } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
 
 interface SelectableButtonProps {
   children?: ReactNode;
+  onButtonClick: Function;
 }
 
-function SelectableButton({ children }: SelectableButtonProps) {
+function SelectableButton({ children, onButtonClick }: SelectableButtonProps) {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleButtonClick = () => {
     setIsChecked(!isChecked);
+    onButtonClick(children as string);
   };
 
   return (
@@ -19,7 +21,6 @@ function SelectableButton({ children }: SelectableButtonProps) {
       onClick={handleButtonClick}
     >
       <span> {children} </span>
-      <Checkbox isChecked={isChecked} size="0" />
     </Button>
   );
 }
