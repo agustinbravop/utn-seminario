@@ -156,9 +156,14 @@ function NewCourt() {
     mode: "onTouched",
   });
 
+
+
   const handleAdd= () => {
-    disponibilidad.push("juan")
-    console.log(disponibilidad)
+    disponibilidad.push("juan5");
+    console.log(disponibilidad);
+    const oldDisciplinas = methods.getValues("disciplinas");
+    const newDisciplinas = oldDisciplinas.concat("pepe");
+    methods.setValue('disciplinas', newDisciplinas);
   }
 
   const disponibilidad = ["hector"]
