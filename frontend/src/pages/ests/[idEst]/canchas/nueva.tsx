@@ -25,6 +25,16 @@ type FormState = CrearCanchaReq & {
   imagen: File | undefined;
 };
 
+type D = { 
+  horaInicio: string
+  horaFin: string
+  minutosReserva: number,
+  precioReserva: number,
+  precioSena: number,
+  disciplina: string,
+  dias: string[],
+}
+
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
   descripcion: Yup.string().required("Obligatorio"),
@@ -114,7 +124,7 @@ function NewCourt() {
     console.log(disp)
   }, [disp]);
 
-  const handleChangeDisp = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeDisp = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement> ) => {
     setDisp({ ...disp, [e.target.name]: e.target.value });
   };
 
@@ -156,14 +166,24 @@ function NewCourt() {
     mode: "onTouched",
   });
 
-
+  const data2 = methods.getValues("disciplinas")
 
   const handleAdd= () => {
     disponibilidad.push("juan5");
     console.log(disponibilidad);
     const oldDisciplinas = methods.getValues("disciplinas");
-    const newDisciplinas = oldDisciplinas.concat("pepe");
+    const newDisciplinas = oldDisciplinas.concat("Juan Carlos Ongania");
     methods.setValue('disciplinas', newDisciplinas);
+    setDisp({
+      horaInicio: "",
+      horaFin: "",
+      minutosReserva: 0,
+      precioReserva: 0,
+      precioSena: 0,
+      disciplina: "",
+      dias: [""],
+    })
+    console.log(disp)
   }
 
   const disponibilidad = ["hector"]
@@ -222,6 +242,8 @@ function NewCourt() {
               En qué rangos horarios la cancha estará disponible y para qué
               disciplinas.
             </p>
+            {data2.map((d) => (<p> {d} </p>) )
+            }
             <Button onClick={() => handleAdd()} > Agregar disponibilidad + </Button>
           </div>
           <br />
@@ -232,7 +254,7 @@ function NewCourt() {
                 id="hora-inicio"
                 isRequired
               >
-                <Select placeholder="Elegir Horario" name="horaInicio">
+                <Select placeholder="Elegir Horario" name="horaInicio" onChange={handleChangeDisp}  value={disp.horaInicio}>
                   {horas.map((hora, i) => (
                     <option key={i} value={hora}>
                       {hora}
@@ -246,7 +268,7 @@ function NewCourt() {
                 id="hora-fin"
                 isRequired
               >
-                <Select placeholder="Elegir Horario" name="horaFin">
+                <Select placeholder="Elegir Horario" name="horaFin" onChange={handleChangeDisp}  value={disp.horaFin}>
                   {horas.map((hora, i) => (
                     <option key={i} value={hora}>
                       {hora}
@@ -262,7 +284,7 @@ function NewCourt() {
                 id="nombre"
                 isRequired
               >
-                <Select placeholder="Seleccione una opcion" name="disciplina">
+                <Select placeholder="Seleccione una opcion" name="disciplina" onChange={handleChangeDisp}   value={disp.disciplina}>
                   {disciplinas.map((disciplina, i) => (
                     <option key={i} value={disciplina}>
                       {disciplina}
@@ -276,8 +298,8 @@ function NewCourt() {
                 id="duracionReserva"
                 isRequired
               >
-                <Input placeholder=" " name="minutosReserva" />
-                <FormLabel>Duracion de una reserva</FormLabel>
+                <Input placeholder=" " name="minutosReserva" value={disp.minutosReserva} onChange={handleChangeDisp}/>
+                <FormLabel>Duracion de una reserva (minutos)</FormLabel>
               </FormControl>
             </HStack>
             <HStack width="600px">
@@ -286,14 +308,14 @@ function NewCourt() {
                 id="reserva"
                 isRequired
               >
-                <Input placeholder=" " name="precioReserva" />
+                <Input placeholder=" " name="precioReserva"  value={disp.precioReserva} onChange={handleChangeDisp}/>
                 <FormLabel>Precio de la reserva</FormLabel>
               </FormControl>
               <FormControl
                 variant="floating"
                 id="precioSena"
               >
-                <Input placeholder=" " name="precioSena" />
+                <Input placeholder=" " value={disp.precioSena} name="precioSena" onChange={handleChangeDisp} />
                 <FormLabel>Precio de la seña</FormLabel>
               </FormControl>
             </HStack>
