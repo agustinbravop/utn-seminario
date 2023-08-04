@@ -1,6 +1,6 @@
 import {
   Input,
-  InputProps,
+  type InputProps,
   InputGroup,
   InputLeftAddon,
   InputLeftElement,
@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 import { useController } from "react-hook-form";
 import {
   BaseFormControl,
-  NoVariantBaseFormControlProps,
+  type NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 /**

@@ -1,6 +1,6 @@
-import { CheckboxGroupProps, CheckboxGroup } from "@chakra-ui/react";
+import { type CheckboxGroupProps, CheckboxGroup } from "@chakra-ui/react";
 import { useController, useFieldArray } from "react-hook-form";
-import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
+import { BaseFormControl, type BaseFormControlProps } from "./BaseFormControl";
 
 interface CheckboxGroupControlProps
   extends BaseFormControlProps,

@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
-import { Control } from "react-hook-form";
+import { Button, type ButtonProps } from "@chakra-ui/react";
+import { type Control } from "react-hook-form";
 import { useFormState } from "react-hook-form";
 
 interface SubmitButtonProps extends ButtonProps {
