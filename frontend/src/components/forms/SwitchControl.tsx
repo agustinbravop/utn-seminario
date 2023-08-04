@@ -1,6 +1,6 @@
-import { Flex, Switch, SwitchProps } from "@chakra-ui/react";
+import { Flex, Switch, type SwitchProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
+import { BaseFormControl, type BaseFormControlProps } from "./BaseFormControl";
 
 interface SwitchControlProps
   extends BaseFormControlProps,

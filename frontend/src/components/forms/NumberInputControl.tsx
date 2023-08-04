@@ -3,7 +3,7 @@ import {
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
-  NumberInputProps,
+  type NumberInputProps,
   NumberInputStepper,
   InputGroup,
   FormLabel,
@@ -11,7 +11,7 @@ import {
 import { useController } from "react-hook-form";
 import {
   BaseFormControl,
-  NoVariantBaseFormControlProps,
+  type NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 interface NumberInputControlProps

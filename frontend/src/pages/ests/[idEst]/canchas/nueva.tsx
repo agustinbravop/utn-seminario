@@ -23,8 +23,8 @@ import {
 } from "@/components/forms";
 import {
   FormProvider,
+  useFieldArray,
   useForm,
-  useWatch,
 } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -120,7 +120,6 @@ function NewCourt() {
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
-  
 
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
@@ -141,16 +140,36 @@ function NewCourt() {
           disciplina: " ",
           dias: [],
         },
-      ], 
+      ],
     },
     mode: "onTouched",
   });
+
+  //VER VALORES DEL FORM
+  /*
   const values = useWatch({ control: methods.control });
   console.log(values);
+   */
+
+  const { fields, append, remove } = useFieldArray({
+    name: "disponibilidades",
+  });
+
+  const agregarHorario = () => {
+    append({
+      horaInicio: "",
+      horaFin: "",
+      disciplina: "",
+      minutosReserva: 0,
+      precioReserva: 0,
+      precioSena: 0,
+      dias: [],
+    });
+  };
 
   return (
     <div>
-      <Heading textAlign="center" mt="40px" paddingBottom="60px" >
+      <Heading textAlign="center" mt="40px" paddingBottom="60px">
         Nueva cancha
       </Heading>
       <FormProvider {...methods}>
@@ -193,11 +212,11 @@ function NewCourt() {
                 },
               }}
             />
-          </FormControl> 
+          </FormControl>
           <HStack>
             <CheckboxGroupControl name="disciplinas">
               <HStack>
-                <Checkbox value="Futbol">Futbol</Checkbox> 
+                <Checkbox value="Futbol">Futbol</Checkbox>
                 <Checkbox value="Voley">Voley</Checkbox>
               </HStack>
             </CheckboxGroupControl>
@@ -209,10 +228,108 @@ function NewCourt() {
               En qué rangos horarios la cancha estará disponible y para qué
               disciplinas.
             </p>
-            <Button> Agregar disponibilidad + </Button>
+            <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
           </div>
           <br />
-          <HStack width="600px">
+
+          {fields.map((horario, index) => (
+            <>
+              <HStack key={horario.id} width="600px">
+                <SelectControl
+                  placeholder="Elegir horario"
+                  label="Horario de Inicio"
+                  name={`disponibilidades[${index}].horaInicio`}
+                  isRequired
+                >
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </SelectControl>
+                <SelectControl
+                  placeholder="Elegir horario"
+                  label="Horario de Fin"
+                  name={`disponibilidades[${index}].horaFin`}
+                  isRequired
+                >
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </SelectControl>
+              </HStack>
+              <HStack key={horario.id} width="600px">
+                <SelectControl
+                  placeholder="Seleccionar disciplina"
+                  label=""
+                  name={`disponibilidades[${index}].disciplina`}
+                  isRequired
+                >
+                  {disciplinas.map((disciplina, i) => (
+                    <option key={i} value={disciplina}>
+                      {disciplina}
+                    </option>
+                  ))}
+                </SelectControl>
+                <InputControl
+                  isRequired
+                  placeholder=""
+                  name={`disponibilidades[${index}].minutosReserva`}
+                  type="number"
+                  label="Duración de la reserva"
+                ></InputControl>
+              </HStack>
+              <HStack key={horario.id} width="600px">
+                <InputControl
+                  placeholder=""
+                  name={`disponibilidades[${index}].precioReserva`}
+                  type="number"
+                  label="Precio de reserva"
+                  isRequired
+                ></InputControl>
+                <InputControl
+                  placeholder=""
+                  name={`disponibilidades[${index}].precioSena`}
+                  type="number"
+                  label="Seña de reserva"
+                ></InputControl>
+              </HStack>
+              <div>
+                <p> Seleccionar los días para la disponibilidad.</p>
+              </div>
+              <br />
+              <HStack key={horario.id}>
+                <CheckboxGroupControl name={`disponibilidades[${index}].dias`}>
+                  <HStack>
+                    <Checkbox value="Lunes">Lunes</Checkbox>
+                    <Checkbox value="Martes">Martes</Checkbox>
+                    <Checkbox value="Miercoles">Miercoles</Checkbox>
+                    <Checkbox value="Jueves">Jueves</Checkbox>
+                    <Checkbox value="Viernes">Viernes</Checkbox>
+                    <Checkbox value="Sabado">Sabado</Checkbox>
+                    <Checkbox value="Domingo">Domingo</Checkbox>
+                  </HStack>
+                </CheckboxGroupControl>
+              </HStack>
+            </>
+          ))}
+
+          <br />
+          <SubmitButton type="submit">Crear</SubmitButton>
+        </VStack>
+      </FormProvider>
+    </div>
+  );
+}
+
+export default NewCourt;
+
+/* 
+            --------------------DE ACA PARA ABAJO ANDA BIEN
+
+            <HStack width="600px">
             <SelectControl
               placeholder="Elegir horario"
               label="Horario de Inicio"
@@ -253,7 +370,7 @@ function NewCourt() {
             </SelectControl>
             <InputControl
               isRequired
-              placeholder="0"
+              placeholder=""
               name="disponibilidades.minutosReserva"
               type="number"
               label="Duración de la reserva"
@@ -291,44 +408,4 @@ function NewCourt() {
               </HStack>
             </CheckboxGroupControl>
           </HStack>
-          <br />
-          <SubmitButton type="submit">Crear</SubmitButton>
-        </VStack>
-      </FormProvider>
-    </div>
-  );
-}
-
-export default NewCourt;
-
-/* 
-<SelectableButton
-              
-              children="Lunes"
-              onButtonClick={handleDiaSelect}
-            />
-            <SelectableButton
-              children="Martes"
-              onButtonClick={handleDiaSelect}
-            />
-            <SelectableButton
-              children="Miercoles"
-              onButtonClick={handleDiaSelect}
-            />
-            <SelectableButton
-              children="Jueves"
-              onButtonClick={handleDiaSelect}
-            />
-            <SelectableButton
-              children="Viernes"
-              onButtonClick={handleDiaSelect}
-            />
-            <SelectableButton
-              children="Sabado"
-              onButtonClick={handleDiaSelect}
-            />
-            <SelectableButton
-              children="Domingo"
-              onButtonClick={handleDiaSelect}
-            />
 */

@@ -1,12 +1,12 @@
 import {
   Slider,
   SliderFilledTrack,
-  SliderProps,
+  type SliderProps,
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import { BaseFormControl, BaseFormControlProps } from "./BaseFormControl";
+import { BaseFormControl, type BaseFormControlProps } from "./BaseFormControl";
 
 interface SliderControlProps
   extends BaseFormControlProps,
