@@ -10,9 +10,9 @@ export class AdministradorHandler {
 
   getAdministradorByID(): RequestHandler {
     return async (req, res) => {
-      const idAdmin = Number(req.params["idAdmin"]);
-      const admin = await this.service.getAdministradorByID(idAdmin);
-      res.status(200).json(admin);
+      const idAdmin = Number(req.params.id);
+      const result = await this.service.getAdministradorByID(idAdmin);
+      res.status(200).json(result)
     };
   }
 }
