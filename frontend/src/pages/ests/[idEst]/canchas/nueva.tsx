@@ -247,7 +247,7 @@ function NewCourt() {
           </FormControl>
           </VStack>
 
-          <VStack width="800px">
+          <VStack width="900px">
          
             <Text as='b' > Disponibilidad horaria </Text>
             <p>
@@ -284,7 +284,6 @@ function NewCourt() {
               </Table>
             </TableContainer>
             <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
-            <Button onClick={()=> console.log(data2)}> Prueba </Button>
           <br />
           </VStack>
 
