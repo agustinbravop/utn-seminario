@@ -14,8 +14,6 @@ export async function crearCancha(
   if (imagen) {
     formData.append("imagen", imagen);
   };
-  console.log(cancha.disponibilidades)
-  
   let key: keyof CrearCanchaReq;
   for (key in cancha) {
     formData.append(key, String(cancha[key]));

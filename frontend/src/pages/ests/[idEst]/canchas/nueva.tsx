@@ -171,7 +171,15 @@ function NewCourt() {
       precioSena: 0,
       dias: [],
     });
+    console.log(data2)
+    console.log(lastFieldIndex)
   };
+
+
+  const data2 = methods.getValues("disponibilidades")
+  const lastFieldIndex = fields.length - 1;
+
+
 
   return (
     <div>
@@ -220,12 +228,6 @@ function NewCourt() {
             />
           </FormControl>
           <HStack>
-            <CheckboxGroupControl name="disciplinas">
-              <HStack>
-                <Checkbox value="Futbol">Futbol</Checkbox>
-                <Checkbox value="Voley">Voley</Checkbox>
-              </HStack>
-            </CheckboxGroupControl>
           </HStack>
           <div className="margen">
             <h3>Disponibilidad horaria</h3>
@@ -234,17 +236,33 @@ function NewCourt() {
               En qué rangos horarios la cancha estará disponible y para qué
               disciplinas.
             </p>
+
+            {data2.map((d) => (
+              <>
+              <p> {d.horaInicio} {d.horaFin} {d.minutosReserva} {d.precioReserva} {d.precioSena} {d.disciplina} {d.dias.map((dia) => (<>{dia+" "}</>))} </p>
+              </>
+              // setDisp({
+              //   horaInicio: "",
+              //   horaFin: "",
+              //   minutosReserva: 0,
+              //   precioReserva: 0,
+              //   precioSena: 0,
+              //   disciplina: "",
+              //   dias: [],
+              // })
+            ) )
+            }
             <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
           </div>
           <br />
 
-          {fields.map((_h, index) => (
+          {fields.length > 0 && (
             <>
               <HStack width="600px">
                 <SelectControl
                   placeholder="Elegir horario"
                   label="Horario de Inicio"
-                  name={`disponibilidades[${index}].horaInicio`}
+                  name={`disponibilidades[${lastFieldIndex}].horaInicio`}
                   isRequired
                 >
                   {horas.map((hora, i) => (
@@ -256,7 +274,7 @@ function NewCourt() {
                 <SelectControl
                   placeholder="Elegir horario"
                   label="Horario de Fin"
-                  name={`disponibilidades[${index}].horaFin`}
+                  name={`disponibilidades[${lastFieldIndex}].horaFin`}
                   isRequired
                 >
                   {horas.map((hora, i) => (
@@ -270,7 +288,7 @@ function NewCourt() {
                 <SelectControl
                   placeholder="Seleccionar disciplina"
                   label=""
-                  name={`disponibilidades[${index}].disciplina`}
+                  name={`disponibilidades[${lastFieldIndex}].disciplina`}
                   isRequired
                 >
                   {disciplinas.map((disciplina, i) => (
@@ -282,7 +300,7 @@ function NewCourt() {
                 <InputControl
                   isRequired
                   placeholder=" "
-                  name={`disponibilidades[${index}].minutosReserva`}
+                  name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
                   type="number"
                   label="Duración de la reserva"
                 ></InputControl>
@@ -290,14 +308,14 @@ function NewCourt() {
               <HStack width="600px">
                 <InputControl
                   placeholder=" "
-                  name={`disponibilidades[${index}].precioReserva`}
+                  name={`disponibilidades[${lastFieldIndex}].precioReserva`}
                   type="number"
                   label="Precio de reserva"
                   isRequired
                 ></InputControl>
                 <InputControl
                   placeholder=" "
-                  name={`disponibilidades[${index}].precioSena`}
+                  name={`disponibilidades[${lastFieldIndex}].precioSena`}
                   type="number"
                   label="Seña de reserva"
                 ></InputControl>
@@ -307,7 +325,7 @@ function NewCourt() {
               </div>
               <br />
               <HStack>
-                <CheckboxGroupControl name={`disponibilidades[${index}].dias`}>
+                <CheckboxGroupControl name={`disponibilidades[${lastFieldIndex}].dias`}>
                   <HStack>
                     <Checkbox value="Lunes">Lunes</Checkbox>
                     <Checkbox value="Martes">Martes</Checkbox>
@@ -320,7 +338,7 @@ function NewCourt() {
                 </CheckboxGroupControl>
               </HStack>
             </>
-          ))}
+          )}
 
           <br />
           <SubmitButton type="submit">Crear</SubmitButton>
