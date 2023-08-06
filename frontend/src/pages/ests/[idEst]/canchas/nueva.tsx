@@ -28,6 +28,17 @@ import {
 } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+Text,
+  TableContainer,
+} from '@chakra-ui/react'
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
@@ -191,9 +202,10 @@ function NewCourt() {
           as="form"
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="24px"
-          width="400px"
+          width="800px"
           m="auto"
         >
+          <VStack  width="400px" >
           <InputControl
             name="nombre"
             label="Nombre de la cancha"
@@ -227,34 +239,48 @@ function NewCourt() {
               }}
             />
           </FormControl>
-          <HStack>
-          </HStack>
+          </VStack>
+
+          <VStack width="800px">
           <div className="margen">
-            <h3>Disponibilidad horaria</h3>
+            <Text as='b' > Disponibilidad horaria </Text>
             <p>
               {" "}
               En qué rangos horarios la cancha estará disponible y para qué
               disciplinas.
             </p>
-
-            {data2.map((d) => (
-              <>
-              <p> {d.horaInicio} {d.horaFin} {d.minutosReserva} {d.precioReserva} {d.precioSena} {d.disciplina} {d.dias.map((dia) => (<>{dia+" "}</>))} </p>
-              </>
-              // setDisp({
-              //   horaInicio: "",
-              //   horaFin: "",
-              //   minutosReserva: 0,
-              //   precioReserva: 0,
-              //   precioSena: 0,
-              //   disciplina: "",
-              //   dias: [],
-              // })
-            ) )
-            }
+            
+            <TableContainer paddingTop="20px" paddingBottom="20px">
+              <Table variant='simple' size='sm'>
+                <Thead backgroundColor="lightgray">
+                  <Tr>
+                    <Th>disciplina</Th>
+                    <Th>hora inicio</Th>
+                    <Th>hora fin</Th>
+                    <Th>reserva (minutos)</Th>
+                    <Th>precio reserva/seña</Th>
+                    <Th>  dias </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                {data2.map((d) => (
+                     <Tr>
+                     <Td> {d.disciplina} </Td>
+                     <Td> {d.horaInicio} </Td>
+                     <Td> {d.horaFin} </Td>
+                     <Td> {d.minutosReserva} </Td>
+                     <Td> {d.precioReserva}/{d.precioSena} </Td>
+                     <Td>  {d.dias.map((dia) => (<>{dia+" - "}</>))} </Td>
+                   </Tr>
+                  ) )
+                  }
+                </Tbody>
+              </Table>
+            </TableContainer>
             <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
           </div>
           <br />
+          </VStack>
 
           {fields.length > 0 && (
             <>
@@ -320,10 +346,6 @@ function NewCourt() {
                   label="Seña de reserva"
                 ></InputControl>
               </HStack>
-              <div>
-                <p> Seleccionar los días para la disponibilidad.</p>
-              </div>
-              <br />
               <HStack>
                 <CheckboxGroupControl name={`disponibilidades[${lastFieldIndex}].dias`}>
                   <HStack>
