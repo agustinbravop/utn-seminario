@@ -32,7 +32,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -164,8 +163,13 @@ function NewCourt() {
   const {control} = methods
 
   useEffect(() => {
-
+      console.log(data2)
   }, [control]);
+
+
+  useEffect(() => {
+    console.log(data2)
+}, );
  
   const { fields, append } = useFieldArray({
     name: "disponibilidades",
@@ -183,10 +187,12 @@ function NewCourt() {
       dias: [],
     });
     console.log(data2)
-    console.log(lastFieldIndex)
   };
 
 
+
+
+  
   const data2 = methods.getValues("disponibilidades")
   const lastFieldIndex = fields.length - 1;
 
@@ -242,7 +248,7 @@ function NewCourt() {
           </VStack>
 
           <VStack width="800px">
-          <div className="margen">
+         
             <Text as='b' > Disponibilidad horaria </Text>
             <p>
               {" "}
@@ -263,7 +269,7 @@ function NewCourt() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                {data2.map((d) => (
+                {methods.getValues("disponibilidades").map((d) => (
                      <Tr>
                      <Td> {d.disciplina} </Td>
                      <Td> {d.horaInicio} </Td>
@@ -278,7 +284,7 @@ function NewCourt() {
               </Table>
             </TableContainer>
             <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
-          </div>
+            <Button onClick={()=> console.log(data2)}> Prueba </Button>
           <br />
           </VStack>
 
