@@ -11,7 +11,7 @@ export interface CanchaService {
     cancha: Cancha,
     imagen?: Express.Multer.File
   ): Promise<Cancha>;
-  eliminarCancha(idCancha:number):Promise<Cancha>
+  eliminarCancha(idCancha: number): Promise<Cancha>;
 }
 
 export class CanchaServiceimpl implements CanchaService {
@@ -62,8 +62,7 @@ export class CanchaServiceimpl implements CanchaService {
     return await this.repo.modificarCancha(cancha);
   }
 
-  async eliminarCancha(idCancha:number):Promise<Cancha> { 
-   
-    return await this.repo.eliminarCancha(idCancha)
+  async eliminarCancha(idCancha: number): Promise<Cancha> {
+    return await this.repo.eliminarCancha(idCancha);
   }
 }

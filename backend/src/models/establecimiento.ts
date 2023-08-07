@@ -6,7 +6,7 @@ export const establecimientoSchema = z.object({
   id: z.number().positive().int(),
   nombre: z.string().nonempty(),
   correo: z.string().nonempty().email(),
-  estaEliminada:z.boolean().default(false),
+  eliminado: z.boolean().default(false),
   telefono: z.string().nonempty().max(15),
   direccion: z.string().nonempty(),
   localidad: z.string().nonempty(),

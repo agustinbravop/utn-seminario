@@ -19,10 +19,10 @@ export const modificarCanchaReqSchema = canchaSchema
   .omit({
     id: true,
     urlImagen: true,
-    estaEliminada:true,
+    estaEliminada: true,
   })
   .extend({
-    id:z.string().transform((str)=>Number(str)),
+    id: z.string().transform((str) => Number(str)),
     idEstablecimiento: z.string().transform((str) => Number(str)),
     estaHabilitada: z.string().transform((str) => str === "true"),
     disciplinas: z.string().transform((_) => [""]),
@@ -89,11 +89,11 @@ export class CanchaHandler {
     };
   }
 
-  eliminarCancha():RequestHandler{ 
-    return async (req, res)=> { 
-      const idCancha=Number(req.params['idCancha'])
-      const eliminarCancha=await this.service.eliminarCancha(idCancha)
-      res.status(200).json(eliminarCancha)
-    }; 
+  eliminarCancha(): RequestHandler {
+    return async (req, res) => {
+      const idCancha = Number(req.params["idCancha"]);
+      const eliminarCancha = await this.service.eliminarCancha(idCancha);
+      res.status(200).json(eliminarCancha);
+    };
   }
 }

@@ -34,11 +34,12 @@ export function establecimientosRouter(
     handler.putEstablecimiento()
   );
 
-  router.delete("/:idEst", 
-  authMiddle.isAdmin(), 
-  handler.validateAdminOwnsEstablecimiento(),
-  handler.eliminarEstablecimiento()
-  )
+  router.delete(
+    "/:idEst",
+    authMiddle.isAdmin(),
+    handler.validateAdminOwnsEstablecimiento(),
+    handler.eliminarEstablecimiento()
+  );
 
   return router;
 }

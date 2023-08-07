@@ -13,7 +13,6 @@ export class AuthMiddleware {
     return async (req, res, next) => {
       const token = req.header("Authorization")?.replace("Bearer ", "");
       if (!token) {
-        
         return res
           .status(401)
           .send(new UnauthorizedError("Authorization header inválido"));

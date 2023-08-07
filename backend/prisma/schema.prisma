@@ -1,7 +1,5 @@
 generator client {
   provider = "prisma-client-js"
- 
-
 }
 
 datasource db {
@@ -73,15 +71,14 @@ model establecimiento {
   direccion          String         @db.VarChar
   urlImagen          String?        @db.VarChar
   correo             String         @unique @db.VarChar
-  estaEliminada      Boolean
+  eliminado          Boolean        @default(false)
   horariosDeAtencion String?
-  localidad          String         @db.VarChar 
+  localidad          String         @db.VarChar
   provincia          String         @db.VarChar
   idAdministrador    Int
   administrador      administrador  @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
   canchas            cancha[]
   metodosDePago      metodoDePago[]
-
 }
 
 model metodoDePago {

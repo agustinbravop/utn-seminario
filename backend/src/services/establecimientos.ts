@@ -15,7 +15,7 @@ export interface EstablecimientoService {
     est: Establecimiento,
     imagen?: Express.Multer.File
   ): Promise<Establecimiento>;
-  eliminar(idEst:number):Promise<Establecimiento>; 
+  eliminar(idEst: number): Promise<Establecimiento>;
 }
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
@@ -79,15 +79,12 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
     const ests = await this.repo.getByAdminID(admin.id);
 
-
-
     if (admin.suscripcion.limiteEstablecimientos <= ests.length) {
       throw new ConflictError("Limite de establecimientos alcanzado");
     }
   }
 
-  async eliminar(idEst:number):Promise<Establecimiento> 
-  { 
-    return await this.repo.eliminar(idEst)
+  async eliminar(idEst: number): Promise<Establecimiento> {
+    return await this.repo.eliminar(idEst);
   }
 }

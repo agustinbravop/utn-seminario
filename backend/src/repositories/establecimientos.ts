@@ -2,13 +2,12 @@ import { PrismaClient, establecimiento } from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Establecimiento } from "../models/establecimiento.js";
 
-
 export interface EstablecimientoRepository {
   crear(est: Establecimiento): Promise<Establecimiento>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
-  eliminar(idEst:number):Promise<Establecimiento>; 
+  eliminar(idEst: number): Promise<Establecimiento>;
 }
 
 export class PrismaEstablecimientoRepository
@@ -32,7 +31,6 @@ export class PrismaEstablecimientoRepository
           nombre: est.nombre,
           telefono: est.telefono,
           correo: est.correo,
-          estaEliminada: false,
           direccion: est.direccion,
           localidad: est.localidad,
           provincia: est.provincia,
@@ -49,16 +47,12 @@ export class PrismaEstablecimientoRepository
   }
 
   async getByID(idEst: number): Promise<Establecimiento> {
-    const estsDB=this.prisma.establecimiento.findUnique({
-                              where: {
-                                id: idEst,
-                              },
-                            }); 
-
-    if ((await estsDB)?.estaEliminada===true) { 
-      throw new InternalServerError(`No existe establecimiento con ese identificador ${idEst} intente nuevamente`)
-    }
-    return awaitQuery(estsDB,
+    return awaitQuery(
+      this.prisma.establecimiento.findUnique({
+        where: {
+          id: idEst,
+        },
+      }),
       `No existe establecimiento con id ${idEst}`,
       "Error al intentar obtener el establecimiento"
     );
@@ -67,18 +61,12 @@ export class PrismaEstablecimientoRepository
   async getByAdminID(idAdmin: number): Promise<Establecimiento[]> {
     try {
       const estsDB = await this.prisma.establecimiento.findMany({
-        where: { 
-          AND: [
-            {idAdministrador: idAdmin}, 
-            {estaEliminada: false}
-          ],
+        where: {
+          AND: [{ idAdministrador: idAdmin }, { eliminado: false }],
         },
       });
-    
-     
+
       return estsDB.map((estDB) => this.toModel(estDB));
-       
-      
     } catch (e) {
       console.error(e);
       throw new InternalServerError("No se pudo obtener los establecimientos");
@@ -93,7 +81,6 @@ export class PrismaEstablecimientoRepository
         },
         data: {
           ...est,
-          id: undefined,
         },
       }),
       `No existe establecimiento con id ${est.id}`,
@@ -101,16 +88,14 @@ export class PrismaEstablecimientoRepository
     );
   }
 
-  async eliminar(idEst:number):Promise<Establecimiento> 
-  { 
+  async eliminar(idEst: number): Promise<Establecimiento> {
     return awaitQuery(
       this.prisma.establecimiento.update({
         where: {
-          id: Number(idEst)
+          id: Number(idEst),
         },
         data: {
-          estaEliminada:true, 
-          id: undefined,
+          eliminado: true,
         },
       }),
       `No existe establecimiento con id ${idEst}`,
