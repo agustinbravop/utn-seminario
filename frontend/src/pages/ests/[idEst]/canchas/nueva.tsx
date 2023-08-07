@@ -21,11 +21,7 @@ import {
   SelectControl,
   SubmitButton,
 } from "@/components/forms";
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -35,9 +31,9 @@ import {
   Tr,
   Th,
   Td,
-Text,
+  Text,
   TableContainer,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 type FormState = CrearCanchaReq & {
@@ -53,13 +49,13 @@ const validationSchema = Yup.object({
   imagen: Yup.mixed<File>().optional(),
   disponibilidades: Yup.array(
     Yup.object({
-      horaInicio: Yup.string().required(),
-      horaFin: Yup.string().required(),
-      minutosReserva: Yup.number().required(),
-      precioReserva: Yup.number().required(),
-      precioSena: Yup.number().optional(),
-      disciplina: Yup.string().required(),
-      dias: Yup.array(Yup.string().required()).required(),
+      horaInicio: Yup.string().required("Obligatorio"),
+      horaFin: Yup.string().required("Obligatorio"),
+      minutosReserva: Yup.number().typeError('Debe ingresar un numero').required("Obligatorio"),
+      precioReserva: Yup.number().typeError('Debe ingresar un numero').required("Obligatorio"),
+      precioSena: Yup.number().typeError('Debe ingresar un numero').optional(),
+      disciplina: Yup.string().required("Obligatorio"),
+      dias: Yup.array(Yup.string().required()).required("Obligatorio").min(1),
     })
   ).required(),
 });
@@ -160,19 +156,12 @@ function NewCourt() {
   /*
   const values = useWatch({ control: methods.control });
   console.log(values);
-   */ 
-  
+   */
+
   const { control } = methods;
 
-  useEffect(() => {
-      console.log(data2)
-  }, [control]);
+  useEffect(() => {}, [control]);
 
-
-  useEffect(() => {
-    console.log(data2)
-}, );
- 
   const { fields, append } = useFieldArray({
     name: "disponibilidades",
     control,
@@ -188,20 +177,16 @@ function NewCourt() {
       precioSena: 0,
       dias: [],
     });
-    console.log(data2)
   };
 
   const handleDelete = (index: number) => {
-    const disponibilidades = methods.getValues('disponibilidades');
+    const disponibilidades = methods.getValues("disponibilidades");
     disponibilidades.splice(index, 1); // Eliminamos el elemento del arreglo
-    methods.setValue('disponibilidades', disponibilidades); // Actualizamos el valor del arreglo
+    methods.setValue("disponibilidades", disponibilidades); // Actualizamos el valor del arreglo
   };
-  
-  const last = methods.getValues("disponibilidades").length - 1
-  const data2 = methods.getValues("disponibilidades")
+
+  const last = methods.getValues("disponibilidades").length - 1;
   const lastFieldIndex = fields.length - 1;
-
-
 
   return (
     <div>
@@ -216,53 +201,52 @@ function NewCourt() {
           width="800px"
           m="auto"
         >
-          <VStack  width="400px" >
-          <InputControl
-            name="nombre"
-            label="Nombre de la cancha"
-            placeholder="Nombre"
-            isRequired
-          />
-          <InputControl
-            name="descripcion"
-            label="Descripción"
-            placeholder="Descripción"
-            isRequired
-          />
-          <FormControl>
-            <FormLabel marginTop="10px" marginLeft="10px">
-              Imagen
-            </FormLabel>
-            <Input
-              type="file"
-              name="imagen"
-              onChange={handleImagenChange}
-              accept="image/*"
-              sx={{
-                "::file-selector-button": {
-                  height: 10,
-                  padding: 0,
-                  mr: 4,
-                  background: "none",
-                  border: "none",
-                  fontWeight: "bold",
-                },
-              }}
+          <VStack width="400px">
+            <InputControl
+              name="nombre"
+              label="Nombre de la cancha"
+              placeholder="Nombre"
+              isRequired
             />
-          </FormControl>
+            <InputControl
+              name="descripcion"
+              label="Descripción"
+              placeholder="Descripción"
+              isRequired
+            />
+            <FormControl>
+              <FormLabel marginTop="10px" marginLeft="10px">
+                Imagen
+              </FormLabel>
+              <Input
+                type="file"
+                name="imagen"
+                onChange={handleImagenChange}
+                accept="image/*"
+                sx={{
+                  "::file-selector-button": {
+                    height: 10,
+                    padding: 0,
+                    mr: 4,
+                    background: "none",
+                    border: "none",
+                    fontWeight: "bold",
+                  },
+                }}
+              />
+            </FormControl>
           </VStack>
 
           <VStack width="1100px">
-         
-            <Text as='b' > Disponibilidad horaria </Text>
+            <Text as="b"> Disponibilidad horaria </Text>
             <p>
               {" "}
               En qué rangos horarios la cancha estará disponible y para qué
               disciplinas.
             </p>
-            
+
             <TableContainer paddingTop="20px" paddingBottom="20px">
-              <Table variant='simple' size='sm'>
+              <Table variant="simple" size="sm">
                 <Thead backgroundColor="lightgray">
                   <Tr>
                     <Th>disciplina</Th>
@@ -270,30 +254,47 @@ function NewCourt() {
                     <Th>hora fin</Th>
                     <Th>reserva (min.)</Th>
                     <Th>p. reserva/seña</Th>
-                    <Th>  dias </Th>
-                    <Th>  delete </Th>
+                    <Th> dias </Th>
+                    <Th> Eliminar </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                {methods.getValues('disponibilidades').map((d, index) =>
-            // Verificar si el índice es mayor o igual a numeroDado
-            index < last ? (
-              <Tr>
-              <Td> {d.disciplina} </Td>
-              <Td> {d.horaInicio} </Td>
-              <Td> {d.horaFin} </Td>
-              <Td> {d.minutosReserva} </Td>
-              <Td> {d.precioReserva}/{d.precioSena} </Td>
-              <Td>  {d.dias.map((dia) => (<>{dia+" - "}</>))} </Td>
-              <Td> <Button type="button" onClick={() => handleDelete(index)}> <DeleteIcon/> </Button> </Td>
-            </Tr>
-            ) : null
-          )}
+                  {methods.getValues("disponibilidades").map((d, index) =>
+                    // Verificar si el índice es mayor o igual a numeroDado
+                    index < last ? (
+                      <Tr>
+                        <Td> {d.disciplina} </Td>
+                        <Td> {d.horaInicio} </Td>
+                        <Td> {d.horaFin} </Td>
+                        <Td> {d.minutosReserva} </Td>
+                        <Td>
+                          {" "}
+                          {d.precioReserva}/{d.precioSena}{" "}
+                        </Td>
+                        <Td>
+                          {" "}
+                          {d.dias.map((dia) => (
+                            <>{dia + " - "}</>
+                          ))}{" "}
+                        </Td>
+                        <Td>
+                          {" "}
+                          <Button
+                            type="button"
+                            onClick={() => handleDelete(index)}
+                          >
+                            {" "}
+                            <DeleteIcon />{" "}
+                          </Button>{" "}
+                        </Td>
+                      </Tr>
+                    ) : null
+                  )}
                 </Tbody>
               </Table>
             </TableContainer>
             <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
-          <br />
+            <br />
           </VStack>
 
           {fields.length > 0 && (
@@ -339,7 +340,7 @@ function NewCourt() {
                 </SelectControl>
                 <InputControl
                   isRequired
-                  placeholder=" "
+                  placeholder=""
                   name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
                   type="number"
                   label="Duración de la reserva (minutos)"
@@ -347,21 +348,23 @@ function NewCourt() {
               </HStack>
               <HStack width="600px">
                 <InputControl
-                  placeholder=" "
+                  placeholder=""
                   name={`disponibilidades[${lastFieldIndex}].precioReserva`}
                   type="number"
                   label="Precio de reserva"
                   isRequired
                 ></InputControl>
                 <InputControl
-                  placeholder=" "
+                  placeholder=""
                   name={`disponibilidades[${lastFieldIndex}].precioSena`}
                   type="number"
                   label="Seña de reserva"
                 ></InputControl>
               </HStack>
               <HStack>
-                <CheckboxGroupControl name={`disponibilidades[${lastFieldIndex}].dias`}>
+                <CheckboxGroupControl
+                  name={`disponibilidades[${lastFieldIndex}].dias`}
+                >
                   <HStack>
                     <Checkbox value="Lunes">Lunes</Checkbox>
                     <Checkbox value="Martes">Martes</Checkbox>
