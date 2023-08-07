@@ -29,10 +29,9 @@ import {
   deleteEstablecimientoByID,
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import { useEffect } from "react";
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -62,26 +61,16 @@ export default function EditEstabPage() {
   const { data } = useQuery<Establecimiento>({
     queryKey: ["establecimientos", idEst],
     queryFn: () => getEstablecimientoByID(Number(idEst)),
-    enabled: true,
   });
 
-  const methods = useForm<FormState>({
-    resolver: yupResolver(validationSchema),
-    mode: "onTouched",
-  });
-
-  useEffect(() => {
-    // Precargar el formulario con los datos actuales.
-    methods.reset(data);
-  }, [methods, data]);
-
-  const { mutate, isLoading, isError } = useMutation<
+  const { methods, mutate, isLoading, isError } = useMutationForm<
     Establecimiento,
     ApiError,
     FormState
   >({
-    mutationKey: ["establecimientos", data?.id],
+    defaultValues: data,
     mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
+    validationSchema,
     onSuccess: () => {
       toast({
         title: "Establecimiento modificado",

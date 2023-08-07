@@ -1,6 +1,5 @@
 import { ApiError } from "@/utils/api";
 import { Establecimiento } from "@/models";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import {
   Alert,
@@ -19,9 +18,9 @@ import {
   crearEstablecimiento,
 } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
@@ -45,11 +44,16 @@ function NewEstab() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
-  const { mutate, isLoading, isError } = useMutation<
+
+  const { methods, mutate, isLoading, isError } = useMutationForm<
     Establecimiento,
     ApiError,
     FormState
   >({
+    validationSchema,
+    defaultValues: {
+      idAdministrador: Number(currentAdmin?.id),
+    },
     mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
     onSuccess: () => {
       toast({
@@ -68,14 +72,6 @@ function NewEstab() {
         isClosable: true,
       });
     },
-  });
-
-  const methods = useForm<FormState>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: {
-      idAdministrador: Number(currentAdmin?.id),
-    },
-    mode: "onTouched",
   });
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {

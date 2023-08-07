@@ -8,9 +8,6 @@ export const Catch = () => {
   return <div>Something went wrong...</div>;
 };
 
-// `Pending` es tratado por el generouted plugin, como fallback de una página lazy loaded.
-export const Pending = () => <div>Loading...</div>;
-
 export default function RootLayout() {
   return (
     <>

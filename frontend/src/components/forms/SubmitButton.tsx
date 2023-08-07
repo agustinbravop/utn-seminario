@@ -12,7 +12,7 @@ interface SubmitButtonProps extends ButtonProps {
 
 /**
  * Integra un Chakra `Button` con react-hook-form para gestionar los estados Loading, Submitting, etc.
- * El button renderizado **submitea el form al ser seleccionado** y tiene type 'submit' por defecto.
+ * El <button> renderizado tiene type 'submit' por defecto.
  *
  * https://chakra-ui.com/docs/components/button
  */
