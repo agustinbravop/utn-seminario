@@ -15,7 +15,7 @@ interface SelectControlProps
  * https://chakra-ui.com/docs/components/select
  */
 export function SelectControl(props: SelectControlProps) {
-  const { name, control, icon, variant, children, ...rest } = props;
+  const { name, control, icon, placeholder, variant, children, ...rest } = props;
   const { field } = useController({
     name,
     control,
@@ -23,7 +23,7 @@ export function SelectControl(props: SelectControlProps) {
 
   return (
     <BaseFormControl name={name} control={control} {...rest}>
-      <Select {...field} id={name} icon={icon} variant={variant}>
+      <Select {...field} id={name} placeholder={placeholder} icon={icon} variant={variant}>
         {children}
       </Select>
     </BaseFormControl>

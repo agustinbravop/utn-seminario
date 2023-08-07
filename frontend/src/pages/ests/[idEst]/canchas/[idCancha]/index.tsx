@@ -19,6 +19,7 @@ import { EditIcon, SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { getCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
+import SubMenu from "@/components/SubMenu/SubMenu";
 
 export default function CourtInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -29,53 +30,27 @@ export default function CourtInfoPage() {
 
   return (
     <div>
-      <Heading
-        size="md"
-        fontSize="26px"
-        textAlign="left"
-        marginLeft="18%"
-        marginTop="20px"
-      >
-        Información de {data?.nombre}
-      </Heading>
-      <HStack
-        marginRight="auto"
-        marginLeft="18%"
-        marginBottom="50px"
-        marginTop="20px"
-      >
-        <InputGroup width="18%">
-          <InputRightElement pointerEvents="none">
-            <SearchIcon color="gray.300" />
-          </InputRightElement>
-          <Input
-            focusBorderColor="lightblue"
-            placeholder="Nombre de la cancha"
-            size="md"
-            width="100%"
-          />
-        </InputGroup>
-        <HStack
-          marginLeft="auto"
-          marginRight="10%"
-          display="flex"
-          alignContent="column"
-          spacing={5}
-          align="center"
-        >
-          <Link to="editar">
-            <Button leftIcon={<EditIcon />}>Editar Info</Button>
-          </Link>
-        </HStack>
-      </HStack>
-      <Box display="flex" marginLeft="18%" height="70%">
+      <SubMenu/>
+      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" marginTop="20px" > Información de {data?.nombre} </Heading>
+      <HStack marginRight="auto" marginLeft="18%" marginBottom="30px"marginTop="20px" >
+            <Text>Esta es la información que se muestra al usuario de su cancha.</Text>
+            <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
+            <Link to="editar">
+              <Button leftIcon={<EditIcon />}>Editar Información</Button>
+            </Link>
+            </HStack> 
+            </HStack>
+      <Box
+      display="flex"
+      justifyContent="center"
+    >
         <Card
-          boxSize="43rem"
-          justifyContent="center"
-          display="flex"
-          style={{ marginTop: "10px", marginBottom: "1rem" }}
-          height="75%"
-          width="73%"
+        boxSize="10rem"
+        justifyContent="center"
+        display="flex"
+        style={{ marginTop:"10px", marginBottom: "1rem" }}
+        height="75%"
+        width="56%"
         >
           <CardBody height="100%" marginTop="0px">
             <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
@@ -107,7 +82,7 @@ export default function CourtInfoPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Está habilitada
                     </Heading>
-                    <Text fontSize="sm">{data?.estaHabilitada}</Text>
+                    <Text fontSize="sm">{data?.estaHabilitada.toString()}</Text>
                   </Box>
                 </Stack>
               </Box>
