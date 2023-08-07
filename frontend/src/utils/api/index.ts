@@ -93,8 +93,8 @@ export async function post<T>(endpoint: string, body: any): Promise<T> {
   });
 }
 
-export async function del<T>(endpoint: string): Promise<T> {
-  return request("DELETE", endpoint,);
+export async function del(endpoint: string): Promise<void> {
+  return request("DELETE", endpoint);
 }
 
 export async function postFormData<T>(

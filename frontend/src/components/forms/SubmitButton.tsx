@@ -17,16 +17,14 @@ interface SubmitButtonProps extends ButtonProps {
  * https://chakra-ui.com/docs/components/button
  */
 export function SubmitButton(props: SubmitButtonProps) {
-  const { control, children, ...rest } = props;
-  const { isSubmitting } = useFormState({
-    control,
-  });
+  const { control, children, isLoading, ...rest } = props;
+  const { isSubmitting } = useFormState({ control });
 
   return (
     <Button
       type="submit"
       colorScheme="brand"
-      isLoading={isSubmitting}
+      isLoading={isSubmitting || isLoading}
       {...rest}
     >
       {children}

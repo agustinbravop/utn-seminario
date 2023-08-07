@@ -44,7 +44,7 @@ export default function CanchasPage() {
 
   return (
     <>
-      <SubMenu/>
+      <SubMenu />
       <Heading
         size="md"
         fontSize="26px"

@@ -1,12 +1,6 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
-import {
-  Button,
-  HStack,
-  Image,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+import { Button, HStack, Image, MenuItem, MenuList } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton, Text } from "@chakra-ui/react";
 import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
@@ -24,7 +18,6 @@ export default function TopMenu() {
     </HStack>
   );
 }
-
 
 function Nav() {
   const { currentAdmin, logout } = useCurrentAdmin();
@@ -65,10 +58,10 @@ function Nav() {
           width={177}
         />
       </Link>
-      <HStack marginLeft="150px" marginRight="auto" >
-      <Link to={`/admin/${currentAdmin.id}`}>
-            <Text> Mis establecimientos </Text>
-      </Link>
+      <HStack marginLeft="150px" marginRight="auto">
+        <Link to={`/admin/${currentAdmin.id}`}>
+          <Text> Mis establecimientos </Text>
+        </Link>
       </HStack>
       <nav style={{ paddingRight: "15px" }}>
         <HStack>

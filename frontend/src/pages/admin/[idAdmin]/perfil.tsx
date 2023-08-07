@@ -23,12 +23,12 @@ export default function PerfilPage() {
           marginLeft="32%"
           marginTop="5%"
         >
-          <CardHeader >
-            <Heading size="lg" textAlign="center" >
+          <CardHeader>
+            <Heading size="lg" textAlign="center">
               Mi perfil
             </Heading>
           </CardHeader>
-          <CardBody marginTop="28px" >
+          <CardBody marginTop="28px">
             <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
               <Box>
                 <Heading size="xs" textTransform="uppercase">

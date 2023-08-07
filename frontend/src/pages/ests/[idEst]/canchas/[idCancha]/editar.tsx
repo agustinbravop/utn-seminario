@@ -28,7 +28,7 @@ import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
-  deleteCanchaByID
+  deleteCanchaByID,
 } from "@/utils/api/canchas";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
@@ -107,11 +107,11 @@ export default function EditCourtPage() {
     enabled: true,
   });
 
-  useEffect(() => {
-    console.log(data)
-  }, [data]);
-
-  const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate, isLoading, isError } = useMutation<
+    Cancha,
+    ApiError,
+    FormState
+  >({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
     onSuccess: () => {
       toast({
@@ -132,7 +132,6 @@ export default function EditCourtPage() {
     },
   });
 
-
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
     defaultValues: async () => {
@@ -141,12 +140,16 @@ export default function EditCourtPage() {
     mode: "onTouched",
   });
 
+  useEffect(() => {
+    // Precargar el formulario con los datos actuales.
+    methods.reset(data);
+  }, [methods, data]);
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const { mutate: mutateDelete } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate: mutateDelete } = useMutation<void, ApiError>({
     mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
     onSuccess: () => {
       toast({
@@ -168,15 +171,15 @@ export default function EditCourtPage() {
   });
 
   const handleEliminar = () => {
-    console.log("hola")
-    mutateDelete()
+    console.log("hola");
+    mutateDelete();
     onClose();
   };
 
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha 
+        Editar Cancha
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -326,7 +329,7 @@ export default function EditCourtPage() {
             <SelectableButton children="Domingo" />
           </HStack> */}
           <Container centerContent mt="20px">
-            <SubmitButton>Modificar</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar el establecimiento. Intente de nuevo

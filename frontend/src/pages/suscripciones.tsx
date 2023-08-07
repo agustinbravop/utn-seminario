@@ -25,7 +25,6 @@ export default function SuscripcionesPage() {
   const { data, isLoading, isError } = useQuery<Suscripcion[]>(
     ["suscripciones"],
     getSuscripciones
-    
   );
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
@@ -72,7 +71,7 @@ export default function SuscripcionesPage() {
     <>
       <Box marginBottom="110px" marginLeft="12%">
         <Heading size="md">Elija una suscripción</Heading>
-        <Text >
+        <Text>
           Nos ajustamos a las necesidades de cada negocio. La puede modificar en
           cualquier momento.
         </Text>

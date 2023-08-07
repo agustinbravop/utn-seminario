@@ -58,7 +58,11 @@ export default function SubscribePage() {
   const { search } = useLocation();
   const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
-  const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
+  const { mutate, isLoading, isError } = useMutation<
+    Administrador,
+    ApiError,
+    FormState
+  >({
     mutationFn: (registrarAdmin) => apiRegister(registrarAdmin),
     onSuccess: () => {
       toast({
@@ -160,7 +164,7 @@ export default function SubscribePage() {
               isRequired
             />
 
-            <SubmitButton>Registrarse</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar su cuenta. Intente de nuevo

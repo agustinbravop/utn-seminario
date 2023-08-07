@@ -13,8 +13,7 @@ const images = [
 export default function LandingPage() {
   return (
     <>
-      
-<Box marginLeft="120px">
+      <Box marginLeft="120px">
         <Heading
           style={{
             width: "500px",
@@ -26,11 +25,13 @@ export default function LandingPage() {
         >
           Reserva una cancha desde donde quieras
         </Heading>
-        <Text  >
+        <Text>
           Encontrá tu cancha preferida para jugar con tus amigos de entre más de
           mil establecimientos
         </Text>
-        <Button marginTop="15px" type="button">Buscar</Button>
+        <Button marginTop="15px" type="button">
+          Buscar
+        </Button>
         <VStack
           style={{
             display: "flex",
@@ -42,21 +43,25 @@ export default function LandingPage() {
             <Box width="65%" display="flex" justifyContent="center">
               <Carousel images={images} autoPlay={true} showButtons={true} />
             </Box>
-            <Box marginTop="100px" marginLeft="20px" justifyContent="center" width="35%">
-              <Heading  style={{ fontSize: "20px" }}>
+            <Box
+              marginTop="100px"
+              marginLeft="20px"
+              justifyContent="center"
+              width="35%"
+            >
+              <Heading style={{ fontSize: "20px" }}>
                 ¿Queres publicitar tu Establecimiento?
               </Heading>
               <Text maxWidth="400px" textAlign="left">
-                Campo de Juego te permite administrar las reservas de tus canchas,
-                aceptar pagos a través de Mercado Pago, ver reportes de ingresos y
-                mucho más.
+                Campo de Juego te permite administrar las reservas de tus
+                canchas, aceptar pagos a través de Mercado Pago, ver reportes de
+                ingresos y mucho más.
               </Text>
               <Link to="/suscripciones">
-                <Button marginTop="20px" >Ver Opciones</Button>
+                <Button marginTop="20px">Ver Opciones</Button>
               </Link>
             </Box>
           </Box>
-
         </VStack>
       </Box>
     </>

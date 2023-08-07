@@ -36,7 +36,10 @@ export async function modificarEstablecimiento(
     formData.append(key, String(establecimiento[key]));
   }
 
-  return putFormData<Establecimiento>(`${API_URL}/establecimientos/${establecimiento.id}`, formData);
+  return putFormData<Establecimiento>(
+    `${API_URL}/establecimientos/${establecimiento.id}`,
+    formData
+  );
 }
 
 export async function getEstablecimientosByAdminID(
@@ -51,9 +54,6 @@ export async function getEstablecimientoByID(
   return get(`${API_URL}/establecimientos/${id}`);
 }
 
-
-export async function deleteEstablecimientoByID(
-  idEst: number | undefined,
-) {
+export async function deleteEstablecimientoByID(idEst: number | undefined) {
   return del(`${API_URL}/establecimientos/${idEst}`);
 }

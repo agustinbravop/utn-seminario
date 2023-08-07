@@ -41,13 +41,13 @@ export type HorarioDeAtencion = {
 };
 
 export type Disponibilidad = {
-  horaInicio : string;
-  horaFin : string;
+  horaInicio: string;
+  horaFin: string;
   minutosReserva: number;
   precioReserva: number;
   precioSena?: number;
   disciplina: string;
-  dias : string[];
+  dias: string[];
 };
 
 export type Suscripcion = {
