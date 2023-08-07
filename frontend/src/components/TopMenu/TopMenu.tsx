@@ -70,6 +70,9 @@ function Nav() {
             <Text> Mis establecimientos </Text>
       </Link>
       <Link to={`/admin/${currentAdmin.id}`}>
+            <Text> Reservas </Text>
+      </Link>
+      <Link to={`/admin/${currentAdmin.id}`}>
             <Text> Configuración </Text>
       </Link>
       </HStack>

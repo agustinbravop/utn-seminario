@@ -38,6 +38,7 @@ import {
 Text,
   TableContainer,
 } from '@chakra-ui/react'
+import { DeleteIcon } from "@chakra-ui/icons";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
@@ -142,12 +143,12 @@ function NewCourt() {
       imagen: undefined,
       disponibilidades: [
         {
-          horaInicio: " ",
-          horaFin: " ",
+          horaInicio: "-",
+          horaFin: "-",
           minutosReserva: 0,
           precioReserva: 0,
           precioSena: 0,
-          disciplina: " ",
+          disciplina: "-",
           dias: [],
         },
       ],
@@ -160,7 +161,8 @@ function NewCourt() {
   const values = useWatch({ control: methods.control });
   console.log(values);
    */ 
-  const {control} = methods
+  
+  const { control } = methods;
 
   useEffect(() => {
       console.log(data2)
@@ -178,9 +180,9 @@ function NewCourt() {
 
   const agregarHorario = () => {
     append({
-      horaInicio: "",
-      horaFin: "",
-      disciplina: "",
+      horaInicio: "-",
+      horaFin: "-",
+      disciplina: "-",
       minutosReserva: 0,
       precioReserva: 0,
       precioSena: 0,
@@ -189,10 +191,13 @@ function NewCourt() {
     console.log(data2)
   };
 
-
-
-
+  const handleDelete = (index: number) => {
+    const disponibilidades = methods.getValues('disponibilidades');
+    disponibilidades.splice(index, 1); // Eliminamos el elemento del arreglo
+    methods.setValue('disponibilidades', disponibilidades); // Actualizamos el valor del arreglo
+  };
   
+  const last = methods.getValues("disponibilidades").length - 1
   const data2 = methods.getValues("disponibilidades")
   const lastFieldIndex = fields.length - 1;
 
@@ -247,7 +252,7 @@ function NewCourt() {
           </FormControl>
           </VStack>
 
-          <VStack width="900px">
+          <VStack width="1100px">
          
             <Text as='b' > Disponibilidad horaria </Text>
             <p>
@@ -263,23 +268,27 @@ function NewCourt() {
                     <Th>disciplina</Th>
                     <Th>hora inicio</Th>
                     <Th>hora fin</Th>
-                    <Th>reserva (minutos)</Th>
-                    <Th>precio reserva/seña</Th>
+                    <Th>reserva (min.)</Th>
+                    <Th>p. reserva/seña</Th>
                     <Th>  dias </Th>
+                    <Th>  delete </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
-                {methods.getValues("disponibilidades").map((d) => (
-                     <Tr>
-                     <Td> {d.disciplina} </Td>
-                     <Td> {d.horaInicio} </Td>
-                     <Td> {d.horaFin} </Td>
-                     <Td> {d.minutosReserva} </Td>
-                     <Td> {d.precioReserva}/{d.precioSena} </Td>
-                     <Td>  {d.dias.map((dia) => (<>{dia+" - "}</>))} </Td>
-                   </Tr>
-                  ) )
-                  }
+                {methods.getValues('disponibilidades').map((d, index) =>
+            // Verificar si el índice es mayor o igual a numeroDado
+            index < last ? (
+              <Tr>
+              <Td> {d.disciplina} </Td>
+              <Td> {d.horaInicio} </Td>
+              <Td> {d.horaFin} </Td>
+              <Td> {d.minutosReserva} </Td>
+              <Td> {d.precioReserva}/{d.precioSena} </Td>
+              <Td>  {d.dias.map((dia) => (<>{dia+" - "}</>))} </Td>
+              <Td> <Button type="button" onClick={() => handleDelete(index)}> <DeleteIcon/> </Button> </Td>
+            </Tr>
+            ) : null
+          )}
                 </Tbody>
               </Table>
             </TableContainer>
@@ -333,7 +342,7 @@ function NewCourt() {
                   placeholder=" "
                   name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
                   type="number"
-                  label="Duración de la reserva"
+                  label="Duración de la reserva (minutos)"
                 ></InputControl>
               </HStack>
               <HStack width="600px">
