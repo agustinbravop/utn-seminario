@@ -14,7 +14,6 @@ export const crearEstablecimientoReqSchema = establecimientoSchema
   })
   .extend({
     idAdministrador: z.string().transform((str) => {
-      console.log(typeof str, str, Number(str));
       return Number(str);
     }),
   });
@@ -37,8 +36,6 @@ export class EstablecimientoHandler {
 
   postEstablecimiento(): RequestHandler {
     return async (req, res) => {
-      console.log(res.locals);
-
       const est: Establecimiento = {
         ...res.locals.body,
         idAdministrador: Number(res.locals.idAdmin),
@@ -64,7 +61,6 @@ export class EstablecimientoHandler {
     return async (req, res) => {
       // TODO: mejorar input validation
       const idAdmin = Number(req.params.idAdmin);
-      console.log(idAdmin);
       const ests = await this.service.getByAdminID(idAdmin);
       res.status(200).json(ests);
     };

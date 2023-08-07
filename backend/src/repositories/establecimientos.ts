@@ -19,10 +19,6 @@ export class PrismaEstablecimientoRepository
     this.prisma = client;
   }
 
-  private toModel(est: establecimiento): Establecimiento {
-    return { ...est };
-  }
-
   async crear(est: Establecimiento): Promise<Establecimiento> {
     try {
       const dbEst = await this.prisma.establecimiento.create({
@@ -39,7 +35,7 @@ export class PrismaEstablecimientoRepository
           horariosDeAtencion: est.horariosDeAtencion,
         },
       });
-      return this.toModel(dbEst);
+      return toModel(dbEst);
     } catch (e) {
       console.error(e);
       throw new InternalServerError("No se pudo crear el establecimiento");
@@ -66,7 +62,7 @@ export class PrismaEstablecimientoRepository
         },
       });
 
-      return estsDB.map((estDB) => this.toModel(estDB));
+      return estsDB.map((estDB) => toModel(estDB));
     } catch (e) {
       console.error(e);
       throw new InternalServerError("No se pudo obtener los establecimientos");
@@ -107,7 +103,9 @@ export class PrismaEstablecimientoRepository
 type establecimientoDB = establecimiento;
 
 function toModel(est: establecimientoDB): Establecimiento {
-  return { ...est };
+  return {
+    ...est,
+  };
 }
 
 async function awaitQuery(

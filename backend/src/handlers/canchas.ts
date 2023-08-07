@@ -37,7 +37,6 @@ export class CanchaHandler {
 
   getCanchasByEstablecimientoID(): RequestHandler {
     return async (req, res) => {
-      console.log(req.params);
       const idEst = Number(req.params["idEst"]);
 
       const cancha = await this.service.getCanchasByEstablecimientoID(idEst);

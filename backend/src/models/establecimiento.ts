@@ -13,5 +13,5 @@ export const establecimientoSchema = z.object({
   provincia: z.string().nonempty(),
   urlImagen: z.string().nonempty().nullable(),
   idAdministrador: z.number().positive().int(),
-  horariosDeAtencion: z.string().nonempty().nullable(),
+  horariosDeAtencion: z.string().optional().nullable(),
 });
