@@ -107,7 +107,7 @@ export default function CourtInfoPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Está habilitada
                     </Heading>
-                    <Text fontSize="sm">{data?.estaHabilitada}</Text>
+                    <Text fontSize="sm">{data?.estaHabilitada? 'Si' : 'No'}</Text> 
                   </Box>
                 </Stack>
               </Box>
