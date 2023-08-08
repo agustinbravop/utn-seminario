@@ -125,7 +125,7 @@ export default function CourtInfoPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Está habilitada
                     </Heading>
-                    <Text fontSize="sm">{data?.estaHabilitada.toString()}</Text>
+                    <Text fontSize="sm">Esta cancha { data?.estaHabilitada ? "" : "no" } se encuentra habilitada</Text>
                   </Box>
                 </Stack>
               </Box>
