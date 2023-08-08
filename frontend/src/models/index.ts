@@ -17,6 +17,7 @@ export type Cancha = {
   urlImagen?: string;
   idEstablecimiento: number;
   disciplinas: string[];
+  disponibilidades: Disponibilidad[];
 };
 
 export type Establecimiento = {
@@ -45,7 +46,7 @@ export type Disponibilidad = {
   horaFin: string;
   minutosReserva: number;
   precioReserva: number;
-  precioSena?: number;
+  precioSena?: number | undefined;
   disciplina: string;
   dias: string[];
 };
