@@ -72,7 +72,7 @@ model establecimiento {
   telefono           String
   direccion          String         @db.VarChar
   urlImagen          String?        @db.VarChar
-  correo             String         @unique @db.VarChar
+  correo             String         @db.VarChar
   estaEliminada      Boolean
   horariosDeAtencion String?
   localidad          String         @db.VarChar 
