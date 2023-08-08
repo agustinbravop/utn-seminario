@@ -64,7 +64,7 @@ export class CanchaHandler {
         descripcion: req.body.descripcion,
         estaHabilitada: req.body.estaHabilitada === "true",
         estaEliminada: false, //analizar que funcione
-        urlImagen: req.body.urlImagen,
+        urlImagen: null,
         idEstablecimiento: parseInt(req.body.idEstablecimiento),
         disciplinas: req.body.disciplinas,
       };

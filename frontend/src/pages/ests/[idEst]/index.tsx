@@ -28,6 +28,7 @@ import { DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { ApiError } from "@/utils/api";
 import { useMutation} from "@tanstack/react-query";
+import { defImage } from "@/utils/const/const";
 
 export default function CourtPage() {
   const { idEst } = useParams();
@@ -94,7 +95,7 @@ export default function CourtPage() {
             <CardBody height="100%" marginTop="0px">
                 <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
                         <Box >
-                            <Image src={ !(data?.urlImagen === null) ? data?.urlImagen : "https://img.freepik.com/fotos-premium/interior-liso-blanco-arquitectonico-abstracto-casa-minimalista-grandes-ventanales-modelo-3d_689904-23060.jpg?w=360"} 
+                            <Image src={ !(data?.urlImagen === null) ? data?.urlImagen : defImage } 
                             width="1000px"  height="400px" objectFit="cover" borderRadius="10px"/>
                         </Box>
                         
