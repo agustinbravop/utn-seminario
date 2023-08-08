@@ -145,7 +145,7 @@ function NewCourt() {
           precioReserva: 0,
           precioSena: 0,
           disciplina: "-",
-          dias: [],
+          //dias: [],
         },
       ],
     },

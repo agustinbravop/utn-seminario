@@ -11,15 +11,26 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   StackDivider,
   Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { EditIcon, SearchIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
-import { getCanchaByID } from "@/utils/api/canchas";
+import { DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { Link, useNavigate } from "react-router-dom";
+import { deleteCanchaByID, getCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
+import { ApiError } from "@/utils/api";
+import { useMutation} from "@tanstack/react-query";
 
 export default function CourtInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -27,6 +38,37 @@ export default function CourtInfoPage() {
   const { data } = useQuery<Cancha>(["canchas", idCancha], () =>
     getCanchaByID(Number(idEst), Number(idCancha))
   );
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const { mutate: mutateDelete } = useMutation<Cancha, ApiError>({
+    mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
+    onSuccess: () => {
+      toast({
+        title: "Cancha Eliminada.",
+        description: `Cancha Eliminada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al eliminar la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const handleEliminar = () => {
+    console.log("hola")
+    mutateDelete()
+    onClose();
+  };
 
   return (
     <div>
@@ -36,8 +78,9 @@ export default function CourtInfoPage() {
             <Text>Esta es la información que se muestra al usuario de su cancha.</Text>
             <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
             <Link to="editar">
-              <Button leftIcon={<EditIcon />}>Editar Información</Button>
+              <Button leftIcon={<EditIcon />}>Editar</Button>
             </Link>
+            <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>Eliminar</Button>
             </HStack> 
             </HStack>
       <Box
@@ -90,6 +133,26 @@ export default function CourtInfoPage() {
           </CardBody>
         </Card>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Eliminar cancha</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>¿Está seguro de eliminar la cancha?</ModalBody>
+          <ModalFooter>
+            <Button colorScheme="gray" mr={3} onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button
+              colorScheme="blackAlpha"
+              backgroundColor="black"
+              onClick={handleEliminar}
+            >
+              Aceptar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
