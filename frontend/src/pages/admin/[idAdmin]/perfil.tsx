@@ -15,12 +15,13 @@ export default function PerfilPage() {
 
   return (
     <>
-      <div style={{ marginTop: "2rem" }}>
+      <VStack>
         <Card
+          // justifyContent="center"
           boxSize="40rem"
-          width="36%"
+          width="50%"
           height="70%"
-          marginLeft="32%"
+          // marginLeft="32%"
           marginTop="5%"
         >
           <CardHeader >
@@ -73,7 +74,7 @@ export default function PerfilPage() {
             </Stack>
           </CardBody>
         </Card>
-      </div>
+      </VStack>
     </>
   );
 }
