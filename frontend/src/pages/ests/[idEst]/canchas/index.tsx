@@ -60,7 +60,7 @@ export default function CanchasPage() {
         marginBottom="50px"
         marginTop="20px"
       >
-        <InputGroup width="25%">
+        <InputGroup width="24%">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>

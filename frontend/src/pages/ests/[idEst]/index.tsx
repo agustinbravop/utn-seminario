@@ -69,10 +69,10 @@ export default function CourtPage() {
   return (
     <>
       <SubMenu/>
-      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" marginTop="20px" > Información </Heading>
-      <HStack marginRight="auto" marginLeft="18%" marginBottom="30px"marginTop="20px" >
+      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="16%" marginTop="20px" > Información </Heading>
+      <HStack marginRight="16%" marginLeft="16%" marginBottom="30px"marginTop="7px" >
             <Text>Esta es la información que se muestra al usuario de su establecimiento.</Text>
-            <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
+            <HStack marginLeft="auto" display="flex" alignContent="column" spacing={5} align="center" >
             <Link to="editar">
               <Button leftIcon={<EditIcon />}>Editar </Button>
             </Link>

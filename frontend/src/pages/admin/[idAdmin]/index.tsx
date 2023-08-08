@@ -62,7 +62,7 @@ export default function EstablecimientosPage() {
         Mis Establecimientos
       </Heading>
       <HStack marginRight="16%" marginLeft="16%" marginBottom="50px" marginTop="20px" >
-        <InputGroup width="25%">
+        <InputGroup width="24%">
           <InputRightElement pointerEvents='none'>
             <SearchIcon color='gray.300' />
           </InputRightElement>
