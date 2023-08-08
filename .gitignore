@@ -13,6 +13,7 @@ backend/imagenes
 
 # testing
 /coverage
+**.http
 
 # logs
 npm-debug.log*
