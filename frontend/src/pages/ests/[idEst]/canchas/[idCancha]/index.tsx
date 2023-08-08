@@ -42,6 +42,7 @@ export default function CourtInfoPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
+  const defImage = ""
 
   const { mutate: mutateDelete } = useMutation<Cancha, ApiError>({
     mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
@@ -99,7 +100,7 @@ export default function CourtInfoPage() {
             <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
               <Box>
                 <Image
-                  src={data?.urlImagen}
+                  src={ !(data?.urlImagen === null) ? data?.urlImagen : "https://img.freepik.com/fotos-premium/interior-liso-blanco-arquitectonico-abstracto-casa-minimalista-grandes-ventanales-modelo-3d_689904-23060.jpg?w=360"} 
                   width="1000px"
                   height="400px"
                   objectFit="cover"

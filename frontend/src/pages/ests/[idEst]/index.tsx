@@ -94,7 +94,8 @@ export default function CourtPage() {
             <CardBody height="100%" marginTop="0px">
                 <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
                         <Box >
-                            <Image src={data?.urlImagen} width="1000px"  height="400px" objectFit="cover" borderRadius="10px"/>
+                            <Image src={ !(data?.urlImagen === null) ? data?.urlImagen : "https://img.freepik.com/fotos-premium/interior-liso-blanco-arquitectonico-abstracto-casa-minimalista-grandes-ventanales-modelo-3d_689904-23060.jpg?w=360"} 
+                            width="1000px"  height="400px" objectFit="cover" borderRadius="10px"/>
                         </Box>
                         
                         <Box marginTop="70px" marginLeft=" 50px" height="100%">
