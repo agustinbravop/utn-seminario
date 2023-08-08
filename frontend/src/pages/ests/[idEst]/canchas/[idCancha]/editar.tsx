@@ -30,7 +30,7 @@ import {
   modificarCancha,
   deleteCanchaByID
 } from "@/utils/api/canchas";
-import { InputControl, SubmitButton } from "@/components/forms";
+import { InputControl, SubmitButton, SwitchControl } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -168,7 +168,6 @@ export default function EditCourtPage() {
   });
 
   const handleEliminar = () => {
-    console.log("hola")
     mutateDelete()
     onClose();
   };
@@ -194,11 +193,14 @@ export default function EditCourtPage() {
             isRequired
           />
           <InputControl
-            name="descripcion"
+            name="descripcion" 
             label="Descripción"
             placeholder="Descripción"
             isRequired
           />
+          <FormControl>
+            <SwitchControl name="estaHabilitada" label='¿Esta habilitada?'></SwitchControl>
+          </FormControl>
           <FormControl>
             <FormLabel marginTop="10px" marginLeft="10px">
               Imagen
