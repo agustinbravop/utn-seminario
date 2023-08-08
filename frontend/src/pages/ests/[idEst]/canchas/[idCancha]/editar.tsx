@@ -175,12 +175,13 @@ export default function EditCourtPage() {
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha 
+        Editar Cancha
       </Heading>
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          // onSubmit={methods.handleSubmit((values) => mutate(values))}
+          onSubmit={methods.handleSubmit(onOpen)}
           spacing="24px"
           width="400px"
           m="auto"
@@ -335,35 +336,32 @@ export default function EditCourtPage() {
               </Alert>
             )}
           </Container>
+
+          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Modificar cancha</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>¿Está seguro de modificar la información de la cancha?</ModalBody>
+
+              <ModalFooter>
+                <Button colorScheme="gray" mr={3} onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  colorScheme="blackAlpha"
+                  backgroundColor="black"
+                  onClick={methods.handleSubmit((values) => mutate(values))}
+                >
+                  Aceptar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </VStack>
       </FormProvider>
-      <Container centerContent mt="20px">
-        <Button colorScheme="red" onClick={onOpen}>
-          Eliminar
-        </Button>
-      </Container>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Eliminar cancha</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>¿Está seguro de eliminar la cancha?</ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button
-              colorScheme="blackAlpha"
-              backgroundColor="black"
-              onClick={handleEliminar}
-            >
-              Aceptar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </>
   );
 }

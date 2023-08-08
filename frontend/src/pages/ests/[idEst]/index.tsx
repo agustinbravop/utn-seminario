@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "@/models";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
   Box,
   Button,
@@ -8,15 +8,26 @@ import {
   CardBody,
   HStack,
   Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   StackDivider,
   Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { getEstablecimientoByID } from "@/utils/api/establecimientos";
+import { deleteEstablecimientoByID, getEstablecimientoByID } from "@/utils/api/establecimientos";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
-import { EditIcon} from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
+import { ApiError } from "@/utils/api";
+import { useMutation} from "@tanstack/react-query";
 
 export default function CourtPage() {
   const { idEst } = useParams();
@@ -25,6 +36,36 @@ export default function CourtPage() {
     getEstablecimientoByID(Number(idEst))
   );
 
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const { mutate: mutateDelete } = useMutation<Establecimiento, ApiError>({
+    mutationFn: () => deleteEstablecimientoByID(data?.id),
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento eliminado.",
+        description: `Establecimiento eliminado exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-2);
+    },
+    onError: () => {
+      toast({
+        title: "Error al eliminar el establecimiento",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const handleEliminar = () => {
+    mutateDelete();
+    onClose();
+  };
   return (
     <>
       <SubMenu/>
@@ -33,8 +74,9 @@ export default function CourtPage() {
             <Text>Esta es la información que se muestra al usuario de su establecimiento.</Text>
             <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
             <Link to="editar">
-              <Button leftIcon={<EditIcon />}>Editar Información</Button>
+              <Button leftIcon={<EditIcon />}>Editar </Button>
             </Link>
+            <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>Eliminar</Button>
             </HStack> 
             </HStack>
       <Box
@@ -96,6 +138,26 @@ export default function CourtPage() {
                 </Box>
             </CardBody>
             </Card>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Eliminar establecimiento</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>¿Está seguro de eliminar el establecimiento?</ModalBody>
+              <ModalFooter>
+                <Button colorScheme="gray" mr={3} onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  colorScheme="blackAlpha"
+                  backgroundColor="black"
+                  onClick={handleEliminar}
+                >
+                  Aceptar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
     </Box>
     </>
   );

@@ -65,9 +65,15 @@ function Nav() {
           width={177}
         />
       </Link>
-      <HStack marginLeft="150px" marginRight="auto" >
+      <HStack marginLeft="150px" marginRight="auto"  spacing={10} >
       <Link to={`/admin/${currentAdmin.id}`}>
             <Text> Mis establecimientos </Text>
+      </Link>
+      <Link to={`/admin/${currentAdmin.id}`}>
+            <Text> Reservas </Text>
+      </Link>
+      <Link to={`/admin/${currentAdmin.id}`}>
+            <Text> Configuración </Text>
       </Link>
       </HStack>
       <nav style={{ paddingRight: "15px" }}>

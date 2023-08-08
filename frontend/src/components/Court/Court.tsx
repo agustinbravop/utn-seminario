@@ -20,9 +20,9 @@ export default function Court({ cancha }: estabProps) {
     <Card maxWidth="xs" height="450px" width="300px">
       <Image
         src={cancha.urlImagen !== null ? cancha.urlImagen : undefined}
-        borderRadius="lg"
         alt={`Imagen del cancha ${cancha.nombre}`}
         objectFit="cover"
+        borderTopRadius="lg"
         maxWidth="100%"
         height="200px"
       />
@@ -31,7 +31,8 @@ export default function Court({ cancha }: estabProps) {
           <Heading size="md" marginBottom="10px">
             {cancha.nombre}
           </Heading>
-          <Text marginBottom="0">{cancha.descripcion}</Text>
+          <Text marginBottom="5">{cancha.descripcion}</Text>
+          <Text marginBottom="0">{ cancha?.estaHabilitada ? "Esta habilitada" : "No esta habilitada"}</Text>
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">

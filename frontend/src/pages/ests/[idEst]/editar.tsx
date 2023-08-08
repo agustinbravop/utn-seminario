@@ -26,7 +26,6 @@ import {
   ModificarEstablecimientoReq,
   getEstablecimientoByID,
   modificarEstablecimiento,
-  deleteEstablecimientoByID
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
@@ -107,37 +106,6 @@ export default function EditEstabPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const { mutate: mutateDelete } = useMutation<Establecimiento, ApiError, FormState>({
-    mutationFn: () => deleteEstablecimientoByID(data?.id),
-    onSuccess: () => {
-      toast({
-        title: "Establecimiento eliminado.",
-        description: `Establecimiento eliminado exitosamente.`,
-        status: "success",
-        isClosable: true,
-      });
-      navigate(-3);
-    },
-    onError: () => {
-      toast({
-        title: "Error al eliminar el establecimiento",
-        description: `Intente de nuevo.`,
-        status: "error",
-        isClosable: true,
-      });
-    },
-  });
-
-  const handleEliminar = () => {
-    console.log("hola")
-    console.log("Eliminar establecimiento")
-    // deleteEstablecimientoByID(data?.idEstablecimiento, data?.id)
-    // navigate("www.google.com")
-    mutateDelete();
-    onClose();
-  };
-
-
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px" >
@@ -146,7 +114,8 @@ export default function EditEstabPage() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          // onSubmit={methods.handleSubmit((values) => mutate(values))}
+          onSubmit={methods.handleSubmit(onOpen)}
           spacing="4"
           width="400px"
           m="auto"
@@ -223,18 +192,13 @@ export default function EditEstabPage() {
               Error al intentar registrar el establecimiento. Intente de nuevo
             </Alert>
           )}
-          <Container centerContent mt="20px">
-            <Button colorScheme="red" onClick={onOpen}>
-              Eliminar
-            </Button>
-          </Container>
 
           <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>Eliminar establecimiento</ModalHeader>
+              <ModalHeader>Modificar establecimiento</ModalHeader>
               <ModalCloseButton />
-              <ModalBody>¿Está seguro de eliminar el establecimiento?</ModalBody>
+              <ModalBody>¿Está seguro de modificar la información del establecimiento?</ModalBody>
 
               <ModalFooter>
                 <Button colorScheme="gray" mr={3} onClick={onClose}>
@@ -243,7 +207,7 @@ export default function EditEstabPage() {
                 <Button
                   colorScheme="blackAlpha"
                   backgroundColor="black"
-                  onClick={handleEliminar}
+                  onClick={methods.handleSubmit((values) => mutate(values))}
                 >
                   Aceptar
                 </Button>
