@@ -32,7 +32,7 @@ export default function Court({ cancha }: estabProps) {
             {cancha.nombre}
           </Heading>
           <Text marginBottom="5">{cancha.descripcion}</Text>
-          <Text marginBottom="0">{cancha?.estaHabilitada.toString()}</Text>
+          <Text marginBottom="0">{ cancha?.estaHabilitada ? "Esta habilitada" : "No esta habilitada"}</Text>
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">
