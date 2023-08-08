@@ -193,14 +193,11 @@ export default function EditCourtPage() {
             isRequired
           />
           <InputControl
-            name="descripcion" 
+            name="descripcion"
             label="Descripción"
             placeholder="Descripción"
             isRequired
           />
-          <FormControl>
-            <SwitchControl name="estaHabilitada" label='¿Esta habilitada?'></SwitchControl>
-          </FormControl>
           <FormControl>
             <FormLabel marginTop="10px" marginLeft="10px">
               Imagen
@@ -222,7 +219,9 @@ export default function EditCourtPage() {
               }}
             />
           </FormControl>
-
+          <FormControl>
+            <SwitchControl name="estaHabilitada" label='¿Esta habilitada?'></SwitchControl>
+          </FormControl>
           <Heading size="md" mt="20px">
             Disponibilidad horarias
           </Heading>

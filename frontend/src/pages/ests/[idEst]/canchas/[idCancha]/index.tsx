@@ -123,7 +123,7 @@ export default function CourtInfoPage() {
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Está habilitada
+                      Habilitación
                     </Heading>
                     <Text fontSize="sm">Esta cancha { data?.estaHabilitada ? "" : "no" } se encuentra habilitada</Text>
                   </Box>
