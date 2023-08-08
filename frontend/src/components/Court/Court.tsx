@@ -10,16 +10,18 @@ import {
 } from "@chakra-ui/react";
 import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
+import { defImage } from "@/utils/const/const";
 
 type estabProps = {
   cancha: Cancha;
 };
 
 export default function Court({ cancha }: estabProps) {
+
   return (
     <Card maxWidth="xs" height="450px" width="300px">
       <Image
-        src={cancha.urlImagen !== null ? cancha.urlImagen : undefined}
+        src={!(cancha?.urlImagen === null) ? cancha?.urlImagen : defImage}
         alt={`Imagen del cancha ${cancha.nombre}`}
         objectFit="cover"
         borderTopRadius="lg"
@@ -32,7 +34,7 @@ export default function Court({ cancha }: estabProps) {
             {cancha.nombre}
           </Heading>
           <Text marginBottom="5">{cancha.descripcion}</Text>
-          <Text marginBottom="0">{cancha?.estaHabilitada.toString()}</Text>
+          <Text marginBottom="0">{ cancha?.estaHabilitada ? "Esta habilitada" : "No esta habilitada"}</Text>
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">

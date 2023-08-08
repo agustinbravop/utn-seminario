@@ -11,15 +11,27 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   StackDivider,
   Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { EditIcon, SearchIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
-import { getCanchaByID } from "@/utils/api/canchas";
+import { DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { Link, useNavigate } from "react-router-dom";
+import { deleteCanchaByID, getCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
+import { ApiError } from "@/utils/api";
+import { useMutation} from "@tanstack/react-query";
+import { defImage } from "@/utils/const/const";
 
 export default function CourtInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -28,16 +40,48 @@ export default function CourtInfoPage() {
     getCanchaByID(Number(idEst), Number(idCancha))
   );
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const { mutate: mutateDelete } = useMutation<Cancha, ApiError>({
+    mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
+    onSuccess: () => {
+      toast({
+        title: "Cancha Eliminada.",
+        description: `Cancha Eliminada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al eliminar la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const handleEliminar = () => {
+    console.log("hola")
+    mutateDelete()
+    onClose();
+  };
+
   return (
     <div>
       <SubMenu/>
-      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="18%" marginTop="20px" > Información de {data?.nombre} </Heading>
-      <HStack marginRight="auto" marginLeft="18%" marginBottom="30px"marginTop="20px" >
+      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="16%" marginTop="20px" > Información de {data?.nombre} </Heading>
+      <HStack marginRight="16%" marginLeft="16%" marginBottom="30px"marginTop="7px" >
             <Text>Esta es la información que se muestra al usuario de su cancha.</Text>
-            <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
+            <HStack marginLeft="auto"  display="flex" alignContent="column" spacing={5} align="center" >
             <Link to="editar">
-              <Button leftIcon={<EditIcon />}>Editar Información</Button>
+              <Button leftIcon={<EditIcon />}>Editar</Button>
             </Link>
+            <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>Eliminar</Button>
             </HStack> 
             </HStack>
       <Box
@@ -56,7 +100,7 @@ export default function CourtInfoPage() {
             <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
               <Box>
                 <Image
-                  src={data?.urlImagen}
+                  src={ !(data?.urlImagen === null) ? data?.urlImagen : defImage} 
                   width="1000px"
                   height="400px"
                   objectFit="cover"
@@ -80,9 +124,9 @@ export default function CourtInfoPage() {
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Está habilitada
+                      Habilitación
                     </Heading>
-                    <Text fontSize="sm">{data?.estaHabilitada.toString()}</Text>
+                    <Text fontSize="sm">Esta cancha { data?.estaHabilitada ? "" : "no" } se encuentra habilitada</Text>
                   </Box>
                 </Stack>
               </Box>
@@ -90,6 +134,26 @@ export default function CourtInfoPage() {
           </CardBody>
         </Card>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Eliminar cancha</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>¿Está seguro de eliminar la cancha?</ModalBody>
+          <ModalFooter>
+            <Button colorScheme="gray" mr={3} onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button
+              colorScheme="blackAlpha"
+              backgroundColor="black"
+              onClick={handleEliminar}
+            >
+              Aceptar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

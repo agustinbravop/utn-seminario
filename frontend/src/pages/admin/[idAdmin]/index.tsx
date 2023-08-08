@@ -61,22 +61,22 @@ export default function EstablecimientosPage() {
       <Heading textAlign="center" paddingBottom="12" mt="40px">
         Mis Establecimientos
       </Heading>
-      <HStack marginRight="auto" marginLeft="18%" marginBottom="50px" marginTop="20px" >
-      <InputGroup width="18%">
-            <InputRightElement pointerEvents='none'>
-              <SearchIcon color='gray.300' />
-            </InputRightElement>
-            <Input
-          focusBorderColor="lightblue"
-          placeholder="Nombre del establecimiento"
-          size="md"
-          width="100%"
-          onChange={handleChange}
-          value={filtro}
-        />
+      <HStack marginRight="16%" marginLeft="16%" marginBottom="50px" marginTop="20px" >
+        <InputGroup width="24%">
+          <InputRightElement pointerEvents='none'>
+            <SearchIcon color='gray.300' />
+          </InputRightElement>
+          <Input
+            focusBorderColor="lightblue"
+            placeholder="Nombre del establecimiento"
+            size="md"
+            width="100%"
+            onChange={handleChange}
+            value={filtro}
+          />
         </InputGroup>
-        <HStack marginLeft="auto" marginRight="15%" display="flex" alignContent="column" spacing={5} align="center" >
-          <Text mb="0"> 
+        <HStack marginLeft="auto" display="flex" alignContent="column" spacing={5} align="center" >
+          <Text mb="0">
             {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
             establecimientos
           </Text>
@@ -87,7 +87,7 @@ export default function EstablecimientosPage() {
           </Link>
         </HStack>
       </HStack>
-      <HStack marginLeft="18%">
+      <HStack marginLeft="16%" marginRight="16%">
         {isLoading ? (
           <LoadingSpinner />
         ) : isError ? (

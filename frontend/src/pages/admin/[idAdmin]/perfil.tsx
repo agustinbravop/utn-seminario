@@ -8,6 +8,7 @@ import {
   StackDivider,
   Box,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 
 export default function PerfilPage() {
@@ -15,12 +16,13 @@ export default function PerfilPage() {
 
   return (
     <>
-      <div style={{ marginTop: "2rem" }}>
+      <VStack>
         <Card
+          // justifyContent="center"
           boxSize="40rem"
-          width="36%"
+          width="40%"
           height="70%"
-          marginLeft="32%"
+          // marginLeft="32%"
           marginTop="5%"
         >
           <CardHeader >
@@ -29,7 +31,7 @@ export default function PerfilPage() {
             </Heading>
           </CardHeader>
           <CardBody marginTop="28px" >
-            <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
+            <Stack divider={<StackDivider />} spacing="2.5" marginTop="-2rem">
               <Box>
                 <Heading size="xs" textTransform="uppercase">
                   Nombre
@@ -73,7 +75,7 @@ export default function PerfilPage() {
             </Stack>
           </CardBody>
         </Card>
-      </div>
+      </VStack>
     </>
   );
 }
