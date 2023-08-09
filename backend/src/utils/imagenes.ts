@@ -1,5 +1,5 @@
 import cloudinary from "cloudinary";
-import { ApiError, InternalServerError } from "./apierrors";
+import { ApiError, InternalServerError } from "./apierrors.js";
 
 cloudinary.v2.config({
   cloud_name: "dlyqi5ko6",

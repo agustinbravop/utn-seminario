@@ -48,7 +48,7 @@ const validationSchema = Yup.object({
   disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
   imagen: Yup.mixed<File>().optional(),
   disponibilidades: Yup.array(
-    Yup.object({
+    Yup.object().shape({
       horaInicio: Yup.string().required("Obligatorio"),
       horaFin: Yup.string().required("Obligatorio"),
       minutosReserva: Yup.number()
@@ -57,7 +57,7 @@ const validationSchema = Yup.object({
       precioReserva: Yup.number()
         .typeError("Debe ingresar un numero")
         .required("Obligatorio"),
-      precioSena: Yup.number().typeError("Debe ingresar un numero").optional(),
+      precioSenia: Yup.number().typeError("Debe ingresar un numero").optional(),
       disciplina: Yup.string().required("Obligatorio"),
       dias: Yup.array(Yup.string<Dia>().required())
         .min(1, "Obligatorio")
@@ -193,7 +193,10 @@ function NuevaCancha() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          onSubmit={methods.handleSubmit((values) => {
+            console.log(values);
+            mutate(values);
+          })}
           spacing="24px"
           width="800px"
           m="auto"
@@ -290,8 +293,6 @@ function NuevaCancha() {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
-            <br />
           </VStack>
 
           {fields.length > 0 && (
@@ -375,6 +376,7 @@ function NuevaCancha() {
               </HStack>
             </>
           )}
+          <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
 
           <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
         </VStack>
