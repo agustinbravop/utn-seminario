@@ -54,7 +54,7 @@ export default function CourtPage() {
           status: "success",
           isClosable: true,
         });
-        navigate(-2);
+        navigate(`/admin/${data?.idAdministrador}`);
       },
       onError: () => {
         toast({

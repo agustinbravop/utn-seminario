@@ -138,7 +138,20 @@ function NuevaCancha() {
         },
       ],
     },
-    mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
+    mutationFn: ({ imagen, ...cancha }) => {
+      return crearCancha(
+        {
+          ...cancha,
+          disponibilidades: cancha.disponibilidades.map((d) => ({
+            ...d,
+            precioSenia: d.precioSenia && Number(d.precioSenia),
+            precioReserva: Number(d.precioReserva),
+            minutosReserva: Number(d.minutosReserva),
+          })),
+        },
+        imagen
+      );
+    },
     onSuccess: () => {
       toast({
         title: "Cancha creada",
@@ -273,8 +286,11 @@ function NuevaCancha() {
                         </Td>
                         <Td>
                           {" "}
-                          {d.dias.map((dia) => (
-                            <>{dia + " - "}</>
+                          {d.dias.map((dia, index) => (
+                            <React.Fragment key={index}>
+                              {dia}
+                              {index !== d.dias.length - 1 && " - "}
+                            </React.Fragment>
                           ))}{" "}
                         </Td>
                         <Td>
