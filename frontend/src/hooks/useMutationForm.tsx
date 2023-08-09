@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { UseFormProps, FieldValues, DefaultValues } from "react-hook-form";
+import { DefaultValues, useForm } from "react-hook-form";
+import { UseFormProps, FieldValues } from "react-hook-form";
 import { ObjectSchema } from "yup";
 
 /**
@@ -23,11 +23,11 @@ export interface MutationFormProps<
 
   /**
    * Idéntico a `defaultValues` de `useForm`, pero cada vez que el valor cambie
-   * se ejecuta `method.reset(defaultValues)` para actualizar el form.
+   * se ejecuta `method.reset(resetValues)` para actualizar el form.
    * Permite, por ejemplo, hacer un fetch asincrónico de los defaultValues, y
    * actualizar el form cuando se los obtenga.
    */
-  defaultValues?: DefaultValues<TVariables>;
+  resetValues?: DefaultValues<TVariables>;
 }
 
 /**
@@ -44,6 +44,7 @@ export default function useMutationForm<
   TContext = unknown,
 >({
   validationSchema,
+  resetValues,
   ...props
 }: MutationFormProps<TData, TError, TVariables, TContext>) {
   const {
@@ -76,8 +77,10 @@ export default function useMutationForm<
   useEffect(() => {
     // Recargar el formulario con los datos actualizados. Se ejecuta al montarse,
     // y otra vez si los defaultValues se cargan asincrónicamente.
-    methods.reset(defaultValues);
-  }, [methods, defaultValues]);
+    if (resetValues) {
+      methods.reset(resetValues);
+    }
+  }, [methods, resetValues]);
 
   const {
     mutationFn,

@@ -1,28 +1,41 @@
-
-import { postFormData, API_URL, get, putFormData, del } from ".";
+import { API_URL, get, del, patchFormData, post, put } from ".";
 import { Cancha } from "@/models";
 
 export type CrearCanchaReq = Omit<Cancha, "id" | "urlImagen">;
 
 export type ModificarCanchaReq = Omit<Cancha, "urlImagen">;
 
+function modificarImagen(cancha: Cancha, imagen?: File) {
+  if (!imagen) {
+    return cancha;
+  }
+
+  const formData = new FormData();
+  formData.append("imagen", imagen);
+  return patchFormData<Cancha>(
+    `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}/imagen`,
+    formData
+  );
+}
+
 export async function crearCancha(
   cancha: CrearCanchaReq,
   imagen?: File
 ): Promise<Cancha> {
-  const formData = new FormData();
-  if (imagen) {
-    formData.append("imagen", imagen);
-  };
-  let key: keyof CrearCanchaReq;
-  for (key in cancha) {
-    formData.append(key, String(cancha[key]));
-  }
-
-  return postFormData<Cancha>(
+  return post<Cancha>(
     `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
-    formData
-  );
+    cancha
+  ).then((cancha) => modificarImagen(cancha, imagen));
+}
+
+export async function modificarCancha(
+  cancha: ModificarCanchaReq,
+  imagen?: File
+): Promise<Cancha> {
+  return put<Cancha>(
+    `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
+    cancha
+  ).then((cancha) => modificarImagen(cancha, imagen));
 }
 
 export async function getCanchasByEstablecimientoID(
@@ -36,25 +49,6 @@ export async function getCanchaByID(
   idCancha: number
 ): Promise<Cancha> {
   return get(`${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`);
-}
-
-export async function modificarCancha(
-  cancha: ModificarCanchaReq,
-  imagen?: File
-): Promise<Cancha> {
-  const formData = new FormData();
-  if (imagen) {
-    formData.append("imagen", imagen);
-  }
-  let key: keyof ModificarCanchaReq;
-  for (key in cancha) {
-    formData.append(key, String(cancha[key]));
-  }
-
-  return putFormData<Cancha>(
-    `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
-    formData
-  );
 }
 
 export async function deleteCanchaByID(

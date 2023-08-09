@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cancha, Establecimiento } from "@/models";
+import { Cancha } from "@/models";
 import { useParams } from "react-router";
 import {
   Button,
@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import Courts from "@/components/Courts/Courts";
 import { getCanchasByEstablecimientoID } from "@/utils/api/canchas";
-import { getEstablecimientoByID } from "@/utils/api/establecimientos";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
 import Alerta from "@/components/Alerta/Alerta";
@@ -29,18 +28,15 @@ export default function CanchasPage() {
     () => getCanchasByEstablecimientoID(Number(idEst))
   );
 
-  useQuery<Establecimiento>(["establecimiento", idEst], () =>
-    getEstablecimientoByID(Number(idEst))
-  );
-
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
   };
 
-  const canchasFiltradas = data?.filter((cancha) =>
-    cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
-  );
+  const canchasFiltradas =
+    data?.filter((cancha) =>
+      cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
+    ) ?? [];
 
   return (
     <>

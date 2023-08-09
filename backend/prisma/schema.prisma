@@ -28,40 +28,33 @@ model cancha {
   id                Int              @id @default(autoincrement()) @map("idCancha")
   nombre            String           @db.VarChar
   descripcion       String           @db.VarChar
-  estaHabilitada    Boolean
+  habilitada        Boolean          @default(true)
   urlImagen         String?          @db.VarChar
   idEstablecimiento Int
-  estaEliminada     Boolean
+  eliminada         Boolean          @default(false)
   establecimiento   establecimiento  @relation(fields: [idEstablecimiento], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  disciplinas       disciplina[]
   disponibilidades  disponibilidad[]
   reservas          reserva[]
 }
 
-model diaDeSemana {
-  diaDeSemana        String              @id @db.VarChar
-  disponibilidades   disponibilidad[]
-  horariosDeAtencion horarioDeAtencion[]
-}
-
 model disciplina {
   disciplina       String           @id @db.VarChar
-  canchas          cancha[]
   reservas         reserva[]
   disponibilidades disponibilidad[]
 }
 
 model disponibilidad {
-  id                     Int           @id @default(autoincrement()) @map("idDisponibilidad")
-  horaInicio             DateTime?     @db.Time(6)
-  horaFin                DateTime?     @db.Time(6)
-  minutosDuracionReserva Int
-  precioReserva          Decimal       @db.Decimal
-  precioSenia            Decimal       @db.Decimal
-  canchas                cancha[]
-  idDisciplina           String        @map("disciplina") @db.VarChar
-  disciplina             disciplina    @relation(fields: [idDisciplina], references: [disciplina])
-  diasDeSemana           diaDeSemana[]
+  id             Int        @id @default(autoincrement()) @map("idDisponibilidad")
+  horaInicio     String     @db.Char(5)
+  horaFin        String     @db.Char(5)
+  minutosReserva Int
+  precioReserva  Decimal    @db.Decimal
+  precioSenia    Decimal?   @db.Decimal
+  idCancha       Int        @map("cancha")
+  cancha         cancha     @relation(fields: [idCancha], references: [id])
+  idDisciplina   String     @map("disciplina") @db.VarChar
+  disciplina     disciplina @relation(fields: [idDisciplina], references: [disciplina])
+  dias           String[]
 }
 
 model establecimiento {
@@ -85,14 +78,6 @@ model metodoDePago {
   metodoDePago     String            @id @db.VarChar()
   establecimientos establecimiento[]
   pagos            pago[]
-}
-
-model horarioDeAtencion {
-  id            Int         @id @default(autoincrement()) @map("idHorariosDeAtencion")
-  horaApertura  DateTime    @db.Time(6)
-  horaCierre    DateTime    @db.Time(6)
-  idDiaDeSemana String      @map("diaDeSemana") @db.VarChar
-  diaDeSemana   diaDeSemana @relation(fields: [idDiaDeSemana], references: [diaDeSemana], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model jugador {

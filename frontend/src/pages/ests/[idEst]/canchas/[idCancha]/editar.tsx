@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Cancha } from "@/models";
+import { Cancha, Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -44,10 +44,13 @@ const validationSchema = Yup.object({
   id: Yup.number().positive().required("Obligatorio"),
   nombre: Yup.string().required("Obligatorio"),
   descripcion: Yup.string().required("Obligatorio"),
-  estaHabilitada: Yup.bool().default(true),
+  habilitada: Yup.bool().default(true),
   idEstablecimiento: Yup.number().required(),
   imagen: Yup.mixed<File>().optional(),
   disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
+  disponibilidades: Yup.array(Yup.mixed<Disponibilidad>().required()).default(
+    []
+  ),
 });
 
 // const horas = [

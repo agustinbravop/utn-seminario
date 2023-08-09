@@ -13,7 +13,7 @@ export type Cancha = {
   id: number;
   nombre: string;
   descripcion: string;
-  estaHabilitada: boolean;
+  habilitada: boolean;
   urlImagen?: string;
   idEstablecimiento: number;
   disciplinas: string[];
@@ -46,10 +46,19 @@ export type Disponibilidad = {
   horaFin: string;
   minutosReserva: number;
   precioReserva: number;
-  precioSena?: number | undefined;
+  precioSenia?: number | undefined;
   disciplina: string;
-  dias: string[];
+  dias: Dia[];
 };
+
+export type Dia =
+  | "Lunes"
+  | "Martes"
+  | "Miércoles"
+  | "Jueves"
+  | "Viernes"
+  | "Sábado"
+  | "Domingo";
 
 export type Suscripcion = {
   id: number;

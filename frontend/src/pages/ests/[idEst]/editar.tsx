@@ -58,17 +58,17 @@ export default function EditEstabPage() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data } = useQuery<Establecimiento>({
+  const { data, isLoading } = useQuery<Establecimiento>({
     queryKey: ["establecimientos", idEst],
     queryFn: () => getEstablecimientoByID(Number(idEst)),
   });
 
-  const { methods, mutate, isLoading, isError } = useMutationForm<
+  const { methods, mutate, isError } = useMutationForm<
     Establecimiento,
     ApiError,
     FormState
   >({
-    defaultValues: data,
+    resetValues: data,
     mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
     validationSchema,
     onSuccess: () => {
@@ -99,7 +99,6 @@ export default function EditEstabPage() {
     ApiError
   >({
     mutationFn: () => deleteEstablecimientoByID(data?.id),
-    mutationKey: ["establecimientos", "data?.id || 0"],
     onSuccess: () => {
       toast({
         title: "Establecimiento eliminado.",

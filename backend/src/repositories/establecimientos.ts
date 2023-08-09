@@ -23,16 +23,8 @@ export class PrismaEstablecimientoRepository
     try {
       const dbEst = await this.prisma.establecimiento.create({
         data: {
+          ...est,
           id: undefined,
-          nombre: est.nombre,
-          telefono: est.telefono,
-          correo: est.correo,
-          direccion: est.direccion,
-          localidad: est.localidad,
-          provincia: est.provincia,
-          idAdministrador: est.idAdministrador,
-          urlImagen: est.urlImagen,
-          horariosDeAtencion: est.horariosDeAtencion,
         },
       });
       return toModel(dbEst);
