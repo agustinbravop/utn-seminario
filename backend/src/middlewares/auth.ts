@@ -9,6 +9,9 @@ export class AuthMiddleware {
     this.service = service;
   }
 
+  /**
+   * Valida que la request tenga un JWT válido y que sea de un usuario **administrador**.
+   */
   public isAdmin(): Handler {
     return async (req, res, next) => {
       const token = req.header("Authorization")?.replace("Bearer ", "");

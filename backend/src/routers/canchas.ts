@@ -20,10 +20,10 @@ export function canchasRouter(
 
   router.get("/:idEst/canchas/", handler.getCanchasByEstablecimientoID());
   router.get("/:idEst/canchas/:idCancha", handler.getCanchaByID());
+  
   router.post(
     "/:idEst/canchas/",
     authMiddle.isAdmin(),
-    upload.single("imagen"),
     estHandler.validateAdminOwnsEstablecimiento(),
     validateBody(crearCanchaReqSchema),
     handler.postCancha()
@@ -31,16 +31,22 @@ export function canchasRouter(
   router.put(
     "/:idEst/canchas/:idCancha",
     authMiddle.isAdmin(),
-    upload.single("imagen"),
     estHandler.validateAdminOwnsEstablecimiento(),
     validateBody(modificarCanchaReqSchema),
     handler.putCancha()
+  );
+  router.patch(
+    "/:idEst/canchas/:idCancha/imagen",
+    authMiddle.isAdmin(),
+    estHandler.validateAdminOwnsEstablecimiento(),
+    upload.single("imagen"),
+    handler.patchImagenCancha()
   );
   router.delete(
     "/:idEst/canchas/:idCancha",
     authMiddle.isAdmin(),
     estHandler.validateAdminOwnsEstablecimiento(),
-    handler.eliminarCancha()
+    handler.deleteCancha()
   );
 
   return router;

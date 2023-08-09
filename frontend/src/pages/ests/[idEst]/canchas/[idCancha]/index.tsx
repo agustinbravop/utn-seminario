@@ -8,14 +8,11 @@ import {
   HStack,
   Heading,
   Image,
-  Input,
-  InputGroup,
-  InputRightElement,
   Stack,
   StackDivider,
   Text,
 } from "@chakra-ui/react";
-import { EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { getCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
@@ -27,6 +24,10 @@ export default function CourtInfoPage() {
   const { data } = useQuery<Cancha>(["canchas", idCancha], () =>
     getCanchaByID(Number(idEst), Number(idCancha))
   );
+  
+  if (!data) {
+    return <p>Cargando...</p>;
+  }
 
   return (
     <div>
@@ -38,8 +39,7 @@ export default function CourtInfoPage() {
         marginLeft="18%"
         marginTop="20px"
       >
-        {" "}
-        Información de {data?.nombre}{" "}
+        Información de {data.nombre}
       </Heading>
       <HStack
         marginRight="auto"
@@ -76,7 +76,7 @@ export default function CourtInfoPage() {
             <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
               <Box>
                 <Image
-                  src={data?.urlImagen}
+                  src={data.urlImagen}
                   width="1000px"
                   height="400px"
                   objectFit="cover"
@@ -90,19 +90,19 @@ export default function CourtInfoPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Descripción
                     </Heading>
-                    <Text fontSize="sm">{data?.descripcion}</Text>
+                    <Text fontSize="sm">{data.descripcion}</Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Disciplinas
                     </Heading>
-                    <Text fontSize="sm">{data?.disciplinas}</Text>
+                    <Text fontSize="sm">{data.disciplinas}</Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Está habilitada
                     </Heading>
-                    <Text fontSize="sm">{data?.estaHabilitada.toString()}</Text>
+                    <Text fontSize="sm">{data.habilitada.toString()}</Text>
                   </Box>
                 </Stack>
               </Box>
