@@ -1,6 +1,5 @@
 import { ApiError } from "@/utils/api";
 import { Establecimiento } from "@/models";
-import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import {
   Alert,
@@ -19,10 +18,9 @@ import {
   crearEstablecimiento,
 } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
@@ -43,39 +41,37 @@ const validationSchema = Yup.object({
 });
 
 function NewEstab() {
- 
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
-  const { mutate, isError } = useMutation<Establecimiento, ApiError, FormState>(
-    {
-      mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
-      onSuccess: () => {
-        toast({
-          title: "Establecimiento creado.",
-          description: `Establecimiento registrado correctamente.`,
-          status: "success",
-          isClosable: true,
-        });
-        navigate(-1);
-      },
-      onError: () => {
-        toast({
-          title: "Error al crear el establecimiento.",
-          description: `Intente de nuevo.`,
-          status: "error",
-          isClosable: true,
-        });
-      },
-    }
-  );
 
-  const methods = useForm<FormState>({
-    resolver: yupResolver(validationSchema),
+  const { methods, mutate, isLoading, isError } = useMutationForm<
+    Establecimiento,
+    ApiError,
+    FormState
+  >({
+    validationSchema,
     defaultValues: {
       idAdministrador: Number(currentAdmin?.id),
     },
-    mode: "onTouched",
+    mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento creado.",
+        description: `Establecimiento registrado correctamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear el establecimiento.",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
   });
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +160,7 @@ function NewEstab() {
               />
             </FormControl>
 
-            <SubmitButton>Crear</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar el establecimiento. Intente de nuevo

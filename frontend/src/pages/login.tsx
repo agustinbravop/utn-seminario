@@ -1,13 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
 import { Administrador } from "@/models/index";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Heading, VStack, Alert } from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { ApiError } from "@/utils/api";
+import useMutationForm from "@/hooks/useMutationForm";
 
 interface LoginState {
   correoOUsuario: string;
@@ -24,19 +23,26 @@ const validationSchema = Yup.object({
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useCurrentAdmin();
-  const { mutate, isError } = useMutation<Administrador, ApiError, LoginState>({
+  const { methods, mutate, isLoading, isError } = useMutationForm<
+    Administrador,
+    ApiError,
+    LoginState
+  >({
+    validationSchema,
+    defaultValues: { correoOUsuario: "", clave: "" },
     mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
     onSuccess: (admin) => navigate(`/admin/${admin.id}`),
   });
 
-  const methods = useForm<LoginState>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: { correoOUsuario: "", clave: "" },
-    mode: "onTouched",
-  });
   return (
     <>
-      <Heading textAlign="center" size="2xl" fontSize="40px" marginTop="100px" marginBottom="60px">
+      <Heading
+        textAlign="center"
+        size="2xl"
+        fontSize="40px"
+        marginTop="100px"
+        marginBottom="60px"
+      >
         ¡Bienvenido a Play Finder!
       </Heading>
       <FormProvider {...methods}>
@@ -60,10 +66,10 @@ export default function LoginPage() {
             placeholder="Contraseña"
             isRequired
           />
-          <SubmitButton>Iniciar Sesión</SubmitButton>
+          <SubmitButton isLoading={isLoading}>Iniciar Sesión</SubmitButton>
           {isError && (
             <Alert status="error" margin="20px">
-              Error al intentar iniciar sesión. Contrsaseña o usuario incorrecto.
+              Error al intentar iniciar sesión. Contraseña o usuario incorrecto.
             </Alert>
           )}
         </VStack>

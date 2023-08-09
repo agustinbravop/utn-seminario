@@ -1,17 +1,18 @@
 import { Cancha } from "../models/cancha.js";
-import { InternalServerError } from "../utils/apierrors.js";
+import { BadRequestError, InternalServerError } from "../utils/apierrors.js";
 import { CanchaRepository } from "../repositories/canchas.js";
 import { subirImagen } from "../utils/imagenes.js";
 
 export interface CanchaService {
-  getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
-  getCanchaByID(idCancha: number): Promise<Cancha>;
-  crearCancha(cancha: Cancha, imagen?: Express.Multer.File): Promise<Cancha>;
-  modificarCancha(
-    cancha: Cancha,
+  getByEstablecimientoID(idEst: number): Promise<Cancha[]>;
+  getByID(idCancha: number): Promise<Cancha>;
+  crear(cancha: Cancha): Promise<Cancha>;
+  modificar(cancha: Cancha): Promise<Cancha>;
+  modificarImagen(
+    idCancha: number,
     imagen?: Express.Multer.File
   ): Promise<Cancha>;
-  eliminarCancha(idCancha:number):Promise<Cancha>
+  eliminar(idCancha: number): Promise<Cancha>;
 }
 
 export class CanchaServiceimpl implements CanchaService {
@@ -21,49 +22,46 @@ export class CanchaServiceimpl implements CanchaService {
     this.repo = service;
   }
 
-  async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {
+  async getByEstablecimientoID(idEst: number) {
     return await this.repo.getCanchasByEstablecimientoID(idEst);
   }
 
-  async getCanchaByID(idCancha: number): Promise<Cancha> {
+  async getByID(idCancha: number) {
     return await this.repo.getCanchaByID(idCancha);
   }
 
-  async crearCancha(
-    cancha: Cancha,
-    imagen?: Express.Multer.File
-  ): Promise<Cancha> {
-    cancha.urlImagen = null;
-    if (imagen) {
-      try {
-        cancha.urlImagen = await subirImagen(imagen);
-      } catch (e) {
-        console.error(e);
-        throw new InternalServerError("Error al subir la imagen");
-      }
-    }
-
+  async crear(cancha: Cancha) {
     return await this.repo.crearCancha(cancha);
   }
 
-  async modificarCancha(
-    cancha: Cancha,
-    imagen?: Express.Multer.File
-  ): Promise<Cancha> {
-    if (imagen && imagen.mimetype.startsWith("image/")) {
-      try {
-        cancha.urlImagen = await subirImagen(imagen);
-      } catch (e) {
-        console.error(e);
-        throw new InternalServerError("Error al actualizar la imagen");
-      }
-    }
-
+  async modificar(cancha: Cancha) {
     return await this.repo.modificarCancha(cancha);
   }
 
-  async eliminarCancha(idCancha:number):Promise<Cancha> { 
-   
-    return await this.repo.eliminarCancha(idCancha)
+  async modificarImagen(idCancha: number, imagen?: Express.Multer.File) {
+    const cancha = await this.repo.getCanchaByID(idCancha);
+
+    // Si no se envió una imagen, se considera que se desea eliminar la imagen existente.
+    if (!imagen) {
+      cancha.urlImagen = null;
+      return await this.modificar(cancha);
+    }
+
+    if (!imagen.mimetype.startsWith("image/")) {
+      throw new BadRequestError(
+        "Formato de imagen no soportado: " + imagen.mimetype
+      );
+    }
+
+    cancha.urlImagen = await subirImagen(
+      imagen,
+      new InternalServerError("Error al intentar actualizar la imagen")
+    );
+
+    return await this.modificar(cancha);
+  }
+
+  async eliminar(idCancha: number) {
+    return await this.repo.eliminarCancha(idCancha);
   }
 }

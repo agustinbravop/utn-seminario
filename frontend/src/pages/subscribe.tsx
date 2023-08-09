@@ -1,7 +1,6 @@
 import PaymentForm from "@/components/PaymentForm/PaymentForm";
 import { Administrador } from "@/models";
 import { useLocation, useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "@/utils/api";
 import { RegistrarAdmin, apiRegister } from "@/utils/api/auth";
 import * as Yup from "yup";
@@ -14,9 +13,9 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = RegistrarAdmin & {
   clave: string;
@@ -46,7 +45,6 @@ const validationSchema = Yup.object({
       .matches(/[0-9]+/, "Debe ser un número")
       .min(15, "Deben ser entre 15 y 19 dígitos")
       .max(19, "Deben ser entre 15 y 19 dígitos")
-      .nullable()
       .required("Obligatorio"),
   }),
   idSuscripcion: Yup.number().required(),
@@ -58,12 +56,17 @@ export default function SubscribePage() {
   const { search } = useLocation();
   const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
-  const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
+  const { methods, mutate, isLoading, isError } = useMutationForm<
+    Administrador,
+    ApiError,
+    FormState
+  >({
+    validationSchema,
     mutationFn: (registrarAdmin) => apiRegister(registrarAdmin),
     onSuccess: () => {
       toast({
         title: "Cuenta registrada correctamente.",
-        description: `Inicie sesión para continuar.`,
+        description: "Inicie sesión para continuar.",
         status: "success",
         isClosable: true,
       });
@@ -77,10 +80,6 @@ export default function SubscribePage() {
         isClosable: true,
       });
     },
-  });
-
-  const methods = useForm<FormState>({
-    resolver: yupResolver<FormState>(validationSchema),
     defaultValues: {
       tarjeta: {
         cvv: undefined,
@@ -160,7 +159,7 @@ export default function SubscribePage() {
               isRequired
             />
 
-            <SubmitButton>Registrarse</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar su cuenta. Intente de nuevo

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Cancha } from "@/models";
+import { Cancha, Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -28,7 +28,7 @@ import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
-  deleteCanchaByID
+  deleteCanchaByID,
 } from "@/utils/api/canchas";
 import { InputControl, SubmitButton, SwitchControl } from "@/components/forms";
 import { FormProvider, useForm } from "react-hook-form";
@@ -44,10 +44,13 @@ const validationSchema = Yup.object({
   id: Yup.number().positive().required("Obligatorio"),
   nombre: Yup.string().required("Obligatorio"),
   descripcion: Yup.string().required("Obligatorio"),
-  estaHabilitada: Yup.bool().default(true),
+  habilitada: Yup.bool().default(true),
   idEstablecimiento: Yup.number().required(),
   imagen: Yup.mixed<File>().optional(),
   disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
+  disponibilidades: Yup.array(Yup.mixed<Disponibilidad>().required()).default(
+    []
+  ),
 });
 
 // const horas = [
@@ -107,11 +110,11 @@ export default function EditCourtPage() {
     enabled: true,
   });
 
-  useEffect(() => {
-    console.log(data)
-  }, [data]);
-
-  const { mutate, isError } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate, isLoading, isError } = useMutation<
+    Cancha,
+    ApiError,
+    FormState
+  >({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
     onSuccess: () => {
       toast({
@@ -132,7 +135,6 @@ export default function EditCourtPage() {
     },
   });
 
-
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
     defaultValues: async () => {
@@ -141,12 +143,16 @@ export default function EditCourtPage() {
     mode: "onTouched",
   });
 
+  useEffect(() => {
+    // Precargar el formulario con los datos actuales.
+    methods.reset(data);
+  }, [methods, data]);
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const { mutate: mutateDelete } = useMutation<Cancha, ApiError, FormState>({
+  const { mutate: mutateDelete } = useMutation<void, ApiError>({
     mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
     onSuccess: () => {
       toast({
@@ -168,7 +174,7 @@ export default function EditCourtPage() {
   });
 
   const handleEliminar = () => {
-    mutateDelete()
+    mutateDelete();
     onClose();
   };
 
@@ -220,7 +226,10 @@ export default function EditCourtPage() {
             />
           </FormControl>
           <FormControl>
-            <SwitchControl name="estaHabilitada" label='¿Esta habilitada?'></SwitchControl>
+            <SwitchControl
+              name="estaHabilitada"
+              label="¿Esta habilitada?"
+            ></SwitchControl>
           </FormControl>
           <Heading size="md" mt="20px">
             Disponibilidad horarias
@@ -328,7 +337,7 @@ export default function EditCourtPage() {
             <SelectableButton children="Domingo" />
           </HStack> */}
           <Container centerContent mt="20px">
-            <SubmitButton>Modificar</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar el establecimiento. Intente de nuevo
@@ -341,7 +350,9 @@ export default function EditCourtPage() {
             <ModalContent>
               <ModalHeader>Modificar cancha</ModalHeader>
               <ModalCloseButton />
-              <ModalBody>¿Está seguro de modificar la información de la cancha?</ModalBody>
+              <ModalBody>
+                ¿Está seguro de modificar la información de la cancha?
+              </ModalBody>
 
               <ModalFooter>
                 <Button colorScheme="gray" mr={3} onClick={onClose}>
@@ -359,8 +370,6 @@ export default function EditCourtPage() {
           </Modal>
         </VStack>
       </FormProvider>
-
-
     </>
   );
 }

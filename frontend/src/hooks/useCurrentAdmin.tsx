@@ -1,12 +1,10 @@
 import { useEffect, useContext, createContext, useState } from "react";
 import { Administrador } from "../models";
-import {
-  readLocalStorage,
-  writeLocalStorage,
-} from "../utils/storage/localStorage";
+import { readLocalStorage } from "../utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
 import { JWT } from "../utils/api";
 import { apiLogin } from "../utils/api/auth";
+import { useToast } from "@chakra-ui/react";
 
 interface ICurrentAdminContext {
   currentAdmin?: Administrador;
@@ -33,6 +31,7 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   const [currentAdmin, setCurrentAdmin] = useState<Administrador | undefined>(
     readAdminFromStorage()
   );
+  const toast = useToast(); // Para dar un mensaje de error.
 
   const updateCurrentAdmin = () => {
     const usuario = readAdminFromStorage();
@@ -42,17 +41,29 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   useEffect(() => {
     updateCurrentAdmin();
 
-    // Responde cuando una request fue rechazada con un status `401 Unauthorized`.
+    // Se ejecuta cuando el token del localStorage cambia, normalmente al login o logout.
+    // También se borra cuando una request es rechazada con un status `401 Unauthorized`.
     function handleTokenUpdate(ev: StorageEvent) {
       if (ev.key === "token") {
         updateCurrentAdmin();
+
+        // Si había iniciado sesión pero venció (recibimos un 401), se le informa al usuario.
+        if (ev.oldValue && !ev.newValue) {
+          toast({
+            title: "La sesión actual venció.",
+            description: "Por favor inicie sesión de nuevo.",
+            status: "error",
+            isClosable: true,
+          });
+        }
       }
     }
+
     window.addEventListener("storage", handleTokenUpdate);
     return () => {
       window.removeEventListener("storage", handleTokenUpdate);
     };
-  }, []);
+  }, [toast]);
 
   const login = async (correoOUsuario: string, clave: string) => {
     return apiLogin(correoOUsuario, clave).then((admin) => {
@@ -62,7 +73,7 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   };
 
   const logout = () => {
-    writeLocalStorage("token", null);
+    localStorage.removeItem("token");
     setCurrentAdmin(undefined);
   };
 

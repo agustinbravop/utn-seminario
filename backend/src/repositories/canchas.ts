@@ -1,17 +1,29 @@
-import { Cancha } from "../models/cancha.js";
+import { Cancha, Dia } from "../models/cancha.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
-import { PrismaClient, cancha, disciplina } from "@prisma/client";
+import {
+  PrismaClient,
+  cancha,
+  disciplina,
+  disponibilidad,
+} from "@prisma/client";
 
 export interface CanchaRepository {
   getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
   getCanchaByID(idCancha: number): Promise<Cancha>;
   crearCancha(cancha: Cancha): Promise<Cancha>;
   modificarCancha(canchaUpdate: Cancha): Promise<Cancha>;
-  eliminarCancha(idCancha:number):Promise<Cancha>
+  eliminarCancha(idCancha: number): Promise<Cancha>;
 }
 
 export class PrismaCanchaRepository implements CanchaRepository {
   private prisma: PrismaClient;
+  private include = {
+    disponibilidades: {
+      include: {
+        disciplina: true,
+      },
+    },
+  };
 
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
@@ -22,16 +34,14 @@ export class PrismaCanchaRepository implements CanchaRepository {
       const canchas = await this.prisma.cancha.findMany({
         where: {
           idEstablecimiento: idEst,
-          estaEliminada: false,
+          eliminada: false,
         },
         orderBy: [
           {
             nombre: "asc",
           },
         ],
-        include: {
-          disciplinas: true,
-        },
+        include: this.include,
       });
       return canchas.map((c) => toModel(c));
     } catch (e) {
@@ -41,56 +51,61 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 
   async getCanchaByID(idCancha: number): Promise<Cancha> {
-    const resultCancha= this.prisma.cancha.findUniqueOrThrow({
-      where: {
-        id:idCancha
-      },
-      include: {
-        disciplinas: true,
-      }, 
-    })
-    try { 
-      if ((await resultCancha).estaEliminada===true) { 
-        throw new InternalServerError(`la cancha con el identificador ${idCancha} no existe intente de nuevo`)
-       }
-
-    } catch(e) { 
-      throw new InternalServerError(`La cancha con el identificador ${idCancha} no existe intente de nuevo`)
-    }
- 
-   return awaitQuery(resultCancha,
-    `Cancha con id ${idCancha}`,
-    " "
-  )
-
-   
-   
-    
+    return awaitQuery(
+      this.prisma.cancha.findUnique({
+        where: {
+          id: idCancha,
+          // TODO: ignorar los soft delete
+        },
+        include: this.include,
+      }),
+      `No existe cancha con id ${idCancha}`,
+      "Error al intentar obtener la cancha"
+    );
   }
 
   async crearCancha(cancha: Cancha): Promise<Cancha> {
     try {
-      const canchaCreada = await this.prisma.cancha.create({
+      const { id } = await this.prisma.cancha.create({
         data: {
           nombre: cancha.nombre,
           descripcion: cancha.descripcion,
-          estaHabilitada: Boolean(cancha.estaHabilitada),
-          estaEliminada:false,
+          habilitada: cancha.habilitada,
+          eliminada: cancha.eliminada,
           urlImagen: cancha.urlImagen,
-          idEstablecimiento: Number(cancha.idEstablecimiento),
-          // disciplinas: {
-          //   connectOrCreate: cancha.disciplinas.map((d) => ({
-          //     where: { disciplina: d },
-          //     create: { disciplina: d },
-          //   })),
-          // },
+          idEstablecimiento: cancha.idEstablecimiento,
         },
-        include: {
-          disciplinas: true,
-        },
+        include: this.include,
       });
-      return toModel(canchaCreada);
-    } catch (e) { 
+
+      await Promise.all(
+        cancha.disponibilidades.map(async (disp) => {
+          await this.prisma.disponibilidad.create({
+            data: {
+              horaFin: disp.horaFin,
+              horaInicio: disp.horaInicio,
+              minutosReserva: disp.minutosReserva,
+              precioReserva: disp.precioReserva,
+              precioSenia: disp.precioSenia,
+              dias: disp.dias,
+              disciplina: {
+                connectOrCreate: {
+                  where: { disciplina: disp.disciplina },
+                  create: { disciplina: disp.disciplina },
+                },
+              },
+              cancha: {
+                connect: {
+                  id: id,
+                },
+              },
+            },
+          });
+        })
+      );
+
+      return await this.getCanchaByID(id);
+    } catch (e) {
       console.error(e);
       throw new InternalServerError(
         "Error interno al intentar cargar la cancha"
@@ -99,61 +114,91 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 
   async modificarCancha(cancha: Cancha): Promise<Cancha> {
-    return awaitQuery(
-      this.prisma.cancha.update({
-        where: {
-          id: Number(cancha.id),
-        },
-        include: {
-          disciplinas: true,
-        },
+    try {
+      const { id } = await this.prisma.cancha.update({
+        where: { id: cancha.id },
         data: {
           nombre: cancha.nombre,
           descripcion: cancha.descripcion,
+          habilitada: cancha.habilitada,
+          eliminada: cancha.eliminada,
           urlImagen: cancha.urlImagen,
-          estaHabilitada: Boolean(cancha.estaHabilitada),
-         
-          // disciplinas: {
-          //   connectOrCreate: cancha.disciplinas.map((d) => ({
-          //     where: { disciplina: d },
-          //     create: { disciplina: d },
-          //   })),
-          // },
+          idEstablecimiento: cancha.idEstablecimiento,
         },
-      }),
-      `No existe cancha con id ${cancha.id}`,
-      "Error interno al intentar modificar la cancha"
-  
-    );
+        include: this.include,
+      });
+
+      await Promise.all(
+        cancha.disponibilidades.map(async (disp) => {
+          await this.prisma.disponibilidad.update({
+            where: { id: disp.id },
+            data: {
+              horaFin: disp.horaFin,
+              horaInicio: disp.horaInicio,
+              minutosReserva: disp.minutosReserva,
+              precioReserva: disp.precioReserva,
+              precioSenia: disp.precioSenia,
+              dias: disp.dias,
+              disciplina: {
+                connectOrCreate: {
+                  where: { disciplina: disp.disciplina },
+                  create: { disciplina: disp.disciplina },
+                },
+              },
+              cancha: {
+                connect: {
+                  id: id,
+                },
+              },
+            },
+          });
+        })
+      );
+
+      return await this.getCanchaByID(id);
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerError(
+        "Error interno al intentar modificar la cancha"
+      );
+    }
   }
 
-  async eliminarCancha(idCancha:number):Promise<Cancha> { 
+  async eliminarCancha(idCancha: number): Promise<Cancha> {
     return awaitQuery(
       this.prisma.cancha.update({
-        where: { 
-          id: Number(idCancha),
+        where: {
+          id: idCancha,
         },
-        include: {
-          disciplinas: true,
-        },
+        include: this.include,
         data: {
-          estaEliminada:true
+          eliminada: true,
         },
       }),
       `No existe cancha con id ${idCancha}`,
       "Error interno al intentar modificar la cancha"
-  
     );
-   
   }
 }
 
-type canchaDB = cancha & { disciplinas: disciplina[] };
+type disponibilidadDB = Omit<disponibilidad, "idDisciplina" | "idCancha"> & {
+  disciplina: disciplina;
+};
+
+type canchaDB = cancha & {
+  disponibilidades: disponibilidadDB[];
+};
 
 function toModel(cancha: canchaDB): Cancha {
   return {
     ...cancha,
-    disciplinas: cancha.disciplinas.map((d) => d.disciplina),
+    disciplinas: cancha.disponibilidades.map((d) => d.disciplina.disciplina),
+    disponibilidades: cancha.disponibilidades.map((d) => ({
+      ...d,
+      disciplina: d.disciplina.disciplina,
+      precioSenia: d.precioSenia ?? undefined,
+      dias: d.dias as Dia[],
+    })),
   };
 }
 
@@ -166,7 +211,6 @@ async function awaitQuery(
     const cancha = await promise;
 
     if (cancha) {
-      
       return toModel(cancha);
     }
   } catch (e) {
