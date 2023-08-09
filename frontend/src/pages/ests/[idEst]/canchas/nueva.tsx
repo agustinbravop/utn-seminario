@@ -185,42 +185,6 @@ function NuevaCancha() {
   const last = methods.getValues("disponibilidades").length - 1;
   const lastFieldIndex = fields.length - 1;
 
-  //VER VALORES DEL FORM
-  /*
-  const values = useWatch({ control: methods.control });
-  console.log(values);
-   */
-
-  const { control } = methods;
-
-  useEffect(() => {}, [control]);
-
-  const { fields, append } = useFieldArray({
-    name: "disponibilidades",
-    control,
-  });
-
-  const agregarHorario = () => {
-    append({
-      horaInicio: "-",
-      horaFin: "-",
-      disciplina: "-",
-      minutosReserva: 0,
-      precioReserva: 0,
-      precioSena: 0,
-      dias: [],
-    });
-  };
-
-  const handleDelete = (index: number) => {
-    const disponibilidades = methods.getValues("disponibilidades");
-    disponibilidades.splice(index, 1); // Eliminamos el elemento del arreglo
-    methods.setValue("disponibilidades", disponibilidades); // Actualizamos el valor del arreglo
-  };
-
-  const last = methods.getValues("disponibilidades").length - 1;
-  const lastFieldIndex = fields.length - 1;
-
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
