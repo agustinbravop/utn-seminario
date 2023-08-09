@@ -29,6 +29,7 @@ import SubMenu from "@/components/SubMenu/SubMenu";
 import { ApiError } from "@/utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { defImage } from "@/utils/const/const";
+import React from "react";
 
 export default function CourtInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -41,8 +42,8 @@ export default function CourtInfoPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { mutate: mutateDelete } = useMutation<Cancha, ApiError>({
-    mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
+  const { mutate: mutateDelete } = useMutation<Cancha, ApiError, void>({
+    mutationFn: (_) => deleteCanchaByID(data?.idEstablecimiento, data?.id),
     onSuccess: () => {
       toast({
         title: "Cancha Eliminada.",
@@ -142,7 +143,14 @@ export default function CourtInfoPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Disciplinas
                     </Heading>
-                    <Text fontSize="sm">{data.disciplinas}</Text>
+                    <Text fontSize="sm">
+                      {data.disciplinas.map((disciplina, index) => (
+                        <React.Fragment key={index}>
+                          {disciplina}
+                          {index !== data.disciplinas.length - 1 && " - "}
+                        </React.Fragment>
+                      ))}
+                    </Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">

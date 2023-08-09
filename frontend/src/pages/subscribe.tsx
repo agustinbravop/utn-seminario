@@ -21,6 +21,16 @@ type FormState = RegistrarAdmin & {
   clave: string;
 };
 
+const today = new Date();
+const currentYear = today.getFullYear() % 100;
+
+const customValidation = (value: any) => {
+  const [inputMonth, inputYear] = value.split("/").map(Number);
+  const currentMonth = today.getMonth() + 1;
+  const monthDiff = (inputYear - currentYear) * 12 + inputMonth - currentMonth;
+  return monthDiff >= 2;
+};
+
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
   apellido: Yup.string().required("Obligatorio"),
@@ -39,7 +49,8 @@ const validationSchema = Yup.object({
       .required("Obligatorio"),
     vencimiento: Yup.string()
       .matches(/\d\d\/\d\d\d?\d?/, "formato 'MM/AA'")
-      .required("Obligatorio"),
+      .required("Obligatorio")
+      .test("No debe vencer el mes siguiente", customValidation),
     nombre: Yup.string().required("Obligatorio"),
     numero: Yup.string()
       .matches(/[0-9]+/, "Debe ser un número")

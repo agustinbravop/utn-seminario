@@ -227,12 +227,12 @@ export default function EditCourtPage() {
           </FormControl>
           <FormControl>
             <SwitchControl
-              name="estaHabilitada"
+              name="habilitada"
               label="¿Esta habilitada?"
             ></SwitchControl>
           </FormControl>
           <Heading size="md" mt="20px">
-            Disponibilidad horarias
+            Disponibilidades horarias
           </Heading>
           <Text>
             En qué rangos horarios la cancha estará disponible y para qué
