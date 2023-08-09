@@ -8,7 +8,7 @@ type CourtsProp = {
 
 export default function Courts({ canchas }: CourtsProp) {
   return (
-    <HStack display="flex" flexWrap="wrap" justifyContent="center">
+    <HStack display="flex" flexWrap="wrap" justifyContent="left">
       {canchas.map((cancha, index) => (
         <Court key={index} cancha={cancha} />
       ))}
