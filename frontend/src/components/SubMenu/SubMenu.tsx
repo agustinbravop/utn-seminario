@@ -29,7 +29,17 @@ export default function SubMenu() {
 
   return (
     <>
-      <HStack gap="30px" marginLeft="19%" marginTop="20px">
+      {establecimientoLoading ? (
+        <LoadingSpinner />
+      ) : establecimientoError ? (
+        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+      ) : (
+        <Heading textAlign="center" paddingBottom="7" mt="40px">
+          {" "}
+          {establecimientoData.nombre}{" "}
+        </Heading>
+      )}
+      <HStack gap="30px" marginLeft="16%" marginTop="18px" marginBottom="40px">
         <Link to={`/ests/${establecimientoData?.id}`}>
           <Text
             textDecoration={sub ? "underline" : "none"}
@@ -57,16 +67,6 @@ export default function SubMenu() {
           Reservas
         </Link>
       </HStack>
-      {establecimientoLoading ? (
-        <LoadingSpinner />
-      ) : establecimientoError ? (
-        <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-      ) : (
-        <Heading textAlign="center" paddingBottom="7" mt="40px">
-          {" "}
-          {establecimientoData.nombre}{" "}
-        </Heading>
-      )}
     </>
   );
 }

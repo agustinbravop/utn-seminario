@@ -45,18 +45,18 @@ export default function CanchasPage() {
         size="md"
         fontSize="26px"
         textAlign="left"
-        marginLeft="18%"
+        marginLeft="16%"
         mt="20px"
       >
         Canchas
       </Heading>
       <HStack
-        marginRight="auto"
-        marginLeft="18%"
+        marginRight="16%"
+        marginLeft="16%"
         marginBottom="50px"
         marginTop="20px"
       >
-        <InputGroup width="18%">
+        <InputGroup width="24%">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>
@@ -71,7 +71,7 @@ export default function CanchasPage() {
         </InputGroup>
         <HStack
           marginLeft="auto"
-          marginRight="15%"
+          // marginRight="15%"
           display="flex"
           alignContent="column"
           spacing={5}
@@ -83,7 +83,7 @@ export default function CanchasPage() {
           </Link>
         </HStack>
       </HStack>
-      <HStack marginLeft="18%">
+      <HStack marginLeft="16%" marginRight="16%">
         {isLoading ? (
           <LoadingSpinner />
         ) : isError ? (

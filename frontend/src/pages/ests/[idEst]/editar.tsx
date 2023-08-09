@@ -1,6 +1,6 @@
 import { ApiError } from "@/utils/api";
 import { Establecimiento } from "@/models";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@/router";
 import {
   Alert,
@@ -11,7 +11,6 @@ import {
   Input,
   VStack,
   useToast,
-  Container,
   Button,
   Modal,
   ModalOverlay,
@@ -26,7 +25,6 @@ import {
   ModificarEstablecimientoReq,
   getEstablecimientoByID,
   modificarEstablecimiento,
-  deleteEstablecimientoByID,
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
 import { FormProvider } from "react-hook-form";
@@ -94,35 +92,6 @@ export default function EditEstabPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const { mutate: mutateDelete, isLoading: isLoadingDelete } = useMutation<
-    void,
-    ApiError
-  >({
-    mutationFn: () => deleteEstablecimientoByID(data?.id),
-    onSuccess: () => {
-      toast({
-        title: "Establecimiento eliminado.",
-        description: `Establecimiento eliminado exitosamente.`,
-        status: "success",
-        isClosable: true,
-      });
-      navigate(-3);
-    },
-    onError: () => {
-      toast({
-        title: "Error al eliminar el establecimiento",
-        description: `Intente de nuevo.`,
-        status: "error",
-        isClosable: true,
-      });
-    },
-  });
-
-  const handleEliminar = () => {
-    mutateDelete();
-    onClose();
-  };
-
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
@@ -131,7 +100,8 @@ export default function EditEstabPage() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          // onSubmit={methods.handleSubmit((values) => mutate(values))}
+          onSubmit={methods.handleSubmit(onOpen)}
           spacing="4"
           width="400px"
           m="auto"
@@ -208,19 +178,14 @@ export default function EditEstabPage() {
               Error al intentar guardar los cambios. Intente de nuevo
             </Alert>
           )}
-          <Container centerContent mt="20px">
-            <Button colorScheme="red" variant="outline" onClick={onOpen}>
-              Eliminar
-            </Button>
-          </Container>
 
           <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>Eliminar establecimiento</ModalHeader>
+              <ModalHeader>Modificar establecimiento</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                ¿Está seguro de eliminar el establecimiento?
+                ¿Está seguro de modificar la información del establecimiento?
               </ModalBody>
 
               <ModalFooter>
@@ -229,8 +194,8 @@ export default function EditEstabPage() {
                 </Button>
                 <Button
                   colorScheme="brand"
-                  onClick={handleEliminar}
-                  isLoading={isLoadingDelete}
+                  backgroundColor="black"
+                  onClick={methods.handleSubmit((values) => mutate(values))}
                 >
                   Aceptar
                 </Button>

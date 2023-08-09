@@ -50,11 +50,9 @@ export class CanchaHandler {
   }
 
   putCancha(): RequestHandler {
-    return async (req, res) => {
+    return async (_req, res) => {
       const cancha: Cancha = {
         ...res.locals.body,
-        id: parseInt(req.body.id),
-        idEstablecimiento: parseInt(req.body.idEstablecimiento),
       };
 
       const canchaActualizada = await this.service.modificar(cancha);

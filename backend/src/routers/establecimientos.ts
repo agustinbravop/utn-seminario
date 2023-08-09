@@ -18,7 +18,7 @@ export function establecimientosRouter(
 
   router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
   router.get("/:idEst", handler.getEstablecimientoByID());
-  
+
   router.post(
     "/",
     authMiddle.isAdmin(),

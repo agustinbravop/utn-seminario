@@ -20,7 +20,7 @@ export function canchasRouter(
 
   router.get("/:idEst/canchas/", handler.getCanchasByEstablecimientoID());
   router.get("/:idEst/canchas/:idCancha", handler.getCanchaByID());
-  
+
   router.post(
     "/:idEst/canchas/",
     authMiddle.isAdmin(),
