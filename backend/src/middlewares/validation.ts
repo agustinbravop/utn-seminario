@@ -7,11 +7,13 @@ export function validateBody(schema: AnyZodObject) {
     const result = schema.safeParse(req.body);
 
     if (!result.success) {
+      console.error("Body recibido: ", req.body);
+
       const issues = result.error.issues;
       const msg = issues
         .map((issue) => `At ${issue.path}: ${issue.message}`)
         .join("; ");
-      return res.status(400).json(new BadRequestError(msg));
+      throw new BadRequestError(msg);
     }
 
     res.locals.body = result.data;

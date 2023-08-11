@@ -1,7 +1,6 @@
 import PaymentForm from "@/components/PaymentForm/PaymentForm";
 import { Administrador } from "@/models";
 import { useLocation, useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "@/utils/api";
 import { RegistrarAdmin, apiRegister } from "@/utils/api/auth";
 import * as Yup from "yup";
@@ -14,12 +13,22 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = RegistrarAdmin & {
   clave: string;
+};
+
+const today = new Date();
+const currentYear = today.getFullYear() % 100;
+
+const customValidation = (value: any) => {
+  const [inputMonth, inputYear] = value.split("/").map(Number);
+  const currentMonth = today.getMonth() + 1;
+  const monthDiff = (inputYear - currentYear) * 12 + inputMonth - currentMonth;
+  return monthDiff >= 2;
 };
 
 const validationSchema = Yup.object({
@@ -40,13 +49,13 @@ const validationSchema = Yup.object({
       .required("Obligatorio"),
     vencimiento: Yup.string()
       .matches(/\d\d\/\d\d\d?\d?/, "formato 'MM/AA'")
-      .required("Obligatorio"),
+      .required("Obligatorio")
+      .test("No debe vencer el mes siguiente", customValidation),
     nombre: Yup.string().required("Obligatorio"),
     numero: Yup.string()
       .matches(/[0-9]+/, "Debe ser un número")
       .min(15, "Deben ser entre 15 y 19 dígitos")
       .max(19, "Deben ser entre 15 y 19 dígitos")
-      .nullable()
       .required("Obligatorio"),
   }),
   idSuscripcion: Yup.number().required(),
@@ -58,12 +67,17 @@ export default function SubscribePage() {
   const { search } = useLocation();
   const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
-  const { mutate, isError } = useMutation<Administrador, ApiError, FormState>({
+  const { methods, mutate, isLoading, isError } = useMutationForm<
+    Administrador,
+    ApiError,
+    FormState
+  >({
+    validationSchema,
     mutationFn: (registrarAdmin) => apiRegister(registrarAdmin),
     onSuccess: () => {
       toast({
         title: "Cuenta registrada correctamente.",
-        description: `Inicie sesión para continuar.`,
+        description: "Inicie sesión para continuar.",
         status: "success",
         isClosable: true,
       });
@@ -77,10 +91,6 @@ export default function SubscribePage() {
         isClosable: true,
       });
     },
-  });
-
-  const methods = useForm<FormState>({
-    resolver: yupResolver<FormState>(validationSchema),
     defaultValues: {
       tarjeta: {
         cvv: undefined,
@@ -160,7 +170,7 @@ export default function SubscribePage() {
               isRequired
             />
 
-            <SubmitButton>Registrarse</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar su cuenta. Intente de nuevo

@@ -17,7 +17,6 @@ type estabProps = {
 };
 
 export default function Court({ cancha }: estabProps) {
-
   return (
     <Card maxWidth="xs" height="450px" width="300px">
       <Image
@@ -34,7 +33,9 @@ export default function Court({ cancha }: estabProps) {
             {cancha.nombre}
           </Heading>
           <Text marginBottom="5">{cancha.descripcion}</Text>
-          <Text marginBottom="0">{ cancha?.estaHabilitada ? "Esta habilitada" : "No esta habilitada"}</Text>
+          <Text marginBottom="0">
+            {cancha.habilitada ? "Esta habilitada" : "No esta habilitada"}
+          </Text>
         </VStack>
       </CardBody>
       <CardFooter display="flex" justify="center">

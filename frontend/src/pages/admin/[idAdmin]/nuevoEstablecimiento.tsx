@@ -1,6 +1,5 @@
 import { ApiError } from "@/utils/api";
 import { Establecimiento } from "@/models";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import {
   Alert,
@@ -19,10 +18,10 @@ import {
   crearEstablecimiento,
 } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { FormProvider, useForm } from "react-hook-form";
 import { InputControl, SelectControl, SubmitButton } from "@/components/forms";
 import { useEffect, useState } from "react";
+import { FormProvider } from "react-hook-form";
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
@@ -62,28 +61,6 @@ function NewEstab() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
-  const { mutate, isError } = useMutation<Establecimiento, ApiError, FormState>(
-    {
-      mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
-      onSuccess: () => {
-        toast({
-          title: "Establecimiento creado.",
-          description: `Establecimiento registrado correctamente.`,
-          status: "success",
-          isClosable: true,
-        });
-        navigate(-1);
-      },
-      onError: () => {
-        toast({
-          title: "Error al crear el establecimiento.",
-          description: `Intente de nuevo.`,
-          status: "error",
-          isClosable: true,
-        });
-      },
-    }
-  );
 
   const [prov, setProv] = useState<provincias[]>([]);
   const [localidades, setLocalidades] = useState<localidades[]>([]);
@@ -92,30 +69,50 @@ function NewEstab() {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((response) => response.json())
       .then((data: apiGobProv) => {
-        setProv(data.provincias);
+        setProv(data?.provincias ?? []);
       });
   }, []);
 
-  const methods = useForm<FormState>({
-    resolver: yupResolver(validationSchema),
+  const { methods, mutate, isLoading, isError } = useMutationForm<
+    Establecimiento,
+    ApiError,
+    FormState
+  >({
+    validationSchema,
     defaultValues: {
       idAdministrador: Number(currentAdmin?.id),
     },
-    mode: "onTouched",
+    mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento creado.",
+        description: `Establecimiento registrado correctamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear el establecimiento.",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
   });
 
+  const provincia = methods.watch("provincia");
   useEffect(() => {
     fetch(
-      `https://apis.datos.gob.ar/georef/api/municipios?provincia=${methods.watch(
-        "provincia"
-      )}&campos=nombre&max=150`
+      `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=nombre&max=150`
     )
       .then((response) => response.json())
       .then((data: apiGobLoc) => {
         //console.log(data.localidades)
-        setLocalidades(data.municipios);
+        setLocalidades(data?.municipios ?? []);
       });
-  }, [methods.watch("provincia")]);
+  }, [provincia]);
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
@@ -157,23 +154,21 @@ function NewEstab() {
             />
             <HStack>
               <SelectControl
-                name="localidad"
-                label="Localidad"
-                placeholder="Localidad"
-                isRequired
-                children={
-                  localidades
-                    ? localidades.map((e) => <option>{e.nombre}</option>)
-                    : null
-                }
-              />
-              <SelectControl
                 name="provincia"
                 label="Provincia"
                 placeholder="Provincia"
                 isRequired
                 children={prov.map((e) => (
-                  <option>{e.nombre}</option>
+                  <option key={e.id}>{e.nombre}</option>
+                ))}
+              />
+              <SelectControl
+                name="localidad"
+                label="Localidad"
+                placeholder="Localidad"
+                isRequired
+                children={localidades.map((e) => (
+                  <option key={e.id}>{e.nombre}</option>
                 ))}
               />
             </HStack>
@@ -211,7 +206,7 @@ function NewEstab() {
               />
             </FormControl>
 
-            <SubmitButton>Crear</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar el establecimiento. Intente de nuevo

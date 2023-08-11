@@ -5,29 +5,18 @@ import {
   establecimientoSchema,
 } from "../models/establecimiento.js";
 import { ForbiddenError } from "../utils/apierrors.js";
-import { z } from "zod";
 
-export const crearEstablecimientoReqSchema = establecimientoSchema
-  .omit({
-    id: true,
-    urlImagen: true,
-  })
-  .extend({
-    idAdministrador: z.string().transform((str) => {
-      console.log(typeof str, str, Number(str));
-      return Number(str);
-    }),
-  });
+export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
+  id: true,
+  urlImagen: true,
+  eliminado: true,
+});
 
-export const modificarEstablecimientoReqSchema = establecimientoSchema
-  .omit({
-    urlImagen: true,
-    id: true, //agregado :(
-    estaEliminada: true, //ver si se puede solucionar.
-  })
-  .extend({
-    idAdministrador: z.string().transform((str) => Number(str)),
-  });
+export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
+  urlImagen: true,
+  id: true,
+  eliminado: true,
+});
 
 export class EstablecimientoHandler {
   private service: EstablecimientoService;
@@ -36,25 +25,21 @@ export class EstablecimientoHandler {
   }
 
   postEstablecimiento(): RequestHandler {
-    return async (req, res) => {
-      console.log(res.locals);
-
+    return async (_req, res) => {
       const est: Establecimiento = {
         ...res.locals.body,
         idAdministrador: Number(res.locals.idAdmin),
-        id: 0,
       };
-      const imagen = req.file;
 
-      const estCreado = await this.service.crear(est, imagen);
+      const estCreado = await this.service.crear(est);
       res.status(201).json(estCreado);
     };
   }
 
   getEstablecimientoByID(): RequestHandler {
     return async (req, res) => {
-      // TODO: mejorar input validation
       const id = Number(req.params.idEst);
+
       const est = await this.service.getByID(id);
       res.status(200).json(est);
     };
@@ -62,9 +47,8 @@ export class EstablecimientoHandler {
 
   getEstablecimientosByAdminID(): RequestHandler {
     return async (req, res) => {
-      // TODO: mejorar input validation
       const idAdmin = Number(req.params.idAdmin);
-      console.log(idAdmin)
+
       const ests = await this.service.getByAdminID(idAdmin);
       res.status(200).json(ests);
     };
@@ -73,40 +57,41 @@ export class EstablecimientoHandler {
   putEstablecimiento(): RequestHandler {
     return async (req, res) => {
       const est: Establecimiento = {
-        // ...res.locals.body,
-        id: parseInt(req.body.id),
-        nombre: req.body.nombre,
-        correo: req.body.correo,
-        telefono: req.body.telefono,
-        direccion: req.body.direccion,
-        localidad: req.body.localidad,
-        estaEliminada: req.body.estaEliminada === "true", //analizar req.body.estaHabilitada === "true"
-        provincia: req.body.provincia,
-        urlImagen: req.body.urlImagen,
-        horariosDeAtencion: req.body.horariosDeAtencion, //cambiado :)
+        ...res.locals.body,
+        id: Number(req.params.idEst),
         // El `idAdministrador` es el `id` que recibimos en el JWT Payload.
         idAdministrador: res.locals.idAdmin,
       };
-      const imagen = req.file;
 
-      const estModificado = await this.service.modificar(est, imagen);
+      const estModificado = await this.service.modificar(est);
       res.status(200).json(estModificado);
     };
-
   }
 
-  eliminarEstablecimiento():RequestHandler { 
-    return async (req, res)=> { 
-      const idEst=Number(req.params['idEst']) 
-      const eliminarEst=await this.service.eliminar(idEst); 
-      res.status(200).json(eliminarEst)
-    }
+  patchImagenEstablecimiento(): RequestHandler {
+    return async (req, res) => {
+      const idEst = Number(req.params["idEst"]);
+      const imagen = req.file;
+
+      const estActualizado = await this.service.modificarImagen(idEst, imagen);
+      res.status(200).json(estActualizado);
+    };
+  }
+
+  eliminarEstablecimiento(): RequestHandler {
+    return async (req, res) => {
+      const idEst = Number(req.params["idEst"]);
+
+      const estEliminado = await this.service.eliminar(idEst);
+      res.status(200).json(estEliminado);
+    };
   }
 
   /**
-   * Valida que el idEst de los params corresponda a un establecimiento del idAdmin del JWT.
-   * **Asume que el JWT del administrador ya fue autenticado.**
-   * Se usa para prevenir que un administrador modifique un establecimiento que no le pertenece.
+   * Valida que el param `idEst` corresponda a un establecimiento del `idAdmin` del JWT.
+   * Este middleware **asume que el JWT del administrador ya fue autenticado.**
+   *
+   * Sirve para evitar que un administrador modifique un establecimiento que no le pertenece.
    */
   validateAdminOwnsEstablecimiento(): RequestHandler {
     return async (req, res, next) => {
@@ -114,13 +99,9 @@ export class EstablecimientoHandler {
       const est = await this.service.getByID(idEst);
 
       if (est.idAdministrador !== res.locals.idAdmin) {
-        return res
-          .status(403)
-          .json(
-            new ForbiddenError(
-              "No puede alterar establecimientos de otro administrador"
-            )
-          );
+        throw new ForbiddenError(
+          "No puede alterar establecimientos de otro administrador"
+        );
       }
 
       next();

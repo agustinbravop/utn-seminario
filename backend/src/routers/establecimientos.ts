@@ -18,27 +18,34 @@ export function establecimientosRouter(
 
   router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
   router.get("/:idEst", handler.getEstablecimientoByID());
+
   router.post(
     "/",
     authMiddle.isAdmin(),
-    upload.single("imagen"),
     validateBody(crearEstablecimientoReqSchema),
     handler.postEstablecimiento()
   );
   router.put(
     "/:idEst",
     authMiddle.isAdmin(),
-    upload.single("imagen"),
     handler.validateAdminOwnsEstablecimiento(),
     validateBody(modificarEstablecimientoReqSchema),
     handler.putEstablecimiento()
   );
+  router.patch(
+    "/:idEst/imagen",
+    authMiddle.isAdmin(),
+    handler.validateAdminOwnsEstablecimiento(),
+    upload.single("imagen"),
+    handler.patchImagenEstablecimiento()
+  );
 
-  router.delete("/:idEst", 
-  authMiddle.isAdmin(), 
-  handler.validateAdminOwnsEstablecimiento(),
-  handler.eliminarEstablecimiento()
-  )
+  router.delete(
+    "/:idEst",
+    authMiddle.isAdmin(),
+    handler.validateAdminOwnsEstablecimiento(),
+    handler.eliminarEstablecimiento()
+  );
 
   return router;
 }

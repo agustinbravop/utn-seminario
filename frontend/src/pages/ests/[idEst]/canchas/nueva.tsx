@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { Cancha } from "@/models";
+import React from "react";
+import { Cancha, Dia } from "@/models";
 import { useNavigate, useParams } from "react-router";
-import { useMutation } from "@tanstack/react-query";
 import { ApiError } from "@/utils/api";
 import {
   Button,
@@ -21,7 +20,7 @@ import {
   SelectControl,
   SubmitButton,
 } from "@/components/forms";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { FormProvider, useFieldArray } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -35,6 +34,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
@@ -43,68 +43,115 @@ type FormState = CrearCanchaReq & {
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
   descripcion: Yup.string().required("Obligatorio"),
-  estaHabilitada: Yup.bool().default(true),
+  habilitada: Yup.bool().default(true),
   idEstablecimiento: Yup.number().required(),
   disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
   imagen: Yup.mixed<File>().optional(),
   disponibilidades: Yup.array(
-    Yup.object({
+    Yup.object().shape({
       horaInicio: Yup.string().required("Obligatorio"),
       horaFin: Yup.string().required("Obligatorio"),
-      minutosReserva: Yup.number().typeError('Debe ingresar un numero').required("Obligatorio"),
-      precioReserva: Yup.number().typeError('Debe ingresar un numero').required("Obligatorio"),
-      precioSena: Yup.number().typeError('Debe ingresar un numero').optional(),
+      minutosReserva: Yup.number()
+        .typeError("Debe ingresar un numero")
+        .required("Obligatorio"),
+      precioReserva: Yup.number()
+        .typeError("Debe ingresar un numero")
+        .required("Obligatorio"),
+      precioSenia: Yup.number().typeError("Debe ingresar un numero").optional(),
       disciplina: Yup.string().required("Obligatorio"),
-      dias: Yup.array(Yup.string().required()).required("Obligatorio").min(1),
+      dias: Yup.array(Yup.string<Dia>().required())
+        .min(1, "Obligatorio")
+        .required("Obligatorio"),
     })
   ).required(),
 });
 
-function NewCourt() {
+// Aca dejo hardcodeadas algunas disciplinas :|
+const disciplinas = [
+  "Basket",
+  "Futbol",
+  "Tenis",
+  "Padel",
+  "Hokey",
+  "Ping-Pong",
+];
+
+//Horarios hardcodeados, no se si seria lo mejor
+//Si igual lo dejamos asi, mejor armar un for
+const horas = [
+  "1:00",
+  "2:00",
+  "3:00",
+  "4:00",
+  "5:00",
+  "6:00",
+  "7:00",
+  "8:00",
+  "9:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00",
+  "19:00",
+  "20:00",
+  "21:00",
+  "22:00",
+  "23:00",
+];
+
+function NuevaCancha() {
   const { idEst } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
 
-  // Aca dejo hardcodeadas algunas disciplinas :|
-  const disciplinas = [
-    "Basket",
-    "Futbol",
-    "Tenis",
-    "Padel",
-    "Hokey",
-    "Ping-Pong",
-  ];
+  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
+  };
 
-  //Horarios hardcodeados, no se si seria lo mejor
-  //Si igual lo dejamos asi, mejor armar un for
-  const horas = [
-    "1:00",
-    "2:00",
-    "3:00",
-    "4:00",
-    "5:00",
-    "6:00",
-    "7:00",
-    "8:00",
-    "9:00",
-    "10:00",
-    "11:00",
-    "12:00",
-    "13:00",
-    "14:00",
-    "15:00",
-    "16:00",
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00",
-    "22:00",
-    "23:00",
-  ];
-
-  const { mutate } = useMutation<Cancha, ApiError, FormState>({
-    mutationFn: ({ imagen, ...cancha }) => crearCancha(cancha, imagen),
+  const { methods, mutate, isLoading } = useMutationForm<
+    Cancha,
+    ApiError,
+    FormState
+  >({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      nombre: "",
+      descripcion: "",
+      habilitada: true,
+      idEstablecimiento: Number(idEst),
+      disciplinas: [],
+      imagen: undefined,
+      disponibilidades: [
+        {
+          horaInicio: "-",
+          horaFin: "-",
+          minutosReserva: 0,
+          precioReserva: 0,
+          precioSenia: 0,
+          disciplina: "-",
+          dias: [],
+        },
+      ],
+    },
+    mutationFn: ({ imagen, ...cancha }) => {
+      return crearCancha(
+        {
+          ...cancha,
+          disponibilidades: cancha.disponibilidades.map((d) => ({
+            ...d,
+            precioSenia: d.precioSenia && Number(d.precioSenia),
+            precioReserva: Number(d.precioReserva),
+            minutosReserva: Number(d.minutosReserva),
+          })),
+        },
+        imagen
+      );
+    },
     onSuccess: () => {
       toast({
         title: "Cancha creada",
@@ -122,49 +169,12 @@ function NewCourt() {
         isClosable: true,
       });
     },
-  });
-
-  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
-  };
-
-  const methods = useForm<FormState>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: {
-      nombre: "",
-      descripcion: "",
-      estaHabilitada: true,
-      idEstablecimiento: Number(idEst),
-      disciplinas: [],
-      imagen: undefined,
-      disponibilidades: [
-        {
-          horaInicio: "-",
-          horaFin: "-",
-          minutosReserva: 0,
-          precioReserva: 0,
-          precioSena: 0,
-          disciplina: "-",
-          //dias: [],
-        },
-      ],
-    },
     mode: "onTouched",
   });
 
-  //VER VALORES DEL FORM
-  /*
-  const values = useWatch({ control: methods.control });
-  console.log(values);
-   */
-
-  const { control } = methods;
-
-  useEffect(() => {}, [control]);
-
   const { fields, append } = useFieldArray({
     name: "disponibilidades",
-    control,
+    control: methods.control,
   });
 
   const agregarHorario = () => {
@@ -174,7 +184,7 @@ function NewCourt() {
       disciplina: "-",
       minutosReserva: 0,
       precioReserva: 0,
-      precioSena: 0,
+      precioSenia: 0,
       dias: [],
     });
   };
@@ -196,7 +206,10 @@ function NewCourt() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          onSubmit={methods.handleSubmit((values) => {
+            console.log(values);
+            mutate(values);
+          })}
           spacing="24px"
           width="800px"
           m="auto"
@@ -269,12 +282,15 @@ function NewCourt() {
                         <Td> {d.minutosReserva} </Td>
                         <Td>
                           {" "}
-                          {d.precioReserva}/{d.precioSena}{" "}
+                          {d.precioReserva}/{d.precioSenia}{" "}
                         </Td>
                         <Td>
                           {" "}
-                          {d.dias.map((dia) => (
-                            <>{dia + " - "}</>
+                          {d.dias.map((dia, index) => (
+                            <React.Fragment key={index}>
+                              {dia}
+                              {index !== d.dias.length - 1 && " - "}
+                            </React.Fragment>
                           ))}{" "}
                         </Td>
                         <Td>
@@ -293,8 +309,6 @@ function NewCourt() {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
-            <br />
           </VStack>
 
           {fields.length > 0 && (
@@ -356,7 +370,7 @@ function NewCourt() {
                 ></InputControl>
                 <InputControl
                   placeholder=""
-                  name={`disponibilidades[${lastFieldIndex}].precioSena`}
+                  name={`disponibilidades[${lastFieldIndex}].precioSenia`}
                   type="number"
                   label="Seña de reserva"
                 ></InputControl>
@@ -368,23 +382,23 @@ function NewCourt() {
                   <HStack>
                     <Checkbox value="Lunes">Lunes</Checkbox>
                     <Checkbox value="Martes">Martes</Checkbox>
-                    <Checkbox value="Miercoles">Miercoles</Checkbox>
+                    <Checkbox value="Miércoles">Miércoles</Checkbox>
                     <Checkbox value="Jueves">Jueves</Checkbox>
                     <Checkbox value="Viernes">Viernes</Checkbox>
-                    <Checkbox value="Sabado">Sabado</Checkbox>
+                    <Checkbox value="Sábado">Sábado</Checkbox>
                     <Checkbox value="Domingo">Domingo</Checkbox>
                   </HStack>
                 </CheckboxGroupControl>
               </HStack>
             </>
           )}
+          <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
 
-          <br />
-          <SubmitButton type="submit">Crear</SubmitButton>
+          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
         </VStack>
       </FormProvider>
     </div>
   );
 }
 
-export default NewCourt;
+export default NuevaCancha;

@@ -61,10 +61,15 @@ export default function EstablecimientosPage() {
       <Heading textAlign="center" paddingBottom="12" mt="40px">
         Mis Establecimientos
       </Heading>
-      <HStack marginRight="16%" marginLeft="16%" marginBottom="50px" marginTop="20px" >
+      <HStack
+        marginRight="16%"
+        marginLeft="16%"
+        marginBottom="50px"
+        marginTop="20px"
+      >
         <InputGroup width="24%">
-          <InputRightElement pointerEvents='none'>
-            <SearchIcon color='gray.300' />
+          <InputRightElement pointerEvents="none">
+            <SearchIcon color="gray.300" />
           </InputRightElement>
           <Input
             focusBorderColor="lightblue"
@@ -75,7 +80,13 @@ export default function EstablecimientosPage() {
             value={filtro}
           />
         </InputGroup>
-        <HStack marginLeft="auto" display="flex" alignContent="column" spacing={5} align="center" >
+        <HStack
+          marginLeft="auto"
+          display="flex"
+          alignContent="column"
+          spacing={5}
+          align="center"
+        >
           <Text mb="0">
             {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
             establecimientos
@@ -103,8 +114,3 @@ export default function EstablecimientosPage() {
     </>
   );
 }
-
-
-
-
-

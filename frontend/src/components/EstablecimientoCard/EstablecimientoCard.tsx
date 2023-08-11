@@ -28,7 +28,11 @@ export default function EstablecimientoCard({
     <Card width="300px" height="450px">
       <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
         <Image
-          src={ !(establecimiento?.urlImagen === null) ? establecimiento?.urlImagen : defImage } 
+          src={
+            !(establecimiento?.urlImagen === null)
+              ? establecimiento?.urlImagen
+              : defImage
+          }
           borderTopRadius="lg"
           alt={`Imagen del establecimiento ${establecimiento.nombre}`}
           objectFit="cover"
@@ -51,13 +55,10 @@ export default function EstablecimientoCard({
           <Text>{establecimiento.horariosDeAtencion}</Text>
         </VStack>
       </CardBody>
-      <CardFooter display="flex" justify="center" >
-        <HStack spacing={5} >
+      <CardFooter display="flex" justify="center">
+        <HStack spacing={5}>
           <Link to={`/ests/${establecimiento.id}`}>
-            <Button
-              leftIcon={ <InfoIcon/>} >
-              Info
-            </Button>
+            <Button leftIcon={<InfoIcon />}>Info</Button>
           </Link>
           <Link to={`/ests/${establecimiento.id}/canchas`}>
             <Button

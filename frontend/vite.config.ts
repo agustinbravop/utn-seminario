@@ -5,7 +5,9 @@ import generouted from "./src/router/index";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      include: "**/*.tsx",
+    }),
     // File system based routing: https://github.com/oedotme/generouted/tree/main
     generouted(),
   ],

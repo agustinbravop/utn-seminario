@@ -6,12 +6,10 @@ import { Box, Heading, Text, VStack } from "@chakra-ui/layout";
 function HomePage() {
   const navigate = useNavigate();
 
-
-
   return (
     <div>
       <TopMenu />
-     
+
       <Box m="100px">
         <Heading
           style={{

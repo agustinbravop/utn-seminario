@@ -3,6 +3,11 @@ import { readLocalStorage, writeLocalStorage } from "../storage/localStorage";
 export const API_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
 
+/**
+ * Representa un error del backend, con su `status` y su `message`.
+ * El `message` no suele ser un mensaje muy legible para el cliente, a menos que
+ * sea un error 409 Conflict.
+ */
 export class ApiError extends Error {
   status: number;
   message: string;
@@ -93,20 +98,19 @@ export async function post<T>(endpoint: string, body: any): Promise<T> {
   });
 }
 
-export async function del<T>(endpoint: string): Promise<T> {
-  return request("DELETE", endpoint,);
+export async function put<T>(endpoint: string, body: any): Promise<T> {
+  return request("PUT", endpoint, JSON.stringify(body), {
+    "Content-Type": "application/json",
+  });
 }
 
-export async function postFormData<T>(
+export async function del(endpoint: string): Promise<void> {
+  return request("DELETE", endpoint);
+}
+
+export async function patchFormData<T>(
   endpoint: string,
   formData: FormData
 ): Promise<T> {
-  return request("POST", endpoint, formData);
-}
-
-export async function putFormData<T>(
-  endpoint: string,
-  formData: FormData
-): Promise<T> {
-  return request("PUT", endpoint, formData);
+  return request("PATCH", endpoint, formData);
 }

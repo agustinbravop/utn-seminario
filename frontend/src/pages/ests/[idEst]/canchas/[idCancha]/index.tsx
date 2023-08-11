@@ -8,9 +8,6 @@ import {
   HStack,
   Heading,
   Image,
-  Input,
-  InputGroup,
-  InputRightElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -24,14 +21,15 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteCanchaByID, getCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { ApiError } from "@/utils/api";
-import { useMutation} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { defImage } from "@/utils/const/const";
+import React from "react";
 
 export default function CourtInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -44,8 +42,8 @@ export default function CourtInfoPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { mutate: mutateDelete } = useMutation<Cancha, ApiError>({
-    mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
+  const { mutate: mutateDelete } = useMutation<void, ApiError>({
+    mutationFn: (_) => deleteCanchaByID(data?.idEstablecimiento, data?.id),
     onSuccess: () => {
       toast({
         title: "Cancha Eliminada.",
@@ -66,41 +64,66 @@ export default function CourtInfoPage() {
   });
 
   const handleEliminar = () => {
-    console.log("hola")
-    mutateDelete()
+    console.log("hola");
+    mutateDelete();
     onClose();
   };
 
+  if (!data) {
+    return <p>Cargando...</p>;
+  }
+
   return (
     <div>
-      <SubMenu/>
-      <Heading size="md" fontSize="26px" textAlign="left" marginLeft="16%" marginTop="20px" > Información de {data?.nombre} </Heading>
-      <HStack marginRight="16%" marginLeft="16%" marginBottom="30px"marginTop="7px" >
-            <Text>Esta es la información que se muestra al usuario de su cancha.</Text>
-            <HStack marginLeft="auto"  display="flex" alignContent="column" spacing={5} align="center" >
-            <Link to="editar">
-              <Button leftIcon={<EditIcon />}>Editar</Button>
-            </Link>
-            <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>Eliminar</Button>
-            </HStack> 
-            </HStack>
-      <Box
-      display="flex"
-      justifyContent="center"
-    >
+      <SubMenu />
+      <Heading
+        size="md"
+        fontSize="26px"
+        textAlign="left"
+        marginLeft="16%"
+        marginTop="20px"
+      >
+        {" "}
+        Información de {data?.nombre}{" "}
+      </Heading>
+      <HStack
+        marginRight="16%"
+        marginLeft="16%"
+        marginBottom="30px"
+        marginTop="7px"
+      >
+        <Text>
+          Esta es la información que se muestra al usuario de su cancha.
+        </Text>
+        <HStack
+          marginLeft="auto"
+          display="flex"
+          alignContent="column"
+          spacing={5}
+          align="center"
+        >
+          <Link to="editar">
+            <Button leftIcon={<EditIcon />}>Editar</Button>
+          </Link>
+          <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+            Eliminar
+          </Button>
+        </HStack>
+      </HStack>
+      <Box display="flex" justifyContent="center">
         <Card
-        boxSize="10rem"
-        justifyContent="center"
-        display="flex"
-        style={{ marginTop:"10px", marginBottom: "1rem" }}
-        height="75%"
-        width="56%"
+          boxSize="10rem"
+          justifyContent="center"
+          display="flex"
+          style={{ marginTop: "10px", marginBottom: "1rem" }}
+          height="75%"
+          width="56%"
         >
           <CardBody height="100%" marginTop="0px">
             <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
               <Box>
                 <Image
-                  src={ !(data?.urlImagen === null) ? data?.urlImagen : defImage} 
+                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
                   width="1000px"
                   height="400px"
                   objectFit="cover"
@@ -114,19 +137,29 @@ export default function CourtInfoPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Descripción
                     </Heading>
-                    <Text fontSize="sm">{data?.descripcion}</Text>
+                    <Text fontSize="sm">{data.descripcion}</Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Disciplinas
                     </Heading>
-                    <Text fontSize="sm">{data?.disciplinas}</Text>
+                    <Text fontSize="sm">
+                      {data.disciplinas.map((disciplina, index) => (
+                        <React.Fragment key={index}>
+                          {disciplina}
+                          {index !== data.disciplinas.length - 1 && " - "}
+                        </React.Fragment>
+                      ))}
+                    </Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Habilitación
                     </Heading>
-                    <Text fontSize="sm">Esta cancha { data?.estaHabilitada ? "" : "no" } se encuentra habilitada</Text>
+                    <Text fontSize="sm">
+                      Esta cancha {data.habilitada ? "" : "no"} se encuentra
+                      habilitada
+                    </Text>
                   </Box>
                 </Stack>
               </Box>

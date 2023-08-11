@@ -1,6 +1,6 @@
 import { ApiError } from "@/utils/api";
 import { Establecimiento } from "@/models";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@/router";
 import {
   Alert,
@@ -11,7 +11,6 @@ import {
   Input,
   VStack,
   useToast,
-  Container,
   Button,
   Modal,
   ModalOverlay,
@@ -28,10 +27,9 @@ import {
   modificarEstablecimiento,
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
-import { FormProvider, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import { useEffect } from "react";
+import useMutationForm from "@/hooks/useMutationForm";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -58,49 +56,37 @@ export default function EditEstabPage() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data } = useQuery<Establecimiento>({
+  const { data, isLoading } = useQuery<Establecimiento>({
     queryKey: ["establecimientos", idEst],
     queryFn: () => getEstablecimientoByID(Number(idEst)),
-    enabled: true,
   });
 
-  useEffect(() => {
-    console.log(data)
-  }, [data]);
-
-  const methods = useForm<FormState>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: async () => {
-      return Promise.resolve({
-        ...(data as Establecimiento),
-        imagen: undefined,
+  const { methods, mutate, isError } = useMutationForm<
+    Establecimiento,
+    ApiError,
+    FormState
+  >({
+    resetValues: data,
+    mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
+    validationSchema,
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento modificado",
+        description: `Establecimiento modificado exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al modificar el establecimiento",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
       });
     },
-    mode: "onTouched",
   });
-
-  const { mutate, isError } = useMutation<Establecimiento, ApiError, FormState>(
-    {
-      mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
-      onSuccess: () => {
-        toast({
-          title: "Establecimiento modificado",
-          description: `Establecimiento modificado exitosamente.`,
-          status: "success",
-          isClosable: true,
-        });
-        navigate(-1);
-      },
-      onError: () => {
-        toast({
-          title: "Error al modificar el establecimiento",
-          description: `Intente de nuevo.`,
-          status: "error",
-          isClosable: true,
-        });
-      },
-    }
-  );
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
@@ -108,7 +94,7 @@ export default function EditEstabPage() {
 
   return (
     <div>
-      <Heading textAlign="center" mt="40px" paddingBottom="60px" >
+      <Heading textAlign="center" mt="40px" paddingBottom="60px">
         Editar Establecimiento
       </Heading>
       <FormProvider {...methods}>
@@ -186,10 +172,10 @@ export default function EditEstabPage() {
               }}
             />
           </FormControl>
-          <SubmitButton>Guardar cambios</SubmitButton>
+          <SubmitButton isLoading={isLoading}>Guardar cambios</SubmitButton>
           {isError && (
             <Alert status="error">
-              Error al intentar registrar el establecimiento. Intente de nuevo
+              Error al intentar guardar los cambios. Intente de nuevo
             </Alert>
           )}
 
@@ -198,14 +184,16 @@ export default function EditEstabPage() {
             <ModalContent>
               <ModalHeader>Modificar establecimiento</ModalHeader>
               <ModalCloseButton />
-              <ModalBody>¿Está seguro de modificar la información del establecimiento?</ModalBody>
+              <ModalBody>
+                ¿Está seguro de modificar la información del establecimiento?
+              </ModalBody>
 
               <ModalFooter>
                 <Button colorScheme="gray" mr={3} onClick={onClose}>
                   Cancelar
                 </Button>
                 <Button
-                  colorScheme="blackAlpha"
+                  colorScheme="brand"
                   backgroundColor="black"
                   onClick={methods.handleSubmit((values) => mutate(values))}
                 >
