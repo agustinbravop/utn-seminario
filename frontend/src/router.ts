@@ -7,6 +7,7 @@ export type Path =
   | `/`
   | `/HomePage/HomePage`
   | `/admin/:idAdmin`
+  | `/admin/:idAdmin/editar`
   | `/admin/:idAdmin/nuevoEstablecimiento`
   | `/admin/:idAdmin/perfil`
   | `/ests/:idEst`
@@ -21,6 +22,7 @@ export type Path =
 
 export type Params = {
   '/admin/:idAdmin': { idAdmin: string }
+  '/admin/:idAdmin/editar': { idAdmin: string }
   '/admin/:idAdmin/nuevoEstablecimiento': { idAdmin: string }
   '/admin/:idAdmin/perfil': { idAdmin: string }
   '/ests/:idEst': { idEst: string }
