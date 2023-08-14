@@ -39,7 +39,7 @@ export default function SubMenu() {
           {establecimientoData.nombre}{" "}
         </Heading>
       )}
-      <HStack gap="30px" marginLeft="16%" marginTop="18px" marginBottom="40px">
+      <HStack gap="30px" marginLeft="16%" marginTop="18px" marginBottom="30px">
         <Link to={`/ests/${establecimientoData?.id}`}>
           <Text
             textDecoration={sub ? "underline" : "none"}

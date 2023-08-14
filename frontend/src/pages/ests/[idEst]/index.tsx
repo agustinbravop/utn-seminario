@@ -71,10 +71,9 @@ export default function CourtPage() {
     mutateDelete();
     onClose();
   };
-  return (
-    <>
-      <SubMenu />
-      <Heading
+
+    /*
+    <Heading
         size="md"
         fontSize="26px"
         textAlign="left"
@@ -84,15 +83,20 @@ export default function CourtPage() {
         {" "}
         Información{" "}
       </Heading>
+    */
+
+  return (
+    <>
+      <SubMenu />
       <HStack
         marginRight="16%"
         marginLeft="16%"
         marginBottom="30px"
-        marginTop="7px"
+        marginTop="0px"
       >
         <Text>
           Esta es la información que se muestra al usuario de su
-          establecimiento.
+          establecimiento. 
         </Text>
         <HStack
           marginLeft="auto"
