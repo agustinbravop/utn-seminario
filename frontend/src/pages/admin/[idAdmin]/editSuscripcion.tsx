@@ -30,7 +30,6 @@ import { FormProvider } from "react-hook-form";
 import { SubmitButton } from "@/components/forms/SubmitButton";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { useParams } from "@/router";
 
 const iconos = [
   <Icon as={BsShop} fill="brand.500" fontSize={90} />,
@@ -63,7 +62,7 @@ export default function SuscripcionesPage() {
         status: "success",
         isClosable: true,
       });
-      navigate(-1);
+      navigate(-1); 
     },
     onError: () => {
       toast({
@@ -144,7 +143,7 @@ export default function SuscripcionesPage() {
         >
           {cards}
         </HStack>
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered> 
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Confirmación</ModalHeader>
@@ -159,7 +158,7 @@ export default function SuscripcionesPage() {
               <Button
                 colorScheme="brand"
                 backgroundColor="black"
-                onClick={methods.handleSubmit((values) => mutate(values))}
+                onClick={methods.handleSubmit((values) => mutate(currentAdmin? currentAdmin : values))}
               >
                 Aceptar
               </Button>

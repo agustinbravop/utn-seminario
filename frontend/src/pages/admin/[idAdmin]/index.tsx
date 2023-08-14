@@ -52,6 +52,10 @@ export default function EstablecimientosPage() {
     return <Navigate to="/login" />;
   }
 
+  if ( data?.length > currentAdmin.suscripcion.limiteEstablecimientos){
+    return <Navigate to="./selectEstab" />
+  }
+
   const establecimientosFiltrados = data?.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
