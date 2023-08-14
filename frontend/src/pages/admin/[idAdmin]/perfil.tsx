@@ -15,7 +15,7 @@ import {
 import { Link } from "react-router-dom";
 
 export default function PerfilPage() {
-  const { currentAdmin } = useCurrentAdmin();
+  const { currentAdmin } = useCurrentAdmin(); 
 
   return (
     <>

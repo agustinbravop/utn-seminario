@@ -96,6 +96,11 @@ export default function EstablecimientosPage() {
               Agregar Establecimiento
             </Button>
           </Link>
+          <Link to="editSuscripcion">
+            <Button >
+              ¡Actualizar Suscripción!
+            </Button>
+          </Link>
         </HStack>
       </HStack>
       <HStack marginLeft="16%" marginRight="16%">

@@ -1,4 +1,4 @@
-import { Administrador, Suscripcion } from "@/models";
+import { Administrador } from "@/models";
 import {
   Card,
   CardHeader,
@@ -26,8 +26,7 @@ import { useQuery } from "@tanstack/react-query";
 import useMutationForm from "@/hooks/useMutationForm";
 import { ApiError } from "@/utils/api";
 import { FormProvider } from "react-hook-form";
-import { InputControl, SelectControl, SubmitButton } from "@/components/forms";
-import { getSuscripciones } from "@/utils/api/auth";
+import { InputControl, SubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
 
 type FormState = Administrador;
@@ -60,8 +59,6 @@ export default function PerfilPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
-  const datos = useQuery<Suscripcion[]>(["suscripciones"], getSuscripciones);
-  const suscripciones = datos.data;
 
   const { data, isLoading } = useQuery<Administrador>({
     queryKey: ["administrador", idAdmin],
@@ -138,7 +135,7 @@ export default function PerfilPage() {
                 <Box>
                   <Heading size="xs" textTransform="uppercase">
                     usuario
-                  </Heading>
+                  </Heading> 
                   <InputControl
                     isRequired
                     name="usuario"
@@ -162,18 +159,6 @@ export default function PerfilPage() {
                     name="telefono"
                   />
                 </Box>
-                <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Suscripcion
-                  </Heading>
-                  <SelectControl
-                    isRequired
-                    name="suscripcion.nombre"
-                  >
-                    {suscripciones?.map((s) => <option>{s.nombre}</option>)}
-                  </SelectControl>
-                </Box>
-                <Box></Box>
                 <SubmitButton isLoading={isLoading}>
                   Guardar cambios
                 </SubmitButton>

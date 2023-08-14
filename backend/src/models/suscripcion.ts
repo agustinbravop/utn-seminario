@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { decimalSchema } from ".";
+import { decimalSchema } from "./index.js";
 
 export type Suscripcion = z.infer<typeof suscripcionSchema>;
 
