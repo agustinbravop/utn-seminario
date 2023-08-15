@@ -20,27 +20,28 @@ import {
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { InputControl, SelectControl, SubmitButton } from "@/components/forms";
 import { useEffect, useState } from "react";
-import { FormProvider } from "react-hook-form";
+import { FormProvider, useWatch } from "react-hook-form";
 import useMutationForm from "@/hooks/useMutationForm";
+import { useQuery } from "@tanstack/react-query";
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
 };
 
-type provincias = {
+type ApiGobProv = {
+  provincias: Provincia[];
+};
+
+type ApiGobLoc = {
+  municipios: Localidad[];
+};
+
+type Localidad = { id: number; nombre: string };
+
+type Provincia = {
   centroide: {};
   id: number;
   nombre: string;
-};
-
-type apiGobProv = {
-  provincias: provincias[];
-};
-
-type localidades = { id: number; nombre: string };
-
-type apiGobLoc = {
-  municipios: localidades[];
 };
 
 const validationSchema = Yup.object({
@@ -61,17 +62,16 @@ function NewEstab() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
+  const [localidades, setLocalidades] = useState<string[]>([]);
 
-  const [prov, setProv] = useState<provincias[]>([]);
-  const [localidades, setLocalidades] = useState<localidades[]>([]);
-
-  useEffect(() => {
-    fetch("https://apis.datos.gob.ar/georef/api/provincias")
-      .then((response) => response.json())
-      .then((data: apiGobProv) => {
-        setProv(data?.provincias ?? []);
-      });
-  }, []);
+  const { data: provincias } = useQuery<string[]>(["provincias"], {
+    queryFn: () =>
+      fetch("https://apis.datos.gob.ar/georef/api/provincias")
+        .then((req) => req.json())
+        .then(
+          (data: ApiGobProv) => data?.provincias?.map((p) => p.nombre) ?? []
+        ),
+  });
 
   const { methods, mutate, isLoading, isError } = useMutationForm<
     Establecimiento,
@@ -102,17 +102,19 @@ function NewEstab() {
     },
   });
 
-  const provincia = methods.watch("provincia");
+  const provincia = useWatch({ name: "provincia", control: methods.control });
   useEffect(() => {
     fetch(
       `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=nombre&max=150`
     )
       .then((response) => response.json())
-      .then((data: apiGobLoc) => {
-        //console.log(data.localidades)
-        setLocalidades(data?.municipios ?? []);
+      .then((data: ApiGobLoc) => {
+        console.log(data);
+
+        setLocalidades(data?.municipios?.map((m) => m.nombre) ?? []);
       });
-  }, [provincia]);
+    methods.resetField("localidad");
+  }, [provincia, methods]);
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
@@ -158,8 +160,10 @@ function NewEstab() {
                 label="Provincia"
                 placeholder="Provincia"
                 isRequired
-                children={prov.map((e) => (
-                  <option key={e.id}>{e.nombre}</option>
+                children={provincias?.sort().map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
                 ))}
               />
               <SelectControl
@@ -167,10 +171,16 @@ function NewEstab() {
                 label="Localidad"
                 placeholder="Localidad"
                 isRequired
-                children={localidades.map((e) => (
-                  <option key={e.id}>{e.nombre}</option>
+              >
+                {localidades.sort().map((l) => (
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
                 ))}
-              />
+                <option key="Otra" value="Otra">
+                  Otra
+                </option>
+              </SelectControl>
             </HStack>
             <InputControl
               name="telefono"

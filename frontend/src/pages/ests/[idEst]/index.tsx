@@ -44,28 +44,26 @@ export default function CourtPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { mutate: mutateDelete } = useMutation<void, ApiError>(
-    {
-      mutationFn: () => deleteEstablecimientoByID(data?.id),
-      onSuccess: () => {
-        toast({
-          title: "Establecimiento eliminado.",
-          description: `Establecimiento eliminado exitosamente.`,
-          status: "success",
-          isClosable: true,
-        });
-        navigate(`/admin/${data?.idAdministrador}`);
-      },
-      onError: () => {
-        toast({
-          title: "Error al eliminar el establecimiento",
-          description: `Intente de nuevo.`,
-          status: "error",
-          isClosable: true,
-        });
-      },
-    }
-  );
+  const { mutate: mutateDelete } = useMutation<void, ApiError>({
+    mutationFn: () => deleteEstablecimientoByID(data?.id),
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento eliminado.",
+        description: `Establecimiento eliminado exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(`/admin/${data?.idAdministrador}`);
+    },
+    onError: () => {
+      toast({
+        title: "Error al eliminar el establecimiento",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
 
   const handleEliminar = () => {
     mutateDelete();
