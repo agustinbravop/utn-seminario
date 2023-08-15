@@ -1,12 +1,12 @@
 import {
   Slider,
   SliderFilledTrack,
-  type SliderProps,
+  SliderProps,
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import { BaseFormControl, type BaseFormControlProps } from "./BaseFormControl";
+import BaseFormControl, { BaseFormControlProps } from "./BaseFormControl";
 
 interface SliderControlProps
   extends BaseFormControlProps,
@@ -19,7 +19,7 @@ interface SliderControlProps
  *
  * https://chakra-ui.com/docs/components/slider
  */
-export function SliderControl(props: SliderControlProps) {
+export default function SliderControl(props: SliderControlProps) {
   const { name, control, direction, max, min, step, children, ...rest } = props;
   const { field } = useController({
     name,

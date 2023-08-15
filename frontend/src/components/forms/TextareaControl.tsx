@@ -1,8 +1,7 @@
-import { Textarea, type TextareaProps } from "@chakra-ui/react";
+import { Textarea, TextareaProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import {
-  BaseFormControl,
-  type NoVariantBaseFormControlProps,
+import BaseFormControl, {
+  NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 interface TextareaControlProps
@@ -14,7 +13,7 @@ interface TextareaControlProps
  *
  * https://chakra-ui.com/docs/components/textarea
  */
-export function TextareaControl(props: TextareaControlProps) {
+export default function TextareaControl(props: TextareaControlProps) {
   const { name, control, resize, variant, ...rest } = props;
 
   const { field } = useController({
