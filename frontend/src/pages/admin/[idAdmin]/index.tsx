@@ -52,8 +52,8 @@ export default function EstablecimientosPage() {
     return <Navigate to="/login" />;
   }
 
-  if ( data?.length > currentAdmin.suscripcion.limiteEstablecimientos){
-    return <Navigate to="./selectEstab" />
+  if (data?.length > currentAdmin.suscripcion.limiteEstablecimientos) {
+    return <Navigate to="./selectEstab" />;
   }
 
   const establecimientosFiltrados = data?.filter((establecimiento) =>
@@ -95,15 +95,15 @@ export default function EstablecimientosPage() {
             {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
             establecimientos
           </Text>
-          <Link to="nuevoEstablecimiento">
-            <Button leftIcon={<Icon as={GrAddCircle} />}>
-              Agregar Establecimiento
-            </Button>
-          </Link>
+          {data?.length < currentAdmin.suscripcion.limiteEstablecimientos ? (
+            <Link to="nuevoEstablecimiento">
+              <Button leftIcon={<Icon as={GrAddCircle} />}>
+                Agregar Establecimiento
+              </Button>
+            </Link>
+          ) : null}
           <Link to="editSuscripcion">
-            <Button >
-              ¡Actualizar Suscripción!
-            </Button>
+            <Button>¡Actualizar Suscripción!</Button>
           </Link>
         </HStack>
       </HStack>

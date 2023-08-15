@@ -57,8 +57,8 @@ export default function SuscripcionesPage() {
     mutationFn: (admin) => cambiarSuscripcion(admin, newSus),
     onSuccess: () => {
       toast({
-        title: "Perfil actualizado",
-        description: `Perfil actualizado exitosamente.`, 
+        title: "Nueva Suscripción",
+        description: `Suscripción actualizada exitosamente.`, 
         status: "success",
         isClosable: true,
       });
@@ -66,7 +66,7 @@ export default function SuscripcionesPage() {
     },
     onError: () => {
       toast({
-        title: "Error al intentar editar el perfil",
+        title: "Error al intentar cambiar de suscripción",
         description: `Intente de nuevo.`,
         status: "error",
         isClosable: true,

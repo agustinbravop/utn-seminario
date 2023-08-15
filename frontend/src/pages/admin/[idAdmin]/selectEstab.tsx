@@ -25,40 +25,38 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { Box } from "@chakra-ui/react";
 
-export default function selectEstab() {
+export default function SelectEstab() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useQuery<Establecimiento[]>(
+  const { data } = useQuery<Establecimiento[]>(
     ["establecimientos", currentAdmin?.id],
     () => getEstablecimientosByAdminID(Number(currentAdmin?.id))
   );
 
   const [selected, setSelected] = useState<Establecimiento[]>([]);
-  const [click, setClick] = useState(false);
 
-  const maximo = currentAdmin?.suscripcion.limiteEstablecimientos;
-
-  const handleSubmit = () => {
-    data?.forEach((e) => {
-      if (!selected.includes(e)) {
-        deleteEstablecimientoByID(e.id);
-      }
-    });
-    navigate(`/admin/${currentAdmin?.id}`);
-  };
-
-  const handleAddEst = (est: Establecimiento) => {
-    setClick(!click);
-    click
+  const handleEstado = (est: Establecimiento, b: boolean) => {
+    !b
       ? setSelected([...selected, est])
-      : selected.splice(selected.lastIndexOf(est), 1);
+      : setSelected(selected.filter((item) => item !== est));
     console.log(selected);
   };
 
   const establecimientos = data?.map((e) => {
+    const [estado, setEstado] = useState(false);
+
+    const handleClick = (est: Establecimiento) => {
+      handleEstado(est, estado);
+      setEstado(!estado);
+    };
+
     return (
-      <Card width="300px" height="450px">
+      <Card
+        width="300px"
+        height="450px"
+        variant={estado ? "filled" : "elevated"}
+      >
         <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
           <Image
             src={!(e.urlImagen === null) ? e.urlImagen : defImage}
@@ -90,22 +88,10 @@ export default function selectEstab() {
             </Link>
 
             <Button
-              leftIcon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-eye-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                </svg>
-              }
-              onClick={() => handleAddEst(e)}
+              colorScheme={estado ? "red" : "orange"}
+              onClick={() => handleClick(e)}
             >
-              Seleccionar
+              {estado ? "Quitar" : "Seleccionar"}
             </Button>
           </HStack>
         </CardFooter>
@@ -113,11 +99,39 @@ export default function selectEstab() {
     );
   });
 
+  const handleSubmit = async () => {
+    const promesasDelete: Promise<void>[] =
+      data?.map((e) => {
+        if (!selected.includes(e)) {
+          return deleteEstablecimientoByID(e.id);
+        }
+        return Promise.resolve();
+      }) || [];
+
+    await Promise.all(promesasDelete);
+
+    navigate(`/admin/${currentAdmin?.id}`);
+  };
+
+  const maximo = currentAdmin?.suscripcion.limiteEstablecimientos;
+
   return (
     <>
-      {establecimientos}
-      {selected.length >= 1 && selected.length <= maximo ? (
-        <Button onClick={handleSubmit}>Continuar</Button>
+      <Heading textAlign="center">
+        Seleccione los establecimientos que desea
+      </Heading>
+      <br />
+      <HStack display="flex" flexWrap="wrap" justifyContent="center">
+        {establecimientos}
+      </HStack>
+      {selected.length > 0 && selected.length < maximo + 1 ? (
+        <Button
+          justifyContent="center"
+          textAlign="center"
+          onClick={handleSubmit}
+        >
+          Continuar
+        </Button>
       ) : null}
     </>
   );
