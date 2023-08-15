@@ -3,6 +3,7 @@ import { Cancha, Dia } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { ApiError } from "@/utils/api";
 import {
+  Box,
   Button,
   Checkbox,
   FormControl,
@@ -10,6 +11,14 @@ import {
   Heading,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -142,12 +151,14 @@ function NuevaCancha() {
       return crearCancha(
         {
           ...cancha,
-          disponibilidades: cancha.disponibilidades.map((d) => ({
-            ...d,
-            precioSenia: d.precioSenia && Number(d.precioSenia),
-            precioReserva: Number(d.precioReserva),
-            minutosReserva: Number(d.minutosReserva),
-          })),
+          disponibilidades: cancha.disponibilidades
+            .slice(0, -1) // Obtener todos los elementos excepto el último
+            .map((d) => ({
+              ...d,
+              precioSenia: d.precioSenia && Number(d.precioSenia),
+              precioReserva: Number(d.precioReserva),
+              minutosReserva: Number(d.minutosReserva),
+            })),
         },
         imagen
       );
@@ -178,15 +189,24 @@ function NuevaCancha() {
   });
 
   const agregarHorario = () => {
+    // Obtener los valores actuales del formulario
+    const currentValues = methods.getValues();
+  
+    // Agregar el nuevo horario al arreglo utilizando los valores actuales
+ 
+
     append({
+      disciplina: "-",
       horaInicio: "-",
       horaFin: "-",
-      disciplina: "-",
       minutosReserva: 0,
       precioReserva: 0,
       precioSenia: 0,
       dias: [],
     });
+  
+    //methods.reset();
+    onClose(); // Cierra el modal
   };
 
   const handleDelete = (index: number) => {
@@ -197,11 +217,12 @@ function NuevaCancha() {
 
   const last = methods.getValues("disponibilidades").length - 1;
   const lastFieldIndex = fields.length - 1;
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
-        Nueva cancha
+        Nueva cancha 
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -250,68 +271,89 @@ function NuevaCancha() {
             </FormControl>
           </VStack>
 
-          <VStack width="1100px">
-            <Text as="b"> Disponibilidad horaria </Text>
-            <p>
-              {" "}
-              En qué rangos horarios la cancha estará disponible y para qué
-              disciplinas.
-            </p>
+          <VStack width="1100px" align="center" >
+            <VStack marginTop="20px" align="start" width="100%" ml="585px">
+              <Text fontWeight="bold">
+                Disponibilidad horaria 
+              </Text>
+              <Text>
+                En qué rangos horarios la cancha estará disponible y para qué disciplinas.
+              </Text>
+              <Button onClick={onOpen}> Agregar disponibilidad + </Button>
+            </VStack>
+ 
+            <>
+              {methods.getValues("disponibilidades").length > 1 && (
+                 <TableContainer paddingTop="20px" paddingBottom="20px">
+                 <Table variant="simple" size="sm">
+                   <Thead backgroundColor="lightgray">
+                     <Tr>
+                       <Th>disciplina</Th>
+                       <Th>hora inicio</Th>
+                       <Th>hora fin</Th>
+                       <Th>reserva (min.)</Th>
+                       <Th>p. reserva/seña</Th>
+                       <Th> dias </Th>
+                       <Th> Eliminar </Th>
+                     </Tr>
+                   </Thead>
+                   <Tbody>
+                     {methods.getValues("disponibilidades").map((d, index) =>
+                       // Verificar si el índice es mayor o igual a numeroDado
+                       index < last ? (
+                         <Tr>
+                           <Td> {d.disciplina} </Td>
+                           <Td> {d.horaInicio} </Td>
+                           <Td> {d.horaFin} </Td>
+                           <Td> {d.minutosReserva} </Td>
+                           <Td>
+                             {" "}
+                             {d.precioReserva}/{d.precioSenia}{" "}
+                           </Td>
+                           <Td>
+                             {" "}
+                             {d.dias.map((dia, index) => (
+                               <React.Fragment key={index}>
+                                 {dia}
+                                 {index !== d.dias.length - 1 && " - "}
+                               </React.Fragment>
+                             ))}{" "}
+                           </Td>
+                           <Td>
+                             {" "}
+                             <Button
+                               type="button"
+                               onClick={() => handleDelete(index)}
+                             >
+                               {" "}
+                               <DeleteIcon />{" "}
+                             </Button>{" "}
+                           </Td>
+                         </Tr>
+                       ) : null
+                     )}
+                   </Tbody>
+                 </Table>
+               </TableContainer>
+               
+              )}
+            </>
 
-            <TableContainer paddingTop="20px" paddingBottom="20px">
-              <Table variant="simple" size="sm">
-                <Thead backgroundColor="lightgray">
-                  <Tr>
-                    <Th>disciplina</Th>
-                    <Th>hora inicio</Th>
-                    <Th>hora fin</Th>
-                    <Th>reserva (min.)</Th>
-                    <Th>p. reserva/seña</Th>
-                    <Th> dias </Th>
-                    <Th> Eliminar </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {methods.getValues("disponibilidades").map((d, index) =>
-                    // Verificar si el índice es mayor o igual a numeroDado
-                    index < last ? (
-                      <Tr>
-                        <Td> {d.disciplina} </Td>
-                        <Td> {d.horaInicio} </Td>
-                        <Td> {d.horaFin} </Td>
-                        <Td> {d.minutosReserva} </Td>
-                        <Td>
-                          {" "}
-                          {d.precioReserva}/{d.precioSenia}{" "}
-                        </Td>
-                        <Td>
-                          {" "}
-                          {d.dias.map((dia, index) => (
-                            <React.Fragment key={index}>
-                              {dia}
-                              {index !== d.dias.length - 1 && " - "}
-                            </React.Fragment>
-                          ))}{" "}
-                        </Td>
-                        <Td>
-                          {" "}
-                          <Button
-                            type="button"
-                            onClick={() => handleDelete(index)}
-                          >
-                            {" "}
-                            <DeleteIcon />{" "}
-                          </Button>{" "}
-                        </Td>
-                      </Tr>
-                    ) : null
-                  )}
-                </Tbody>
-              </Table>
-            </TableContainer>
           </VStack>
 
-          {fields.length > 0 && (
+          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+        </VStack>
+
+
+
+        <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Modificar cancha</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                ¿Está seguro de modificar la información de la cancha?
+                {fields.length > 0 && (
             <>
               <HStack width="600px">
                 <SelectControl
@@ -392,10 +434,22 @@ function NuevaCancha() {
               </HStack>
             </>
           )}
-          <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
+              </ModalBody>
 
-          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
-        </VStack>
+              <ModalFooter>
+                <Button colorScheme="gray" mr={3} onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  colorScheme="blackAlpha"
+                  backgroundColor="black"
+                  onClick={agregarHorario}
+                >
+                  Aceptar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
       </FormProvider>
     </div>
   );
