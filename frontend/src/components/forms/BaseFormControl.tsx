@@ -6,7 +6,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { type Control, useController } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 
 /**
  * Propiedades del componente `BaseFormControl`. Extiende todas las propiedades del FormControl de Chakra excepto 'label' para que acepte un ReactNode en lugar de un simple string.
@@ -53,7 +53,7 @@ export type NoVariantBaseFormControlProps = Omit<
  *
  * Es una adaptación de https://github.com/crhistianramirez/react-hook-form-chakra
  */
-export function BaseFormControl(props: BaseFormControlProps) {
+export default function BaseFormControl(props: BaseFormControlProps) {
   const { children, name, control, id, helperText, label, ...rest } = props;
 
   const {

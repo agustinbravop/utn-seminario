@@ -1,6 +1,6 @@
-import { RadioGroup, type RadioGroupProps } from "@chakra-ui/react";
+import { RadioGroup, RadioGroupProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import { BaseFormControl, type BaseFormControlProps } from "./BaseFormControl";
+import BaseFormControl, { BaseFormControlProps } from "./BaseFormControl";
 
 interface RadioGroupControlProps
   extends BaseFormControlProps,
@@ -11,7 +11,7 @@ interface RadioGroupControlProps
  *
  * https://chakra-ui.com/docs/components/radio
  */
-export function RadioGroupControl(props: RadioGroupControlProps) {
+export default function RadioGroupControl(props: RadioGroupControlProps) {
   const { name, control, children, ...rest } = props;
   const { field } = useController({
     name,

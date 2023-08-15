@@ -17,7 +17,6 @@ export const disponibilidadSchema = z.object({
   id: z.number().int().positive(),
   horaInicio: z.string().nonempty(),
   horaFin: z.string().nonempty(),
-  minutosReserva: z.number().int().positive(),
   precioReserva: decimalSchema,
   precioSenia: decimalSchema.optional(),
   disciplina: z.string().nonempty(),

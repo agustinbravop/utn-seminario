@@ -3,6 +3,7 @@ import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import {
   PrismaClient,
   cancha,
+  dia,
   disciplina,
   disponibilidad,
 } from "@prisma/client";
@@ -21,6 +22,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     disponibilidades: {
       include: {
         disciplina: true,
+        dias: true,
       },
     },
   };
@@ -53,10 +55,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
   async getCanchaByID(idCancha: number): Promise<Cancha> {
     return awaitQuery(
       this.prisma.cancha.findUnique({
-        where: {
-          id: idCancha,
-          // TODO: ignorar los soft delete
-        },
+        where: { id: idCancha },
         include: this.include,
       }),
       `No existe cancha con id ${idCancha}`,
@@ -78,25 +77,21 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
+      // Creo las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
           await this.prisma.disponibilidad.create({
             data: {
               horaFin: disp.horaFin,
               horaInicio: disp.horaInicio,
-              minutosReserva: disp.minutosReserva,
               precioReserva: disp.precioReserva,
               precioSenia: disp.precioSenia,
-              dias: disp.dias,
+              dias: { connect: disp.dias.map((dia) => ({ dia })) },
+              cancha: { connect: { id } },
               disciplina: {
                 connectOrCreate: {
                   where: { disciplina: disp.disciplina },
                   create: { disciplina: disp.disciplina },
-                },
-              },
-              cancha: {
-                connect: {
-                  id: id,
                 },
               },
             },
@@ -128,6 +123,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
+      // Modifico las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
           await this.prisma.disponibilidad.update({
@@ -135,19 +131,14 @@ export class PrismaCanchaRepository implements CanchaRepository {
             data: {
               horaFin: disp.horaFin,
               horaInicio: disp.horaInicio,
-              minutosReserva: disp.minutosReserva,
               precioReserva: disp.precioReserva,
               precioSenia: disp.precioSenia,
-              dias: disp.dias,
+              dias: { connect: disp.dias.map((dia) => ({ dia })) },
+              cancha: { connect: { id: id } },
               disciplina: {
                 connectOrCreate: {
                   where: { disciplina: disp.disciplina },
                   create: { disciplina: disp.disciplina },
-                },
-              },
-              cancha: {
-                connect: {
-                  id: id,
                 },
               },
             },
@@ -167,13 +158,9 @@ export class PrismaCanchaRepository implements CanchaRepository {
   async eliminarCancha(idCancha: number): Promise<Cancha> {
     return awaitQuery(
       this.prisma.cancha.update({
-        where: {
-          id: idCancha,
-        },
+        where: { id: idCancha },
+        data: { eliminada: true },
         include: this.include,
-        data: {
-          eliminada: true,
-        },
       }),
       `No existe cancha con id ${idCancha}`,
       "Error interno al intentar modificar la cancha"
@@ -183,6 +170,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
 
 type disponibilidadDB = Omit<disponibilidad, "idDisciplina" | "idCancha"> & {
   disciplina: disciplina;
+  dias: dia[];
 };
 
 type canchaDB = cancha & {
@@ -197,7 +185,7 @@ function toModel(cancha: canchaDB): Cancha {
       ...d,
       disciplina: d.disciplina.disciplina,
       precioSenia: d.precioSenia ?? undefined,
-      dias: d.dias as Dia[],
+      dias: d.dias.map((dia) => dia.dia) as Dia[],
     })),
   };
 }
