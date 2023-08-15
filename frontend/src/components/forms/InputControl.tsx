@@ -1,6 +1,6 @@
 import {
   Input,
-  type InputProps,
+  InputProps,
   InputGroup,
   InputLeftAddon,
   InputLeftElement,
@@ -10,9 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useController } from "react-hook-form";
-import {
-  BaseFormControl,
-  type NoVariantBaseFormControlProps,
+import BaseFormControl, {
+  NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 /**
@@ -52,7 +51,7 @@ interface InputControlProps
  *
  * https://chakra-ui.com/docs/components/input
  */
-export function InputControl(props: InputControlProps) {
+export default function InputControl(props: InputControlProps) {
   const {
     name,
     control,

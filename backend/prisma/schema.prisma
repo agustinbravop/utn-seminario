@@ -9,142 +9,172 @@ datasource db {
 }
 
 model administrador {
-  id               Int               @id @default(autoincrement()) @map("idAdministrador")
-  usuario          String            @unique @db.VarChar
-  correo           String            @unique @db.VarChar
-  clave            String            @db.VarChar
-  nombre           String            @db.VarChar
-  apellido         String            @db.VarChar
-  telefono         String            @db.VarChar
+  id       Int    @id @default(autoincrement()) @map("idAdministrador")
+  usuario  String @unique @db.VarChar
+  correo   String @unique @db.VarChar
+  clave    String @db.VarChar
+  nombre   String @db.VarChar
+  apellido String @db.VarChar
+  telefono String @db.VarChar
+
   idTarjeta        Int               @unique
   tarjeta          tarjeta           @relation(fields: [idTarjeta], references: [id], onDelete: Cascade)
   idSuscripcion    Int
   suscripcion      suscripcion       @relation(fields: [idSuscripcion], references: [id], onDelete: NoAction, onUpdate: NoAction)
   establecimiento  establecimiento[]
-  pago_suscripcion pagoSuscripcion[]
+  pagosSuscripcion pagoSuscripcion[]
 }
 
 model cancha {
-  id                Int              @id @default(autoincrement()) @map("idCancha")
-  nombre            String           @db.VarChar
-  descripcion       String           @db.VarChar
-  habilitada        Boolean          @default(true)
-  urlImagen         String?          @db.VarChar
+  id          Int     @id @default(autoincrement()) @map("idCancha")
+  nombre      String  @db.VarChar
+  descripcion String  @db.VarChar
+  habilitada  Boolean @default(true)
+  urlImagen   String? @db.VarChar
+  eliminada   Boolean @default(false)
+
   idEstablecimiento Int
-  eliminada         Boolean          @default(false)
   establecimiento   establecimiento  @relation(fields: [idEstablecimiento], references: [id], onDelete: NoAction, onUpdate: NoAction)
   disponibilidades  disponibilidad[]
   reservas          reserva[]
 }
 
 model disciplina {
-  disciplina       String           @id @db.VarChar
+  disciplina String @id @db.VarChar
+
   reservas         reserva[]
   disponibilidades disponibilidad[]
 }
 
 model disponibilidad {
-  id             Int        @id @default(autoincrement()) @map("idDisponibilidad")
-  horaInicio     String     @db.Char(5)
-  horaFin        String     @db.Char(5)
-  minutosReserva Int
-  precioReserva  Decimal    @db.Decimal
-  precioSenia    Decimal?   @db.Decimal
-  idCancha       Int        @map("cancha")
-  cancha         cancha     @relation(fields: [idCancha], references: [id])
-  idDisciplina   String     @map("disciplina") @db.VarChar
-  disciplina     disciplina @relation(fields: [idDisciplina], references: [disciplina])
-  dias           String[]
+  id            Int      @id @default(autoincrement()) @map("idDisponibilidad")
+  horaInicio    String   @db.Char(5)
+  horaFin       String   @db.Char(5)
+  precioReserva Decimal  @db.Decimal
+  precioSenia   Decimal? @db.Decimal
+
+  idCancha     Int        @map("cancha")
+  cancha       cancha     @relation(fields: [idCancha], references: [id])
+  idDisciplina String     @map("disciplina") @db.VarChar
+  disciplina   disciplina @relation(fields: [idDisciplina], references: [disciplina])
+  dias         dia[]
+}
+
+model dia {
+  dia String @id
+
+  disponibilidad disponibilidad[]
 }
 
 model establecimiento {
-  id                 Int            @id @default(autoincrement()) @map("idEstablecimiento")
-  nombre             String         @db.VarChar
+  id                 Int     @id @default(autoincrement()) @map("idEstablecimiento")
+  nombre             String  @db.VarChar
   telefono           String
-  direccion          String         @db.VarChar
-  urlImagen          String?        @db.VarChar
-  correo             String         @unique @db.VarChar
-  eliminado          Boolean        @default(false)
+  direccion          String  @db.VarChar
+  urlImagen          String? @db.VarChar
+  correo             String  @db.VarChar
+  eliminado          Boolean @default(false)
   horariosDeAtencion String?
-  localidad          String         @db.VarChar
-  provincia          String         @db.VarChar
-  idAdministrador    Int
-  administrador      administrador  @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  canchas            cancha[]
-  metodosDePago      metodoDePago[]
+
+  idLocalidad     Int
+  localidad       localidad      @relation(fields: [idLocalidad], references: [id])
+  idAdministrador Int
+  administrador   administrador  @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  canchas         cancha[]
+  metodosDePago   metodoDePago[]
+}
+
+model localidad {
+  id     Int    @id @default(autoincrement()) @map("idLocalidad")
+  nombre String
+
+  idProvincia     String
+  provincia       provincia         @relation(fields: [idProvincia], references: [provincia])
+  establecimiento establecimiento[]
+
+  @@unique([nombre, idProvincia])
+}
+
+model provincia {
+  provincia String @id
+
+  localidad localidad[]
 }
 
 model metodoDePago {
-  metodoDePago     String            @id @db.VarChar()
+  metodoDePago String @id @db.VarChar()
+
   establecimientos establecimiento[]
   pagos            pago[]
 }
 
 model jugador {
-  id       Int       @id @default(autoincrement()) @map("idJugador")
-  nombre   String    @db.VarChar
-  apellido String    @db.VarChar
-  usuario  String    @db.VarChar
-  telefono String    @db.VarChar
-  correo   String    @db.VarChar
-  clave    String    @db.VarChar
+  id       Int    @id @default(autoincrement()) @map("idJugador")
+  nombre   String @db.VarChar
+  apellido String @db.VarChar
+  usuario  String @db.VarChar
+  telefono String @db.VarChar
+  correo   String @db.VarChar
+  clave    String @db.VarChar
+
   reservas reserva[]
 }
 
 model pago {
-  id             Int          @id @default(autoincrement()) @map("idPago")
-  monto          Decimal      @db.Decimal
-  fechaPago      DateTime     @db.Timestamp(6)
+  id        Int      @id @default(autoincrement()) @map("idPago")
+  monto     Decimal  @db.Decimal
+  fechaPago DateTime @db.Timestamp(6)
+
   idMetodoDePago String       @map("metodoDePago") @db.VarChar
   metodoDePago   metodoDePago @relation(fields: [idMetodoDePago], references: [metodoDePago], onDelete: NoAction, onUpdate: NoAction)
   reservas       reserva[]    @relation("pagoReserva")
   senias         reserva[]    @relation("pagoSenia")
-  reserva        reserva[]
 }
 
 model pagoSuscripcion {
-  idPagoSuscripcion Int           @id @default(autoincrement())
-  monto             Decimal       @db.Decimal
-  fechaPago         DateTime      @db.Timestamp(6)
-  fechaVencimiento  DateTime      @db.Timestamp(6)
-  idAdministrador   Int
-  administrador     administrador @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idPagoSuscripcion Int      @id @default(autoincrement())
+  monto             Decimal  @db.Decimal
+  fechaPago         DateTime @db.Timestamp(6)
+  fechaVencimiento  DateTime @db.Timestamp(6)
+
+  idAdministrador Int
+  administrador   administrador @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model suscripcion {
-  id                     Int             @id @default(autoincrement()) @map("idSuscripcion")
-  nombre                 String          @unique @db.VarChar
+  id                     Int     @id @default(autoincrement()) @map("idSuscripcion")
+  nombre                 String  @unique @db.VarChar
   limiteEstablecimientos Int
   costoMensual           Decimal
-  administrador          administrador[]
+
+  administrador administrador[]
 }
 
 model reserva {
-  id                   Int         @id @default(autoincrement()) @map("idReserva")
-  fechaReserva         DateTime    @db.Date
-  horaInicio           DateTime    @db.Time(6)
-  horaFin              DateTime    @db.Time(6)
-  precio               Float
-  idCancha             Int
-  cancha               cancha?     @relation(fields: [idCancha], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idPagoReserva        Int
-  pagoReserva          pago?       @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idPagoSenia          Int?
-  pagoSenia            pago?       @relation("pagoSenia", fields: [idPagoSenia], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idJugador            Int?
-  jugador              jugador?    @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idDisciplina         String      @db.VarChar
-  disciplina           disciplina? @relation(fields: [idDisciplina], references: [disciplina], onDelete: NoAction, onUpdate: NoAction)
-  disciplinaDisciplina String?     @db.VarChar
-  pago                 pago?       @relation(fields: [pagoId], references: [id])
-  pagoId               Int?
+  id           Int      @id @default(autoincrement()) @map("idReserva")
+  fechaReserva DateTime @db.Date
+  horaInicio   DateTime @db.Time(6)
+  horaFin      DateTime @db.Time(6)
+  precio       Float
+
+  idCancha      Int
+  cancha        cancha     @relation(fields: [idCancha], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idJugador     Int
+  jugador       jugador    @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idDisciplina  String     @db.VarChar
+  disciplina    disciplina @relation(fields: [idDisciplina], references: [disciplina], onDelete: NoAction, onUpdate: NoAction)
+  idPagoReserva Int
+  pagoReserva   pago?      @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idPagoSenia   Int?
+  pagoSenia     pago?      @relation("pagoSenia", fields: [idPagoSenia], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model tarjeta {
-  id            Int            @id @default(autoincrement()) @map("idTarjeta")
-  nombre        String         @db.VarChar
-  numero        String
-  cvv           Int
-  vencimiento   String
+  id          Int    @id @default(autoincrement()) @map("idTarjeta")
+  nombre      String @db.VarChar
+  numero      String
+  cvv         Int
+  vencimiento String
+
   administrador administrador?
 }

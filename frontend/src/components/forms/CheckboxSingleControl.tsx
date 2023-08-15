@@ -1,8 +1,7 @@
-import { Checkbox, type CheckboxProps } from "@chakra-ui/react";
+import { Checkbox, CheckboxProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import {
-  BaseFormControl,
-  type NoVariantBaseFormControlProps,
+import BaseFormControl, {
+  NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 /**
@@ -14,7 +13,9 @@ interface CheckboxSingleControlProps
   extends NoVariantBaseFormControlProps,
     Omit<CheckboxProps, keyof NoVariantBaseFormControlProps> {}
 
-export function CheckboxSingleControl(props: CheckboxSingleControlProps) {
+export default function CheckboxSingleControl(
+  props: CheckboxSingleControlProps
+) {
   const { name, control, children, icon, ...rest } = props;
   const { field } = useController({ name, control });
 

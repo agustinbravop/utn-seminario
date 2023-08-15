@@ -1,4 +1,4 @@
-import { PrismaClient, establecimiento } from "@prisma/client";
+import { PrismaClient, establecimiento, localidad } from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Establecimiento } from "../models/establecimiento.js";
 
@@ -14,6 +14,7 @@ export class PrismaEstablecimientoRepository
   implements EstablecimientoRepository
 {
   private prisma: PrismaClient;
+  private include = { localidad: true };
 
   constructor(client: PrismaClient) {
     this.prisma = client;
@@ -23,9 +24,35 @@ export class PrismaEstablecimientoRepository
     try {
       const dbEst = await this.prisma.establecimiento.create({
         data: {
-          ...est,
           id: undefined,
+          nombre: est.nombre,
+          correo: est.correo,
+          direccion: est.direccion,
+          telefono: est.telefono,
+          urlImagen: est.urlImagen,
+          horariosDeAtencion: est.horariosDeAtencion,
+          administrador: { connect: { id: est.idAdministrador } },
+          localidad: {
+            connectOrCreate: {
+              where: {
+                nombre_idProvincia: {
+                  nombre: est.localidad,
+                  idProvincia: est.provincia,
+                },
+              },
+              create: {
+                nombre: est.localidad,
+                provincia: {
+                  connectOrCreate: {
+                    where: { provincia: est.provincia },
+                    create: { provincia: est.provincia },
+                  },
+                },
+              },
+            },
+          },
         },
+        include: this.include,
       });
       return toModel(dbEst);
     } catch (e) {
@@ -37,9 +64,8 @@ export class PrismaEstablecimientoRepository
   async getByID(idEst: number): Promise<Establecimiento> {
     return awaitQuery(
       this.prisma.establecimiento.findUnique({
-        where: {
-          id: idEst,
-        },
+        where: { id: idEst },
+        include: this.include,
       }),
       `No existe establecimiento con id ${idEst}`,
       "Error al intentar obtener el establecimiento"
@@ -52,6 +78,7 @@ export class PrismaEstablecimientoRepository
         where: {
           AND: [{ idAdministrador: idAdmin }, { eliminado: false }],
         },
+        include: this.include,
       });
 
       return estsDB.map((estDB) => toModel(estDB));
@@ -64,12 +91,36 @@ export class PrismaEstablecimientoRepository
   async modificar(est: Establecimiento): Promise<Establecimiento> {
     return awaitQuery(
       this.prisma.establecimiento.update({
-        where: {
-          id: est.id,
-        },
+        where: { id: est.id },
         data: {
-          ...est,
+          nombre: est.nombre,
+          correo: est.correo,
+          direccion: est.direccion,
+          telefono: est.telefono,
+          urlImagen: est.urlImagen,
+          horariosDeAtencion: est.horariosDeAtencion,
+          administrador: { connect: { id: est.idAdministrador } },
+          localidad: {
+            connectOrCreate: {
+              where: {
+                nombre_idProvincia: {
+                  nombre: est.localidad,
+                  idProvincia: est.provincia,
+                },
+              },
+              create: {
+                nombre: est.localidad,
+                provincia: {
+                  connectOrCreate: {
+                    where: { provincia: est.provincia },
+                    create: { provincia: est.provincia },
+                  },
+                },
+              },
+            },
+          },
         },
+        include: this.include,
       }),
       `No existe establecimiento con id ${est.id}`,
       "Error al intentar modificar el establecimiento"
@@ -79,12 +130,9 @@ export class PrismaEstablecimientoRepository
   async eliminar(idEst: number): Promise<Establecimiento> {
     return awaitQuery(
       this.prisma.establecimiento.update({
-        where: {
-          id: Number(idEst),
-        },
-        data: {
-          eliminado: true,
-        },
+        where: { id: Number(idEst) },
+        data: { eliminado: true },
+        include: this.include,
       }),
       `No existe establecimiento con id ${idEst}`,
       "Error al intentar modificar el establecimiento"
@@ -92,11 +140,15 @@ export class PrismaEstablecimientoRepository
   }
 }
 
-type establecimientoDB = establecimiento;
+type establecimientoDB = establecimiento & {
+  localidad: localidad;
+};
 
 function toModel(est: establecimientoDB): Establecimiento {
   return {
     ...est,
+    localidad: est.localidad.nombre,
+    provincia: est.localidad.idProvincia,
   };
 }
 
