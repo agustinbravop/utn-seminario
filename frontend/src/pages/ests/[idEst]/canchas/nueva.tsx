@@ -3,13 +3,13 @@ import { Cancha, Dia } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { ApiError } from "@/utils/api";
 import {
-  Box,
   Button,
   Checkbox,
   FormControl,
   FormLabel,
   Heading,
   HStack,
+  Icon,
   Input,
   Modal,
   ModalBody,
@@ -44,11 +44,11 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import useMutationForm from "@/hooks/useMutationForm";
+import { GrAddCircle } from "react-icons/gr";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
 };
-
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
   descripcion: Yup.string().required("Obligatorio"),
@@ -75,7 +75,6 @@ const validationSchema = Yup.object({
   ).required(),
 });
 
-// Aca dejo hardcodeadas algunas disciplinas :|
 const disciplinas = [
   "Basket",
   "Futbol",
@@ -85,8 +84,6 @@ const disciplinas = [
   "Ping-Pong",
 ];
 
-//Horarios hardcodeados, no se si seria lo mejor
-//Si igual lo dejamos asi, mejor armar un for
 const horas = [
   "1:00",
   "2:00",
@@ -139,9 +136,6 @@ function NuevaCancha() {
         {
           horaInicio: "-",
           horaFin: "-",
-          minutosReserva: 0,
-          precioReserva: 0,
-          precioSenia: 0,
           disciplina: "-",
           dias: [],
         },
@@ -189,36 +183,27 @@ function NuevaCancha() {
   });
 
   const agregarHorario = () => {
-    // Obtener los valores actuales del formulario
-    const currentValues = methods.getValues();
-  
-    // Agregar el nuevo horario al arreglo utilizando los valores actuales
- 
-
     append({
       disciplina: "-",
       horaInicio: "-",
-      horaFin: "-",
-      minutosReserva: 0,
-      precioReserva: 0,
-      precioSenia: 0,
+      horaFin: "",
+      minutosReserva: null,
+      precioReserva: null,
+      precioSenia: null,
       dias: [],
     });
-  
     //methods.reset();
-    onClose(); // Cierra el modal
+    onClose(); 
   };
 
   const handleDelete = (index: number) => {
     const disponibilidades = methods.getValues("disponibilidades");
-    disponibilidades.splice(index, 1); // Eliminamos el elemento del arreglo
-    methods.setValue("disponibilidades", disponibilidades); // Actualizamos el valor del arreglo
+    disponibilidades.splice(index, 1); 
+    methods.setValue("disponibilidades", disponibilidades); 
   };
-
   const last = methods.getValues("disponibilidades").length - 1;
   const lastFieldIndex = fields.length - 1;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
@@ -272,14 +257,16 @@ function NuevaCancha() {
           </VStack>
 
           <VStack width="1100px" align="center" >
-            <VStack marginTop="20px" align="start" width="100%" ml="585px">
+            <VStack marginTop="20px" align="start" width="100%" px="281px">
               <Text fontWeight="bold">
                 Disponibilidad horaria 
               </Text>
               <Text>
                 En qué rangos horarios la cancha estará disponible y para qué disciplinas.
               </Text>
-              <Button onClick={onOpen}> Agregar disponibilidad + </Button>
+              <VStack >
+                <Button leftIcon={<Icon as={GrAddCircle}/> } onClick={onOpen} > Agregar disponibilidad </Button>
+              </VStack>
             </VStack>
  
             <>
@@ -338,24 +325,18 @@ function NuevaCancha() {
                
               )}
             </>
-
           </VStack>
-
           <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
         </VStack>
-
-
 
         <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>Modificar cancha</ModalHeader>
-              <ModalCloseButton />
+              <ModalHeader>Agregar disponibilidad</ModalHeader>
               <ModalBody>
-                ¿Está seguro de modificar la información de la cancha?
                 {fields.length > 0 && (
             <>
-              <HStack width="600px">
+              <HStack width="600px" py="10px">
                 <SelectControl
                   placeholder="Elegir horario"
                   label="Horario de Inicio"
@@ -381,9 +362,9 @@ function NuevaCancha() {
                   ))}
                 </SelectControl>
               </HStack>
-              <HStack width="600px">
+              <HStack width="600px" py="10px">
                 <SelectControl
-                  placeholder="Seleccionar disciplina"
+                  placeholder="Seleccionar disciplina "
                   label=""
                   name={`disponibilidades[${lastFieldIndex}].disciplina`}
                   isRequired
@@ -402,7 +383,7 @@ function NuevaCancha() {
                   label="Duración de la reserva (minutos)"
                 ></InputControl>
               </HStack>
-              <HStack width="600px">
+              <HStack width="600px" py="10px">
                 <InputControl
                   placeholder=""
                   name={`disponibilidades[${lastFieldIndex}].precioReserva`}
@@ -417,7 +398,7 @@ function NuevaCancha() {
                   label="Seña de reserva"
                 ></InputControl>
               </HStack>
-              <HStack>
+              <HStack py="10px" >
                 <CheckboxGroupControl
                   name={`disponibilidades[${lastFieldIndex}].dias`}
                 >
@@ -435,7 +416,6 @@ function NuevaCancha() {
             </>
           )}
               </ModalBody>
-
               <ModalFooter>
                 <Button colorScheme="gray" mr={3} onClick={onClose}>
                   Cancelar
@@ -454,5 +434,4 @@ function NuevaCancha() {
     </div>
   );
 }
-
 export default NuevaCancha;
