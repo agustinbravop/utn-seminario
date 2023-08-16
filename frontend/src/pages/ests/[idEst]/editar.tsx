@@ -29,7 +29,7 @@ import {
 import * as Yup from "yup";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import useMutationForm from "@/hooks/useMutationForm";
+import { useMutationForm } from "@/hooks/useMutationForm";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;

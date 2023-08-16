@@ -37,7 +37,7 @@ export interface MutationFormProps<
  * Esencialmente, llama a `mutate` dentro de `handleSubmit`, y hace
  * un `methods.reset(defaultValues)` siempre que los defaultValues cambien.
  */
-export default function useMutationForm<
+export function useMutationForm<
   TData = unknown,
   TError = unknown,
   TVariables extends FieldValues = {},

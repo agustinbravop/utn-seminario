@@ -34,7 +34,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-import useMutationForm from "@/hooks/useMutationForm";
+import { useMutationForm } from "@/hooks/useMutationForm";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;

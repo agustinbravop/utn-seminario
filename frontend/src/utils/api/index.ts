@@ -104,7 +104,7 @@ export async function put<T>(endpoint: string, body: any): Promise<T> {
   });
 }
 
-export async function del(endpoint: string): Promise<void> {
+export async function del<T = void>(endpoint: string): Promise<T> {
   return request("DELETE", endpoint);
 }
 

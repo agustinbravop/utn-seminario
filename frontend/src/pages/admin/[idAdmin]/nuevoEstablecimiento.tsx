@@ -21,7 +21,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { InputControl, SelectControl, SubmitButton } from "@/components/forms";
 import { useEffect, useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
-import useMutationForm from "@/hooks/useMutationForm";
+import { useMutationForm } from "@/hooks/useMutationForm";
 import { useQuery } from "@tanstack/react-query";
 
 type FormState = CrearEstablecimientoReq & {

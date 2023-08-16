@@ -6,7 +6,7 @@ import { Heading, VStack, Alert } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { ApiError } from "@/utils/api";
-import useMutationForm from "@/hooks/useMutationForm";
+import { useMutationForm } from "@/hooks/useMutationForm";
 
 interface LoginState {
   correoOUsuario: string;

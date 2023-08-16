@@ -2,7 +2,7 @@ import PaymentForm from "@/components/PaymentForm/PaymentForm";
 import { Administrador } from "@/models";
 import { useLocation, useNavigate } from "react-router";
 import { ApiError } from "@/utils/api";
-import { RegistrarAdmin, apiRegister } from "@/utils/api/auth";
+import { RegistrarAdminReq, apiRegister } from "@/utils/api/auth";
 import * as Yup from "yup";
 import {
   HStack,
@@ -15,9 +15,9 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import useMutationForm from "@/hooks/useMutationForm";
+import { useMutationForm } from "@/hooks/useMutationForm";
 
-type FormState = RegistrarAdmin & {
+type FormState = RegistrarAdminReq & {
   clave: string;
 };
 
