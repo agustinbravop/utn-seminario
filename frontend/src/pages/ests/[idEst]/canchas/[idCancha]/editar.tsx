@@ -195,11 +195,16 @@ export default function EditCourtPage() {
   };
 
   const disponibilidadesArray = methods.getValues("disponibilidades") || [];
+
   const handleDelete = (index: number) => {
     const disponibilidades = methods.getValues("disponibilidades");
     disponibilidades.splice(index, 1);
     methods.setValue("disponibilidades", disponibilidades);
   };
+
+  useEffect(() => {
+    console.log('Nuevo valor del array:', disponibilidadesArray);
+  }, [disponibilidadesArray]);
 
   const last = disponibilidadesArray.length -1;
   const lastFieldIndex = fields.length - 1;
@@ -209,10 +214,22 @@ export default function EditCourtPage() {
     onClose: formOnClose,
   } = useDisclosure();
 
+  useEffect(() => {
+    append({
+      disciplina: "-",
+      horaInicio: "-",
+      horaFin: "",
+      minutosReserva: undefined,
+      precioReserva: null,
+      precioSenia: null,
+      dias: [],
+    });
+  }, []);
+
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha 45
+        Editar Cancha 
       </Heading>
       <FormProvider {...methods}>
         <VStack
