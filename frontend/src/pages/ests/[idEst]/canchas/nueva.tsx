@@ -9,7 +9,16 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Icon,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -35,11 +44,11 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import useMutationForm from "@/hooks/useMutationForm";
+import { GrAddCircle } from "react-icons/gr";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
 };
-
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
   descripcion: Yup.string().required("Obligatorio"),
@@ -66,7 +75,6 @@ const validationSchema = Yup.object({
   ).required(),
 });
 
-// Aca dejo hardcodeadas algunas disciplinas :|
 const disciplinas = [
   "Basket",
   "Futbol",
@@ -76,8 +84,6 @@ const disciplinas = [
   "Ping-Pong",
 ];
 
-//Horarios hardcodeados, no se si seria lo mejor
-//Si igual lo dejamos asi, mejor armar un for
 const horas = [
   "1:00",
   "2:00",
@@ -130,9 +136,6 @@ function NuevaCancha() {
         {
           horaInicio: "-",
           horaFin: "-",
-          minutosReserva: 0,
-          precioReserva: 0,
-          precioSenia: 0,
           disciplina: "-",
           dias: [],
         },
@@ -142,12 +145,14 @@ function NuevaCancha() {
       return crearCancha(
         {
           ...cancha,
-          disponibilidades: cancha.disponibilidades.map((d) => ({
-            ...d,
-            precioSenia: d.precioSenia && Number(d.precioSenia),
-            precioReserva: Number(d.precioReserva),
-            minutosReserva: Number(d.minutosReserva),
-          })),
+          disponibilidades: cancha.disponibilidades
+            .slice(0, -1) // Obtener todos los elementos excepto el último
+            .map((d) => ({
+              ...d,
+              precioSenia: d.precioSenia && Number(d.precioSenia),
+              precioReserva: Number(d.precioReserva),
+              minutosReserva: Number(d.minutosReserva),
+            })),
         },
         imagen
       );
@@ -179,29 +184,31 @@ function NuevaCancha() {
 
   const agregarHorario = () => {
     append({
-      horaInicio: "-",
-      horaFin: "-",
       disciplina: "-",
-      minutosReserva: 0,
-      precioReserva: 0,
-      precioSenia: 0,
+      horaInicio: "-",
+      horaFin: "",
+      minutosReserva: undefined,
+      precioReserva: null,
+      precioSenia: null,
       dias: [],
     });
+    //methods.reset();
+    onClose(); 
   };
 
   const handleDelete = (index: number) => {
     const disponibilidades = methods.getValues("disponibilidades");
-    disponibilidades.splice(index, 1); // Eliminamos el elemento del arreglo
-    methods.setValue("disponibilidades", disponibilidades); // Actualizamos el valor del arreglo
+    disponibilidades.splice(index, 1); 
+    methods.setValue("disponibilidades", disponibilidades); 
   };
-
   const last = methods.getValues("disponibilidades").length - 1;
   const lastFieldIndex = fields.length - 1;
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
-        Nueva cancha
+        Nueva cancha 
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -250,70 +257,87 @@ function NuevaCancha() {
             </FormControl>
           </VStack>
 
-          <VStack width="1100px">
-            <Text as="b"> Disponibilidad horaria </Text>
-            <p>
-              {" "}
-              En qué rangos horarios la cancha estará disponible y para qué
-              disciplinas.
-            </p>
-
-            <TableContainer paddingTop="20px" paddingBottom="20px">
-              <Table variant="simple" size="sm">
-                <Thead backgroundColor="lightgray">
-                  <Tr>
-                    <Th>disciplina</Th>
-                    <Th>hora inicio</Th>
-                    <Th>hora fin</Th>
-                    <Th>reserva (min.)</Th>
-                    <Th>p. reserva/seña</Th>
-                    <Th> dias </Th>
-                    <Th> Eliminar </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {methods.getValues("disponibilidades").map((d, index) =>
-                    // Verificar si el índice es mayor o igual a numeroDado
-                    index < last ? (
-                      <Tr>
-                        <Td> {d.disciplina} </Td>
-                        <Td> {d.horaInicio} </Td>
-                        <Td> {d.horaFin} </Td>
-                        <Td> {d.minutosReserva} </Td>
-                        <Td>
-                          {" "}
-                          {d.precioReserva}/{d.precioSenia}{" "}
-                        </Td>
-                        <Td>
-                          {" "}
-                          {d.dias.map((dia, index) => (
-                            <React.Fragment key={index}>
-                              {dia}
-                              {index !== d.dias.length - 1 && " - "}
-                            </React.Fragment>
-                          ))}{" "}
-                        </Td>
-                        <Td>
-                          {" "}
-                          <Button
-                            type="button"
-                            onClick={() => handleDelete(index)}
-                          >
-                            {" "}
-                            <DeleteIcon />{" "}
-                          </Button>{" "}
-                        </Td>
-                      </Tr>
-                    ) : null
-                  )}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </VStack>
-
-          {fields.length > 0 && (
+          <VStack width="1100px" align="center" >
+            <VStack marginTop="20px" align="start" width="100%" px="281px">
+              <Text fontWeight="bold">
+                Disponibilidad horaria 
+              </Text>
+              <Text>
+                En qué rangos horarios la cancha estará disponible y para qué disciplinas.
+              </Text>
+              <VStack >
+                <Button leftIcon={<Icon as={GrAddCircle}/> } onClick={onOpen} > Agregar disponibilidad </Button>
+              </VStack>
+            </VStack>
+ 
             <>
-              <HStack width="600px">
+              {methods.getValues("disponibilidades").length > 1 && (
+                 <TableContainer paddingTop="20px" paddingBottom="20px">
+                 <Table variant="simple" size="sm">
+                   <Thead backgroundColor="lightgray">
+                     <Tr>
+                       <Th>disciplina</Th>
+                       <Th>hora inicio</Th>
+                       <Th>hora fin</Th>
+                       <Th>reserva (min.)</Th>
+                       <Th>p. reserva/seña</Th>
+                       <Th> dias </Th>
+                       <Th> Eliminar </Th>
+                     </Tr>
+                   </Thead>
+                   <Tbody>
+                     {methods.getValues("disponibilidades").map((d, index) =>
+                       // Verificar si el índice es mayor o igual a numeroDado
+                       index < last ? (
+                         <Tr>
+                           <Td> {d.disciplina} </Td>
+                           <Td> {d.horaInicio} </Td>
+                           <Td> {d.horaFin} </Td>
+                           <Td> {d.minutosReserva} </Td>
+                           <Td>
+                             {" "}
+                             {d.precioReserva}/{d.precioSenia}{" "}
+                           </Td>
+                           <Td>
+                             {" "}
+                             {d.dias.map((dia, index) => (
+                               <React.Fragment key={index}>
+                                 {dia}
+                                 {index !== d.dias.length - 1 && " - "}
+                               </React.Fragment>
+                             ))}{" "}
+                           </Td>
+                           <Td>
+                             {" "}
+                             <Button
+                               type="button"
+                               onClick={() => handleDelete(index)}
+                             >
+                               {" "}
+                               <DeleteIcon />{" "}
+                             </Button>{" "}
+                           </Td>
+                         </Tr>
+                       ) : null
+                     )}
+                   </Tbody>
+                 </Table>
+               </TableContainer>
+               
+              )}
+            </>
+          </VStack>
+          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+        </VStack>
+
+        <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Agregar disponibilidad</ModalHeader>
+              <ModalBody>
+                {fields.length > 0 && (
+            <>
+              <HStack width="600px" py="10px">
                 <SelectControl
                   placeholder="Elegir horario"
                   label="Horario de Inicio"
@@ -339,9 +363,9 @@ function NuevaCancha() {
                   ))}
                 </SelectControl>
               </HStack>
-              <HStack width="600px">
+              <HStack width="600px" py="10px">
                 <SelectControl
-                  placeholder="Seleccionar disciplina"
+                  placeholder="Seleccionar disciplina "
                   label=""
                   name={`disponibilidades[${lastFieldIndex}].disciplina`}
                   isRequired
@@ -360,7 +384,7 @@ function NuevaCancha() {
                   label="Duración de la reserva (minutos)"
                 ></InputControl>
               </HStack>
-              <HStack width="600px">
+              <HStack width="600px" py="10px">
                 <InputControl
                   placeholder=""
                   name={`disponibilidades[${lastFieldIndex}].precioReserva`}
@@ -375,7 +399,7 @@ function NuevaCancha() {
                   label="Seña de reserva"
                 ></InputControl>
               </HStack>
-              <HStack>
+              <HStack py="10px" >
                 <CheckboxGroupControl
                   name={`disponibilidades[${lastFieldIndex}].dias`}
                 >
@@ -392,13 +416,23 @@ function NuevaCancha() {
               </HStack>
             </>
           )}
-          <Button onClick={agregarHorario}> Agregar disponibilidad + </Button>
-
-          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
-        </VStack>
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="gray" mr={3} onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  colorScheme="blackAlpha"
+                  backgroundColor="black"
+                  onClick={agregarHorario}
+                >
+                  Aceptar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
       </FormProvider>
     </div>
   );
 }
-
 export default NuevaCancha;

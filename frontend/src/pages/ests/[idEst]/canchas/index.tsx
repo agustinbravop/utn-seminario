@@ -41,22 +41,13 @@ export default function CanchasPage() {
   return (
     <>
       <SubMenu />
-      <Heading
-        size="md"
-        fontSize="26px"
-        textAlign="left"
-        marginLeft="16%"
-        mt="20px"
-      >
-        Canchas
-      </Heading>
       <HStack
         marginRight="16%"
         marginLeft="16%"
         marginBottom="50px"
-        marginTop="20px"
+        marginTop="0px"
       >
-        <InputGroup width="24%">
+        <InputGroup width="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>

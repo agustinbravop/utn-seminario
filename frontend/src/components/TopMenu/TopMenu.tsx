@@ -58,12 +58,12 @@ function Nav() {
           width={177}
         />
       </Link>
-      <HStack marginLeft="150px" marginRight="auto" spacing={10}>
+      <HStack marginLeft="auto" marginRight="auto" spacing={10}>
         <Link to={`/admin/${currentAdmin.id}`}>
-          <Text> Mis establecimientos </Text>
+          <Text> Establecimientos </Text>
         </Link>
         <Link to={`/admin/${currentAdmin.id}`}>
-          <Text> Reservas </Text>
+          <Text> Estadísticas </Text>
         </Link>
         <Link to={`/admin/${currentAdmin.id}`}>
           <Text> Configuración </Text>
