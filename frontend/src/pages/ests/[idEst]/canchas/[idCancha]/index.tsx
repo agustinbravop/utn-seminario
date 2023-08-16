@@ -64,7 +64,6 @@ export default function CourtInfoPage() {
   });
 
   const handleEliminar = () => {
-    console.log("hola");
     mutateDelete();
     onClose();
   };
@@ -75,22 +74,12 @@ export default function CourtInfoPage() {
 
   return (
     <div>
-      <SubMenu />
-      <Heading
-        size="md"
-        fontSize="26px"
-        textAlign="left"
-        marginLeft="16%"
-        marginTop="20px"
-      >
-        {" "}
-        Información de {data?.nombre}{" "}
-      </Heading>
+      <SubMenu canchas={true} nombreCancha= { `: ${data.nombre}`} />
       <HStack
         marginRight="16%"
         marginLeft="16%"
         marginBottom="30px"
-        marginTop="7px"
+        marginTop="0px"
       >
         <Text>
           Esta es la información que se muestra al usuario de su cancha.

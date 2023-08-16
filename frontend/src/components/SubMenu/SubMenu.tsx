@@ -9,8 +9,8 @@ import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import Alerta from "../../components/Alerta/Alerta";
 import { Link } from "react-router-dom";
 
-export default function SubMenu() {
-  const { idEst } = useParams();
+export default function SubMenu( { canchas, nombreCancha }: { canchas: boolean; nombreCancha:string } ) {
+  const { idEst, idCancha } = useParams();
   const location = useLocation();
   const {
     data: establecimientoData,
@@ -36,11 +36,28 @@ export default function SubMenu() {
       ) : (
         <Heading textAlign="center" paddingBottom="7" mt="40px">
           {" "}
-          {establecimientoData.nombre}{" "}
+          {establecimientoData.nombre}{" "} {nombreCancha}
         </Heading>
       )}
       <HStack gap="30px" marginLeft="16%" marginTop="18px" marginBottom="30px">
-        <Link to={`/ests/${establecimientoData?.id}`}>
+
+      {canchas ? (
+          <>
+            <Link to={`/ests/${establecimientoData?.id}/canchas/${idCancha}`}>
+              <Text
+                textDecoration={sub ? "underline" : "none"}
+                textDecorationThickness="3px"
+                marginBottom="0px"
+                textUnderlineOffset="7px"
+              >
+                {" "}
+                Información{" "}
+              </Text>
+          </Link>
+          </>
+        ) : (
+          <>
+          <Link to={`/ests/${establecimientoData?.id}`}>
           <Text
             textDecoration={sub ? "underline" : "none"}
             textDecorationThickness="3px"
@@ -66,6 +83,9 @@ export default function SubMenu() {
         <Link to={`/establecimiento/${establecimientoData?.id}/canchas`}>
           Reservas
         </Link>
+          </>
+        )}
+    
       </HStack>
     </>
   );

@@ -204,6 +204,7 @@ function NuevaCancha() {
   const last = methods.getValues("disponibilidades").length - 1;
   const lastFieldIndex = fields.length - 1;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
