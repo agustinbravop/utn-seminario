@@ -187,7 +187,7 @@ function NuevaCancha() {
       disciplina: "-",
       horaInicio: "-",
       horaFin: "",
-      minutosReserva: null,
+      minutosReserva: undefined,
       precioReserva: null,
       precioSenia: null,
       dias: [],
