@@ -21,6 +21,16 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
+import { GrAddCircle } from "react-icons/gr";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteCanchaByID, getCanchaByID } from "@/utils/api/canchas";
@@ -95,7 +105,7 @@ export default function CourtInfoPage() {
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>
           <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
-            Eliminar
+            Eliminar 
           </Button>
         </HStack>
       </HStack>
@@ -150,6 +160,46 @@ export default function CourtInfoPage() {
                       habilitada
                     </Text>
                   </Box>
+
+                  <Box>
+                  <Heading size="xs" textTransform="uppercase">
+                      Disponibilidades
+                    </Heading>
+                  <TableContainer paddingTop="10px" paddingBottom="20px">
+                 <Table variant="simple" size="sm">
+                   <Thead backgroundColor="lightgray">
+                     <Tr>
+                       <Th>disciplina</Th>
+                       <Th>horario</Th>
+                       <Th>precio</Th>
+                       <Th> dias </Th>
+                     </Tr>
+                   </Thead>
+                   <Tbody>
+                     {data.disponibilidades.map((d, index) =>
+                         <Tr>
+                           <Td> {d.disciplina} </Td>
+                           <Td> {d.horaInicio}- {d.horaFin} </Td>
+                           <Td>
+                             {" "}
+                             ${d.precioReserva}{" "}
+                           </Td>
+                           <Td>
+                             {" "}
+                             {d.dias.map((dia, index) => (
+                               <React.Fragment key={index}>
+                                 {dia}
+                                 {index !== d.dias.length - 1 && " - "}
+                               </React.Fragment>
+                             ))}{" "}
+                           </Td>
+                         </Tr>
+                     )}
+                   </Tbody>
+                 </Table>
+               </TableContainer>
+                  </Box>
+               
                 </Stack>
               </Box>
             </Box>
