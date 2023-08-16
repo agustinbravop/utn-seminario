@@ -1,5 +1,5 @@
-import { Button, type ButtonProps } from "@chakra-ui/react";
-import { type Control } from "react-hook-form";
+import { Button, ButtonProps } from "@chakra-ui/react";
+import { Control } from "react-hook-form";
 import { useFormState } from "react-hook-form";
 
 interface SubmitButtonProps extends ButtonProps {
@@ -16,7 +16,7 @@ interface SubmitButtonProps extends ButtonProps {
  *
  * https://chakra-ui.com/docs/components/button
  */
-export function SubmitButton(props: SubmitButtonProps) {
+export default function SubmitButton(props: SubmitButtonProps) {
   const { control, children, isLoading, ...rest } = props;
   const { isSubmitting } = useFormState({ control });
 

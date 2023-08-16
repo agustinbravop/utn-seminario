@@ -43,10 +43,11 @@ export default function EstablecimientosPage() {
     setFiltro(e.target.value);
   };
 
-  const { data, isLoading, isError } = useQuery<Establecimiento[]>(
-    ["establecimientos", currentAdmin?.id],
-    () => getEstablecimientosByAdminID(Number(currentAdmin?.id))
-  );
+  const { data, isLoading, isError } = useQuery<Establecimiento[]>({
+    queryKey: ["establecimientos", currentAdmin?.id],
+    queryFn: () => getEstablecimientosByAdminID(Number(currentAdmin?.id)),
+    initialData: [],
+  });
 
   if (!currentAdmin) {
     return <Navigate to="/login" />;
@@ -88,14 +89,16 @@ export default function EstablecimientosPage() {
           align="center"
         >
           <Text mb="0">
-            {data?.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
-            establecimientos
+            {data.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
+            establecimiento{data?.length === 1 || "s"}
           </Text>
-          <Link to="nuevoEstablecimiento">
-            <Button leftIcon={<Icon as={GrAddCircle} />}>
-              Agregar Establecimiento
-            </Button>
-          </Link>
+          {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
+            <Link to="nuevoEstablecimiento">
+              <Button leftIcon={<Icon as={GrAddCircle} />}>
+                Agregar Establecimiento
+              </Button>
+            </Link>
+          )}
         </HStack>
       </HStack>
       <HStack marginLeft="16%" marginRight="16%">

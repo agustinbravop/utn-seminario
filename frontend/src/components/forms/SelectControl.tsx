@@ -1,8 +1,7 @@
-import { Select, type SelectProps } from "@chakra-ui/react";
+import { Select, SelectProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import {
-  BaseFormControl,
-  type NoVariantBaseFormControlProps,
+import BaseFormControl, {
+  NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 interface SelectControlProps
@@ -14,7 +13,7 @@ interface SelectControlProps
  *
  * https://chakra-ui.com/docs/components/select
  */
-export function SelectControl(props: SelectControlProps) {
+export default function SelectControl(props: SelectControlProps) {
   const { name, control, icon, placeholder, variant, children, ...rest } =
     props;
   const { field } = useController({

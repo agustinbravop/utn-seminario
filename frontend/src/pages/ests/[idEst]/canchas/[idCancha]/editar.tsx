@@ -234,7 +234,6 @@ export default function EditCourtPage() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          // onSubmit={methods.handleSubmit((values) => mutate(values))}
           onSubmit={methods.handleSubmit(onOpen)}
           spacing="24px"
           width="400px"

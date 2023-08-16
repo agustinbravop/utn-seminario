@@ -3,15 +3,14 @@ import {
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
-  type NumberInputProps,
+  NumberInputProps,
   NumberInputStepper,
   InputGroup,
   FormLabel,
 } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import {
-  BaseFormControl,
-  type NoVariantBaseFormControlProps,
+import BaseFormControl, {
+  NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 interface NumberInputControlProps
@@ -29,7 +28,7 @@ interface NumberInputControlProps
  *
  * https://chakra-ui.com/docs/components/number-input
  */
-export function NumberInputControl(props: NumberInputControlProps) {
+export default function NumberInputControl(props: NumberInputControlProps) {
   const {
     name,
     control,
