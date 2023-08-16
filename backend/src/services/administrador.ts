@@ -14,7 +14,6 @@ export class AdministradorServiceImpl implements AdministradorService {
   }
   
   async modificar(admin: Administrador): Promise<Administrador> {
-    console.log(admin)
     return await this.repo.modificarAdmin(admin);
   }
 

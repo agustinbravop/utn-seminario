@@ -17,12 +17,11 @@ export class AdministradorHandler {
     };
   }
 
-  putAdmin(): RequestHandler {
+  patchAdmin(): RequestHandler {
     return async (req, res) => {
       const admin: Administrador = {
         ...res.locals.body,
       };
-
       admin.id = Number(req.params["idAdmin"])
 
       const adminActualizado = await this.service.modificar(admin);

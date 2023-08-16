@@ -12,11 +12,11 @@ export function administradoresRouter(
 
   router.get("/:id", handler.getAdministradorByID());
 
-  router.put(
-    "/:idAdmin/perfil",
+  router.patch(
+    "/:idAdmin",
     authMiddle.isAdmin(),
-    validateBody(administradorSchema),
-    handler.putAdmin()
+    validateBody(administradorSchema.deepPartial()),
+    handler.patchAdmin()
   );
 
   return router;

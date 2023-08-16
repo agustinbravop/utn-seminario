@@ -55,10 +55,7 @@ export function createRouter(prismaClient: PrismaClient): Router {
 
   router.use(
     "/establecimientos",
-    establecimientosRouter(estHandler, authMiddle, upload)
-  );
-  router.use(
-    "/establecimientos",
+    establecimientosRouter(estHandler, authMiddle, upload),
     canchasRouter(canchaHandler, estHandler, authMiddle, upload)
   );
 
