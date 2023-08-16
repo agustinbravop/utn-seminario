@@ -58,9 +58,9 @@ function Nav() {
           width={177}
         />
       </Link>
-      <HStack marginLeft="150px" marginRight="auto" spacing={10}>
+      <HStack marginLeft="auto" marginRight="auto" spacing={10}>
         <Link to={`/admin/${currentAdmin.id}`}>
-          <Text> Mis Establecimientos </Text>
+          <Text> Establecimientos </Text>
         </Link>
         <Link to={`/admin/${currentAdmin.id}`}>
           <Text> Estadísticas </Text>
