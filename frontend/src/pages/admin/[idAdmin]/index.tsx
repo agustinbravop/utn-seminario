@@ -67,7 +67,7 @@ export default function EstablecimientosPage() {
         marginBottom="50px"
         marginTop="20px"
       >
-        <InputGroup width="24%">
+        <InputGroup width="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>

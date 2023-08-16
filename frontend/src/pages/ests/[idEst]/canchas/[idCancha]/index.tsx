@@ -165,9 +165,13 @@ export default function CourtInfoPage() {
                   <Heading size="xs" textTransform="uppercase">
                       Disponibilidades
                     </Heading>
-                  <TableContainer paddingTop="10px" paddingBottom="20px">
+                    <Text fontSize="sm">
+                      Estas son las disponibilidades de la cancha.
+                    </Text>
+
+                  <TableContainer paddingTop="15px" paddingBottom="20px">
                  <Table variant="simple" size="sm">
-                   <Thead backgroundColor="lightgray">
+                   <Thead >
                      <Tr>
                        <Th>disciplina</Th>
                        <Th>horario</Th>
