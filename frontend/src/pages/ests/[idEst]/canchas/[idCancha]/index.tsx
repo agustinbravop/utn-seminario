@@ -92,7 +92,7 @@ export default function CourtInfoPage() {
         marginTop="0px"
       >
         <Text>
-          Esta es la información que se muestra al usuario de su cancha.
+          Esta es la información que se muestra al usuario de su cancha. 
         </Text>
         <HStack
           marginLeft="auto"
@@ -119,14 +119,14 @@ export default function CourtInfoPage() {
           width="56%"
         >
           <CardBody height="100%" marginTop="0px">
-            <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
+            <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%" width="100%">
               <Box>
                 <Image
                   src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
-                  width="1000px"
+                  width="400px"
                   height="400px"
-                  objectFit="cover"
-                  borderRadius="10px"
+                  objectFit="cover" 
+                  borderRadius="10px" 
                 />
               </Box>
 
