@@ -53,10 +53,6 @@ export default function EstablecimientosPage() {
     return <Navigate to="/login" />;
   }
 
-  if (data?.length > currentAdmin.suscripcion.limiteEstablecimientos) {
-    return <Navigate to="./selectEstab" />;
-  }
-
   const establecimientosFiltrados = data?.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
@@ -103,9 +99,6 @@ export default function EstablecimientosPage() {
               </Button>
             </Link>
           )}
-          <Link to="editSuscripcion">
-            <Button>¡Actualizar Suscripción!</Button>
-          </Link>
         </HStack>
       </HStack>
       <HStack marginLeft="16%" marginRight="16%">

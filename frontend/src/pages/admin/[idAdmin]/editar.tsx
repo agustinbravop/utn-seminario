@@ -28,6 +28,7 @@ import { ApiError } from "@/utils/api";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 type FormState = Administrador;
 
@@ -36,7 +37,9 @@ const validationSchema = Yup.object({
   nombre: Yup.string().required("Debe ingresar su nombre"),
   apellido: Yup.string().required("Debe ingresar su apellido"),
   telefono: Yup.string().required("Debe ingresar su telefono"),
-  correo: Yup.string().email("Formato erroneo").required("Debe tener un correo"),
+  correo: Yup.string()
+    .email("Formato erroneo")
+    .required("Debe tener un correo"),
   usuario: Yup.string().required("Debe ingresar un nombre de usuario"),
   tarjeta: Yup.object({
     id: Yup.number(),
@@ -59,7 +62,6 @@ export default function PerfilPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
-
   const { data, isLoading } = useQuery<Administrador>({
     queryKey: ["administrador", idAdmin],
     queryFn: () => getAdminById(Number(idAdmin)),
@@ -81,7 +83,7 @@ export default function PerfilPage() {
         status: "success",
         isClosable: true,
       });
-      navigate(-1)
+      navigate(-1);
     },
     onError: () => {
       toast({
@@ -112,7 +114,7 @@ export default function PerfilPage() {
           <CardBody marginTop="28px">
             <FormProvider {...methods}>
               <Stack
-                divider={<StackDivider />} 
+                divider={<StackDivider />}
                 spacing="2.5"
                 marginTop="-2rem"
                 as="form"
@@ -122,54 +124,41 @@ export default function PerfilPage() {
                   <Heading size="xs" textTransform="uppercase">
                     Nombre
                   </Heading>
-                  <InputControl
-                    isRequired
-                    name="nombre"
-                  />
+                  <InputControl isRequired name="nombre" />
                   <br />
-                  <InputControl
-                    isRequired
-                    name="apellido"
-                  />
+                  <InputControl isRequired name="apellido" />
                 </Box>
                 <Box>
                   <Heading size="xs" textTransform="uppercase">
                     usuario
-                  </Heading> 
-                  <InputControl
-                    isRequired
-                    name="usuario"
-                  />
+                  </Heading>
+                  <InputControl isRequired name="usuario" />
                 </Box>
                 <Box>
                   <Heading size="xs" textTransform="uppercase">
                     correo
                   </Heading>
-                  <InputControl
-                    isRequired
-                    name="correo"
-                  />
+                  <InputControl isRequired name="correo" />
                 </Box>
                 <Box>
                   <Heading size="xs" textTransform="uppercase">
                     telefono
                   </Heading>
-                  <InputControl
-                    isRequired
-                    name="telefono"
-                  />
+                  <InputControl isRequired name="telefono" />
                 </Box>
                 <SubmitButton isLoading={isLoading}>
                   Guardar cambios
                 </SubmitButton>
+                <Link to="editSuscripcion">
+                  <Button>¡Actualizar Suscripción!</Button>
+                </Link>
                 <Modal isOpen={isOpen} onClose={onClose} isCentered>
                   <ModalOverlay />
                   <ModalContent>
                     <ModalHeader>Modificar</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                      ¿Está seguro de modificar la información de su
-                      perfil?
+                      ¿Está seguro de modificar la información de su perfil?
                     </ModalBody>
                     <ModalFooter>
                       <Button colorScheme="gray" mr={3} onClick={onClose}>

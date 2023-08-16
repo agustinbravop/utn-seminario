@@ -29,37 +29,38 @@ export default function SelectEstab() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
 
+  if (!currentAdmin) {
+    navigate("/login");
+    return;
+  }
+
   const { data } = useQuery<Establecimiento[]>(
     ["establecimientos", currentAdmin?.id],
     () => getEstablecimientosByAdminID(Number(currentAdmin?.id))
   );
 
-  const [selected, setSelected] = useState<Establecimiento[]>([]);
-
-  const handleEstado = (est: Establecimiento, b: boolean) => {
-    !b
-      ? setSelected([...selected, est])
-      : setSelected(selected.filter((item) => item !== est));
-    console.log(selected);
+  // array de los ids de los establecimientos a conservar. Los no seleccionados se eliminan.
+  const [selected, setSelected] = useState<number[]>([]);
+  const handleEstablecimientoToggle = (idEst: number) => {
+    if (selected.includes(idEst)) {
+      setSelected(selected.filter((id) => id !== idEst));
+    } else {
+      setSelected([...selected, idEst]);
+    }
   };
 
   const establecimientos = data?.map((e) => {
-    const [estado, setEstado] = useState(false);
-
-    const handleClick = (est: Establecimiento) => {
-      handleEstado(est, estado);
-      setEstado(!estado);
-    };
-
+    const seleccionado = selected.includes(e.id);
     return (
       <Card
+        key={e.id}
         width="300px"
         height="450px"
-        variant={estado ? "filled" : "elevated"}
+        variant={seleccionado ? "filled" : "elevated"}
       >
         <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
           <Image
-            src={!(e.urlImagen === null) ? e.urlImagen : defImage}
+            src={e.urlImagen || defImage}
             borderTopRadius="lg"
             alt={`Imagen del establecimiento ${e.nombre}`}
             objectFit="cover"
@@ -83,15 +84,11 @@ export default function SelectEstab() {
         </CardBody>
         <CardFooter display="flex" justify="center">
           <HStack spacing={5}>
-            <Link to={`/ests/${e.id}`}>
-              <Button leftIcon={<InfoIcon />}>Info</Button>
-            </Link>
-
             <Button
-              colorScheme={estado ? "red" : "orange"}
-              onClick={() => handleClick(e)}
+              colorScheme={seleccionado ? "red" : "orange"}
+              onClick={() => handleEstablecimientoToggle(e.id)}
             >
-              {estado ? "Quitar" : "Seleccionar"}
+              {seleccionado ? "Quitar" : "Seleccionar"}
             </Button>
           </HStack>
         </CardFooter>
@@ -100,20 +97,16 @@ export default function SelectEstab() {
   });
 
   const handleSubmit = async () => {
-    const promesasDelete: Promise<void>[] =
-      data?.map((e) => {
-        if (!selected.includes(e)) {
-          return deleteEstablecimientoByID(e.id);
-        }
-        return Promise.resolve();
-      }) || [];
+    const eliminados = data?.filter((e) => !selected.includes(e.id)) || [];
+    if (selected.length > currentAdmin.suscripcion.limiteEstablecimientos) {
+    }
 
-    await Promise.all(promesasDelete);
-
-    navigate(`/admin/${currentAdmin?.id}`);
+    Promise.all(
+      eliminados.map((e) => deleteEstablecimientoByID(e.id)) || []
+    ).then(() => navigate(`/admin/${currentAdmin?.id}`));
   };
 
-  const maximo = currentAdmin?.suscripcion.limiteEstablecimientos;
+  const maximo = currentAdmin?.suscripcion.limiteEstablecimientos || 0;
 
   return (
     <>
@@ -124,7 +117,7 @@ export default function SelectEstab() {
       <HStack display="flex" flexWrap="wrap" justifyContent="center">
         {establecimientos}
       </HStack>
-      {selected.length > 0 && selected.length < maximo + 1 ? (
+      {selected.length > 0 && selected.length < maximo + 1 && (
         <Button
           justifyContent="center"
           textAlign="center"
@@ -132,7 +125,7 @@ export default function SelectEstab() {
         >
           Continuar
         </Button>
-      ) : null}
+      )}
     </>
   );
 }

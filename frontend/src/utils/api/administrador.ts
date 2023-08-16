@@ -1,22 +1,27 @@
-import { Administrador, Suscripcion } from "@/models";
-import { API_URL, get, put } from ".";
+import { Administrador } from "@/models";
+import { API_URL, get, patch, put } from ".";
 
 export type ModificarAdmin = Omit<Administrador, "suscripcion" | "tarjeta">;
 
 export async function getAdminById(id: number): Promise<Administrador> {
-  return get(`${API_URL}/administradores/${id}`)
+  return get(`${API_URL}/administradores/${id}`);
 }
 
 export async function editarPerfil(
   admin: ModificarAdmin
 ): Promise<Administrador> {
-  return put<Administrador>(`${API_URL}/administradores/${admin.id}/perfil`, admin);
+  return put<Administrador>(
+    `${API_URL}/administradores/${admin.id}`,
+    admin
+  );
 }
 
 export async function cambiarSuscripcion(
-  admin: Omit<Administrador, "tarjeta">,
-  nuevaSus: Suscripcion
+  idAdmin: number,
+  idSuscripcion: number
 ): Promise<Administrador> {
-  admin.suscripcion = nuevaSus
-  return put<Administrador>(`${API_URL}/administradores/${admin.id}/perfil`, admin);
+  return patch<Administrador>(`${API_URL}/administradores/${idAdmin}`, {
+    id: idAdmin,
+    idSuscripcion,
+  });
 }

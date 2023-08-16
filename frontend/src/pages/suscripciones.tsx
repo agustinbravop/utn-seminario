@@ -34,6 +34,8 @@ export default function SuscripcionesPage() {
   if (isError) {
     cards = <p>error!</p>;
   }
+  console.log(data);
+  
 
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
