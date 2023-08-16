@@ -86,6 +86,7 @@ export default function SelectEstab() {
           <HStack spacing={5}>
             <Button
               colorScheme={seleccionado ? "red" : "orange"}
+              variant={seleccionado? "solid" : "outline"}
               onClick={() => handleEstablecimientoToggle(e.id)}
             >
               {seleccionado ? "Quitar" : "Seleccionar"}
@@ -110,10 +111,11 @@ export default function SelectEstab() {
 
   return (
     <>
-      <Heading textAlign="center">
-        Seleccione los establecimientos que desea
+      <Heading textAlign="center" as="h1">
+        Seleccione los establecimientos que desea conservar
       </Heading>
       <br />
+      <Text color={(selected.length > maximo || selected.length === 0)? "red" : "black"}> {selected.length} / {maximo} </Text>
       <HStack display="flex" flexWrap="wrap" justifyContent="center">
         {establecimientos}
       </HStack>

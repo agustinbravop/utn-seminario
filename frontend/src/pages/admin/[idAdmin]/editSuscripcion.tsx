@@ -25,7 +25,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { cambiarSuscripcion } from "@/utils/api/administrador";
 import { ApiError } from "@/utils/api";
-import { FormProvider } from "react-hook-form";
 import { SubmitButton } from "@/components/forms";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
@@ -122,7 +121,8 @@ export default function SuscripcionesPage() {
   return (
     <>
       <Box marginBottom="110px" marginLeft="12%">
-        <Heading size="md">Elija una nueva suscripción</Heading>
+        <Text fontSize="4xl">Seleccione el plan al que mejor se adapte</Text>
+        <Text fontSize="2xl">Puedes adaptar tu suscripción en función de tus necesidades. Cambia de plan, ajusta características y elige lo que mejor funcione para ti. Consulta los detalles y términos para obtener más información</Text>
       </Box>
       <HStack justifyContent="center" gap="95px" my="50px" as="form">
         {cards}

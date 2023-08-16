@@ -35,6 +35,7 @@ export default function PerfilPage() {
             <Link to="../editar">
               <Button leftIcon={<EditIcon />}>Editar </Button>
             </Link>
+            
           </CardHeader>
           <CardBody marginTop="28px">
             <Stack divider={<StackDivider />} spacing="2.5" marginTop="-2rem">
@@ -81,6 +82,9 @@ export default function PerfilPage() {
             </Stack>
           </CardBody>
         </Card>
+            <Link to="editSuscripcion">
+              <Button>Actualizar Suscripcion</Button> 
+            </Link>
       </VStack>
     </>
   );
