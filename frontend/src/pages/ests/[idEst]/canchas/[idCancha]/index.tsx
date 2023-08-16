@@ -123,7 +123,7 @@ export default function CourtInfoPage() {
               <Box>
                 <Image
                   src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
-                  width="400px"
+                  width="1000px"
                   height="400px"
                   objectFit="cover" 
                   borderRadius="10px" 

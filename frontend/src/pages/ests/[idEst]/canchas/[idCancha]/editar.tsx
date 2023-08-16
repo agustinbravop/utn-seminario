@@ -198,7 +198,7 @@ export default function EditCourtPage() {
     disponibilidades.splice(index, 1);
     methods.setValue("disponibilidades", disponibilidades);
   };
-  const last = disponibilidadesArray.length - 1;
+  const last = disponibilidadesArray.length ;
   const lastFieldIndex = fields.length - 1;
   const {
     isOpen: formIsOpen,
@@ -208,7 +208,7 @@ export default function EditCourtPage() {
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha
+        Editar Cancha 45
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -277,7 +277,7 @@ export default function EditCourtPage() {
               </VStack>
             </VStack>
             <>
-              {disponibilidadesArray.length > 1 && (
+              {disponibilidadesArray.length > 0 && (
                 <TableContainer paddingTop="20px" paddingBottom="20px">
                   <Table variant="simple" size="sm">
                     <Thead backgroundColor="lightgray">
