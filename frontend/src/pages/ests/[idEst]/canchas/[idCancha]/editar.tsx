@@ -185,13 +185,13 @@ export default function EditCourtPage() {
       disciplina: "-",
       horaInicio: "-",
       horaFin: "",
-      minutosReserva: undefined,
-      precioReserva: null,
-      precioSenia: null,
+      minutosReserva: 0, 
+      precioReserva: 0,
+      precioSenia: undefined,
       dias: [],
     });
     //methods.reset();
-    onClose(); 
+    onClose();  
   };
 
   const disponibilidadesArray = methods.getValues("disponibilidades") || [];
@@ -204,32 +204,35 @@ export default function EditCourtPage() {
 
   useEffect(() => {
     console.log('Nuevo valor del array:', disponibilidadesArray);
+    console.log('Longitud actual:', disponibilidadesArray.length)
   }, [disponibilidadesArray]);
 
-  const last = disponibilidadesArray.length -1;
-  const lastFieldIndex = fields.length - 1;
-  const {
-    isOpen: formIsOpen,
-    onOpen: formOnOpen,
-    onClose: formOnClose,
-  } = useDisclosure();
 
   useEffect(() => {
     append({
       disciplina: "-",
       horaInicio: "-",
       horaFin: "",
-      minutosReserva: undefined,
-      precioReserva: null,
-      precioSenia: null,
+      minutosReserva: 0,
+      precioReserva: 0,
+      precioSenia: undefined,
       dias: [],
     });
-  }, []);
+  }, [methods, data]);
+
+  const last = disponibilidadesArray.length -1;
+  const lastFieldIndex = fields.length-1;
+  const {
+    isOpen: formIsOpen,
+    onOpen: formOnOpen,
+    onClose: formOnClose,
+  } = useDisclosure();
+
 
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha 
+        Editar Cancha
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -310,11 +313,11 @@ export default function EditCourtPage() {
                         <Th>p. reserva/seña</Th>
                         <Th> dias </Th>
                         <Th> Eliminar </Th>
-                      </Tr>
+                      </Tr> 
                     </Thead>
                     <Tbody>
                       {methods.getValues("disponibilidades").map((d, index) =>
-                        index < (last + 1) ? (
+                        index < disponibilidadesArray.length -1 ? (
                           <Tr>
                             <Td> {d.disciplina} </Td>
                             <Td> {d.horaInicio} </Td>
@@ -392,9 +395,11 @@ export default function EditCourtPage() {
             <ModalContent>
               <ModalHeader>Agregar disponibilidad</ModalHeader>
               <ModalBody>
-                {fields.length > 0 && (
+                
+                {(
             <>
               <HStack width="600px" py="10px">
+
                 <SelectControl
                   placeholder="Elegir horario"
                   label="Horario de Inicio"
