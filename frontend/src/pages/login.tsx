@@ -23,7 +23,7 @@ const validationSchema = Yup.object({
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useCurrentAdmin();
-  const { methods, mutate, isLoading, isError } = useMutationForm<
+  const { methods, mutate, isLoading, isError} = useMutationForm<
     Administrador,
     ApiError,
     LoginState
@@ -33,9 +33,11 @@ export default function LoginPage() {
     mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
     onSuccess: (admin) => navigate(`/admin/${admin.id}`),
   });
-
+  
+ 
   return (
     <>
+      
       <Heading
         textAlign="center"
         size="2xl"
@@ -77,3 +79,4 @@ export default function LoginPage() {
     </>
   );
 }
+  

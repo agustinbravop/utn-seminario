@@ -1,14 +1,13 @@
 import {
   PinInput,
   PinInputField,
-  type PinInputProps,
+  PinInputProps,
   Stack,
-  type StackProps,
+  StackProps,
 } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
-import {
-  BaseFormControl,
-  type NoVariantBaseFormControlProps,
+import BaseFormControl, {
+  NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
 interface PinInputControlProps
@@ -30,7 +29,7 @@ interface PinInputControlProps
  *
  * https://chakra-ui.com/docs/components/pin-input
  */
-export function PinInputControl(props: PinInputControlProps) {
+export default function PinInputControl(props: PinInputControlProps) {
   const {
     name,
     control,

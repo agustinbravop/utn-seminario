@@ -4,9 +4,19 @@ import { useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Alert,
+  Checkbox,
   Container,
+  HStack,
   Heading,
+  Icon,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -30,11 +40,13 @@ import {
   modificarCancha,
   deleteCanchaByID,
 } from "@/utils/api/canchas";
-import { InputControl, SubmitButton, SwitchControl } from "@/components/forms";
-import { FormProvider, useForm } from "react-hook-form";
+import { CheckboxGroupControl, InputControl, SelectControl, SubmitButton, SwitchControl } from "@/components/forms";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { ApiError } from "@/utils/api";
+import { GrAddCircle } from "react-icons/gr";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -53,50 +65,40 @@ const validationSchema = Yup.object({
   ),
 });
 
-// const horas = [
-//   { value: "option1", label: "1:00hs" },
-//   { value: "option2", label: "2:00hs" },
-//   { value: "option3", label: "3:00hs" },
-//   { value: "option4", label: "4:00hs" },
-//   { value: "option5", label: "5:00hs" },
-//   { value: "option6", label: "6:00hs" },
-//   { value: "option7", label: "7:00hs" },
-//   { value: "option8", label: "8:00hs" },
-//   { value: "option9", label: "9:00hs" },
-//   { value: "option10", label: "10:00hs" },
-//   { value: "option11", label: "11:00hs" },
-//   { value: "option12", label: "12:00hs" },
-//   { value: "option13", label: "13:00hs" },
-//   { value: "option14", label: "14:00hs" },
-//   { value: "option15", label: "15:00hs" },
-//   { value: "option16", label: "16:00hs" },
-//   { value: "option17", label: "17:00hs" },
-//   { value: "option18", label: "18:00hs" },
-//   { value: "option19", label: "19:00hs" },
-//   { value: "option20", label: "20:00hs" },
-//   { value: "option21", label: "21:00hs" },
-//   { value: "option22", label: "22:00hs" },
-//   { value: "option23", label: "23:00hs" },
-//   { value: "option24", label: "24:00hs" },
-// ];
+const disciplinas = [
+  "Basket",
+  "Futbol",
+  "Tenis",
+  "Padel",
+  "Hokey",
+  "Ping-Pong",
+];
 
-// const disciplinas = [
-//   { value: "futbol", label: "Fútbol" },
-//   { value: "basquetbol", label: "Básquetbol" },
-//   { value: "tenis", label: "Tenis" },
-//   { value: "natacion", label: "Natación" },
-//   { value: "atletismo", label: "Atletismo" },
-//   { value: "gimnasia", label: "Gimnasia" },
-//   { value: "volleyball", label: "Volleyball" },
-//   { value: "boxeo", label: "Boxeo" },
-//   { value: "karate", label: "Karate" },
-//   { value: "hockey", label: "Hockey" },
-//   { value: "rugby", label: "Rugby" },
-//   { value: "padel", label: "Pádel" },
-//   { value: "squash", label: "Squash" },
-//   { value: "beisbol", label: "Béisbol" },
-//   { value: "softbol", label: "Softbol" },
-// ];
+const horas = [
+  "1:00",
+  "2:00",
+  "3:00",
+  "4:00",
+  "5:00",
+  "6:00",
+  "7:00",
+  "8:00",
+  "9:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00",
+  "19:00",
+  "20:00",
+  "21:00",
+  "22:00",
+  "23:00",
+];
 
 export default function EditCourtPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -173,20 +175,65 @@ export default function EditCourtPage() {
     },
   });
 
-  const handleEliminar = () => {
-    mutateDelete();
-    onClose();
+  const { fields, append } = useFieldArray({
+    name: "disponibilidades",
+    control: methods.control,
+  });
+
+  const agregarHorario = () => {
+    append({
+      disciplina: "-",
+      horaInicio: "-",
+      horaFin: "",
+      minutosReserva: undefined,
+      precioReserva: null,
+      precioSenia: null,
+      dias: [],
+    });
+    //methods.reset();
+    onClose(); 
   };
+
+  const disponibilidadesArray = methods.getValues("disponibilidades") || [];
+
+  const handleDelete = (index: number) => {
+    const disponibilidades = methods.getValues("disponibilidades");
+    disponibilidades.splice(index, 1);
+    methods.setValue("disponibilidades", disponibilidades);
+  };
+
+  useEffect(() => {
+    console.log('Nuevo valor del array:', disponibilidadesArray);
+  }, [disponibilidadesArray]);
+
+  const last = disponibilidadesArray.length -1;
+  const lastFieldIndex = fields.length - 1;
+  const {
+    isOpen: formIsOpen,
+    onOpen: formOnOpen,
+    onClose: formOnClose,
+  } = useDisclosure();
+
+  useEffect(() => {
+    append({
+      disciplina: "-",
+      horaInicio: "-",
+      horaFin: "",
+      minutosReserva: undefined,
+      precioReserva: null,
+      precioSenia: null,
+      dias: [],
+    });
+  }, []);
 
   return (
     <>
       <Heading m="40px" textAlign="center">
-        Editar Cancha
+        Editar Cancha 
       </Heading>
       <FormProvider {...methods}>
         <VStack
           as="form"
-          // onSubmit={methods.handleSubmit((values) => mutate(values))}
           onSubmit={methods.handleSubmit(onOpen)}
           spacing="24px"
           width="400px"
@@ -231,111 +278,80 @@ export default function EditCourtPage() {
               label="¿Esta habilitada?"
             ></SwitchControl>
           </FormControl>
-          <Heading size="md" mt="20px">
-            Disponibilidades horarias
-          </Heading>
-          <Text>
-            En qué rangos horarios la cancha estará disponible y para qué
-            disciplinas.
-          </Text>
-          <Button> Agregar disponibilidad +</Button>
-          {/* <Button> Agregar disponibilidad +</Button>
-          <VStack
-            spacing="4"
-            width="900px"
-            justifyContent="center"
-            margin="20px auto"
-          >
-            <HStack width="600px">
-              <FormControl
-                variant="floating"
-                id="disciplinas"
-                isRequired
-                onChange={handleChange}
-              >
-                <Select name="disciplinas" placeholder="Seleccione una opcion">
-                  {disciplinas.map((disciplina) => (
-                    <option key={disciplina.value} value={disciplina.value}>
-                      {disciplina.label}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>Disciplina</FormLabel>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="duracionreserva"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input placeholder=" " name="duracionreserva" />
-                <FormLabel>Duracion de la reserva</FormLabel>
-              </FormControl>
-            </HStack>
-            <HStack width="600px">
-              <FormControl
-                variant="floating"
-                id="hora-inicio"
-                isRequired
-                onChange={handleChange}
-              >
-                <Select placeholder="Seleccione una opcion">
-                  {horas.map((hora) => (
-                    <option key={hora.value} value={hora.value}>
-                      {hora.label}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>Hora inicio</FormLabel>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="reserva"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input placeholder=" " name="reserva" />
-                <FormLabel>Precio de la reserva</FormLabel>
-              </FormControl>
-            </HStack>
 
-            <HStack width="600px">
-              <FormControl
-                variant="floating"
-                id="hora-fin"
-                isRequired
-                onChange={handleChange}
-              >
-                <Select placeholder="Seleccione una opcion">
-                  {horas.map((hora) => (
-                    <option key={hora.value} value={hora.value}>
-                      {hora.label}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>Hora fin</FormLabel>
-              </FormControl>
-              <FormControl
-                variant="floating"
-                id="precioseña"
-                isRequired
-                onChange={handleChange}
-              >
-                <Input placeholder=" " name="precioseña" />
-                <FormLabel>Precio de la seña</FormLabel>
-              </FormControl>
-            </HStack>
+          <VStack width="1100px" align="center">
+            <VStack marginTop="20px" align="start" width="100%" px="281px">
+              <Text fontWeight="bold">Disponibilidad horaria</Text>
+              <Text>
+                En qué rangos horarios la cancha estará disponible y para qué
+                disciplinas.
+              </Text>
+              <VStack>
+                <Button
+                  leftIcon={<Icon as={GrAddCircle} />}
+                  onClick={formOnOpen}
+                >
+                  {" "}
+                  Agregar disponibilidad{" "}
+                </Button>
+              </VStack>
+            </VStack>
+            <>
+              {disponibilidadesArray.length > 0 && (
+                <TableContainer paddingTop="20px" paddingBottom="20px">
+                  <Table variant="simple" size="sm">
+                    <Thead backgroundColor="lightgray">
+                      <Tr>
+                        <Th>disciplina</Th>
+                        <Th>hora inicio</Th>
+                        <Th>hora fin</Th>
+                        <Th>reserva (min.)</Th>
+                        <Th>p. reserva/seña</Th>
+                        <Th> dias </Th>
+                        <Th> Eliminar </Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {methods.getValues("disponibilidades").map((d, index) =>
+                        index < (last + 1) ? (
+                          <Tr>
+                            <Td> {d.disciplina} </Td>
+                            <Td> {d.horaInicio} </Td>
+                            <Td> {d.horaFin} </Td>
+                            <Td> {d.minutosReserva} </Td>
+                            <Td>
+                              {" "}
+                              {d.precioReserva}/{d.precioSenia}{" "}
+                            </Td>
+                            <Td>
+                              {" "}
+                              {d.dias.map((dia, index) => (
+                                <React.Fragment key={index}>
+                                  {dia}
+                                  {index !== d.dias.length - 1 && " - "}
+                                </React.Fragment>
+                              ))}{" "}
+                            </Td>
+                            <Td>
+                              {" "}
+                              <Button
+                                type="button"
+                                onClick={() => handleDelete(index)}
+                              >
+                                {" "}
+                                <DeleteIcon />{" "}
+                              </Button>{" "}
+                            </Td>
+                          </Tr>
+                        ) : null
+                      )}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              )}
+            </>
           </VStack>
-          <p> Seleccionar los días para la disponibilidad.</p>
-          <HStack spacing={1} justify="center">
-            <SelectableButton children="Lunes" />
-            <SelectableButton children="Martes" />
-            <SelectableButton children="Miercoles" />
-            <SelectableButton children="Jueves" />
-            <SelectableButton children="Viernes" />
-            <SelectableButton children="Sabado" />
-            <SelectableButton children="Domingo" />
-          </HStack> */}
+
           <Container centerContent mt="20px">
             <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
             {isError && (
@@ -369,6 +385,108 @@ export default function EditCourtPage() {
             </ModalContent>
           </Modal>
         </VStack>
+
+        <Modal size="2xl" isOpen={formIsOpen} onClose={formOnClose} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Agregar disponibilidad</ModalHeader>
+              <ModalBody>
+                {fields.length > 0 && (
+            <>
+              <HStack width="600px" py="10px">
+                <SelectControl
+                  placeholder="Elegir horario"
+                  label="Horario de Inicio"
+                  name={`disponibilidades[${lastFieldIndex}].horaInicio`}
+                  isRequired
+                >
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </SelectControl>
+                <SelectControl
+                  placeholder="Elegir horario"
+                  label="Horario de Fin"
+                  name={`disponibilidades[${lastFieldIndex}].horaFin`}
+                  isRequired
+                >
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </SelectControl>
+              </HStack>
+              <HStack width="600px" py="10px">
+                <SelectControl
+                  placeholder="Seleccionar disciplina "
+                  label=""
+                  name={`disponibilidades[${lastFieldIndex}].disciplina`}
+                  isRequired
+                >
+                  {disciplinas.map((disciplina, i) => (
+                    <option key={i} value={disciplina}>
+                      {disciplina}
+                    </option>
+                  ))}
+                </SelectControl>
+                <InputControl
+                  isRequired
+                  placeholder=""
+                  name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
+                  type="number"
+                  label="Duración de la reserva (minutos)"
+                ></InputControl>
+              </HStack>
+              <HStack width="600px" py="10px">
+                <InputControl
+                  placeholder=""
+                  name={`disponibilidades[${lastFieldIndex}].precioReserva`}
+                  type="number"
+                  label="Precio de reserva"
+                  isRequired
+                ></InputControl>
+                <InputControl
+                  placeholder=""
+                  name={`disponibilidades[${lastFieldIndex}].precioSenia`}
+                  type="number"
+                  label="Seña de reserva"
+                ></InputControl>
+              </HStack>
+              <HStack py="10px" >
+                <CheckboxGroupControl
+                  name={`disponibilidades[${lastFieldIndex}].dias`}
+                >
+                  <HStack>
+                    <Checkbox value="Lunes">Lunes</Checkbox>
+                    <Checkbox value="Martes">Martes</Checkbox>
+                    <Checkbox value="Miércoles">Miércoles</Checkbox>
+                    <Checkbox value="Jueves">Jueves</Checkbox>
+                    <Checkbox value="Viernes">Viernes</Checkbox>
+                    <Checkbox value="Sábado">Sábado</Checkbox>
+                    <Checkbox value="Domingo">Domingo</Checkbox>
+                  </HStack>
+                </CheckboxGroupControl>
+              </HStack>
+            </>
+          )}
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="gray" mr={3} onClick={formOnClose}>
+                  Cancelar
+                </Button>
+                <Button
+                  colorScheme="blackAlpha"
+                  backgroundColor="black"
+                  onClick={agregarHorario}
+                >
+                  Aceptar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
       </FormProvider>
     </>
   );
