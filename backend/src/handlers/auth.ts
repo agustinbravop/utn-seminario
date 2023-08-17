@@ -5,6 +5,7 @@ import { AuthService } from "../services/auth.js";
 import { SuscripcionService } from "../services/suscripciones.js";
 import { z } from "zod";
 
+
 export const registrarAdminSchema = z.object({
   nombre: z.string().nonempty(),
   apellido: z.string().nonempty(),
@@ -38,7 +39,7 @@ export class AuthHandler {
   login(): RequestHandler {
     return async (_req, res) => {
       const loginReq: LoginReq = res.locals.body;
-
+     
       const token = await this.service.loginUsuario(
         loginReq.correoOUsuario,
         loginReq.clave
@@ -72,4 +73,14 @@ export class AuthHandler {
       res.status(201).json(adminCreado);
     };
   }
+
+  cambiarContrasenia():RequestHandler { 
+    return async (req: Request, res:Response)=> { 
+       const admin=req.body
+       const clave=req.body['claveNueva']
+      const administrador=await this.service.cambiarContrasenia(admin, clave) 
+      return res.status(200).json(administrador)
+    }
+  }
+
 }

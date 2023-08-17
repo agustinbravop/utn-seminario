@@ -15,6 +15,7 @@ export function authRouter(handler: AuthHandler): Router {
     validateBody(registrarAdminSchema),
     handler.register()
   );
+  router.put("/cambiarContrasenia", handler.cambiarContrasenia())
 
   return router;
 }

@@ -30,7 +30,7 @@ model cancha {
   descripcion       String           @db.VarChar
   habilitada        Boolean          @default(true)
   urlImagen         String?          @db.VarChar
-  idEstablecimiento Int
+  idEstablecimiento Int              
   eliminada         Boolean          @default(false)
   establecimiento   establecimiento  @relation(fields: [idEstablecimiento], references: [id], onDelete: NoAction, onUpdate: NoAction)
   disponibilidades  disponibilidad[]

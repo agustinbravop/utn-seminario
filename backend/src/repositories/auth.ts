@@ -11,11 +11,14 @@ import {
   UnauthorizedError,
 } from "../utils/apierrors.js";
 import { Rol } from "../services/auth.js";
+import { AdministradorClave } from "../utils/AdministradorClave.js";
+
 
 export type AdministradorConClave = {
   admin: Administrador;
   clave: string;
 };
+
 
 export interface AuthRepository {
   crearAdministrador(
@@ -26,6 +29,7 @@ export interface AuthRepository {
     correoOUsuario: string
   ): Promise<AdministradorConClave>;
   getRoles(correoOUsuario: string): Promise<Rol[]>;
+  cambiarContrasenia(claveNueva:string, correo:string):Promise<AdministradorClave>
 }
 
 export class PrismaAuthRepository implements AuthRepository {
@@ -141,4 +145,25 @@ export class PrismaAuthRepository implements AuthRepository {
       throw new InternalServerError("No se pudo registrar al administrador");
     }
   }
+
+
+  async cambiarContrasenia(claveNueva:string, correo:string):Promise<AdministradorClave> { 
+
+    const administrador=await this.prisma.administrador.update({ 
+      where: { 
+        correo:correo,
+      },
+      data: { 
+        clave:claveNueva
+      }
+    })
+
+    const admin = { 
+      usuarioOCorreo:administrador.correo, 
+      claveActual:administrador.clave
+    }
+    return (admin)
+  }
+
+
 }

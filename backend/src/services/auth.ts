@@ -4,6 +4,9 @@ import { Administrador } from "../models/administrador.js";
 import { BadRequestError, UnauthorizedError } from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
+import { AdministradorClave } from "../utils/AdministradorClave.js";
+import { enviarCorreo } from "../utils/mails.js";
+
 
 /**
  * Representa el tipo de un usuario.
@@ -22,6 +25,7 @@ export interface AuthService {
   ): Promise<Administrador>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(token: string): Rol[];
+  cambiarContrasenia(admin:AdministradorClave, claveNueva:string):Promise<AdministradorClave | null>
 }
 
 export type JWTUserPayload = JWTPayload & { usuario: Administrador };
@@ -136,4 +140,30 @@ export class AuthServiceImpl implements AuthService {
 
     return await this.repo.crearAdministrador(admin, hash);
   }
+
+  async cambiarContrasenia(admin:AdministradorClave, claveNueva:string):Promise<AdministradorClave | null> 
+  { 
+    const administrador= await this.repo.getAdministradorYClave(String(admin.usuarioOCorreo))
+    console.log(administrador.clave)
+    if (administrador && (bcrypt.compareSync(String(admin.claveActual), String(administrador.clave)))) 
+    { 
+      if (claveNueva==admin.claveActual) { 
+        throw new BadRequestError("Error. Intente ingresar una contraseña distinta")
+      }
+      
+      const hash=await bcrypt.hash(String(claveNueva), this.SALT_ROUNDS)
+      const cambioContrasenia=await this.repo.cambiarContrasenia(hash, String(administrador.admin.correo))
+      enviarCorreo(administrador)
+      return cambioContrasenia
+     
+    }else 
+    {
+      throw new BadRequestError("El administrador ingresado no existe o la contrasenia no coincide")
+      
+    }
+    
+
+   
+  }
+
 }
