@@ -52,7 +52,7 @@ export default function CourtInfoPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { mutate: mutateDelete } = useMutation<Cancha, ApiError, void>({
+  const { mutate: mutateDelete } = useMutation<void, ApiError>({
     mutationFn: (_) => deleteCanchaByID(data?.idEstablecimiento, data?.id),
     onSuccess: () => {
       toast({

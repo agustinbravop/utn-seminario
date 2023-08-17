@@ -9,7 +9,7 @@
   "scripts": {
     "build": "npx prisma migrate dev && npx tsc --project .",
     "dev": "ts-node src/index.ts",
-    "start": "npx tsc --project . && node dist/src/index.js",
+    "start": "tsc --project . && node dist/src/index.js",
     "serve": "nodemon src/index.ts",
     "format": "npx prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"

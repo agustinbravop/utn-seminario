@@ -2368,13 +2368,13 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.46.0.tgz#3f7802972e8b6fe3f88ed1aabc74ec596c456db6"
   integrity sha512-a8TLtmPi8xzPkCbp/OGFUo5yhRkHM2Ko9kOWP4znJr0WAhWyThaw3PnwX4vOTWOAMsV2uRt32PPDcEz63esSaA==
 
-"@generouted/react-router@^1.15.2":
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/@generouted/react-router/-/react-router-1.15.2.tgz#81da2eb9b3e29f90f8680d31903d8b9ea43c600a"
-  integrity sha512-oOt692tY6CcdQgkEHxcuSCAl8pgW7+smYgh3YevN56n9VWG1P7WilSygIWZKj00gC6po7yVKVu1a/9gmwUdL3g==
+"@generouted/react-router@^1.15.3":
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/@generouted/react-router/-/react-router-1.15.4.tgz#2178389fcc4806acdac5c1db82b195a6eaf95ded"
+  integrity sha512-B3HgOw/G5SbtbH5/6zzphaLRdXBGfN6jTPTFC4I5pWWWQv4yZzzbvBJgrftBF80hXX9XYujxVw8WzZGWqd70jw==
   dependencies:
-    fast-glob "^3.3.0"
-    generouted "^1.15.2"
+    fast-glob "^3.3.1"
+    generouted "^1.15.4"
 
 "@hookform/resolvers@^3.1.1":
   version "3.1.1"
@@ -3690,7 +3690,7 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-glob@^3.2.9, fast-glob@^3.3.0:
+fast-glob@^3.2.9, fast-glob@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.1.tgz#784b4e897340f3dbbef17413b3f11acf03c874c4"
   integrity sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg==
@@ -3823,10 +3823,10 @@ functions-have-names@^1.2.2, functions-have-names@^1.2.3:
   resolved "https://registry.yarnpkg.com/functions-have-names/-/functions-have-names-1.2.3.tgz#0404fe4ee2ba2f607f0e0ec3c80bae994133b834"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
-generouted@^1.15.2:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/generouted/-/generouted-1.15.2.tgz#8515c5d35f7c095acf5c891ec7ec0d8b0be6c0e6"
-  integrity sha512-y9Pemox6DhJ82F3pOwLVZin3hfJl7JcIYoWsIk9xvakrUk3+k7g+6ZSk5aWuYbLjTArlIa1FCrUOKB2ZWTYP2w==
+generouted@^1.15.4:
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/generouted/-/generouted-1.15.4.tgz#00cc9cbd09a2b195ff0a6a99033fc48dbd7181fe"
+  integrity sha512-ZmHlsf5zMF/4NF7np8SVKrbuGCTUvaYhCHzRnGH43+tQ7r1IHQhsAhhZQv++uacyKBHV/2W/z129Ip+i9U1zKw==
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
