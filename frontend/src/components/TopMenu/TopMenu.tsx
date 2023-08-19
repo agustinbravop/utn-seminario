@@ -1,12 +1,18 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, HStack, Image, MenuItem, MenuList } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton, Text } from "@chakra-ui/react";
 import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 
 export default function TopMenu() {
+  const navigate = useNavigate();
+  const next = (dir: boolean) => {
+    dir ? navigate(-1) : navigate(+1)
+  }
+  
   return (
+    <>
     <HStack
       justifyContent="space-between"
       shadow="md"
@@ -16,6 +22,13 @@ export default function TopMenu() {
     >
       <Nav />
     </HStack>
+    <Button onClick={() => next(true)} >
+      prev
+    </Button>
+    <Button onClick={() => next(false)} >
+      next
+    </Button>
+    </>
   );
 }
 
