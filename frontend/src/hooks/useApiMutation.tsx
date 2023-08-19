@@ -5,6 +5,10 @@ import {
 } from "@tanstack/react-query";
 import { ApiError } from "../utils/api";
 
+/**
+ * Es similar a `UseMutationOptions` de '@tanstack/react-query', pero en TError
+ * usa por defecto a `ApiError`.
+ */
 export interface UseApiMutationOptions<
   /** TVariables es el tipo del objeto que se pasa por parámetro a `mutate()`. */
   TVariables = void,
@@ -27,7 +31,7 @@ export function useApiMutation<
   TError = ApiError,
   TContext = unknown,
 >(
-  options: UseApiMutationOptions<TVariables, TData, TError, TContext>
+  options: UseApiMutationOptions<TVariables, TData, TError, TContext> = {}
 ): UseMutationResult<TData, TError, TVariables, TContext> {
   return useMutation(options);
 }

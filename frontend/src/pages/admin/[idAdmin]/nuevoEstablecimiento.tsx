@@ -1,5 +1,3 @@
-import { ApiError } from "@/utils/api";
-import { Establecimiento } from "@/models";
 import { useNavigate } from "react-router";
 import {
   Alert,
@@ -15,14 +13,14 @@ import {
 import * as Yup from "yup";
 import {
   CrearEstablecimientoReq,
-  crearEstablecimiento,
+  useCrearEstablecimiento,
 } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { InputControl, SelectControl, SubmitButton } from "@/components/forms";
 import { useEffect, useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
-import { useMutationForm } from "@/hooks/useMutationForm";
 import { useQuery } from "@tanstack/react-query";
+import { useYupForm } from "@/hooks/useYupForm";
 
 type FormState = CrearEstablecimientoReq & {
   imagen: File | undefined;
@@ -73,16 +71,14 @@ function NewEstab() {
         ),
   });
 
-  const { methods, mutate, isLoading, isError } = useMutationForm<
-    Establecimiento,
-    ApiError,
-    FormState
-  >({
+  const methods = useYupForm<FormState>({
     validationSchema,
     defaultValues: {
       idAdministrador: Number(currentAdmin?.id),
     },
-    mutationFn: ({ imagen, ...est }) => crearEstablecimiento(est, imagen),
+  });
+
+  const { mutate, isLoading, isError } = useCrearEstablecimiento({
     onSuccess: () => {
       toast({
         title: "Establecimiento creado.",
@@ -109,8 +105,6 @@ function NewEstab() {
     )
       .then((response) => response.json())
       .then((data: ApiGobLoc) => {
-        console.log(data);
-
         setLocalidades(data?.municipios?.map((m) => m.nombre) ?? []);
       });
     methods.resetField("localidad");

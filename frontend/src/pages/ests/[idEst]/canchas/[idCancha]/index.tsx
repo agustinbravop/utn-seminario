@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { Cancha } from "@/models";
 import {
   Box,
   Button,
@@ -30,30 +28,24 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { GrAddCircle } from "react-icons/gr";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
-import { deleteCanchaByID, getCanchaByID } from "@/utils/api/canchas";
+import { useCanchaByID, useEliminarCancha } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
-import { ApiError } from "@/utils/api";
-import { useMutation } from "@tanstack/react-query";
 import { defImage } from "@/utils/const/const";
 import React from "react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 export default function CourtInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
-  const { data } = useQuery<Cancha>(["canchas", idCancha], () =>
-    getCanchaByID(Number(idEst), Number(idCancha))
-  );
+  const { data } = useCanchaByID(Number(idEst), Number(idCancha));
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { mutate: mutateDelete } = useMutation<void, ApiError>({
-    mutationFn: (_) => deleteCanchaByID(data?.idEstablecimiento, data?.id),
+  const { mutate: mutateDelete } = useEliminarCancha({
     onSuccess: () => {
       toast({
         title: "Cancha Eliminada.",
@@ -73,18 +65,18 @@ export default function CourtInfoPage() {
     },
   });
 
-  const handleEliminar = () => {
-    mutateDelete();
-    onClose();
-  };
-
   if (!data) {
     return <p>Cargando...</p>;
   }
 
+  const handleEliminar = () => {
+    mutateDelete({ idEst: data.idEstablecimiento, idCancha: data.id });
+    onClose();
+  };
+
   return (
     <div>
-      <SubMenu canchas={true} nombreCancha= { `: ${data.nombre}`} />
+      <SubMenu canchas={true} nombreCancha={`: ${data.nombre}`} />
       <HStack
         marginRight="16%"
         marginLeft="16%"
@@ -92,7 +84,7 @@ export default function CourtInfoPage() {
         marginTop="0px"
       >
         <Text>
-          Esta es la información que se muestra al usuario de su cancha. 
+          Esta es la información que se muestra al usuario de su cancha.
         </Text>
         <HStack
           marginLeft="auto"
@@ -105,7 +97,7 @@ export default function CourtInfoPage() {
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>
           <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
-            Eliminar 
+            Eliminar
           </Button>
         </HStack>
       </HStack>
@@ -119,14 +111,19 @@ export default function CourtInfoPage() {
           width="56%"
         >
           <CardBody height="100%" marginTop="0px">
-            <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%" width="100%">
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              height="100%"
+              width="100%"
+            >
               <Box>
                 <Image
                   src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
                   width="1000px"
                   height="400px"
-                  objectFit="cover" 
-                  borderRadius="10px" 
+                  objectFit="cover"
+                  borderRadius="10px"
                 />
               </Box>
 
@@ -162,48 +159,45 @@ export default function CourtInfoPage() {
                   </Box>
 
                   <Box>
-                  <Heading size="xs" textTransform="uppercase">
+                    <Heading size="xs" textTransform="uppercase">
                       Disponibilidades
                     </Heading>
                     <Text fontSize="sm">
                       Estas son las disponibilidades de la cancha.
                     </Text>
 
-                  <TableContainer paddingTop="15px" paddingBottom="20px">
-                 <Table variant="simple" size="sm">
-                   <Thead >
-                     <Tr>
-                       <Th>disciplina</Th>
-                       <Th>horario</Th>
-                       <Th>precio</Th>
-                       <Th> dias </Th>
-                     </Tr>
-                   </Thead>
-                   <Tbody>
-                     {data.disponibilidades.map((d, index) =>
-                         <Tr>
-                           <Td> {d.disciplina} </Td>
-                           <Td> {d.horaInicio}- {d.horaFin} </Td>
-                           <Td>
-                             {" "}
-                             ${d.precioReserva}{" "}
-                           </Td>
-                           <Td>
-                             {" "}
-                             {d.dias.map((dia, index) => (
-                               <React.Fragment key={index}>
-                                 {dia}
-                                 {index !== d.dias.length - 1 && " - "}
-                               </React.Fragment>
-                             ))}{" "}
-                           </Td>
-                         </Tr>
-                     )}
-                   </Tbody>
-                 </Table>
-               </TableContainer>
+                    <TableContainer paddingTop="15px" paddingBottom="20px">
+                      <Table variant="simple" size="sm">
+                        <Thead>
+                          <Tr>
+                            <Th>disciplina</Th>
+                            <Th>horario</Th>
+                            <Th>precio</Th>
+                            <Th> dias </Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {data.disponibilidades.map((d) => (
+                            <Tr>
+                              <Td> {d.disciplina} </Td>
+                              <Td>
+                                {d.horaInicio}- {d.horaFin}
+                              </Td>
+                              <Td> ${d.precioReserva} </Td>
+                              <Td>
+                                {d.dias.map((dia, index) => (
+                                  <React.Fragment key={index}>
+                                    {dia}
+                                    {index !== d.dias.length - 1 && " - "}
+                                  </React.Fragment>
+                                ))}
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
                   </Box>
-               
                 </Stack>
               </Box>
             </Box>

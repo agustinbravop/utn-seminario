@@ -1,10 +1,10 @@
-import { API_URL, get, del, patchFormData, post, put } from ".";
+import { API_URL, del, patchFormData, post, put } from ".";
 import { Cancha } from "@/models";
 import {
   useApiQuery,
   UseApiMutationOptions,
-  useApiMutation,
   UseApiQueryOptions,
+  useApiMutation,
 } from "@/hooks";
 
 export type CrearCanchaReq = Omit<Cancha, "id" | "urlImagen">;
@@ -24,18 +24,8 @@ function modificarImagen(cancha: Cancha, imagen?: File) {
   );
 }
 
-export async function crearCancha(
-  cancha: CrearCanchaReq,
-  imagen?: File
-): Promise<Cancha> {
-  return post<Cancha>(
-    `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
-    cancha
-  ).then((cancha) => modificarImagen(cancha, imagen));
-}
-
-export async function useCrearCancha(
-  options?: UseApiMutationOptions<CrearCanchaReq & { imagen: File }, Cancha>
+export function useCrearCancha(
+  options?: UseApiMutationOptions<CrearCanchaReq & { imagen?: File }, Cancha>
 ) {
   return useApiMutation({
     ...options,
@@ -47,18 +37,11 @@ export async function useCrearCancha(
   });
 }
 
-export async function modificarCancha(
-  cancha: ModificarCanchaReq,
-  imagen?: File
-): Promise<Cancha> {
-  return put<Cancha>(
-    `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
-    cancha
-  ).then((cancha) => modificarImagen(cancha, imagen));
-}
-
-export async function useModificarCancha(
-  options?: UseApiMutationOptions<ModificarCanchaReq & { imagen: File }, Cancha>
+export function useModificarCancha(
+  options?: UseApiMutationOptions<
+    ModificarCanchaReq & { imagen?: File },
+    Cancha
+  >
 ) {
   return useApiMutation({
     ...options,
@@ -70,42 +53,30 @@ export async function useModificarCancha(
   });
 }
 
-export async function getCanchasByEstablecimientoID(
-  idEst: number
-): Promise<Cancha[]> {
-  return get(`${API_URL}/establecimientos/${idEst}/canchas`);
-}
-
-export async function useCanchasByEstablecimientoID(
+export function useCanchasByEstablecimientoID(
   idEst: number,
-  options: UseApiQueryOptions<Cancha[]>
-) {
-  return useApiQuery(options, `${API_URL}/establecimientos/${idEst}/canchas`);
-}
-
-export async function getCanchaByID(
-  idEst: number,
-  idCancha: number
-): Promise<Cancha> {
-  return get(`${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`);
-}
-
-export async function useCanchaByID(
-  idEst: number,
-  idCancha: number,
-  options: UseApiQueryOptions<Cancha[]>
+  options?: UseApiQueryOptions<Cancha[]>
 ) {
   return useApiQuery(
-    options,
-    `${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`
+    ["establecimientos", idEst, "canchas"],
+    `${API_URL}/establecimientos/${idEst}/canchas`,
+    { ...options, initialData: [] }
   );
 }
 
-export async function deleteCanchaByID(idEst: number, idCancha: number) {
-  return del(`${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`);
+export function useCanchaByID(
+  idEst: number,
+  idCancha: number,
+  options?: UseApiQueryOptions<Cancha>
+) {
+  return useApiQuery(
+    ["canchas", idCancha],
+    `${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`,
+    options
+  );
 }
 
-export async function useEliminarCancha(
+export function useEliminarCancha(
   options?: UseApiMutationOptions<{ idEst: number; idCancha: number }, Cancha>
 ) {
   return useApiMutation({

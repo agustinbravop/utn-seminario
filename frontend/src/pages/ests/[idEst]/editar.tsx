@@ -1,6 +1,3 @@
-import { ApiError } from "@/utils/api";
-import { Establecimiento } from "@/models";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@/router";
 import {
   Alert,
@@ -23,13 +20,13 @@ import {
 } from "@chakra-ui/react";
 import {
   ModificarEstablecimientoReq,
-  getEstablecimientoByID,
-  modificarEstablecimiento,
+  useEstablecimientoByID,
+  useModificarEstablecimiento,
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import { useMutationForm } from "@/hooks/useMutationForm";
+import { useYupForm } from "@/hooks/useYupForm";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -56,19 +53,14 @@ export default function EditEstabPage() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data, isLoading } = useQuery<Establecimiento>({
-    queryKey: ["establecimientos", idEst],
-    queryFn: () => getEstablecimientoByID(Number(idEst)),
+  const { data, isLoading } = useEstablecimientoByID(Number(idEst));
+
+  const methods = useYupForm<FormState>({
+    validationSchema,
+    resetValues: data,
   });
 
-  const { methods, mutate, isError } = useMutationForm<
-    Establecimiento,
-    ApiError,
-    FormState
-  >({
-    resetValues: data,
-    mutationFn: ({ imagen, ...est }) => modificarEstablecimiento(est, imagen),
-    validationSchema,
+  const { mutate, isError } = useModificarEstablecimiento({
     onSuccess: () => {
       toast({
         title: "Establecimiento modificado",

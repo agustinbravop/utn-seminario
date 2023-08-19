@@ -10,9 +10,8 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "@/models";
-import { getEstablecimientosByAdminID } from "@/utils/api/establecimientos";
+import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
 import { GrAddCircle } from "react-icons/gr";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useState } from "react";
@@ -43,17 +42,15 @@ export default function EstablecimientosPage() {
     setFiltro(e.target.value);
   };
 
-  const { data, isLoading, isError } = useQuery<Establecimiento[]>({
-    queryKey: ["establecimientos", currentAdmin?.id],
-    queryFn: () => getEstablecimientosByAdminID(Number(currentAdmin?.id)),
-    initialData: [],
-  });
+  const { data, isLoading, isError } = useEstablecimientosByAdminID(
+    Number(currentAdmin?.id)
+  );
 
   if (!currentAdmin) {
     return <Navigate to="/login" />;
   }
 
-  const establecimientosFiltrados = data?.filter((establecimiento) =>
+  const establecimientosFiltrados = data.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 

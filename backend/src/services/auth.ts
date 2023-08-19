@@ -97,9 +97,8 @@ export class AuthServiceImpl implements AuthService {
    * @returns el JWT de la sesión si los datos son correctos. ApiError si alguna validación falla.
    */
   async loginUsuario(correoOUsuario: string, clave: string): Promise<string> {
-    const adminConClave = await this.repo.getAdministradorYClave(
-      correoOUsuario
-    );
+    const adminConClave =
+      await this.repo.getAdministradorYClave(correoOUsuario);
 
     const { admin, clave: hash } = adminConClave;
     const esValido = await bcrypt.compare(clave, hash);

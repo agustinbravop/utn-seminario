@@ -1,17 +1,10 @@
-import { Administrador } from "@/models/index";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Heading, VStack, Alert } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import { ApiError } from "@/utils/api";
-import { useMutationForm } from "@/hooks/useMutationForm";
-
-interface LoginState {
-  correoOUsuario: string;
-  clave: string;
-}
+import { useLogin } from "@/utils/api/auth";
+import { useYupForm } from "@/hooks/useYupForm";
 
 const validationSchema = Yup.object({
   correoOUsuario: Yup.string().required("Obligatorio"),
@@ -22,15 +15,13 @@ const validationSchema = Yup.object({
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useCurrentAdmin();
-  const { methods, mutate, isLoading, isError } = useMutationForm<
-    Administrador,
-    ApiError,
-    LoginState
-  >({
+
+  const methods = useYupForm({
     validationSchema,
     defaultValues: { correoOUsuario: "", clave: "" },
-    mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
+  });
+
+  const { mutate, isLoading, isError } = useLogin({
     onSuccess: (admin) => navigate(`/admin/${admin.id}`),
   });
 

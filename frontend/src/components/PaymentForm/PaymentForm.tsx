@@ -68,7 +68,7 @@ export default function PaymentForm({ control }: PaymentFormProps) {
 
       <Box m="0">
         <Cards
-          cvc={values.cvv}
+          cvc={values.cvv ?? ""}
           expiry={values.vencimiento}
           name={values.nombre}
           number={values.numero}
