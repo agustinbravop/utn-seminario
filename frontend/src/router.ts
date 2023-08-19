@@ -14,6 +14,7 @@ export type Path =
   | `/ests/:idEst/canchas/:idCancha/editar`
   | `/ests/:idEst/canchas/nueva`
   | `/ests/:idEst/editar`
+  | `/ests/:idEst/reservas`
   | `/login`
   | `/subscribe`
   | `/suscripciones`
@@ -28,6 +29,7 @@ export type Params = {
   '/ests/:idEst/canchas/:idCancha/editar': { idEst: string; idCancha: string }
   '/ests/:idEst/canchas/nueva': { idEst: string }
   '/ests/:idEst/editar': { idEst: string }
+  '/ests/:idEst/reservas': { idEst: string }
 }
 
 export type ModalPath = never

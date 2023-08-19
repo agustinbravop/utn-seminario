@@ -25,7 +25,10 @@ export default function EstablecimientoCard({
   establecimiento,
 }: EstablecimientoCardProps) {
   return (
-    <Card width="300px" height="450px">
+    <Link to={`/ests/${establecimiento.id}`}>
+    <Card width="300px" height="450px"  
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.01)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')} >
       <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
         <Image
           src={
@@ -82,5 +85,6 @@ export default function EstablecimientoCard({
         </HStack>
       </CardFooter>
     </Card>
+    </Link>
   );
 }

@@ -80,7 +80,7 @@ export default function SubMenu( { canchas, nombreCancha }: { canchas: boolean; 
             Canchas{" "}
           </Text>
         </Link>
-        <Link to={`/establecimiento/${establecimientoData?.id}/canchas`}>
+        <Link to={`/ests/${establecimientoData?.id}/reservas`}>
           Reservas
         </Link>
           </>

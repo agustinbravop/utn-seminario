@@ -60,7 +60,7 @@ export default function EstablecimientosPage() {
   return (
     <>
       <Heading textAlign="center" paddingBottom="12" mt="40px">
-        Mis Establecimientos
+        Establecimientos
       </Heading>
       <HStack
         marginRight="16%"
@@ -95,7 +95,7 @@ export default function EstablecimientosPage() {
           {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
             <Link to="nuevoEstablecimiento">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
-                Agregar Establecimiento
+                Agregar Establecimiento 
               </Button>
             </Link>
           )}
