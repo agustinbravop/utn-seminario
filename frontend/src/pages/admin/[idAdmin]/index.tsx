@@ -60,7 +60,7 @@ export default function EstablecimientosPage() {
   return (
     <>
       <Heading textAlign="center" paddingBottom="12" mt="40px">
-        Establecimientos
+        Establecimientos de {currentAdmin.nombre}
       </Heading>
       <HStack
         marginRight="16%"
