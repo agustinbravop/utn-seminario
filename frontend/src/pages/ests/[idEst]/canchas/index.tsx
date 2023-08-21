@@ -4,7 +4,6 @@ import { useParams } from "react-router";
 import {
   Button,
   HStack,
-  Heading,
   Icon,
   Input,
   InputGroup,
@@ -40,7 +39,7 @@ export default function CanchasPage() {
 
   return (
     <>
-      <SubMenu />
+      <SubMenu  />
       <HStack
         marginRight="16%"
         marginLeft="16%"
