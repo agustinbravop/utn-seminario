@@ -36,7 +36,7 @@ import { defImage } from "@/utils/const/const";
 import React from "react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
-export default function CourtInfoPage() {
+export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
@@ -178,7 +178,7 @@ export default function CourtInfoPage() {
                         </Thead>
                         <Tbody>
                           {data.disponibilidades.map((d) => (
-                            <Tr>
+                            <Tr key={d.id}>
                               <Td> {d.disciplina} </Td>
                               <Td>
                                 {d.horaInicio}- {d.horaFin}

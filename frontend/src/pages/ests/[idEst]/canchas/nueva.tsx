@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Dia } from "@/models";
+import React, { useEffect, useState } from "react";
+import { Dia, Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import {
   Button,
@@ -27,7 +27,7 @@ import {
   SelectControl,
   SubmitButton,
 } from "@/components/forms";
-import { FormProvider, useFieldArray, useWatch } from "react-hook-form";
+import { FormProvider, useFieldArray } from "react-hook-form";
 import * as Yup from "yup";
 import {
   Table,
@@ -106,11 +106,28 @@ const horas = [
   "23:00",
 ];
 
-export default function NuevaCancha() {
+const defaultDisponibilidad: Omit<Disponibilidad, "id"> = {
+  horaFin: "",
+  horaInicio: "",
+  dias: [],
+  disciplina: "",
+  precioReserva: NaN,
+  precioSenia: undefined,
+  minutosReserva: NaN,
+};
+
+export default function NuevaCanchaPage() {
   const { idEst } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [disp, setDisp] = useState(defaultDisponibilidad);
+
+  const handleDispChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    console.log("handleDispChange");
+    setDisp({ ...disp, [name]: value });
+  };
 
   const methods = useYupForm<FormState>({
     validationSchema,
@@ -120,25 +137,24 @@ export default function NuevaCancha() {
       habilitada: true,
       idEstablecimiento: Number(idEst),
       imagen: undefined,
-      disponibilidades: [
-        {
-          horaInicio: "-",
-          horaFin: "-",
-          disciplina: "-",
-          dias: [],
-        },
-      ],
+      disponibilidades: [],
     },
   });
 
-  const values = useWatch({
+  const {
+    fields: disponibilidades,
+    append,
+    remove,
+  } = useFieldArray({
+    name: "disponibilidades",
     control: methods.control,
   });
-  useEffect(() => {
-    console.log(values);
-    console.log(methods.formState);
 
-  }, [values, methods])
+  useEffect(() => {
+    console.log(disponibilidades);
+    console.log(methods.formState);
+    console.log(disp);
+  }, [disp, disponibilidades, methods]);
 
   const { mutate, isLoading } = useCrearCancha({
     onSuccess: () => {
@@ -160,21 +176,12 @@ export default function NuevaCancha() {
     },
   });
 
-  const { fields, append } = useFieldArray({
-    name: "disponibilidades",
-    control: methods.control,
-  });
-
-  const agregarHorario = () => {
-    append({
-      disciplina: "-",
-      horaInicio: "-",
-      horaFin: "",
-      minutosReserva: undefined,
-      precioReserva: null,
-      precioSenia: null,
-      dias: [],
-    });
+  const handleAgregarDisponibilidad = () => {
+    if (!disp) {
+      return;
+    }
+    append(disp);
+    setDisp(defaultDisponibilidad);
     onClose();
   };
 
@@ -182,14 +189,9 @@ export default function NuevaCancha() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const handleDelete = (index: number) => {
-    const disponibilidades = methods.getValues("disponibilidades");
-    disponibilidades.splice(index, 1);
-    methods.setValue("disponibilidades", disponibilidades);
+  const handleDeleteDisponibilidad = (index: number) => {
+    remove(index);
   };
-
-  const last = methods.getValues("disponibilidades").length - 1;
-  const lastFieldIndex = fields.length - 1;
 
   return (
     <div>
@@ -201,17 +203,14 @@ export default function NuevaCancha() {
         <VStack
           as="form"
           onSubmit={methods.handleSubmit((values) => {
-            console.log("Hola");
             mutate({
               ...values,
-              disponibilidades: values.disponibilidades
-                .slice(0, -1) // Obtener todos los elementos excepto el último
-                .map((d) => ({
-                  ...d,
-                  precioSenia: d.precioSenia && Number(d.precioSenia),
-                  precioReserva: Number(d.precioReserva),
-                  minutosReserva: Number(d.minutosReserva),
-                })),
+              disponibilidades: values.disponibilidades.map((d) => ({
+                ...d,
+                precioSenia: d.precioSenia && Number(d.precioSenia),
+                precioReserva: Number(d.precioReserva),
+                minutosReserva: Number(d.minutosReserva),
+              })),
             });
           })}
           spacing="24px"
@@ -269,7 +268,7 @@ export default function NuevaCancha() {
             </VStack>
 
             <>
-              {methods.getValues("disponibilidades").length > 1 && (
+              {disponibilidades.length > 0 && (
                 <TableContainer paddingTop="20px" paddingBottom="20px">
                   <Table variant="simple" size="sm">
                     <Thead backgroundColor="lightgray">
@@ -284,37 +283,33 @@ export default function NuevaCancha() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {methods.getValues("disponibilidades").map(
-                        (d, index) =>
-                          // Verificar si el índice es mayor o igual a numeroDado
-                          index < last && (
-                            <Tr key={`${d.horaInicio}-${d.horaFin}`}>
-                              <Td> {d.disciplina} </Td>
-                              <Td> {d.horaInicio} </Td>
-                              <Td> {d.horaFin} </Td>
-                              <Td> {d.minutosReserva} </Td>
-                              <Td>
-                                {d.precioReserva}/{d.precioSenia}
-                              </Td>
-                              <Td>
-                                {d.dias.map((dia, index) => (
-                                  <React.Fragment key={index}>
-                                    {dia}
-                                    {index !== d.dias.length - 1 && " - "}
-                                  </React.Fragment>
-                                ))}
-                              </Td>
-                              <Td>
-                                <Button
-                                  type="button"
-                                  onClick={() => handleDelete(index)}
-                                >
-                                  <DeleteIcon />
-                                </Button>
-                              </Td>
-                            </Tr>
-                          )
-                      )}
+                      {disponibilidades.map((d, index) => (
+                        <Tr key={`${d.horaInicio}-${d.horaFin}`}>
+                          <Td> {d.disciplina} </Td>
+                          <Td> {d.horaInicio} </Td>
+                          <Td> {d.horaFin} </Td>
+                          <Td> {d.minutosReserva} </Td>
+                          <Td>
+                            {d.precioReserva}/{d.precioSenia}
+                          </Td>
+                          <Td>
+                            {d.dias.map((dia, idx) => (
+                              <React.Fragment key={idx}>
+                                {dia}
+                                {idx !== d.dias.length - 1 && " - "}
+                              </React.Fragment>
+                            ))}
+                          </Td>
+                          <Td>
+                            <Button
+                              type="button"
+                              onClick={() => handleDeleteDisponibilidad(index)}
+                            >
+                              <DeleteIcon />
+                            </Button>
+                          </Td>
+                        </Tr>
+                      ))}
                     </Tbody>
                   </Table>
                 </TableContainer>
@@ -322,7 +317,6 @@ export default function NuevaCancha() {
             </>
           </VStack>
           <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
-          {JSON.stringify(methods.formState)}
         </VStack>
 
         <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
@@ -330,87 +324,97 @@ export default function NuevaCancha() {
           <ModalContent>
             <ModalHeader>Agregar disponibilidad</ModalHeader>
             <ModalBody>
-              {fields.length > 0 && (
-                <>
-                  <HStack width="600px" py="10px">
-                    <SelectControl
-                      placeholder="Elegir horario"
-                      label="Horario de Inicio"
-                      name={`disponibilidades[${lastFieldIndex}].horaInicio`}
-                      isRequired
-                    >
-                      {horas.map((hora, i) => (
-                        <option key={i} value={hora}>
-                          {hora}
-                        </option>
-                      ))}
-                    </SelectControl>
-                    <SelectControl
-                      placeholder="Elegir horario"
-                      label="Horario de Fin"
-                      name={`disponibilidades[${lastFieldIndex}].horaFin`}
-                      isRequired
-                    >
-                      {horas.map((hora, i) => (
-                        <option key={i} value={hora}>
-                          {hora}
-                        </option>
-                      ))}
-                    </SelectControl>
-                  </HStack>
-                  <HStack width="600px" py="10px">
-                    <SelectControl
-                      placeholder="Seleccionar disciplina "
-                      label=""
-                      name={`disponibilidades[${lastFieldIndex}].disciplina`}
-                      isRequired
-                    >
-                      {disciplinas.map((disciplina, i) => (
-                        <option key={i} value={disciplina}>
-                          {disciplina}
-                        </option>
-                      ))}
-                    </SelectControl>
-                    <InputControl
-                      isRequired
-                      placeholder=""
-                      name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
-                      type="number"
-                      label="Duración de la reserva (minutos)"
-                    ></InputControl>
-                  </HStack>
-                  <HStack width="600px" py="10px">
-                    <InputControl
-                      placeholder=""
-                      name={`disponibilidades[${lastFieldIndex}].precioReserva`}
-                      type="number"
-                      label="Precio de reserva"
-                      isRequired
-                    ></InputControl>
-                    <InputControl
-                      placeholder=""
-                      name={`disponibilidades[${lastFieldIndex}].precioSenia`}
-                      type="number"
-                      label="Seña de reserva"
-                    ></InputControl>
-                  </HStack>
-                  <HStack py="10px">
-                    <CheckboxGroupControl
-                      name={`disponibilidades[${lastFieldIndex}].dias`}
-                    >
-                      <HStack>
-                        <Checkbox value="Lunes">Lunes</Checkbox>
-                        <Checkbox value="Martes">Martes</Checkbox>
-                        <Checkbox value="Miércoles">Miércoles</Checkbox>
-                        <Checkbox value="Jueves">Jueves</Checkbox>
-                        <Checkbox value="Viernes">Viernes</Checkbox>
-                        <Checkbox value="Sábado">Sábado</Checkbox>
-                        <Checkbox value="Domingo">Domingo</Checkbox>
-                      </HStack>
-                    </CheckboxGroupControl>
-                  </HStack>
-                </>
-              )}
+              <>
+                <HStack width="600px" py="10px">
+                  <SelectControl
+                    placeholder="Elegir horario"
+                    label="Horario de Inicio"
+                    name="horaInicio"
+                    isRequired
+                    onChange={handleDispChange}
+                  >
+                    {horas.map((hora, i) => (
+                      <option key={i} value={hora}>
+                        {hora}
+                      </option>
+                    ))}
+                  </SelectControl>
+                  <SelectControl
+                    placeholder="Elegir horario"
+                    label="Horario de Fin"
+                    name="horaFin"
+                    onChange={handleDispChange}
+                    isRequired
+                  >
+                    {horas.map((hora, i) => (
+                      <option key={i} value={hora}>
+                        {hora}
+                      </option>
+                    ))}
+                  </SelectControl>
+                </HStack>
+                <HStack width="600px" py="10px">
+                  <SelectControl
+                    placeholder="Seleccionar disciplina"
+                    label=""
+                    name="disciplina"
+                    onChange={handleDispChange}
+                    isRequired
+                  >
+                    {disciplinas.map((disciplina, i) => (
+                      <option key={i} value={disciplina}>
+                        {disciplina}
+                      </option>
+                    ))}
+                  </SelectControl>
+                  <InputControl
+                    isRequired
+                    placeholder=""
+                    name="minutosReserva"
+                    type="number"
+                    onChange={handleDispChange}
+                    label="Duración de la reserva (minutos)"
+                  ></InputControl>
+                </HStack>
+                <HStack width="600px" py="10px">
+                  <InputControl
+                    placeholder=""
+                    name="precioReserva"
+                    type="number"
+                    label="Precio de reserva"
+                    onChange={handleDispChange}
+                    isRequired
+                  ></InputControl>
+                  <InputControl
+                    placeholder=""
+                    onChange={handleDispChange}
+                    name="precioSenia"
+                    type="number"
+                    label="Seña de reserva"
+                  ></InputControl>
+                </HStack>
+                <HStack py="10px">
+                  <CheckboxGroupControl
+                    name="dias"
+                    onValueChange={(values) =>
+                      setDisp({
+                        ...disp,
+                        dias: values as Dia[],
+                      })
+                    }
+                  >
+                    <HStack>
+                      <Checkbox value="Lunes">Lunes</Checkbox>
+                      <Checkbox value="Martes">Martes</Checkbox>
+                      <Checkbox value="Miércoles">Miércoles</Checkbox>
+                      <Checkbox value="Jueves">Jueves</Checkbox>
+                      <Checkbox value="Viernes">Viernes</Checkbox>
+                      <Checkbox value="Sábado">Sábado</Checkbox>
+                      <Checkbox value="Domingo">Domingo</Checkbox>
+                    </HStack>
+                  </CheckboxGroupControl>
+                </HStack>
+              </>
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="gray" mr={3} onClick={onClose}>
@@ -419,7 +423,7 @@ export default function NuevaCancha() {
               <Button
                 colorScheme="blackAlpha"
                 backgroundColor="black"
-                onClick={agregarHorario}
+                onClick={handleAgregarDisponibilidad}
               >
                 Aceptar
               </Button>

@@ -77,6 +77,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
+      console.log(cancha);
       // Creo las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {

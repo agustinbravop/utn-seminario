@@ -1,5 +1,5 @@
 import { API_URL, del, patchFormData, post, put } from ".";
-import { Cancha } from "@/models";
+import { Cancha, Disponibilidad } from "@/models";
 import {
   useApiQuery,
   UseApiMutationOptions,
@@ -7,7 +7,12 @@ import {
   useApiMutation,
 } from "@/hooks";
 
-export type CrearCanchaReq = Omit<Cancha, "id" | "urlImagen">;
+export type CrearCanchaReq = Omit<
+  Cancha,
+  "id" | "urlImagen" | "disponibilidades"
+> & {
+  disponibilidades: Omit<Disponibilidad, "id">[];
+};
 
 export type ModificarCanchaReq = Omit<Cancha, "urlImagen">;
 

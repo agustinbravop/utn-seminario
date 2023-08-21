@@ -42,6 +42,7 @@ export type HorarioDeAtencion = {
 };
 
 export type Disponibilidad = {
+  id: number;
   horaInicio: string;
   horaFin: string;
   minutosReserva: number;
