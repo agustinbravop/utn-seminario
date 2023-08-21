@@ -1,8 +1,6 @@
 import {
-  Button,
   Card,
   CardBody,
-  CardFooter,
   Heading,
   Image,
   Text,
@@ -11,7 +9,7 @@ import {
 import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
-import { InfoIcon } from "@chakra-ui/icons";
+
 
 type estabProps = {
   cancha: Cancha;

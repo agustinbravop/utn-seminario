@@ -17,7 +17,7 @@ export default function CourtInfoPage() {
         marginTop="0px"
       >
         <Text>
-          Esta es la información que se muestra al usuario de su cancha. 
+          Estas son las reservas actuales de para este establecimiento. 
         </Text>
     </HStack>
     </div>
