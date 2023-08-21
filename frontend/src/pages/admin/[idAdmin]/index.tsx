@@ -13,7 +13,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "@/models";
 import { getEstablecimientosByAdminID } from "@/utils/api/establecimientos";
-import { GrAddCircle } from "react-icons/gr";
+import { GrAddCircle, GrDeploy } from "react-icons/gr";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -60,7 +60,7 @@ export default function EstablecimientosPage() {
   return (
     <>
       <Heading textAlign="center" paddingBottom="12" mt="40px">
-        Establecimientos
+        Establecimientos de {currentAdmin.nombre}
       </Heading>
       <HStack
         marginRight="16%"
@@ -98,13 +98,14 @@ export default function EstablecimientosPage() {
                 Agregar Establecimiento 
               </Button>
             </Link>
-          ): (  
-          <Link to="upgrade">
-          <Button leftIcon={<Icon as={GrAddCircle} />}>
-            Agregar Establecimiento 
-          </Button>
-        </Link>
-        ) }
+          )}
+          {data.length == currentAdmin.suscripcion.limiteEstablecimientos && (
+            <Link to="mejorarSuscripcion">
+              <Button leftIcon={<Icon as={GrAddCircle} />}>
+                Agregar Establecimiento
+              </Button>
+            </Link>
+          )}
         </HStack>
       </HStack>
       <HStack marginLeft="16%" marginRight="16%">
