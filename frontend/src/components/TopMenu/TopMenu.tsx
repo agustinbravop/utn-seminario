@@ -1,6 +1,6 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, HStack, Icon, Image, MenuItem, MenuList } from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, HStack, Icon, Image, MenuItem, MenuList } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import { ArrowForwardIcon,ChevronDownIcon,ChevronLeftIcon, ChevronRightIcon, InfoIcon } from "@chakra-ui/icons";
@@ -27,14 +27,25 @@ export default function TopMenu() {
 
     {currentAdmin && (
       <>
-      <HStack paddingTop={4} paddingX={70} justifyContent="flex-end">
-      <Button onClick={() => next(false)}>
-          <ChevronLeftIcon boxSize={6} />
-        </Button>
-        <Button onClick={() => next(true)}>
-          <ChevronRightIcon boxSize={6} />
-        </Button>
-      </HStack>
+      <HStack paddingTop={4} paddingX={340} justifyContent="flex-start">
+        <Button onClick={() => next(false)}>
+            <ChevronLeftIcon boxSize={6} />
+          </Button>
+          <Button onClick={() => next(true)}>
+            <ChevronRightIcon boxSize={6} />
+          </Button>
+          <Breadcrumb spacing='8px' separator={<ChevronRightIcon color='gray.500' />}>
+          <BreadcrumbItem>
+            <BreadcrumbLink href='#'>Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink href='#'>About</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink href='#'>Contact</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+        </HStack>
       </>
     )}
 
