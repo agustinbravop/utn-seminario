@@ -99,7 +99,7 @@ export default function EstablecimientosPage() {
               </Button>
             </Link>
           ): (  
-          <Link to="nuevoEstablecimientupgrade">
+          <Link to="upgrade">
           <Button leftIcon={<Icon as={GrAddCircle} />}>
             Agregar Establecimiento 
           </Button>
