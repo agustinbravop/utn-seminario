@@ -74,6 +74,11 @@ const disciplinas = [
   "Ping-Pong",
 ];
 
+const duracionReserva = [
+  30,
+  60,
+];
+
 const horas = [
   "1:00",
   "2:00",
@@ -437,13 +442,25 @@ export default function EditCourtPage() {
                     </option>
                   ))}
                 </SelectControl>
-                <InputControl
+                {/* <InputControl
                   isRequired
                   placeholder=""
                   name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
                   type="number"
                   label="Duración de la reserva (minutos)"
-                ></InputControl>
+                ></InputControl> */}
+                <SelectControl
+                  placeholder="Seleccionar duración (min)"
+                  label=""
+                  name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
+                  isRequired
+                >
+                  {duracionReserva.map((duracion, i) => (
+                    <option key={i} value={duracion}>
+                      {duracion}
+                    </option>
+                  ))}
+                </SelectControl>
               </HStack>
               <HStack width="600px" py="10px">
                 <InputControl
