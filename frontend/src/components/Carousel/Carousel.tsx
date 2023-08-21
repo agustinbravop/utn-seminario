@@ -80,7 +80,7 @@ export default function Carousel({
     if (autoPlay) {
       const interval = setInterval(() => {
         selectNewImage(images, +1);
-      }, 3000);
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [autoPlay, images, selectNewImage]);
