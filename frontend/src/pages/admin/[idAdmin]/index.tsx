@@ -94,7 +94,7 @@ export default function EstablecimientosPage() {
           </Text>
           {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
             <Link to="nuevoEstablecimiento">
-              <Button leftIcon={<Icon as={GrDeploy} />}>
+              <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento 
               </Button>
             </Link>
