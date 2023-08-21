@@ -60,7 +60,7 @@ export default function EstablecimientosPage() {
   return (
     <>
       <Heading textAlign="center" paddingBottom="12" mt="40px">
-        Establecimientos de {currentAdmin.nombre}
+        Establecimientos
       </Heading>
       <HStack
         marginRight="16%"
@@ -92,7 +92,7 @@ export default function EstablecimientosPage() {
             {data.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
             establecimiento{data?.length === 1 || "s"}
           </Text>
-          {data.length < currentAdmin.suscripcion.limiteEstablecimientos ? (
+          {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
             <Link to="nuevoEstablecimiento">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento 

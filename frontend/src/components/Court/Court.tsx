@@ -5,10 +5,13 @@ import {
   Image,
   Text,
   VStack,
+  Icon,
 } from "@chakra-ui/react";
 import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
+import { MdPlace } from "react-icons/md";
+import { CheckIcon, SmallCloseIcon } from '@chakra-ui/icons'
 
 
 type estabProps = {
@@ -37,7 +40,8 @@ export default function Court({ cancha }: estabProps) {
           </Heading>
           <Text marginBottom="5">{cancha.descripcion}</Text>
           <Text marginBottom="0">
-            {cancha.habilitada ? "Esta habilitada" : "No esta habilitada"}
+          <Icon as={cancha.habilitada ? CheckIcon : SmallCloseIcon} boxSize={4} mr='2' />{" "}
+            {cancha.habilitada ? " Esta habilitada" : " No esta habilitada"}
           </Text>
         </VStack>
       </CardBody>

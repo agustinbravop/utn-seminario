@@ -51,11 +51,11 @@ export default function EstablecimientoCard({
             {establecimiento.nombre}
           </Heading>
           <Text marginBottom="0">
-            <Icon as={MdPlace} boxSize={5} color="gray" />{" "}
+            <Icon as={MdPlace} boxSize={4} mr='2' />{" "}
             {establecimiento.direccion}
           </Text>
           <Text>
-            <PhoneIcon boxSize={3.5} color="gray" /> {establecimiento.telefono}
+            <PhoneIcon boxSize={4} mr='2' /> {establecimiento.telefono}
           </Text>
           <Text>{establecimiento.horariosDeAtencion}</Text>
         </VStack>
