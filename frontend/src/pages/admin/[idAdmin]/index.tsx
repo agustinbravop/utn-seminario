@@ -100,9 +100,11 @@ export default function EstablecimientosPage() {
             </Link>
           )}
           {data.length == currentAdmin.suscripcion.limiteEstablecimientos && (
-              <Button colorScheme="brand" leftIcon={<Icon as={GrDeploy} />} onClick={() => alert('Mejorar Suscripción')}>
-                Mejora tu suscripción!
+            <Link to="mejorarSuscripcion">
+              <Button leftIcon={<Icon as={GrAddCircle} />}>
+                Agregar Establecimiento
               </Button>
+            </Link>
           )}
         </HStack>
       </HStack>
