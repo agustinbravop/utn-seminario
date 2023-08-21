@@ -21,7 +21,10 @@ export const modificarCanchaReqSchema = canchaSchema.omit({
   id: true,
   urlImagen: true,
   eliminada: true,
-});
+})
+.extend({ 
+  disponibilidades:z.array(disponibilidadSchema.omit({id:true}))
+}) 
 
 export class CanchaHandler {
   private service: CanchaService;
@@ -52,11 +55,11 @@ export class CanchaHandler {
   putCancha(): RequestHandler {
     return async (req, res) => {
       const cancha: Cancha = {
-        ...res.locals.body,
+        ...req.body
       };
-
+      
       cancha.id = Number(req.params["idCancha"]);
-
+      console.log(cancha)
       const canchaActualizada = await this.service.modificar(cancha);
       res.status(200).json(canchaActualizada);
     };

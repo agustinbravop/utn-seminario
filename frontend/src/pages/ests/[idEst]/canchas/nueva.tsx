@@ -406,7 +406,7 @@ function NuevaCancha() {
                   <HStack>
                     <Checkbox value="Lunes">Lunes</Checkbox>
                     <Checkbox value="Martes">Martes</Checkbox>
-                    <Checkbox value="Miércoles">Miércoles</Checkbox>
+                    <Checkbox value="Miércole">Miércole</Checkbox>
                     <Checkbox value="Jueves">Jueves</Checkbox>
                     <Checkbox value="Viernes">Viernes</Checkbox>
                     <Checkbox value="Sábado">Sábado</Checkbox>
