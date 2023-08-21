@@ -3,6 +3,7 @@ import { Establecimiento } from "@/models";
 import { useNavigate } from "react-router";
 import {
   Alert,
+  Button,
   Container,
   FormControl,
   FormLabel,
@@ -215,8 +216,10 @@ function NewEstab() {
                 }}
               />
             </FormControl>
-
-            <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+            <HStack justifyContent="flex-end" spacing={30}>
+              <Button onClick={() => navigate(-1) } >Cancelar</Button>
+              <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+          </HStack>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar el establecimiento. Intente de nuevo

@@ -30,7 +30,6 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { GrAddCircle } from "react-icons/gr";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteCanchaByID, getCanchaByID } from "@/utils/api/canchas";
@@ -180,7 +179,7 @@ export default function CourtInfoPage() {
                      </Tr>
                    </Thead>
                    <Tbody>
-                     {data.disponibilidades.map((d, index) =>
+                     {data.disponibilidades.map((d) =>
                          <Tr>
                            <Td> {d.disciplina} </Td>
                            <Td> {d.horaInicio}- {d.horaFin} </Td>

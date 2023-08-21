@@ -1,12 +1,21 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { Link } from "react-router-dom";
-import { Button, HStack, Image, MenuItem, MenuList } from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, HStack, Icon, Image, MenuItem, MenuList } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
-import { Menu, MenuButton, Text } from "@chakra-ui/react";
-import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
+import { Menu, MenuButton } from "@chakra-ui/react";
+import { ArrowForwardIcon,ChevronDownIcon,ChevronLeftIcon, ChevronRightIcon, InfoIcon } from "@chakra-ui/icons";
+import { Administrador } from "@/models";
+import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 export default function TopMenu() {
+  const navigate = useNavigate();
+  const next = (dir: boolean) => {
+    dir ? navigate(+1) : navigate(-1)
+  }
+  const { currentAdmin, logout } = useCurrentAdmin();
+
   return (
+    <>
     <HStack
       justifyContent="space-between"
       shadow="md"
@@ -14,14 +23,30 @@ export default function TopMenu() {
       height="3.6rem"
       backgroundColor="#f8fafd"
     >
-      <Nav />
+      <Nav admin={currentAdmin}logout={logout}/>
     </HStack>
+
+    {currentAdmin && (
+      <>
+      <HStack paddingTop={7} marginLeft="17.3%" marginRight="17.%" spacing={1}>
+        <Button size='xs' backgroundColor="white" onClick={() => next(false)}>
+            <ChevronLeftIcon boxSize={6} />
+          </Button>
+          <Button size='xs' backgroundColor="white" onClick={() => next(true)}>
+            <ChevronRightIcon boxSize={6} />
+          </Button>
+          <Breadcrumb/>
+        </HStack>
+      </>
+    )}
+
+
+    </>
   );
 }
 
-function Nav() {
-  const { currentAdmin, logout } = useCurrentAdmin();
-  if (!currentAdmin) {
+function Nav( {admin, logout}: {admin: Administrador | undefined; logout: VoidFunction}) {
+  if (!admin) {
     return (
       <>
         <Link to="/">
@@ -51,7 +76,7 @@ function Nav() {
 
   return (
     <>
-      <Link to={`/admin/${currentAdmin.id}`}>
+      <Link to={`/admin/${admin.id}`}>
         <Image
           src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
           alt="logo"
@@ -63,13 +88,13 @@ function Nav() {
           <Menu>
             <MenuButton
               as={Button}
-              rightIcon={<ChevronDownIcon />}
+              rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
               leftIcon={<AiOutlineUser size="20" />}
             >
-              {currentAdmin.usuario}
+              {admin.usuario}
             </MenuButton>
             <MenuList>
-              <Link to={`/admin/${currentAdmin.id}/perfil`}>
+              <Link to={`/admin/${admin.id}/perfil`}>
                 <MenuItem>
                   <InfoIcon mr="20px" /> Mi perfil
                 </MenuItem>

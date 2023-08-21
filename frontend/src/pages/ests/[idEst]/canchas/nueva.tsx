@@ -332,7 +332,11 @@ function NuevaCancha() {
               )}
             </>
           </VStack>
-          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+          <HStack justifyContent="flex-end" spacing={30}>
+              <Button onClick={() => navigate(-1) } >Cancelar</Button>
+              <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+          </HStack>
+      
         </VStack>
 
         <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>

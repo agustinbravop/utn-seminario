@@ -1,5 +1,5 @@
 import { useLocation } from "react-router";
-import { HStack, Heading, Text } from "@chakra-ui/react";
+import { Button, HStack, Heading, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "../../models";
 import { getEstablecimientoByID } from "../../utils/api/establecimientos";
@@ -39,49 +39,67 @@ export default function SubMenu( { canchas, nombreCancha }: { canchas: boolean; 
           {establecimientoData.nombre}{" "} {nombreCancha}
         </Heading>
       )}
-      <HStack gap="30px" marginLeft="16%" marginTop="18px" marginBottom="30px">
+      <HStack spacing={0} marginLeft="15.5%" marginTop="18px" marginBottom="30px">
 
       {canchas ? (
           <>
             <Link to={`/ests/${establecimientoData?.id}/canchas/${idCancha}`}>
+            <Button backgroundColor="white" >
               <Text
                 textDecoration={sub ? "underline" : "none"}
                 textDecorationThickness="3px"
                 marginBottom="0px"
-                textUnderlineOffset="7px"
+                textUnderlineOffset="11px"
               >
                 {" "}
                 Información{" "}
               </Text>
+          </Button>
           </Link>
           </>
         ) : (
           <>
           <Link to={`/ests/${establecimientoData?.id}`}>
+          <Button backgroundColor="white" >
           <Text
             textDecoration={sub ? "underline" : "none"}
             textDecorationThickness="3px"
             marginBottom="0px"
-            textUnderlineOffset="7px"
+            textUnderlineOffset="11px"
           >
             {" "}
             Información{" "}
           </Text>
+
+          </Button>
         </Link>
         <Link to={`/ests/${establecimientoData?.id}/canchas`}>
+        <Button backgroundColor="white" >
           <Text
             textDecoration={!sub ? "underline" : "none"}
             textDecorationThickness="3px"
             marginBottom="0px"
-            textUnderlineOffset="7px"
-            transition="texDecoration 1s ease-in-out"
+            textUnderlineOffset="11px"
           >
             {" "}
             Canchas{" "}
           </Text>
+
+          </Button>
         </Link>
         <Link to={`/ests/${establecimientoData?.id}/reservas`}>
-          Reservas
+        <Button backgroundColor="white" >
+          <Text
+            textDecoration={"none"}
+            textDecorationThickness="3px"
+            marginBottom="0px"
+            textUnderlineOffset="11px"
+          >
+            {" "}
+            Reservas{" "}
+          </Text>
+
+          </Button>
         </Link>
           </>
         )}
