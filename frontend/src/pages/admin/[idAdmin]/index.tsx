@@ -92,13 +92,19 @@ export default function EstablecimientosPage() {
             {data.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
             establecimiento{data?.length === 1 || "s"}
           </Text>
-          {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
+          {data.length < currentAdmin.suscripcion.limiteEstablecimientos ? (
             <Link to="nuevoEstablecimiento">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento 
               </Button>
             </Link>
-          )}
+          ): (  
+          <Link to="nuevoEstablecimientupgrade">
+          <Button leftIcon={<Icon as={GrAddCircle} />}>
+            Agregar Establecimiento 
+          </Button>
+        </Link>
+        ) }
         </HStack>
       </HStack>
       <HStack marginLeft="16%" marginRight="16%">

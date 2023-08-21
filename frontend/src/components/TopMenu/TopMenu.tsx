@@ -27,13 +27,14 @@ export default function TopMenu() {
 
     {currentAdmin && (
       <>
-      <HStack paddingTop={4} paddingX={340} justifyContent="flex-start">
-        <Button onClick={() => next(false)}>
+      <HStack paddingTop={4} marginLeft="17.3%" marginRight="17.%" spacing={1}>
+        <Button size='xs' backgroundColor="white" onClick={() => next(false)}>
             <ChevronLeftIcon boxSize={6} />
           </Button>
-          <Button onClick={() => next(true)}>
+          <Button size='xs' backgroundColor="white" onClick={() => next(true)}>
             <ChevronRightIcon boxSize={6} />
           </Button>
+
           <Breadcrumb spacing='8px' separator={<ChevronRightIcon color='gray.500' />}>
           <BreadcrumbItem>
             <BreadcrumbLink href='#'>Home</BreadcrumbLink>
