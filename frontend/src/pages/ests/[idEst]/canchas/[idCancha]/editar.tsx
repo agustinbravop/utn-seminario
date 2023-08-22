@@ -178,8 +178,8 @@ export default function EditCourtPage() {
       precioReserva: 0,
       precioSenia: undefined,
       dias: [],
-    })};
-    formOnClose();
+    });
+    formOnClose()};
   };
 
   const handleDelete = (index: number) => {
