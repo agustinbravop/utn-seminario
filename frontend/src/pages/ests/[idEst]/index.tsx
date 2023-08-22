@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { Establecimiento } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import {
   Box,
@@ -22,30 +20,24 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import {
-  deleteEstablecimientoByID,
-  getEstablecimientoByID,
+  useEliminarEstablecimiento,
+  useEstablecimientoByID,
 } from "@/utils/api/establecimientos";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { ApiError } from "@/utils/api";
-import { useMutation } from "@tanstack/react-query";
 import { defImage } from "@/utils/const/const";
 
 export default function CourtPage() {
   const { idEst } = useParams();
-
-  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
-    getEstablecimientoByID(Number(idEst))
-  );
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { mutate: mutateDelete } = useMutation<void, ApiError>({
-    mutationFn: () => deleteEstablecimientoByID(data?.id),
+  const { data } = useEstablecimientoByID(Number(idEst));
+
+  const { mutate: mutateDelete } = useEliminarEstablecimiento({
     onSuccess: () => {
       toast({
         title: "Establecimiento eliminado.",
@@ -66,22 +58,9 @@ export default function CourtPage() {
   });
 
   const handleEliminar = () => {
-    mutateDelete();
+    mutateDelete(Number(data?.id));
     onClose();
   };
-
-    /*
-    <Heading
-        size="md"
-        fontSize="26px"
-        textAlign="left"
-        marginLeft="16%"
-        marginTop="20px"
-      >
-        {" "}
-        Información{" "}
-      </Heading>
-    */
 
   return (
     <>
@@ -94,7 +73,7 @@ export default function CourtPage() {
       >
         <Text>
           Esta es la información que se muestra al usuario de su
-          establecimiento. 
+          establecimiento.
         </Text>
         <HStack
           marginLeft="auto"

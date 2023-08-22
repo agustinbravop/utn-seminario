@@ -6,6 +6,7 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 export type Path =
   | `/`
   | `/admin/:idAdmin`
+  | `/admin/:idAdmin/mejorarSuscripcion`
   | `/admin/:idAdmin/nuevoEstablecimiento`
   | `/admin/:idAdmin/perfil`
   | `/ests/:idEst`
@@ -14,12 +15,14 @@ export type Path =
   | `/ests/:idEst/canchas/:idCancha/editar`
   | `/ests/:idEst/canchas/nueva`
   | `/ests/:idEst/editar`
+  | `/ests/:idEst/reservas`
   | `/login`
   | `/subscribe`
   | `/suscripciones`
 
 export type Params = {
   '/admin/:idAdmin': { idAdmin: string }
+  '/admin/:idAdmin/mejorarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/nuevoEstablecimiento': { idAdmin: string }
   '/admin/:idAdmin/perfil': { idAdmin: string }
   '/ests/:idEst': { idEst: string }
@@ -28,6 +31,7 @@ export type Params = {
   '/ests/:idEst/canchas/:idCancha/editar': { idEst: string; idCancha: string }
   '/ests/:idEst/canchas/nueva': { idEst: string }
   '/ests/:idEst/editar': { idEst: string }
+  '/ests/:idEst/reservas': { idEst: string }
 }
 
 export type ModalPath = never

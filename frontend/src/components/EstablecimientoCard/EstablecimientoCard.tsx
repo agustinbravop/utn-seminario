@@ -25,7 +25,12 @@ export default function EstablecimientoCard({
   establecimiento,
 }: EstablecimientoCardProps) {
   return (
-    <Card width="300px" height="450px">
+    <Link to={`/ests/${establecimiento.id}`}>
+    <Card width="300px" height="370px"  
+           _hover={{ transform: 'scale(1.01)', backgroundColor: '#f8fafd' }} 
+           onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.01)')}
+           onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+         >
       <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
         <Image
           src={
@@ -39,48 +44,23 @@ export default function EstablecimientoCard({
           height="100%"
           width="100%"
         />
-      </Box>
+      </Box> 
       <CardBody height="300px">
         <VStack spacing="0">
           <Heading size="md" marginBottom="10px">
             {establecimiento.nombre}
           </Heading>
           <Text marginBottom="0">
-            <Icon as={MdPlace} boxSize={5} color="gray" />{" "}
+            <Icon as={MdPlace} boxSize={4} mr='2' />{" "}
             {establecimiento.direccion}
           </Text>
           <Text>
-            <PhoneIcon boxSize={3.5} color="gray" /> {establecimiento.telefono}
+            <PhoneIcon boxSize={4} mr='2' /> {establecimiento.telefono}
           </Text>
           <Text>{establecimiento.horariosDeAtencion}</Text>
         </VStack>
       </CardBody>
-      <CardFooter display="flex" justify="center">
-        <HStack spacing={5}>
-          <Link to={`/ests/${establecimiento.id}`}>
-            <Button leftIcon={<InfoIcon />}>Info</Button>
-          </Link>
-          <Link to={`/ests/${establecimiento.id}/canchas`}>
-            <Button
-              leftIcon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-eye-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                </svg>
-              }
-            >
-              Canchas
-            </Button>
-          </Link>
-        </HStack>
-      </CardFooter>
     </Card>
+    </Link>
   );
 }

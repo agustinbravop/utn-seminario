@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 const CarouselImg = styled.img`
   width: 100%;
@@ -79,7 +80,7 @@ export default function Carousel({
     if (autoPlay) {
       const interval = setInterval(() => {
         selectNewImage(images, +1);
-      }, 3000);
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [autoPlay, images, selectNewImage]);
@@ -103,10 +104,10 @@ export default function Carousel({
       {showButtons && (
         <>
           <CarouselButton onClick={previous} style={{ left: "10px" }}>
-            {"<"}
+            <ChevronLeftIcon boxSize={10}/>
           </CarouselButton>
           <CarouselButton onClick={next} style={{ right: "10px" }}>
-            {">"}
+            <ChevronRightIcon boxSize={10}/>
           </CarouselButton>
         </>
       )}

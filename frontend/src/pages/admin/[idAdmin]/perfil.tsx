@@ -11,20 +11,13 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-export default function PerfilPage() {
+export default function PerfilPage() { 
   const { currentAdmin } = useCurrentAdmin();
 
   return (
     <>
       <VStack>
-        <Card
-          // justifyContent="center"
-          boxSize="40rem"
-          width="40%"
-          height="70%"
-          // marginLeft="32%"
-          marginTop="5%"
-        >
+        <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
           <CardHeader>
             <Heading size="lg" textAlign="center">
               Mi perfil
@@ -42,19 +35,19 @@ export default function PerfilPage() {
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  usuario
+                  Usuario
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.usuario}</Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  correo
+                  Correo
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.correo}</Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  telefono
+                  Teléfono
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.telefono}</Text>
               </Box>
@@ -68,7 +61,7 @@ export default function PerfilPage() {
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  Suscripcion
+                  Suscripción
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.suscripcion.nombre}</Text>
               </Box>

@@ -53,7 +53,7 @@ export default function LandingPage() {
                 ¿Queres publicitar tu Establecimiento?
               </Heading>
               <Text maxWidth="400px" textAlign="left">
-                Campo de Juego te permite administrar las reservas de tus
+                Play Finder te permite administrar las reservas de tus
                 canchas, aceptar pagos a través de Mercado Pago, ver reportes de
                 ingresos y mucho más.
               </Text>

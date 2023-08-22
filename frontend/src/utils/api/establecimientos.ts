@@ -1,5 +1,11 @@
-import { get, API_URL, del, patchFormData, put, post } from ".";
+import { API_URL, del, patchFormData, put, post } from ".";
 import { Establecimiento } from "@/models";
+import {
+  useApiQuery,
+  UseApiMutationOptions,
+  UseApiQueryOptions,
+  useApiMutation,
+} from "@/hooks";
 
 export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
 
@@ -18,37 +24,63 @@ function modificarImagen(est: Establecimiento, imagen?: File) {
   );
 }
 
-export async function crearEstablecimiento(
-  est: CrearEstablecimientoReq,
-  imagen?: File
-): Promise<Establecimiento> {
-  return post<Establecimiento>(`${API_URL}/establecimientos`, est).then((est) =>
-    modificarImagen(est, imagen)
+export function useCrearEstablecimiento(
+  options?: UseApiMutationOptions<
+    CrearEstablecimientoReq & { imagen?: File },
+    Establecimiento
+  >
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: ({ imagen, ...est }) =>
+      post<Establecimiento>(`${API_URL}/establecimientos`, est).then((est) =>
+        modificarImagen(est, imagen)
+      ),
+  });
+}
+
+export function useModificarEstablecimiento(
+  options?: UseApiMutationOptions<
+    ModificarEstablecimientoReq & { imagen?: File },
+    Establecimiento
+  >
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: ({ imagen, ...est }) =>
+      put<Establecimiento>(`${API_URL}/establecimientos/${est.id}`, est).then(
+        (est) => modificarImagen(est, imagen)
+      ),
+  });
+}
+
+export function useEstablecimientosByAdminID(
+  idAdmin: number,
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "byAdmin", idAdmin],
+    `${API_URL}/establecimientos/byAdmin/${idAdmin}`,
+    { ...options, initialData: [] }
   );
 }
 
-export async function modificarEstablecimiento(
-  establecimiento: ModificarEstablecimientoReq,
-  imagen?: File
-): Promise<Establecimiento> {
-  return put<Establecimiento>(
-    `${API_URL}/establecimientos/${establecimiento.id}`,
-    establecimiento
-  ).then((est) => modificarImagen(est, imagen));
+export function useEstablecimientoByID(
+  id: number,
+  options?: UseApiQueryOptions<Establecimiento>
+) {
+  return useApiQuery(
+    ["establecimientos", id],
+    `${API_URL}/establecimientos/${id}`,
+    options
+  );
 }
 
-export async function getEstablecimientosByAdminID(
-  idAdmin: number
-): Promise<Establecimiento[]> {
-  return get(`${API_URL}/establecimientos/byAdmin/${idAdmin}`);
-}
-
-export async function getEstablecimientoByID(
-  id: number
-): Promise<Establecimiento> {
-  return get(`${API_URL}/establecimientos/${id}`);
-}
-
-export async function deleteEstablecimientoByID(idEst: number | undefined) {
-  return del(`${API_URL}/establecimientos/${idEst}`);
+export function useEliminarEstablecimiento(
+  options?: UseApiMutationOptions<number, Establecimiento>
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: (idEst) => del(`${API_URL}/establecimientos/${idEst}`),
+  });
 }
