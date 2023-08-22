@@ -14,8 +14,10 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-export default function PerfilPage() {
-  const { currentAdmin } = useCurrentAdmin(); 
+
+export default function PerfilPage() { 
+  const { currentAdmin } = useCurrentAdmin();
+
 
   return (
     <>
@@ -49,19 +51,19 @@ export default function PerfilPage() {
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  usuario
+                  Usuario
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.usuario}</Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  correo
+                  Correo
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.correo}</Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  telefono
+                  Teléfono
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.telefono}</Text>
               </Box>
@@ -75,7 +77,7 @@ export default function PerfilPage() {
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  Suscripcion
+                  Suscripción
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.suscripcion.nombre}</Text>
               </Box>

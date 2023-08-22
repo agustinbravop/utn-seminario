@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,13 +9,11 @@ const queryClient = new QueryClient();
 
 const root = document.getElementById("root")!;
 ReactDOM.createRoot(root).render(
-  <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <CurrentAdminProvider>
-          <App />
-        </CurrentAdminProvider>
-      </QueryClientProvider>
-    </ChakraProvider>
-  </React.StrictMode>
+  <ChakraProvider theme={theme}>
+    <QueryClientProvider client={queryClient}>
+      <CurrentAdminProvider>
+        <App />
+      </CurrentAdminProvider>
+    </QueryClientProvider>
+  </ChakraProvider>
 );

@@ -5,10 +5,10 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 
 export type Path =
   | `/`
-  | `/HomePage/HomePage`
   | `/admin/:idAdmin`
   | `/admin/:idAdmin/editSuscripcion`
   | `/admin/:idAdmin/editar`
+  | `/admin/:idAdmin/mejorarSuscripcion`
   | `/admin/:idAdmin/nuevoEstablecimiento`
   | `/admin/:idAdmin/perfil`
   | `/admin/:idAdmin/selectEstab`
@@ -18,6 +18,7 @@ export type Path =
   | `/ests/:idEst/canchas/:idCancha/editar`
   | `/ests/:idEst/canchas/nueva`
   | `/ests/:idEst/editar`
+  | `/ests/:idEst/reservas`
   | `/login`
   | `/subscribe`
   | `/suscripciones`
@@ -26,6 +27,7 @@ export type Params = {
   '/admin/:idAdmin': { idAdmin: string }
   '/admin/:idAdmin/editSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/editar': { idAdmin: string }
+  '/admin/:idAdmin/mejorarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/nuevoEstablecimiento': { idAdmin: string }
   '/admin/:idAdmin/perfil': { idAdmin: string }
   '/admin/:idAdmin/selectEstab': { idAdmin: string }
@@ -35,6 +37,7 @@ export type Params = {
   '/ests/:idEst/canchas/:idCancha/editar': { idEst: string; idCancha: string }
   '/ests/:idEst/canchas/nueva': { idEst: string }
   '/ests/:idEst/editar': { idEst: string }
+  '/ests/:idEst/reservas': { idEst: string }
 }
 
 export type ModalPath = never

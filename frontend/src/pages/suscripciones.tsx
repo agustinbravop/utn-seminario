@@ -10,9 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
-import { getSuscripciones } from "@/utils/api/auth";
-import { Suscripcion } from "@/models";
-import { useQuery } from "@tanstack/react-query";
+import { useSuscripciones } from "@/utils/api/auth";
 import { Link } from "react-router-dom";
 
 const iconos = [
@@ -22,10 +20,8 @@ const iconos = [
 ];
 
 export default function SuscripcionesPage() {
-  const { data, isLoading, isError } = useQuery<Suscripcion[]>(
-    ["suscripciones"],
-    getSuscripciones
-  );
+  const { data, isLoading, isError } = useSuscripciones();
+
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {

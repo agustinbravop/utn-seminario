@@ -1,8 +1,6 @@
 import PaymentForm from "@/components/PaymentForm/PaymentForm";
-import { Administrador } from "@/models";
 import { useLocation, useNavigate } from "react-router";
-import { ApiError } from "@/utils/api";
-import { RegistrarAdmin, apiRegister } from "@/utils/api/auth";
+import { RegistrarAdminReq, useRegistrarAdmin } from "@/utils/api/auth";
 import * as Yup from "yup";
 import {
   HStack,
@@ -15,16 +13,13 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import useMutationForm from "@/hooks/useMutationForm";
-
-type FormState = RegistrarAdmin & {
-  clave: string;
-};
+import { useYupForm } from "@/hooks/useYupForm";
 
 const today = new Date();
 const currentYear = today.getFullYear() % 100;
 
-const customValidation = (value: any) => {
+// Valida que la tarjeta no vence antes del mes siguiente al actual.
+const validarVencimientoCvv = (value: any) => {
   const [inputMonth, inputYear] = value.split("/").map(Number);
   const currentMonth = today.getMonth() + 1;
   const monthDiff = (inputYear - currentYear) * 12 + inputMonth - currentMonth;
@@ -50,7 +45,7 @@ const validationSchema = Yup.object({
     vencimiento: Yup.string()
       .matches(/\d\d\/\d\d\d?\d?/, "formato 'MM/AA'")
       .required("Obligatorio")
-      .test("No debe vencer el mes siguiente", customValidation),
+      .test("No debe vencer el mes siguiente", validarVencimientoCvv),
     nombre: Yup.string().required("Obligatorio"),
     numero: Yup.string()
       .matches(/[0-9]+/, "Debe ser un número")
@@ -67,13 +62,19 @@ export default function SubscribePage() {
   const { search } = useLocation();
   const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
-  const { methods, mutate, isLoading, isError } = useMutationForm<
-    Administrador,
-    ApiError,
-    FormState
-  >({
+  const methods = useYupForm<RegistrarAdminReq>({
     validationSchema,
-    mutationFn: (registrarAdmin) => apiRegister(registrarAdmin),
+    defaultValues: {
+      tarjeta: {
+        vencimiento: "",
+        numero: "",
+        nombre: "",
+      },
+      idSuscripcion: Number(idSuscripcion),
+    },
+  });
+
+  const { mutate, isLoading, isError } = useRegistrarAdmin({
     onSuccess: () => {
       toast({
         title: "Cuenta registrada correctamente.",
@@ -91,16 +92,6 @@ export default function SubscribePage() {
         isClosable: true,
       });
     },
-    defaultValues: {
-      tarjeta: {
-        cvv: undefined,
-        vencimiento: "",
-        numero: "",
-        nombre: "",
-      },
-      idSuscripcion: Number(idSuscripcion),
-    },
-    mode: "onTouched",
   });
 
   return (

@@ -1,16 +1,18 @@
 import {
-  Button,
   Card,
   CardBody,
-  CardFooter,
   Heading,
   Image,
   Text,
   VStack,
+  Icon,
 } from "@chakra-ui/react";
 import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
+import { MdPlace } from "react-icons/md";
+import { CheckIcon, SmallCloseIcon } from '@chakra-ui/icons'
+
 
 type estabProps = {
   cancha: Cancha;
@@ -18,7 +20,11 @@ type estabProps = {
 
 export default function Court({ cancha }: estabProps) {
   return (
-    <Card maxWidth="xs" height="450px" width="300px">
+    <Link to={`${cancha.id}`}>
+     <Card width="300px" height="370px"  
+    _hover={{ transform: 'scale(1.01)', backgroundColor: '#f8fafd' }} 
+    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.01)')}
+    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}>
       <Image
         src={!(cancha?.urlImagen === null) ? cancha?.urlImagen : defImage}
         alt={`Imagen del cancha ${cancha.nombre}`}
@@ -34,31 +40,12 @@ export default function Court({ cancha }: estabProps) {
           </Heading>
           <Text marginBottom="5">{cancha.descripcion}</Text>
           <Text marginBottom="0">
-            {cancha.habilitada ? "Esta habilitada" : "No esta habilitada"}
+          <Icon as={cancha.habilitada ? CheckIcon : SmallCloseIcon} boxSize={4} mr='2' />{" "}
+            {cancha.habilitada ? " Esta habilitada" : " No esta habilitada"}
           </Text>
         </VStack>
       </CardBody>
-      <CardFooter display="flex" justify="center">
-        <Link to={`${cancha.id}`}>
-          <Button
-            leftIcon={
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-eye-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-              </svg>
-            }
-          >
-            Detalles
-          </Button>
-        </Link>
-      </CardFooter>
     </Card>
+    </Link>
   );
 }

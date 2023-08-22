@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { Establecimiento } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import {
   Box,
@@ -22,30 +20,24 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import {
-  deleteEstablecimientoByID,
-  getEstablecimientoByID,
+  useEliminarEstablecimiento,
+  useEstablecimientoByID,
 } from "@/utils/api/establecimientos";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { ApiError } from "@/utils/api";
-import { useMutation } from "@tanstack/react-query";
 import { defImage } from "@/utils/const/const";
 
 export default function CourtPage() {
   const { idEst } = useParams();
-
-  const { data } = useQuery<Establecimiento>(["establecimientos", idEst], () =>
-    getEstablecimientoByID(Number(idEst))
-  );
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { mutate: mutateDelete } = useMutation<void, ApiError>({
-    mutationFn: () => deleteEstablecimientoByID(data?.id),
+  const { data } = useEstablecimientoByID(Number(idEst));
+
+  const { mutate: mutateDelete } = useEliminarEstablecimiento({
     onSuccess: () => {
       toast({
         title: "Establecimiento eliminado.",
@@ -66,27 +58,18 @@ export default function CourtPage() {
   });
 
   const handleEliminar = () => {
-    mutateDelete();
+    mutateDelete(Number(data?.id));
     onClose();
   };
+
   return (
     <>
       <SubMenu />
-      <Heading
-        size="md"
-        fontSize="26px"
-        textAlign="left"
-        marginLeft="16%"
-        marginTop="20px"
-      >
-        {" "}
-        Información{" "}
-      </Heading>
       <HStack
         marginRight="16%"
         marginLeft="16%"
         marginBottom="30px"
-        marginTop="7px"
+        marginTop="0px"
       >
         <Text>
           Esta es la información que se muestra al usuario de su
@@ -99,12 +82,6 @@ export default function CourtPage() {
           spacing={5}
           align="center"
         >
-          <Link to="editar">
-            <Button leftIcon={<EditIcon />}>Editar </Button>
-          </Link>
-          <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
-            Eliminar
-          </Button>
         </HStack>
       </HStack>
       <Box display="flex" justifyContent="center">
@@ -161,6 +138,12 @@ export default function CourtPage() {
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>
+                    <Link to="editar">
+                      <Button mt="50px" mr="40px" leftIcon={<EditIcon />}>Editar </Button>
+                    </Link>
+                    <Button mt="50px" onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                      Eliminar
+                    </Button>            
                   </Box>
                 </Stack>
               </Box>

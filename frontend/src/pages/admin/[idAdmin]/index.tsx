@@ -10,9 +10,7 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { Establecimiento } from "@/models";
-import { getEstablecimientosByAdminID } from "@/utils/api/establecimientos";
 import { GrAddCircle } from "react-icons/gr";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useState } from "react";
@@ -20,6 +18,7 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Alerta from "@/components/Alerta/Alerta";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
+import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -43,24 +42,22 @@ export default function EstablecimientosPage() {
     setFiltro(e.target.value);
   };
 
-  const { data, isLoading, isError } = useQuery<Establecimiento[]>({
-    queryKey: ["establecimientos", currentAdmin?.id],
-    queryFn: () => getEstablecimientosByAdminID(Number(currentAdmin?.id)),
-    initialData: [],
-  });
+  const { data, isLoading, isError } = useEstablecimientosByAdminID(
+    Number(currentAdmin?.id)
+  );
 
   if (!currentAdmin) {
     return <Navigate to="/login" />;
   }
 
-  const establecimientosFiltrados = data?.filter((establecimiento) =>
+  const establecimientosFiltrados = data.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
     <>
       <Heading textAlign="center" paddingBottom="12" mt="40px">
-        Mis Establecimientos
+        Establecimientos
       </Heading>
       <HStack
         marginRight="16%"
@@ -68,7 +65,7 @@ export default function EstablecimientosPage() {
         marginBottom="50px"
         marginTop="20px"
       >
-        <InputGroup width="24%">
+        <InputGroup width="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>
@@ -94,6 +91,13 @@ export default function EstablecimientosPage() {
           </Text>
           {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
             <Link to="nuevoEstablecimiento">
+              <Button leftIcon={<Icon as={GrAddCircle} />}>
+                Agregar Establecimiento
+              </Button>
+            </Link>
+          )}
+          {data.length === currentAdmin.suscripcion.limiteEstablecimientos && (
+            <Link to="mejorarSuscripcion">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>

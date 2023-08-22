@@ -1,10 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { Cancha } from "@/models";
 import { useParams } from "react-router";
 import {
   Button,
   HStack,
-  Heading,
   Icon,
   Input,
   InputGroup,
@@ -12,7 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Courts from "@/components/Courts/Courts";
-import { getCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
 import Alerta from "@/components/Alerta/Alerta";
@@ -23,9 +20,8 @@ import SubMenu from "@/components/SubMenu/SubMenu";
 
 export default function CanchasPage() {
   const { idEst } = useParams();
-  const { data, isLoading, isError } = useQuery<Cancha[]>(
-    ["canchas", idEst],
-    () => getCanchasByEstablecimientoID(Number(idEst))
+  const { data, isLoading, isError } = useCanchasByEstablecimientoID(
+    Number(idEst)
   );
 
   const [filtro, setFiltro] = useState("");
@@ -33,30 +29,20 @@ export default function CanchasPage() {
     setFiltro(e.target.value);
   };
 
-  const canchasFiltradas =
-    data?.filter((cancha) =>
-      cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
-    ) ?? [];
+  const canchasFiltradas = data.filter((cancha) =>
+    cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
+  );
 
   return (
     <>
-      <SubMenu />
-      <Heading
-        size="md"
-        fontSize="26px"
-        textAlign="left"
-        marginLeft="16%"
-        mt="20px"
-      >
-        Canchas
-      </Heading>
+      <SubMenu  />
       <HStack
         marginRight="16%"
         marginLeft="16%"
         marginBottom="50px"
-        marginTop="20px"
+        marginTop="0px"
       >
-        <InputGroup width="24%">
+        <InputGroup width="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>
@@ -77,7 +63,7 @@ export default function CanchasPage() {
           spacing={5}
           align="center"
         >
-          <Text mb="0">{data?.length} canchas</Text>
+          <Text mb="0">{data?.length} cancha{data?.length === 1 || "s"}</Text>
           <Link to="nueva">
             <Button leftIcon={<Icon as={GrAddCircle} />}>Agregar Cancha</Button>
           </Link>
