@@ -169,6 +169,7 @@ export default function EditCourtPage() {
   });
 
   const agregarHorario = () => {
+    if (methods.formState.isDirty) {
     append({
       disciplina: "-",
       horaInicio: "-",
@@ -177,8 +178,8 @@ export default function EditCourtPage() {
       precioReserva: 0,
       precioSenia: undefined,
       dias: [],
-    });
-    onClose();
+    })};
+    formOnClose();
   };
 
   const handleDelete = (index: number) => {
