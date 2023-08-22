@@ -138,12 +138,14 @@ export default function CourtPage() {
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>
-                    <Link to="editar">
-                      <Button mt="50px" mr="40px" leftIcon={<EditIcon />}>Editar </Button>
-                    </Link>
-                    <Button mt="50px" onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
-                      Eliminar
-                    </Button>            
+                    <Box justifyContent="center" alignItems="center" width="100%" >
+                      <Link to="editar">
+                        <Button mt="50px" mr="30px" leftIcon={<EditIcon />}>Editar </Button>
+                      </Link>
+                      <Button mt="50px" onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                        Eliminar
+                      </Button>
+                    </Box>            
                   </Box>
                 </Stack>
               </Box>

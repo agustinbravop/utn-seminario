@@ -22,13 +22,13 @@ import {
 import * as Yup from "yup";
 import { useParams } from "@/router";
 import { editarPerfil, getAdminById } from "@/utils/api/administrador";
-import { useQuery } from "@tanstack/react-query";
-import useMutationForm from "@/hooks/useMutationForm";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiError } from "@/utils/api";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { useYupForm } from "@/hooks";
 
 type FormState = Administrador;
 
@@ -68,14 +68,17 @@ export default function PerfilPage() {
     enabled: true,
   });
 
-  const { methods, mutate } = useMutationForm<
+  const methods = useYupForm(
+   { validationSchema,
+    resetValues: data,
+}
+  )
+  const { mutate } = useMutation<
     Administrador,
     ApiError,
     FormState
   >({
-    resetValues: data,
     mutationFn: (admin) => editarPerfil(admin),
-    validationSchema,
     onSuccess: () => {
       toast({
         title: "Perfil actualizado",

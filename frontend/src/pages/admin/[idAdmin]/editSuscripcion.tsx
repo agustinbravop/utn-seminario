@@ -19,7 +19,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
-import { getSuscripciones } from "@/utils/api/auth";
+import { useSuscripciones } from "@/utils/api/auth";
 import { Administrador, Suscripcion } from "@/models";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
@@ -66,10 +66,7 @@ export default function SuscripcionesPage() {
     },
   });
 
-  const { data, isError, isLoading } = useQuery<Suscripcion[]>(
-    ["suscripciones"],
-    getSuscripciones
-  );
+  const { data, isError, isLoading } = useSuscripciones()
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {

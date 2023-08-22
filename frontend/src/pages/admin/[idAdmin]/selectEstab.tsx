@@ -1,8 +1,8 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Establecimiento } from "@/models";
 import {
-  deleteEstablecimientoByID,
-  getEstablecimientosByAdminID,
+  useEliminarEstablecimiento,
+  useEstablecimientosByAdminID,
 } from "@/utils/api/establecimientos";
 import { defImage } from "@/utils/const/const";
 import { useQuery } from "@tanstack/react-query";
@@ -34,11 +34,9 @@ export default function SelectEstab() {
     return;
   }
 
-  const { data } = useQuery<Establecimiento[]>(
-    ["establecimientos", currentAdmin?.id],
-    () => getEstablecimientosByAdminID(Number(currentAdmin?.id))
-  );
+  const { data } = useEstablecimientosByAdminID(Number(currentAdmin?.id))
 
+  const { mutate } = useEliminarEstablecimiento()
   // array de los ids de los establecimientos a conservar. Los no seleccionados se eliminan.
   const [selected, setSelected] = useState<number[]>([]);
   const handleEstablecimientoToggle = (idEst: number) => {
@@ -103,7 +101,7 @@ export default function SelectEstab() {
     }
 
     Promise.all(
-      eliminados.map((e) => deleteEstablecimientoByID(e.id)) || []
+      eliminados.map((e) => mutate(e.id)) || []
     ).then(() => navigate(`/admin/${currentAdmin?.id}`));
   };
 

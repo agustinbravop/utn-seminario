@@ -10,7 +10,7 @@ export async function getAdminById(id: number): Promise<Administrador> {
 export async function editarPerfil(
   admin: ModificarAdmin
 ): Promise<Administrador> {
-  return put<Administrador>(
+  return patch<Administrador>(
     `${API_URL}/administradores/${admin.id}`,
     admin
   );

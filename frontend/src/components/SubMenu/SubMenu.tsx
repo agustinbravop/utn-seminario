@@ -7,11 +7,11 @@ import Alerta from "../../components/Alerta/Alerta";
 import { Link } from "react-router-dom";
 
 export default function SubMenu({
-  canchas,
+  canchas = false,
   nombreCancha,
 }: {
-  canchas: boolean;
-  nombreCancha: string;
+  canchas?: boolean;
+  nombreCancha?: string;
 }) {
   const { idEst, idCancha } = useParams();
   const location = useLocation();
