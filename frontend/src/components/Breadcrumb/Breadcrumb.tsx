@@ -43,7 +43,7 @@ export default function Breadscrumb() {
                                 <BreadcrumbItem key={actualLink}>
                                     <BreadcrumbLink href={actualLink}> Home </BreadcrumbLink>
                                 </BreadcrumbItem> :
-                                (crumb === idAdmin.toString()) ? null :
+                                // (crumb === idAdmin.toString()) ? null :
                                     <BreadcrumbItem key={actualLink}>
                                         <BreadcrumbLink href={actualLink}> {(crumb.charAt(0).toUpperCase() + crumb.slice(1)).replace(/([a-z])([A-Z])/g, '$1 $2')} </BreadcrumbLink>
                                     </BreadcrumbItem>
