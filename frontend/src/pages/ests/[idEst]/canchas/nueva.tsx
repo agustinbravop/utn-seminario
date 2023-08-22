@@ -84,6 +84,11 @@ const disciplinas = [
   "Ping-Pong",
 ];
 
+const duracionReserva = [
+  30,
+  60,
+]
+
 const horas = [
   "1:00",
   "2:00",
@@ -327,7 +332,11 @@ function NuevaCancha() {
               )}
             </>
           </VStack>
-          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+          <HStack justifyContent="flex-end" spacing={30}>
+              <Button onClick={() => navigate(-1) } >Cancelar</Button>
+              <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+          </HStack>
+      
         </VStack>
 
         <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
@@ -376,13 +385,25 @@ function NuevaCancha() {
                     </option>
                   ))}
                 </SelectControl>
-                <InputControl
+                {/* <InputControl
                   isRequired
                   placeholder=""
                   name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
                   type="number"
                   label="Duración de la reserva (minutos)"
-                ></InputControl>
+                ></InputControl> */}
+                <SelectControl
+                  placeholder="Seleccionar duración (min)"
+                  label=""
+                  name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
+                  isRequired
+                >
+                  {duracionReserva.map((duracion, i) => (
+                    <option key={i} value={duracion}>
+                      {duracion}
+                    </option>
+                  ))}
+                </SelectControl>
               </HStack>
               <HStack width="600px" py="10px">
                 <InputControl

@@ -78,6 +78,11 @@ const disciplinas = [
   "Ping-Pong",
 ];
 
+const duracionReserva = [
+  30,
+  60,
+];
+
 const horas = [
   "1:00",
   "2:00",
@@ -299,7 +304,7 @@ export default function EditCourtPage() {
             </VStack>
             <>
               {disponibilidadesArray.length > 0 && (
-                <TableContainer paddingTop="20px" paddingBottom="20px">
+                <TableContainer paddingTop="20px" paddingBottom="5px">
                   <Table variant="simple" size="sm">
                     <Thead backgroundColor="lightgray">
                       <Tr>
@@ -353,8 +358,16 @@ export default function EditCourtPage() {
             </>
           </VStack>
 
-          <Container centerContent mt="20px">
-            <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
+          <Container centerContent mt="10px">
+          <HStack justifyContent="flex-end" spacing={30}>
+              <Button onClick={() => navigate(-1) } >Cancelar</Button>
+              <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
+          </HStack>
+            {isError && (
+              <Alert status="error">
+                Error al intentar registrar el establecimiento. Intente de nuevo
+              </Alert>
+            )}
           </Container>
 
           <Modal isOpen={isOpen} onClose={onClose} isCentered>
