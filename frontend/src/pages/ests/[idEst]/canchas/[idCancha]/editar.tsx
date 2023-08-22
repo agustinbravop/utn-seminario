@@ -3,7 +3,6 @@ import { Cancha, Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Alert,
   Checkbox,
   Container,
   HStack,
@@ -38,9 +37,14 @@ import {
   ModificarCanchaReq,
   getCanchaByID,
   modificarCancha,
-  deleteCanchaByID,
 } from "@/utils/api/canchas";
-import { CheckboxGroupControl, InputControl, SelectControl, SubmitButton, SwitchControl } from "@/components/forms";
+import {
+  CheckboxGroupControl,
+  InputControl,
+  SelectControl,
+  SubmitButton,
+  SwitchControl,
+} from "@/components/forms";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -60,9 +64,9 @@ const validationSchema = Yup.object({
   idEstablecimiento: Yup.number().required(),
   imagen: Yup.mixed<File>().optional(),
   disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
-  disponibilidades: Yup.array(Yup.mixed<Disponibilidad>().required()).default(
-    []
-  ),
+  disponibilidades: Yup.array(Yup.mixed<Disponibilidad>().required())
+    .default([])
+    .min(2),
 });
 
 const disciplinas = [
@@ -112,11 +116,7 @@ export default function EditCourtPage() {
     enabled: true,
   });
 
-  const { mutate, isLoading, isError } = useMutation<
-    Cancha,
-    ApiError,
-    FormState
-  >({
+  const { mutate, isLoading } = useMutation<Cancha, ApiError, FormState>({
     mutationFn: ({ imagen, ...cancha }) => modificarCancha(cancha, imagen),
     onSuccess: () => {
       toast({
@@ -139,9 +139,6 @@ export default function EditCourtPage() {
 
   const methods = useForm<FormState>({
     resolver: yupResolver(validationSchema),
-    defaultValues: async () => {
-      return Promise.resolve({ ...(data as Cancha), imagen: undefined });
-    },
     mode: "onTouched",
   });
 
@@ -154,6 +151,7 @@ export default function EditCourtPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
+  /*
   const { mutate: mutateDelete } = useMutation<void, ApiError>({
     mutationFn: () => deleteCanchaByID(data?.idEstablecimiento, data?.id),
     onSuccess: () => {
@@ -174,6 +172,7 @@ export default function EditCourtPage() {
       });
     },
   });
+*/
 
   const { fields, append } = useFieldArray({
     name: "disponibilidades",
@@ -181,17 +180,18 @@ export default function EditCourtPage() {
   });
 
   const agregarHorario = () => {
-    append({
-      disciplina: "-",
-      horaInicio: "-",
-      horaFin: "",
-      minutosReserva: 0, 
-      precioReserva: 0,
-      precioSenia: undefined,
-      dias: [],
-    });
-    //methods.reset();
-    onClose();  
+    if (methods.formState.isDirty) {
+      append({
+        disciplina: "-",
+        horaInicio: "-",
+        horaFin: "-",
+        minutosReserva: 0,
+        precioReserva: 0,
+        precioSenia: undefined,
+        dias: [],
+      });
+      formOnClose();
+    }
   };
 
   const disponibilidadesArray = methods.getValues("disponibilidades") || [];
@@ -203,16 +203,15 @@ export default function EditCourtPage() {
   };
 
   useEffect(() => {
-    console.log('Nuevo valor del array:', disponibilidadesArray);
-    console.log('Longitud actual:', disponibilidadesArray.length)
+    console.log("Nuevo valor del array:", disponibilidadesArray);
+    console.log("Longitud actual:", disponibilidadesArray.length);
   }, [disponibilidadesArray]);
-
 
   useEffect(() => {
     append({
       disciplina: "-",
       horaInicio: "-",
-      horaFin: "",
+      horaFin: "-",
       minutosReserva: 0,
       precioReserva: 0,
       precioSenia: undefined,
@@ -220,14 +219,13 @@ export default function EditCourtPage() {
     });
   }, [methods, data]);
 
-  const last = disponibilidadesArray.length -1;
-  const lastFieldIndex = fields.length-1;
+  //const last = disponibilidadesArray.length - 1;
+  const lastFieldIndex = fields.length - 1;
   const {
     isOpen: formIsOpen,
     onOpen: formOnOpen,
     onClose: formOnClose,
   } = useDisclosure();
-
 
   return (
     <>
@@ -312,11 +310,11 @@ export default function EditCourtPage() {
                         <Th>p. reserva/seña</Th>
                         <Th> dias </Th>
                         <Th> Eliminar </Th>
-                      </Tr> 
+                      </Tr>
                     </Thead>
                     <Tbody>
                       {methods.getValues("disponibilidades").map((d, index) =>
-                        index < disponibilidadesArray.length -1 ? (
+                        index < disponibilidadesArray.length - 1 ? (
                           <Tr>
                             <Td> {d.disciplina} </Td>
                             <Td> {d.horaInicio} </Td>
@@ -357,11 +355,6 @@ export default function EditCourtPage() {
 
           <Container centerContent mt="20px">
             <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
-            {isError && (
-              <Alert status="error">
-                Error al intentar registrar el establecimiento. Intente de nuevo
-              </Alert>
-            )}
           </Container>
 
           <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -387,96 +380,93 @@ export default function EditCourtPage() {
               </ModalFooter>
             </ModalContent>
           </Modal>
-        </VStack>
-
-        <Modal size="2xl" isOpen={formIsOpen} onClose={formOnClose} isCentered>
+          <Modal
+            size="2xl"
+            isOpen={formIsOpen}
+            onClose={formOnClose}
+            isCentered
+          >
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>Agregar disponibilidad</ModalHeader>
               <ModalBody>
-                
-                {(
-            <>
-              <HStack width="600px" py="10px">
-
-                <SelectControl
-                  placeholder="Elegir horario"
-                  label="Horario de Inicio"
-                  name={`disponibilidades[${lastFieldIndex}].horaInicio`}
-                  isRequired
-                >
-                  {horas.map((hora, i) => (
-                    <option key={i} value={hora}>
-                      {hora}
-                    </option>
-                  ))}
-                </SelectControl>
-                <SelectControl
-                  placeholder="Elegir horario"
-                  label="Horario de Fin"
-                  name={`disponibilidades[${lastFieldIndex}].horaFin`}
-                  isRequired
-                >
-                  {horas.map((hora, i) => (
-                    <option key={i} value={hora}>
-                      {hora}
-                    </option>
-                  ))}
-                </SelectControl>
-              </HStack>
-              <HStack width="600px" py="10px">
-                <SelectControl
-                  placeholder="Seleccionar disciplina "
-                  label=""
-                  name={`disponibilidades[${lastFieldIndex}].disciplina`}
-                  isRequired
-                >
-                  {disciplinas.map((disciplina, i) => (
-                    <option key={i} value={disciplina}>
-                      {disciplina}
-                    </option>
-                  ))}
-                </SelectControl>
-                <InputControl
-                  isRequired
-                  placeholder=""
-                  name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
-                  type="number"
-                  label="Duración de la reserva (minutos)"
-                ></InputControl>
-              </HStack>
-              <HStack width="600px" py="10px">
-                <InputControl
-                  placeholder=""
-                  name={`disponibilidades[${lastFieldIndex}].precioReserva`}
-                  type="number"
-                  label="Precio de reserva"
-                  isRequired
-                ></InputControl>
-                <InputControl
-                  placeholder=""
-                  name={`disponibilidades[${lastFieldIndex}].precioSenia`}
-                  type="number"
-                  label="Seña de reserva"
-                ></InputControl>
-              </HStack>
-              <HStack py="10px" >
-                <CheckboxGroupControl
-                  name={`disponibilidades[${lastFieldIndex}].dias`}
-                >
-                  <HStack>
-                    <Checkbox value="Lunes">Lunes</Checkbox>
-                    <Checkbox value="Martes">Martes</Checkbox>
-                    <Checkbox value="Miércoles">Miércoles</Checkbox>
-                    <Checkbox value="Jueves">Jueves</Checkbox>
-                    <Checkbox value="Viernes">Viernes</Checkbox>
-                    <Checkbox value="Sábado">Sábado</Checkbox>
-                    <Checkbox value="Domingo">Domingo</Checkbox>
-                  </HStack>
-                </CheckboxGroupControl>
-              </HStack>
-            </>
-          )}
+                <HStack width="600px" py="10px">
+                  <SelectControl
+                    placeholder="Elegir horario"
+                    label="Horario de Inicio"
+                    name={`disponibilidades[${lastFieldIndex}].horaInicio`}
+                    isRequired={true}
+                  >
+                    {horas.map((hora, i) => (
+                      <option key={i} value={hora}>
+                        {hora}
+                      </option>
+                    ))}
+                  </SelectControl>
+                  <SelectControl
+                    placeholder="Elegir horario"
+                    label="Horario de Fin"
+                    name={`disponibilidades[${lastFieldIndex}].horaFin`}
+                    isRequired={true}
+                  >
+                    {horas.map((hora, i) => (
+                      <option key={i} value={hora}>
+                        {hora}
+                      </option>
+                    ))}
+                  </SelectControl>
+                </HStack>
+                <HStack width="600px" py="10px">
+                  <SelectControl
+                    placeholder="Disciplina"
+                    label="Seleccionar disciplina"
+                    name={`disponibilidades[${lastFieldIndex}].disciplina`}
+                    isRequired={true}
+                  >
+                    {disciplinas.map((disciplina, i) => (
+                      <option key={i} value={disciplina}>
+                        {disciplina}
+                      </option>
+                    ))}
+                  </SelectControl>
+                  <InputControl
+                    isRequired={true}
+                    placeholder=""
+                    name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
+                    type="number"
+                    label="Duración de la reserva (minutos)"
+                  ></InputControl>
+                </HStack>
+                <HStack width="600px" py="10px">
+                  <InputControl
+                    placeholder="Precio"
+                    name={`disponibilidades[${lastFieldIndex}].precioReserva`}
+                    type="number"
+                    label="Precio de reserva"
+                    isRequired={true}
+                  ></InputControl>
+                  <InputControl
+                    placeholder=""
+                    name={`disponibilidades[${lastFieldIndex}].precioSenia`}
+                    type="number"
+                    label="Seña de reserva"
+                  ></InputControl>
+                </HStack>
+                <HStack py="10px">
+                  <CheckboxGroupControl
+                    name={`disponibilidades[${lastFieldIndex}].dias`}
+                  >
+                    <HStack>
+                      <Checkbox value="Lunes">Lunes</Checkbox>
+                      <Checkbox value="Martes">Martes</Checkbox>
+                      <Checkbox value="Miércoles">Miércoles</Checkbox>
+                      <Checkbox value="Jueves">Jueves</Checkbox>
+                      <Checkbox value="Viernes">Viernes</Checkbox>
+                      <Checkbox value="Sábado">Sábado</Checkbox>
+                      <Checkbox value="Domingo">Domingo</Checkbox>
+                    </HStack>
+                  </CheckboxGroupControl>
+                </HStack>
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="gray" mr={3} onClick={formOnClose}>
@@ -492,6 +482,7 @@ export default function EditCourtPage() {
               </ModalFooter>
             </ModalContent>
           </Modal>
+        </VStack>
       </FormProvider>
     </>
   );
