@@ -80,6 +80,8 @@ const disciplinas = [
   "Ping-Pong",
 ];
 
+const duracionReserva = [30, 60];
+
 const horas = [
   "1:00",
   "2:00",
@@ -316,7 +318,10 @@ export default function NuevaCanchaPage() {
               )}
             </>
           </VStack>
-          <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+          <HStack justifyContent="flex-end" spacing={30}>
+            <Button onClick={() => navigate(-1)}>Cancelar</Button>
+            <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
+          </HStack>
         </VStack>
 
         <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
@@ -367,14 +372,19 @@ export default function NuevaCanchaPage() {
                       </option>
                     ))}
                   </SelectControl>
-                  <InputControl
-                    isRequired
-                    placeholder=""
+                  <SelectControl
+                    placeholder="Seleccionar duración (min)"
+                    label=""
                     name="minutosReserva"
-                    type="number"
                     onChange={handleDispChange}
-                    label="Duración de la reserva (minutos)"
-                  ></InputControl>
+                    isRequired
+                  >
+                    {duracionReserva.map((duracion, i) => (
+                      <option key={i} value={duracion}>
+                        {duracion}
+                      </option>
+                    ))}
+                  </SelectControl>
                 </HStack>
                 <HStack width="600px" py="10px">
                   <InputControl

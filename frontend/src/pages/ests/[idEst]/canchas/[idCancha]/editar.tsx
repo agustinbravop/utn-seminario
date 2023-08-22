@@ -78,6 +78,8 @@ const disciplinas = [
   "Ping-Pong",
 ];
 
+const duracionReserva = [30, 60];
+
 const horas = [
   "1:00",
   "2:00",
@@ -171,9 +173,9 @@ export default function EditCourtPage() {
       disciplina: "-",
       horaInicio: "-",
       horaFin: "",
-      minutosReserva: undefined,
-      precioReserva: null,
-      precioSenia: null,
+      minutosReserva: 0,
+      precioReserva: 0,
+      precioSenia: undefined,
       dias: [],
     });
     onClose();
@@ -201,9 +203,9 @@ export default function EditCourtPage() {
       disciplina: "-",
       horaInicio: "-",
       horaFin: "",
-      minutosReserva: undefined,
-      precioReserva: null,
-      precioSenia: null,
+      minutosReserva: 0,
+      precioReserva: 0,
+      precioSenia: undefined,
       dias: [],
     });
   }, [append]);
@@ -280,7 +282,7 @@ export default function EditCourtPage() {
             </VStack>
             <>
               {disponibilidadesArray.length > 0 && (
-                <TableContainer paddingTop="20px" paddingBottom="20px">
+                <TableContainer paddingTop="20px" paddingBottom="5px">
                   <Table variant="simple" size="sm">
                     <Thead backgroundColor="lightgray">
                       <Tr>
@@ -334,8 +336,11 @@ export default function EditCourtPage() {
             </>
           </VStack>
 
-          <Container centerContent mt="20px">
-            <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
+          <Container centerContent mt="10px">
+            <HStack justifyContent="flex-end" spacing={30}>
+              <Button onClick={() => navigate(-1)}>Cancelar</Button>
+              <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
+            </HStack>
             {isError && (
               <Alert status="error">
                 Error al intentar registrar el establecimiento. Intente de nuevo
@@ -414,13 +419,18 @@ export default function EditCourtPage() {
                         </option>
                       ))}
                     </SelectControl>
-                    <InputControl
-                      isRequired
-                      placeholder=""
+                    <SelectControl
+                      placeholder="Seleccionar duración (min)"
+                      label=""
                       name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
-                      type="number"
-                      label="Duración de la reserva (minutos)"
-                    ></InputControl>
+                      isRequired
+                    >
+                      {duracionReserva.map((duracion, i) => (
+                        <option key={i} value={duracion}>
+                          {duracion}
+                        </option>
+                      ))}
+                    </SelectControl>
                   </HStack>
                   <HStack width="600px" py="10px">
                     <InputControl

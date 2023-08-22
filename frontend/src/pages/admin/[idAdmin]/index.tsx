@@ -11,7 +11,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Establecimiento } from "@/models";
-import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
 import { GrAddCircle } from "react-icons/gr";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useState } from "react";
@@ -19,6 +18,7 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Alerta from "@/components/Alerta/Alerta";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
+import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -57,7 +57,7 @@ export default function EstablecimientosPage() {
   return (
     <>
       <Heading textAlign="center" paddingBottom="12" mt="40px">
-        Mis Establecimientos
+        Establecimientos
       </Heading>
       <HStack
         marginRight="16%"
@@ -91,6 +91,13 @@ export default function EstablecimientosPage() {
           </Text>
           {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
             <Link to="nuevoEstablecimiento">
+              <Button leftIcon={<Icon as={GrAddCircle} />}>
+                Agregar Establecimiento
+              </Button>
+            </Link>
+          )}
+          {data.length === currentAdmin.suscripcion.limiteEstablecimientos && (
+            <Link to="mejorarSuscripcion">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>
