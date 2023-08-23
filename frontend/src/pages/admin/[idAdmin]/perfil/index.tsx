@@ -34,9 +34,12 @@ export default function PerfilPage() {
             <Heading size="lg" textAlign="center">
               Mi perfil
             </Heading>
-            <Link to="../editar">
-              <Button leftIcon={<EditIcon />}>Editar </Button>
-            </Link>
+            <Box width="100%" display="flex" flexDirection="column" alignItems="flex-end" >
+             <Link to="editar">
+              <Button mt="20%" leftIcon={<EditIcon />}>Editar </Button>
+            </Link> 
+            </Box>
+            
             
           </CardHeader>
           <CardBody marginTop="28px">
@@ -81,12 +84,18 @@ export default function PerfilPage() {
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.suscripcion.nombre}</Text>
               </Box>
+              <Link to="editSuscripcion">
+              <Box width="100%" display="flex" flexDirection="column" alignItems="center" >
+             <Link to="editSuscripcion">
+             <Button>Actualizar Suscripción</Button> 
+            </Link> 
+            </Box>
+              
+            </Link>
             </Stack>
           </CardBody>
         </Card>
-            <Link to="editSuscripcion">
-              <Button>Actualizar Suscripcion</Button> 
-            </Link>
+            
       </VStack>
     </>
   );
