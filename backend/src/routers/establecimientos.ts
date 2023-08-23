@@ -6,7 +6,7 @@ import {
   crearEstablecimientoReqSchema,
   modificarEstablecimientoReqSchema,
 } from "../handlers/establecimientos.js";
-import { validateBody } from "../middlewares/validation.js";
+import { validateBody, validateIDParams } from "../middlewares/validation.js";
 import { AuthMiddleware } from "../middlewares/auth.js";
 
 export function establecimientosRouter(
@@ -16,8 +16,11 @@ export function establecimientosRouter(
 ): Router {
   const router = express.Router();
 
-  router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
-  router.get("/:idEst", handler.getEstablecimientoByID());
+  router.get(
+    "/byAdmin/:idAdmin",
+    validateIDParams("idAdmin"),
+    handler.getEstablecimientosByAdminID()
+  );
 
   router.post(
     "/",
@@ -25,6 +28,9 @@ export function establecimientosRouter(
     validateBody(crearEstablecimientoReqSchema),
     handler.postEstablecimiento()
   );
+
+  router.use("/:idEst", validateIDParams("idEst"));
+  router.get("/:idEst", handler.getEstablecimientoByID());
   router.put(
     "/:idEst",
     authMiddle.isAdmin(),
