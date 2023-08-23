@@ -24,13 +24,19 @@ export default function Breadcrumb() {
     .map((crumb) => {
       actualLink += `/${crumb}`;
 
-      return actualLink === "/ests" ||
+      return actualLink === "/estsz" ||
         actualLink === "/admin" ? null : actualLink ===
         `/admin/${currentAdmin?.id}/perfil` ? (
         <BreadcrumbItem key={actualLink}>
           <BreadcrumbLink href={actualLink}> Perfil </BreadcrumbLink>
         </BreadcrumbItem>
-      ) : actualLink === `/ests/${crumb}` ? (
+      ) : actualLink === `/ests` ? (
+        <BreadcrumbItem key={actualLink}>
+          <BreadcrumbLink href={actualLink}>
+            Establecimientos
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        ): actualLink === `/ests/${crumb}` ? (
         <BreadcrumbItem key={actualLink}>
           <BreadcrumbLink href={actualLink}>
             {establecimiento?.nombre}
