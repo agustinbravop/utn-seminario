@@ -86,20 +86,6 @@ export default function CanchaInfoPage() {
         <Text>
           Esta es la información que se muestra al usuario de su cancha.
         </Text>
-        <HStack
-          marginLeft="auto"
-          display="flex"
-          alignContent="column"
-          spacing={5}
-          align="center"
-        >
-          <Link to="editar">
-            <Button leftIcon={<EditIcon />}>Editar</Button>
-          </Link>
-          <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
-            Eliminar
-          </Button>
-        </HStack>
       </HStack>
       <Box display="flex" justifyContent="center">
         <Card
@@ -197,6 +183,12 @@ export default function CanchaInfoPage() {
                         </Tbody>
                       </Table>
                     </TableContainer>
+                    <Link to="editar">
+                      <Button mt="50px" mr="40px" leftIcon={<EditIcon />}>Editar</Button>
+                    </Link>
+                    <Button mt="50px" onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                      Eliminar
+                    </Button>
                   </Box>
                 </Stack>
               </Box>

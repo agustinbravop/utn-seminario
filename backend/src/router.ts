@@ -51,14 +51,11 @@ export function createRouter(prismaClient: PrismaClient): Router {
 
   router.use("/suscripciones", suscripcionesRouter(suscripcionHandler));
   router.use("/auth", authRouter(authHandler));
-  router.use("/administradores", administradoresRouter(adminHandler));
+  router.use("/administradores", administradoresRouter(adminHandler, authMiddle ));
 
   router.use(
     "/establecimientos",
-    establecimientosRouter(estHandler, authMiddle, upload)
-  );
-  router.use(
-    "/establecimientos",
+    establecimientosRouter(estHandler, authMiddle, upload),
     canchasRouter(canchaHandler, estHandler, authMiddle, upload)
   );
 

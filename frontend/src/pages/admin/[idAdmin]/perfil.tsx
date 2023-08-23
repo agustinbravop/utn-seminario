@@ -1,4 +1,5 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { EditIcon } from "@chakra-ui/icons";
 import {
   Card,
   CardHeader,
@@ -9,19 +10,34 @@ import {
   Box,
   Text,
   VStack,
+  Button,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+
 
 export default function PerfilPage() { 
   const { currentAdmin } = useCurrentAdmin();
 
+
   return (
     <>
       <VStack>
-        <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
+        <Card
+          // justifyContent="center"
+          boxSize="40rem"
+          width="40%"
+          height="70%"
+          // marginLeft="32%"
+          marginTop="5%"
+        > 
           <CardHeader>
             <Heading size="lg" textAlign="center">
               Mi perfil
             </Heading>
+            <Link to="../editar">
+              <Button leftIcon={<EditIcon />}>Editar </Button>
+            </Link>
+            
           </CardHeader>
           <CardBody marginTop="28px">
             <Stack divider={<StackDivider />} spacing="2.5" marginTop="-2rem">
@@ -68,6 +84,9 @@ export default function PerfilPage() {
             </Stack>
           </CardBody>
         </Card>
+            <Link to="editSuscripcion">
+              <Button>Actualizar Suscripcion</Button> 
+            </Link>
       </VStack>
     </>
   );
