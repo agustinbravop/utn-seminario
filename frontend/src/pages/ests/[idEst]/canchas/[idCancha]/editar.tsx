@@ -182,6 +182,7 @@ export default function EditCourtPage() {
   }, [disp, disponibilidades, methods]);
 
   const handleAgregarDisponibilidad = () => {
+
     const validationRules = {
       disciplina: disp.disciplina !== "",
       horaFin: disp.horaFin !== "",

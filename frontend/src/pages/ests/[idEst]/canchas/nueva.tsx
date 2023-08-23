@@ -179,6 +179,7 @@ export default function NuevaCanchaPage() {
   });
 
   const handleAgregarDisponibilidad = () => {
+
     const validationRules = {
       disciplina: disp.disciplina !== "",
       horaFin: disp.horaFin !== "",
@@ -207,6 +208,7 @@ export default function NuevaCanchaPage() {
         isClosable: true,
       });
     }
+
   };
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -6,7 +6,7 @@ import {
   modificarCanchaReqSchema,
 } from "../handlers/canchas.js";
 import multer from "multer";
-import { validateBody } from "../middlewares/validation.js";
+import { validateBody, validateIDParams } from "../middlewares/validation.js";
 import { EstablecimientoHandler } from "../handlers/establecimientos.js";
 import { AuthMiddleware } from "../middlewares/auth.js";
 
@@ -19,8 +19,6 @@ export function canchasRouter(
   const router = express.Router();
 
   router.get("/:idEst/canchas/", handler.getCanchasByEstablecimientoID());
-  router.get("/:idEst/canchas/:idCancha", handler.getCanchaByID());
-
   router.post(
     "/:idEst/canchas/",
     authMiddle.isAdmin(),
@@ -28,6 +26,12 @@ export function canchasRouter(
     validateBody(crearCanchaReqSchema),
     handler.postCancha()
   );
+
+  router.use(
+    "/:idEst/canchas/:idCancha",
+    validateIDParams("idEst", "idCancha")
+  );
+  router.get("/:idEst/canchas/:idCancha", handler.getCanchaByID());
   router.put(
     "/:idEst/canchas/:idCancha",
     authMiddle.isAdmin(),
