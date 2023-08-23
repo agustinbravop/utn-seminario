@@ -10,6 +10,7 @@ import { AdministradorService } from "./administrador.js";
 
 export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
+  getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEst: number): Promise<Establecimiento>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
@@ -38,6 +39,10 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
   async getByAdminID(idAdmin: number) {
     return await this.repo.getByAdminID(idAdmin);
+  }
+
+  async getDeletedByAdminID(idAdmin: number) {
+    return await this.repo.getDeletedByAdminID(idAdmin);
   }
 
   async crear(est: Establecimiento) {

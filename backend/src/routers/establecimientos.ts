@@ -17,6 +17,7 @@ export function establecimientosRouter(
   const router = express.Router();
 
   router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
+  router.get("/byAdmin/deleted/:idAdmin", handler.getEstablecimientosEliminadosByAdminID());
   router.get("/:idEst", handler.getEstablecimientoByID());
 
   router.post(

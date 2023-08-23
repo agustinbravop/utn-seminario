@@ -8,7 +8,15 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Establecimiento } from "@/models";
 import { GrAddCircle } from "react-icons/gr";
@@ -18,7 +26,10 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Alerta from "@/components/Alerta/Alerta";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
+import {
+  useEstablecimientosByAdminID,
+  useEstablecimientosEliminadosByAdminID,
+} from "@/utils/api/establecimientos";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -37,12 +48,18 @@ function EstablecimientosList({ data }: EstablecimientosListProps) {
 export default function EstablecimientosPage() {
   const { currentAdmin } = useCurrentAdmin();
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
   };
 
   const { data, isLoading, isError } = useEstablecimientosByAdminID(
+    Number(currentAdmin?.id)
+  );
+
+  const methods = useEstablecimientosEliminadosByAdminID(
     Number(currentAdmin?.id)
   );
 
@@ -78,6 +95,7 @@ export default function EstablecimientosPage() {
             value={filtro}
           />
         </InputGroup>
+        <Button onClick={onOpen}>Eliminados</Button>
         <HStack
           marginLeft="auto"
           display="flex"
@@ -118,6 +136,34 @@ export default function EstablecimientosPage() {
           />
         )}
       </HStack>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Establecimientos Eliminados</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {methods.isLoading ? (
+              <LoadingSpinner />
+            ) : methods.isError ? (
+              <Alerta
+                mensaje="Ha ocurrido un error inesperado"
+                status="error"
+              />
+            ) : (
+              <EstablecimientosList
+                data={methods.data}
+                isLoading={methods.isLoading}
+                isError={methods.isError}
+              />
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
