@@ -42,7 +42,7 @@ export default function mejorarSuscripcion() {
                         ◉ Aumentar el límite de establecimientos.
                     </Text>
                     <Text mb='3'>
-                        ◉ Ofrecer promociones especiales, pudiendo de ofrecer descuentos exclusivos o beneficios adicionales.
+                        ◉ Ofrecer promociones especiales, pudiendo ofrecer descuentos exclusivos o beneficios adicionales.
                     </Text>
                     <Text mb='3'>
                         ◉ Acceder a estadísticas personalizadas con análisis detallados del rendimiento.
