@@ -30,7 +30,7 @@ const validationSchema = Yup.object({
 export default function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  
+
   const methods = useYupForm<RegistrarJugadorReq>({
     validationSchema,
   });
@@ -119,10 +119,10 @@ export default function RegisterPage() {
             type="password"
             isRequired
           />
-          <SubmitButton isLoading={isLoading}>Iniciar Sesión</SubmitButton>
+          <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
           {isError && (
             <Alert status="error" margin="20px">
-              Error al intentar iniciar sesión. Contraseña o usuario incorrecto.
+              Error al intentar registrarse. Intente de nuevo.
             </Alert>
           )}
           <Text>
