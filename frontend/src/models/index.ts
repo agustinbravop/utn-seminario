@@ -9,6 +9,15 @@ export type Administrador = {
   suscripcion: Suscripcion;
 };
 
+export type Jugador = {
+  id: number;
+  nombre: string;
+  apellido: string;
+  telefono: string;
+  correo: string;
+  usuario: string;
+};
+
 export type Cancha = {
   id: number;
   nombre: string;

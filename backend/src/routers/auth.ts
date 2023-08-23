@@ -3,6 +3,7 @@ import {
   AuthHandler,
   loginReqSchema,
   registrarAdminSchema,
+  registrarJugadorSchema,
 } from "../handlers/auth.js";
 import { validateBody } from "../middlewares/validation.js";
 import { AuthMiddleware } from "../middlewares/auth.js";
@@ -15,9 +16,14 @@ export function authRouter(
 
   router.post("/login", validateBody(loginReqSchema), handler.login());
   router.post(
-    "/register",
+    "/register/administrador",
     validateBody(registrarAdminSchema),
-    handler.register()
+    handler.registerAdmin()
+  );
+  router.post(
+    "/register/jugador",
+    validateBody(registrarJugadorSchema),
+    handler.registerJugador()
   );
   router.get("/token", authMiddle.isAdmin(), handler.refreshToken());
 

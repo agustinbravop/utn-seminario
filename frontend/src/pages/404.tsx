@@ -1,9 +1,11 @@
 import { Button, HStack, Image, Text } from "@chakra-ui/react";
 import NotFoundPageIllustrationSvg from "@/assets/svg/not_found_page_illustration.svg";
-import { Link } from "react-router-dom";
+import { useNavigate } from "@/router";
 
 // `NotFoundPage` es tratado por el generouted plugin, si no encuentra una página correspondiente a la url.
 export default function NotFoundPage() {
+  const navigate = useNavigate();
+
   return (
     <>
       <Text textAlign="center" fontSize="xl">
@@ -18,9 +20,8 @@ export default function NotFoundPage() {
         margin="auto"
       />
       <HStack justify="center">
-        <Link to="/">
-          <Button>Volver al inicio</Button>
-        </Link>
+        <Button onClick={() => navigate(-1)}>Retroceder</Button>
+        <Button onClick={() => navigate("/")}>Volver al inicio</Button>
       </HStack>
     </>
   );

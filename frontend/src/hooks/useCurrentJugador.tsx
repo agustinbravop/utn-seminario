@@ -1,49 +1,51 @@
 import { useEffect, useContext, createContext, useState } from "react";
-import { Administrador } from "../models";
-import { readLocalStorage } from "../utils/storage/localStorage";
+import { Jugador } from "@/models";
+import { readLocalStorage } from "@/utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
-import { JWT } from "../utils/api";
+import { JWT } from "@/utils/api";
 import { useToast } from "@chakra-ui/react";
 
-interface ICurrentAdminContext {
-  currentAdmin?: Administrador;
+interface ICurrentJugadorContext {
+  currentJugador?: Jugador;
   logout: () => void;
 }
 
-interface CurrentAdminProviderProps {
+interface CurrentJugadorProviderProps {
   children?: React.ReactNode;
 }
 
-const CurrentAdminContext = createContext<ICurrentAdminContext | undefined>(
+const CurrentJugadorContext = createContext<ICurrentJugadorContext | undefined>(
   undefined
 );
 
-function readAdminFromStorage(): Administrador | undefined {
+function readJugadorFromStorage(): Jugador | undefined {
   const token = readLocalStorage<JWT>("token");
   return token
-    ? (jwtDecode(token.token) as { admin: Administrador }).admin
+    ? (jwtDecode(token.token) as { jugador: Jugador }).jugador
     : undefined;
 }
 
-export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
-  const [currentAdmin, setCurrentAdmin] = useState<Administrador | undefined>(
-    readAdminFromStorage()
+export function CurrentJugadorProvider({
+  children,
+}: CurrentJugadorProviderProps) {
+  const [currentJugador, setCurrentJugador] = useState<Jugador | undefined>(
+    readJugadorFromStorage()
   );
   const toast = useToast(); // Para dar un mensaje de error.
 
-  const updateCurrentAdmin = () => {
-    const usuario = readAdminFromStorage();
-    setCurrentAdmin(usuario);
+  const updateCurrentJugador = () => {
+    const usuario = readJugadorFromStorage();
+    setCurrentJugador(usuario);
   };
 
   useEffect(() => {
-    updateCurrentAdmin();
+    updateCurrentJugador();
 
     // Se ejecuta cuando el token del localStorage cambia, normalmente al login o logout.
     // También se borra cuando una request es rechazada con un status `401 Unauthorized`.
     function handleTokenUpdate(ev: StorageEvent) {
       if (ev.key === "token") {
-        updateCurrentAdmin();
+        updateCurrentJugador();
 
         // Si había iniciado sesión pero venció (recibimos un 401), se le informa al usuario.
         if (ev.oldValue && !ev.newValue) {
@@ -65,20 +67,20 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
 
   const logout = () => {
     localStorage.removeItem("token");
-    setCurrentAdmin(undefined);
+    setCurrentJugador(undefined);
   };
 
   return (
-    <CurrentAdminContext.Provider value={{ currentAdmin, logout }}>
+    <CurrentJugadorContext.Provider value={{ currentJugador, logout }}>
       {children}
-    </CurrentAdminContext.Provider>
+    </CurrentJugadorContext.Provider>
   );
 }
 
-export function useCurrentAdmin() {
-  const context = useContext(CurrentAdminContext);
+export function useCurrentJugador() {
+  const context = useContext(CurrentJugadorContext);
   if (context === undefined) {
-    throw new Error("Usar context dentro de un CurrentAdminProvider");
+    throw new Error("Usar context dentro de un CurrentJugadorProvider");
   }
   return context;
 }

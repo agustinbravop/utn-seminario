@@ -82,6 +82,8 @@ model establecimiento {
   administrador   administrador  @relation(fields: [idAdministrador], references: [id], onDelete: NoAction, onUpdate: NoAction)
   canchas         cancha[]
   metodosDePago   metodoDePago[]
+
+  @@unique([id, nombre])
 }
 
 model localidad {
@@ -110,12 +112,12 @@ model metodoDePago {
 
 model jugador {
   id       Int    @id @default(autoincrement()) @map("idJugador")
+  usuario  String @unique @db.VarChar
+  correo   String @unique @db.VarChar
+  clave    String @db.VarChar
   nombre   String @db.VarChar
   apellido String @db.VarChar
-  usuario  String @db.VarChar
   telefono String @db.VarChar
-  correo   String @db.VarChar
-  clave    String @db.VarChar
 
   reservas reserva[]
 }
