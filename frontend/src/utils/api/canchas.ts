@@ -14,7 +14,11 @@ export type CrearCanchaReq = Omit<
   disponibilidades: Omit<Disponibilidad, "id">[];
 };
 
-export type ModificarCanchaReq = Omit<Cancha, "urlImagen">;
+export type ModificarCanchaReq = Omit<Cancha, "urlImagen"> & {
+  disponibilidades: (Omit<Disponibilidad, "id"> & {
+    id?: number | undefined;
+  })[];
+};
 
 function modificarImagen(cancha: Cancha, imagen?: File) {
   if (!imagen) {
@@ -27,35 +31,6 @@ function modificarImagen(cancha: Cancha, imagen?: File) {
     `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}/imagen`,
     formData
   );
-}
-
-export function useCrearCancha(
-  options?: UseApiMutationOptions<CrearCanchaReq & { imagen?: File }, Cancha>
-) {
-  return useApiMutation({
-    ...options,
-    mutationFn: ({ imagen, ...cancha }) =>
-      post<Cancha>(
-        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
-        cancha
-      ).then((cancha) => modificarImagen(cancha, imagen)),
-  });
-}
-
-export function useModificarCancha(
-  options?: UseApiMutationOptions<
-    ModificarCanchaReq & { imagen?: File },
-    Cancha
-  >
-) {
-  return useApiMutation({
-    ...options,
-    mutationFn: ({ imagen, ...cancha }) =>
-      put<Cancha>(
-        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
-        cancha
-      ).then((cancha) => modificarImagen(cancha, imagen)),
-  });
 }
 
 export function useCanchasByEstablecimientoID(
@@ -81,11 +56,51 @@ export function useCanchaByID(
   );
 }
 
+export function useCrearCancha(
+  options?: UseApiMutationOptions<CrearCanchaReq & { imagen?: File }, Cancha>
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (cancha) => [
+      "establecimientos",
+      cancha.idEstablecimiento,
+      "canchas",
+    ],
+    mutationFn: ({ imagen, ...cancha }) =>
+      post<Cancha>(
+        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
+        cancha
+      ).then((cancha) => modificarImagen(cancha, imagen)),
+  });
+}
+
+export function useModificarCancha(
+  options?: UseApiMutationOptions<
+    ModificarCanchaReq & { imagen?: File },
+    Cancha
+  >
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (cancha) => ["canchas", cancha.id],
+    mutationFn: ({ imagen, ...cancha }) =>
+      put<Cancha>(
+        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
+        cancha
+      ).then((cancha) => modificarImagen(cancha, imagen)),
+  });
+}
+
 export function useEliminarCancha(
   options?: UseApiMutationOptions<{ idEst: number; idCancha: number }, Cancha>
 ) {
   return useApiMutation({
     ...options,
+    invalidateOnSuccess: (cancha) => [
+      "establecimientos",
+      cancha.idEstablecimiento,
+      "canchas",
+    ],
     mutationFn: ({ idEst, idCancha }) =>
       del(`${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`),
   });

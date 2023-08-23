@@ -5,8 +5,12 @@ import {
   registrarAdminSchema,
 } from "../handlers/auth.js";
 import { validateBody } from "../middlewares/validation.js";
+import { AuthMiddleware } from "../middlewares/auth.js";
 
-export function authRouter(handler: AuthHandler): Router {
+export function authRouter(
+  handler: AuthHandler,
+  authMiddle: AuthMiddleware
+): Router {
   const router = express.Router();
 
   router.post("/login", validateBody(loginReqSchema), handler.login());
@@ -15,6 +19,7 @@ export function authRouter(handler: AuthHandler): Router {
     validateBody(registrarAdminSchema),
     handler.register()
   );
+  router.get("/token", authMiddle.isAdmin(), handler.refreshToken());
 
   return router;
 }

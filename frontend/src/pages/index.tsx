@@ -53,9 +53,9 @@ export default function LandingPage() {
                 ¿Queres publicitar tu Establecimiento?
               </Heading>
               <Text maxWidth="400px" textAlign="left">
-                Play Finder te permite administrar las reservas de tus
-                canchas, aceptar pagos a través de Mercado Pago, ver reportes de
-                ingresos y mucho más.
+                Play Finder te permite administrar las reservas de tus canchas,
+                aceptar pagos a través de Mercado Pago, ver reportes de ingresos
+                y mucho más.
               </Text>
               <Link to="/suscripciones">
                 <Button marginTop="20px">Ver Opciones</Button>

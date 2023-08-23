@@ -13,7 +13,6 @@ import { Suscripcion } from "@/models";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
-
 const iconos = [
     <Icon as={BsShop} fill="brand.500" fontSize={90} />,
     <Icon as={BsBuildings} fill="brand.500" fontSize={90} />,
@@ -21,7 +20,6 @@ const iconos = [
 ];
 
 export default function mejorarSuscripcion() {
-
 
     return (
         <>

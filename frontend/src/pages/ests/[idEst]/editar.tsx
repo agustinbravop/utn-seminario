@@ -17,7 +17,6 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Box,
 } from "@chakra-ui/react";
 import {
   ModificarEstablecimientoReq,
@@ -88,7 +87,7 @@ export default function EditEstabPage() {
   return (
     <div>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
-        Editar Establecimiento 
+        Editar Establecimiento
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -166,11 +165,10 @@ export default function EditEstabPage() {
             />
           </FormControl>
 
-
           <HStack justifyContent="flex-end" spacing={30}>
-            <Button onClick={() => navigate(-1) } >Cancelar</Button>
-          <SubmitButton isLoading={isLoading}>Guardar</SubmitButton>
-        </HStack>
+            <Button onClick={() => navigate(-1)}>Cancelar</Button>
+            <SubmitButton isLoading={isLoading}>Guardar</SubmitButton>
+          </HStack>
 
           {isError && (
             <Alert status="error">

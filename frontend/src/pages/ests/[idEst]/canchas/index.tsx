@@ -35,7 +35,7 @@ export default function CanchasPage() {
 
   return (
     <>
-      <SubMenu  />
+      <SubMenu />
       <HStack
         marginRight="16%"
         marginLeft="16%"
@@ -63,7 +63,9 @@ export default function CanchasPage() {
           spacing={5}
           align="center"
         >
-          <Text mb="0">{data?.length} cancha{data?.length === 1 || "s"}</Text>
+          <Text mb="0">
+            {data?.length} cancha{data?.length === 1 || "s"}
+          </Text>
           <Link to="nueva">
             <Button leftIcon={<Icon as={GrAddCircle} />}>Agregar Cancha</Button>
           </Link>

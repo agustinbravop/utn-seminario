@@ -47,6 +47,16 @@ export class AuthHandler {
     };
   }
 
+  refreshToken(): RequestHandler {
+    return async (req, res) => {
+      // El Authorization header es válido, sino no hubiera pasado el auth middleware.
+      const currentToken = req.header("Authorization")?.replace("Bearer ", "")!;
+
+      const token = await this.service.refreshJWT(currentToken);
+      res.status(200).json({ token });
+    };
+  }
+
   register(): RequestHandler {
     return async (_req: Request, res: Response) => {
       const body: RegistroReq = res.locals.body;

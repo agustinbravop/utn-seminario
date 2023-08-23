@@ -1,27 +1,45 @@
 import { Administrador } from "@/models";
-import { API_URL, get, patch, put } from ".";
+import { API_URL, JWT, get, patch } from ".";
+import { UseApiMutationOptions, useApiMutation } from "@/hooks";
+import { writeLocalStorage } from "../storage/localStorage";
+import jwtDecode from "jwt-decode";
 
 export type ModificarAdmin = Omit<Administrador, "suscripcion" | "tarjeta">;
 
-export async function getAdminById(id: number): Promise<Administrador> {
-  return get(`${API_URL}/administradores/${id}`);
+export function useModificarAdministrador(
+  options?: UseApiMutationOptions<ModificarAdmin, Administrador>
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: (admin) =>
+      patch<Administrador>(`${API_URL}/administradores/${admin.id}`, admin)
+        .then(() => get<JWT>(`${API_URL}/auth/token`))
+        .then((data) => {
+          writeLocalStorage("token", data);
+          return jwtDecode(data.token) as { usuario: Administrador };
+        })
+        .then((payload) => payload.usuario),
+  });
 }
 
-export async function editarPerfil(
-  admin: ModificarAdmin
-): Promise<Administrador> {
-  return patch<Administrador>(
-    `${API_URL}/administradores/${admin.id}`,
-    admin
-  );
-}
-
-export async function cambiarSuscripcion(
-  idAdmin: number,
-  idSuscripcion: number
-): Promise<Administrador> {
-  return patch<Administrador>(`${API_URL}/administradores/${idAdmin}`, {
-    id: idAdmin,
-    idSuscripcion,
+export function useCambiarSuscripcion(
+  options?: UseApiMutationOptions<
+    { idAdmin: number; idSuscripcion: number },
+    Administrador
+  >
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: ({ idAdmin, idSuscripcion }) =>
+      patch<Administrador>(`${API_URL}/administradores/${idAdmin}`, {
+        id: idAdmin,
+        idSuscripcion,
+      })
+        .then(() => get<JWT>(`${API_URL}/auth/token`))
+        .then((data) => {
+          writeLocalStorage("token", data);
+          return jwtDecode(data.token) as { usuario: Administrador };
+        })
+        .then((payload) => payload.usuario),
   });
 }
