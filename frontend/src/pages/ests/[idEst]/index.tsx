@@ -138,7 +138,7 @@ export default function CourtPage() {
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>
-                    <Box width="100%" pt="33%" display="flex" justifyContent="center" alignItems="flex-end" >
+                    <Box width="100%" pt="25%" display="flex" justifyContent="center" alignItems="flex-end" >
                       <Link to="editar">
                         <Button mr="30px" leftIcon={<EditIcon />}>Editar </Button>
                       </Link>
