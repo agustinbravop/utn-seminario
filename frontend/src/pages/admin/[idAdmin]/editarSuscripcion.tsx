@@ -35,7 +35,7 @@ const iconos = [
 
 export default function SuscripcionesPage() {
   const toast = useToast();
-  const { isOpen, onClose } = useDisclosure();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
   const { currentAdmin } = useCurrentAdmin();
 
@@ -59,12 +59,7 @@ export default function SuscripcionesPage() {
     },
   });
 
-  const [newSus, setNewSus] = useState<Suscripcion>({
-    id: 1,
-    nombre: "",
-    limiteEstablecimientos: 1,
-    costoMensual: 1,
-  });
+  const [newSus, setNewSus] = useState<Suscripcion>(currentAdmin?.suscripcion);
 
   const { data, isError, isLoading } = useSuscripciones();
   let cards;
@@ -81,18 +76,22 @@ export default function SuscripcionesPage() {
     return;
   }
 
+  const actual = newSus.id
+
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
     .map((s, idx) => ({ icono: iconos[idx], ...s }));
   cards = suscripciones?.map((s) => {
-    const actual = currentAdmin?.suscripcion.id === s.id;
+    // const actual = currentAdmin?.suscripcion.id === s.id;
+    const pepe = actual === s.id
+
     return (
       <Card
         bg="light"
         key={s.id}
         color="dark"
         width="14rem"
-        variant={actual ? "filled" : "elevated"}
+        variant={pepe ? "filled" : "elevated"}
       >
         <CardHeader margin="auto">{s.icono}</CardHeader>
         <CardBody textAlign="center">
@@ -105,8 +104,8 @@ export default function SuscripcionesPage() {
             {s.limiteEstablecimientos} establecimiento
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
-          {actual || (
-            <SubmitButton onClick={() => setNewSus(s)}>Elegir</SubmitButton>
+          {pepe || (
+            <Button colorScheme="brand" variant="outline" onClick={() => setNewSus(s)}>Elegir</Button>
           )}
         </CardBody>
       </Card>
@@ -115,9 +114,10 @@ export default function SuscripcionesPage() {
 
   return (
     <>
-      <Box marginBottom="110px" marginLeft="12%">
-        <Text fontSize="4xl">Seleccione el plan al que mejor se adapte</Text>
-        <Text fontSize="2xl">
+      <Box marginBottom="5px" marginLeft="12%" marginRight="12%">
+        <Heading size="lg">Seleccione el plan al que mejor se adapte</Heading>
+        <br />
+        <Text>
           Puedes adaptar tu suscripción en función de tus necesidades. Cambia de
           plan, ajusta características y elige lo que mejor funcione para ti.
           Consulta los detalles y términos para obtener más información
@@ -126,6 +126,9 @@ export default function SuscripcionesPage() {
       <HStack justifyContent="center" gap="95px" my="50px" as="form">
         {cards}
       </HStack>
+      <Box display="flex" justifyContent="center" >
+        <Button onClick={onOpen} colorScheme="brand" >Aceptar</Button>
+      </Box>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
@@ -141,7 +144,8 @@ export default function SuscripcionesPage() {
               colorScheme="brand"
               backgroundColor="black"
               onClick={() =>
-                mutate({ idSuscripcion: newSus.id, idAdmin: currentAdmin.id })
+                console.log({ idSuscripcion: newSus?.id, idAdmin: currentAdmin?.id })
+                // mutate({ idSuscripcion: newSus?.id, idAdmin: currentAdmin?.id })
               }
             >
               Aceptar
