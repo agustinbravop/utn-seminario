@@ -82,12 +82,6 @@ export default function CourtPage() {
           spacing={5}
           align="center"
         >
-          <Link to="editar">
-            <Button leftIcon={<EditIcon />}>Editar </Button>
-          </Link>
-          <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
-            Eliminar
-          </Button>
         </HStack>
       </HStack>
       <Box display="flex" justifyContent="center">
@@ -144,6 +138,14 @@ export default function CourtPage() {
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>
+                    <Box justifyContent="center" alignItems="center" width="100%" >
+                      <Link to="editar">
+                        <Button mt="50px" mr="30px" leftIcon={<EditIcon />}>Editar </Button>
+                      </Link>
+                      <Button mt="50px" onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                        Eliminar
+                      </Button>
+                    </Box>            
                   </Box>
                 </Stack>
               </Box>

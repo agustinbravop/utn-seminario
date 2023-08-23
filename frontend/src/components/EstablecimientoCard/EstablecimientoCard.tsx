@@ -1,17 +1,14 @@
 import {
-  Button,
   Card,
   CardBody,
-  CardFooter,
   Heading,
   Icon,
   Image,
   Text,
   VStack,
-  HStack,
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
-import { InfoIcon, PhoneIcon } from "@chakra-ui/icons";
+import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
 import { Box } from "@chakra-ui/react";

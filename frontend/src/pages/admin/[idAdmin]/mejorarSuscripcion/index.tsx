@@ -1,33 +1,7 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  HStack,
-  Heading,
-  Icon,
-  Text,
-  Image,
-} from "@chakra-ui/react";
-import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
-import { getSuscripciones } from "@/utils/api/auth";
-import { Suscripcion } from "@/models";
-import { useQuery } from "@tanstack/react-query";
+import { Box, Button, HStack, Heading, Text, Image } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 
-const iconos = [
-  <Icon as={BsShop} fill="brand.500" fontSize={90} />,
-  <Icon as={BsBuildings} fill="brand.500" fontSize={90} />,
-  <Icon as={BsRocket} fill="brand.500" fontSize={90} />,
-];
-
-export default function mejorarSuscripcion() {
-  const { currentAdmin } = useCurrentAdmin();
-
-  const suscripcion = currentAdmin?.suscripcion;
-
+export default function MejorarSuscripcion() {
   return (
     <>
       <Box marginLeft="12%">

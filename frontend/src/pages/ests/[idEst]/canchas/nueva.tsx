@@ -179,7 +179,7 @@ export default function NuevaCanchaPage() {
   });
 
   const handleAgregarDisponibilidad = () => {
-    if (!disp) {
+    if (!methods.formState.isDirty) {
       return;
     }
     append(disp);

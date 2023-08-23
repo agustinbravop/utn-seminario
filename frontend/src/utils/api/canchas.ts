@@ -33,35 +33,6 @@ function modificarImagen(cancha: Cancha, imagen?: File) {
   );
 }
 
-export function useCrearCancha(
-  options?: UseApiMutationOptions<CrearCanchaReq & { imagen?: File }, Cancha>
-) {
-  return useApiMutation({
-    ...options,
-    mutationFn: ({ imagen, ...cancha }) =>
-      post<Cancha>(
-        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
-        cancha
-      ).then((cancha) => modificarImagen(cancha, imagen)),
-  });
-}
-
-export function useModificarCancha(
-  options?: UseApiMutationOptions<
-    ModificarCanchaReq & { imagen?: File },
-    Cancha
-  >
-) {
-  return useApiMutation({
-    ...options,
-    mutationFn: ({ imagen, ...cancha }) =>
-      put<Cancha>(
-        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
-        cancha
-      ).then((cancha) => modificarImagen(cancha, imagen)),
-  });
-}
-
 export function useCanchasByEstablecimientoID(
   idEst: number,
   options?: UseApiQueryOptions<Cancha[]>
@@ -85,11 +56,51 @@ export function useCanchaByID(
   );
 }
 
+export function useCrearCancha(
+  options?: UseApiMutationOptions<CrearCanchaReq & { imagen?: File }, Cancha>
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (cancha) => [
+      "establecimientos",
+      cancha.idEstablecimiento,
+      "canchas",
+    ],
+    mutationFn: ({ imagen, ...cancha }) =>
+      post<Cancha>(
+        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas`,
+        cancha
+      ).then((cancha) => modificarImagen(cancha, imagen)),
+  });
+}
+
+export function useModificarCancha(
+  options?: UseApiMutationOptions<
+    ModificarCanchaReq & { imagen?: File },
+    Cancha
+  >
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (cancha) => ["canchas", cancha.id],
+    mutationFn: ({ imagen, ...cancha }) =>
+      put<Cancha>(
+        `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
+        cancha
+      ).then((cancha) => modificarImagen(cancha, imagen)),
+  });
+}
+
 export function useEliminarCancha(
   options?: UseApiMutationOptions<{ idEst: number; idCancha: number }, Cancha>
 ) {
   return useApiMutation({
     ...options,
+    invalidateOnSuccess: (cancha) => [
+      "establecimientos",
+      cancha.idEstablecimiento,
+      "canchas",
+    ],
     mutationFn: ({ idEst, idCancha }) =>
       del(`${API_URL}/establecimientos/${idEst}/canchas/${idCancha}`),
   });

@@ -22,6 +22,7 @@ export interface AuthService {
   ): Promise<Administrador>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(token: string): Rol[];
+  refreshJWT(token: string): Promise<string>;
 }
 
 export type JWTUserPayload = JWTPayload & { usuario: Administrador };
@@ -94,7 +95,8 @@ export class AuthServiceImpl implements AuthService {
    * Valida que el correo/usuario corresponda con la clave y que la clave sea correcta.
    * @param correoOUsuario el correo o username del usuario.
    * @param clave la contraseña en texto plano del usuario.
-   * @returns el JWT de la sesión si los datos son correctos. ApiError si alguna validación falla.
+   * @returns el JWT de la sesión si los datos son correctos.
+   * @throws un ApiError si alguna validación falla.
    */
   async loginUsuario(correoOUsuario: string, clave: string): Promise<string> {
     const adminConClave =
@@ -108,6 +110,27 @@ export class AuthServiceImpl implements AuthService {
 
     const jwt = await this.signJWT(admin);
     return jwt;
+  }
+
+  /**
+   * Retorna un nuevo JWT con los datos **actualizados** del usuario.
+   * @param token el access token actual del usuario.
+   * @returns el nuevo JWT de la sesión, con una nueva expiry date.
+   * @throws un ApiError si alguna validación falla.
+   */
+  async refreshJWT(token: string): Promise<string> {
+    const jwt = await this.verifyJWT(token);
+    if (!jwt) {
+      throw new UnauthorizedError("Token inválido");
+    }
+
+    // Se obtienen los datos actuales del administrador al que corresponde el JWT.
+    const { admin } = await this.repo.getAdministradorYClave(
+      jwt.usuario.correo
+    );
+
+    const newJwt = await this.signJWT(admin);
+    return newJwt;
   }
 
   /**

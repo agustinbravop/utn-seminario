@@ -1,7 +1,9 @@
 import {
+  QueryKey,
   useMutation,
   UseMutationOptions,
   UseMutationResult,
+  useQueryClient,
 } from "@tanstack/react-query";
 import { ApiError } from "../utils/api";
 
@@ -17,7 +19,18 @@ export interface UseApiMutationOptions<
   /** TError es `ApiError` por defecto porque es lo que nuestro backend devuelve. */
   TError = ApiError,
   TContext = unknown,
-> extends UseMutationOptions<TData, TError, TVariables, TContext> {}
+> extends UseMutationOptions<TData, TError, TVariables, TContext> {
+  /**
+   * Una función llamada dentro del callback `onSuccess()` de `useMutation` que
+   * retorna la `QueryKey` de las queries a invalidar si la mutación es exitosa.
+   * `UseMutation` por defecto no invalida queries.
+   */
+  invalidateOnSuccess?: (
+    data: TData,
+    variables: TVariables,
+    context: TContext | undefined
+  ) => QueryKey;
+}
 
 /**
  * Adapter del `useMutation` de '@tanstack/react-query', para nuestro backend.
@@ -33,5 +46,22 @@ export function useApiMutation<
 >(
   options: UseApiMutationOptions<TVariables, TData, TError, TContext> = {}
 ): UseMutationResult<TData, TError, TVariables, TContext> {
-  return useMutation(options);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...options,
+    onSuccess(data, variables, context) {
+      // Si la mutación es exitosa, se invalidan las queries calculadas.
+      if (options.invalidateOnSuccess) {
+        queryClient.invalidateQueries({
+          queryKey: options.invalidateOnSuccess(data, variables, context),
+        });
+      }
+
+      // Se llama al `onSuccess()` callback pasado por parámetro.
+      if (options.onSuccess) {
+        options.onSuccess(data, variables, context);
+      }
+    },
+  });
 }

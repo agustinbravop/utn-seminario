@@ -10,7 +10,6 @@ import {
 import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
-import { MdPlace } from "react-icons/md";
 import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons";
 
 type estabProps = {

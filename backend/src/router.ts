@@ -50,15 +50,15 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const upload = multer({ dest: "imagenes/" });
 
   router.use("/suscripciones", suscripcionesRouter(suscripcionHandler));
-  router.use("/auth", authRouter(authHandler));
-  router.use("/administradores", administradoresRouter(adminHandler));
+  router.use("/auth", authRouter(authHandler, authMiddle));
+  router.use(
+    "/administradores",
+    administradoresRouter(adminHandler, authMiddle)
+  );
 
   router.use(
     "/establecimientos",
-    establecimientosRouter(estHandler, authMiddle, upload)
-  );
-  router.use(
-    "/establecimientos",
+    establecimientosRouter(estHandler, authMiddle, upload),
     canchasRouter(canchaHandler, estHandler, authMiddle, upload)
   );
 
