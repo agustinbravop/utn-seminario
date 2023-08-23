@@ -11,7 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-export default function PerfilPage() { 
+export default function PerfilPage() {
   const { currentAdmin } = useCurrentAdmin();
 
   return (

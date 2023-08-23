@@ -1,51 +1,81 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, HStack, Icon, Image, MenuItem, MenuList } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Icon,
+  Image,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
-import { ArrowForwardIcon,ChevronDownIcon,ChevronLeftIcon, ChevronRightIcon, InfoIcon } from "@chakra-ui/icons";
+import {
+  ArrowForwardIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  InfoIcon,
+} from "@chakra-ui/icons";
 import { Administrador } from "@/models";
 import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 export default function TopMenu() {
   const navigate = useNavigate();
   const next = (dir: boolean) => {
-    dir ? navigate(+1) : navigate(-1)
-  }
+    dir ? navigate(+1) : navigate(-1);
+  };
   const { currentAdmin, logout } = useCurrentAdmin();
 
   return (
     <>
-    <HStack
-      justifyContent="space-between"
-      shadow="md"
-      padding="0 2rem 0 2rem"
-      height="3.6rem"
-      backgroundColor="#f8fafd"
-    >
-      <Nav admin={currentAdmin}logout={logout}/>
-    </HStack>
+      <HStack
+        justifyContent="space-between"
+        shadow="md"
+        padding="0 2rem 0 2rem"
+        height="3.6rem"
+        backgroundColor="#f8fafd"
+      >
+        <Nav admin={currentAdmin} logout={logout} />
+      </HStack>
 
-    {currentAdmin && (
-      <>
-      <HStack paddingTop={7} marginLeft="17.3%" marginRight="17.%" spacing={1}>
-        <Button size='xs' backgroundColor="white" onClick={() => next(false)}>
-            <ChevronLeftIcon boxSize={6} />
-          </Button>
-          <Button size='xs' backgroundColor="white" onClick={() => next(true)}>
-            <ChevronRightIcon boxSize={6} />
-          </Button>
-          <Breadcrumb/>
-        </HStack>
-      </>
-    )}
-
-
+      {currentAdmin && (
+        <>
+          <HStack
+            paddingTop={7}
+            marginLeft="17.3%"
+            marginRight="17.%"
+            spacing={1}
+          >
+            <Button
+              size="xs"
+              backgroundColor="white"
+              onClick={() => next(false)}
+            >
+              <ChevronLeftIcon boxSize={6} />
+            </Button>
+            <Button
+              size="xs"
+              backgroundColor="white"
+              onClick={() => next(true)}
+            >
+              <ChevronRightIcon boxSize={6} />
+            </Button>
+            <Breadcrumb />
+          </HStack>
+        </>
+      )}
     </>
   );
 }
 
-function Nav( {admin, logout}: {admin: Administrador | undefined; logout: VoidFunction}) {
+function Nav({
+  admin,
+  logout,
+}: {
+  admin: Administrador | undefined;
+  logout: VoidFunction;
+}) {
   if (!admin) {
     return (
       <>

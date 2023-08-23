@@ -104,10 +104,10 @@ export default function Carousel({
       {showButtons && (
         <>
           <CarouselButton onClick={previous} style={{ left: "10px" }}>
-            <ChevronLeftIcon boxSize={10}/>
+            <ChevronLeftIcon boxSize={10} />
           </CarouselButton>
           <CarouselButton onClick={next} style={{ right: "10px" }}>
-            <ChevronRightIcon boxSize={10}/>
+            <ChevronRightIcon boxSize={10} />
           </CarouselButton>
         </>
       )}
