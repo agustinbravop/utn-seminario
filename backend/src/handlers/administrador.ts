@@ -23,7 +23,7 @@ export class AdministradorHandler {
         ...res.locals.body,
       };
       admin.id = Number(req.params["idAdmin"])
-
+      console.log(admin)
       const adminActualizado = await this.service.modificar(admin);
       res.status(200).json(adminActualizado);
     };
