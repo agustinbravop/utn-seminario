@@ -1,9 +1,6 @@
 import {
     Box,
     Button,
-    Card,
-    CardBody,
-    CardHeader,
     HStack,
     Heading,
     Icon,
@@ -15,7 +12,7 @@ import { getSuscripciones } from "@/utils/api/auth";
 import { Suscripcion } from "@/models";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+
 
 const iconos = [
     <Icon as={BsShop} fill="brand.500" fontSize={90} />,
@@ -24,9 +21,7 @@ const iconos = [
 ];
 
 export default function mejorarSuscripcion() {
-    const { currentAdmin } = useCurrentAdmin();
 
-    const suscripcion = currentAdmin?.suscripcion;
 
     return (
         <>
@@ -34,7 +29,7 @@ export default function mejorarSuscripcion() {
                 <Heading size="lg">Mejore su suscripción</Heading>
                 <br />
                 <Text>
-                    A alcanzado el límite de establecimientos para su suscripción actual. Le recomendamos mejorar su suscripción.
+                    Ha alcanzado el límite de establecimientos para su suscripción actual. Le recomendamos mejorar su suscripción.
                 </Text>
             </Box>
             <HStack marginLeft="12%"  gap="7%" my="50px">
@@ -47,10 +42,10 @@ export default function mejorarSuscripcion() {
                         ◉ Aumentar el límite de establecimientos.
                     </Text>
                     <Text mb='3'>
-                        ◉ Aumentar la cantidad de canchas.
+                        ◉ Ofrecer promociones especiales, pudiendo de ofrecer descuentos exclusivos o beneficios adicionales.
                     </Text>
                     <Text mb='3'>
-                        ◉ Acceder a estadisticas más personalizadas.
+                        ◉ Acceder a estadísticas personalizadas con análisis detallados del rendimiento.
                     </Text>
                     <Text mb='3'>
                         ◉ Mejorar el posicionamiento de sus canchas en su zona.
