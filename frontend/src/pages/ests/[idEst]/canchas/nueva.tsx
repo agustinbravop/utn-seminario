@@ -179,11 +179,35 @@ export default function NuevaCanchaPage() {
   });
 
   const handleAgregarDisponibilidad = () => {
-    if (disp.dias.length > 0 && disp.disciplina && disp.horaFin && disp.horaInicio && disp.minutosReserva && disp.precioReserva) {
-    append(disp);
-    setDisp(defaultDisponibilidad);
-    onClose();
-  }};
+    const validationRules = {
+      disciplina: disp.disciplina !== "",
+      horaFin: disp.horaFin !== "",
+      horaInicio: disp.horaInicio !== "",
+      dias: disp.dias.length !== 0,
+      precioReserva: !Number.isNaN(disp.precioReserva),
+      minutosReserva: !Number.isNaN(disp.minutosReserva),
+    };
+
+
+    const allValid = Object.values(validationRules).every((isValid) => isValid);
+  
+    if (allValid) {
+      append(disp);
+      setDisp(defaultDisponibilidad);
+      Object.keys(defaultDisponibilidad).forEach((name) =>
+        methods.resetField(name as keyof FormState)
+      );
+      onClose();
+    } else {
+      console.log("Alguna validación ha fallado");
+      toast({
+        title: "Datos faltantes",
+        description: `Verifique todos los datos ingresados y vuelva a intentar.`,
+        status: "warning",
+        isClosable: true,
+      });
+    }
+  };
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
@@ -284,7 +308,7 @@ export default function NuevaCanchaPage() {
                     </Thead>
                     <Tbody>
                       {disponibilidades.map((d, index) => (
-                        <Tr key={`${d.horaInicio}-${d.horaFin}`}>
+                        <Tr key={index}>
                           <Td> {d.disciplina} </Td>
                           <Td> {d.horaInicio} </Td>
                           <Td> {d.horaFin} </Td>

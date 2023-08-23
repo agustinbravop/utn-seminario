@@ -48,12 +48,11 @@ export default function mejorarSuscripcion() {
                     <Text mb='3'>
                         ◉ Mejorar el posicionamiento de sus canchas en su zona.
                     </Text>
-                    <Link to={`cambiarSuscripcion`}>
+                    <Link to={`../perfil/editarSuscripcion`}>
                         <Button
                             mt="5"
                             type="button"
                             colorScheme="brand"
-                            onClick={() => alert('Ir a cambio de suscipción')}
                         >
                             Mejorar suscripción
                         </Button>
