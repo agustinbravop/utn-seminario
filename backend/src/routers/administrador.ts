@@ -10,7 +10,7 @@ export function administradoresRouter(
 ): Router {
   const router = Router();
 
-  router.get("/:id", handler.getAdministradorByID());
+  router.get("/:idAdmin", handler.getAdministradorByID());
 
   router.patch(
     "/:idAdmin",

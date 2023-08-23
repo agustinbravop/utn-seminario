@@ -179,11 +179,12 @@ export default function NuevaCanchaPage() {
   });
 
   const handleAgregarDisponibilidad = () => {
-    if (!methods.formState.isDirty) {
-      return;
-    }
+    // TODO: agregar validación de disponibilidad.
     append(disp);
     setDisp(defaultDisponibilidad);
+    Object.keys(defaultDisponibilidad).forEach((name) =>
+      methods.resetField(name as keyof FormState)
+    );
     onClose();
   };
 
@@ -286,7 +287,7 @@ export default function NuevaCanchaPage() {
                     </Thead>
                     <Tbody>
                       {disponibilidades.map((d, index) => (
-                        <Tr key={`${d.horaInicio}-${d.horaFin}`}>
+                        <Tr key={index}>
                           <Td> {d.disciplina} </Td>
                           <Td> {d.horaInicio} </Td>
                           <Td> {d.horaFin} </Td>

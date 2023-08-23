@@ -22,6 +22,7 @@ import { canchasRouter } from "./routers/canchas.js";
 import { PrismaCanchaRepository } from "./repositories/canchas.js";
 import { CanchaServiceimpl } from "./services/canchas.js";
 import { CanchaHandler } from "./handlers/canchas.js";
+import { validateIDParams } from "./middlewares/validation.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -48,6 +49,8 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const canchaHandler = new CanchaHandler(canchaService);
 
   const upload = multer({ dest: "imagenes/" });
+
+  router.use(validateIDParams("idAdmin", "idCancha", "idEst"));
 
   router.use("/suscripciones", suscripcionesRouter(suscripcionHandler));
   router.use("/auth", authRouter(authHandler, authMiddle));

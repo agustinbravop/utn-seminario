@@ -182,12 +182,13 @@ export default function EditCourtPage() {
   }, [disp, disponibilidades, methods]);
 
   const handleAgregarDisponibilidad = () => {
-    if (!disp) {
-      return;
-    }
+    // TODO: agregar validación de la disponibilidad.
     append(disp);
     setDisp(defaultDisponibilidad);
-   onClose();
+    Object.keys(defaultDisponibilidad).forEach((name) =>
+      methods.resetField(name as keyof FormState)
+    );
+    onClose();
   };
 
   const handleDeleteDisponibilidad = (index: number) => {
