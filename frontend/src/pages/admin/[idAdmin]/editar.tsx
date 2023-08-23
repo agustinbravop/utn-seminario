@@ -1,4 +1,3 @@
-import { Administrador } from "@/models";
 import {
   Card,
   CardHeader,
@@ -20,17 +19,12 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useParams } from "@/router";
-import { editarPerfil, getAdminById } from "@/utils/api/administrador";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ApiError } from "@/utils/api";
+import { useModificarAdministrador } from "@/utils/api/administrador";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { useYupForm } from "@/hooks";
-
-type FormState = Administrador;
+import { useCurrentAdmin, useYupForm } from "@/hooks";
 
 const validationSchema = Yup.object({
   id: Yup.number(),
@@ -57,28 +51,14 @@ const validationSchema = Yup.object({
 });
 
 export default function PerfilPage() {
-  const { idAdmin } = useParams("/admin/:idAdmin/perfil");
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery<Administrador>({
-    queryKey: ["administrador", idAdmin],
-    queryFn: () => getAdminById(Number(idAdmin)),
-    enabled: true,
-  });
+  const { currentAdmin } = useCurrentAdmin();
 
-  const methods = useYupForm(
-   { validationSchema,
-    resetValues: data,
-}
-  )
-  const { mutate } = useMutation<
-    Administrador,
-    ApiError,
-    FormState
-  >({
-    mutationFn: (admin) => editarPerfil(admin),
+  const methods = useYupForm({ validationSchema, resetValues: currentAdmin });
+  const { mutate, isLoading } = useModificarAdministrador({
     onSuccess: () => {
       toast({
         title: "Perfil actualizado",
@@ -101,14 +81,7 @@ export default function PerfilPage() {
   return (
     <>
       <VStack>
-        <Card
-          // justifyContent="center"
-          boxSize="40rem"
-          width="40%"
-          height="70%"
-          // marginLeft="32%"
-          marginTop="5%"
-        >
+        <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
           <CardHeader>
             <Heading size="lg" textAlign="center">
               Editar Perfil
@@ -149,12 +122,11 @@ export default function PerfilPage() {
                   </Heading>
                   <InputControl isRequired name="telefono" />
                 </Box>
-                <SubmitButton isLoading={isLoading}>
-                  Guardar cambios
-                </SubmitButton>
+                <SubmitButton>Guardar cambios</SubmitButton>
                 <Link to="editSuscripcion">
                   <Button>¡Actualizar Suscripción!</Button>
                 </Link>
+
                 <Modal isOpen={isOpen} onClose={onClose} isCentered>
                   <ModalOverlay />
                   <ModalContent>
@@ -173,6 +145,7 @@ export default function PerfilPage() {
                         onClick={methods.handleSubmit((values) =>
                           mutate(values)
                         )}
+                        isLoading={isLoading}
                       >
                         Aceptar
                       </Button>
