@@ -124,12 +124,27 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
-      // Modifico las disponibilidades por separado, por limitaciones de Prisma
+      // Modifico las disponibilidades por separado, por limitaciones de Prisma.
+      // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se crea.
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.prisma.disponibilidad.update({
+          await this.prisma.disponibilidad.upsert({
             where: { id: disp.id },
-            data: {
+            create: {
+              horaFin: disp.horaFin,
+              horaInicio: disp.horaInicio,
+              precioReserva: disp.precioReserva,
+              precioSenia: disp.precioSenia,
+              dias: { connect: disp.dias.map((dia) => ({ dia })) },
+              cancha: { connect: { id: id } },
+              disciplina: {
+                connectOrCreate: {
+                  where: { disciplina: disp.disciplina },
+                  create: { disciplina: disp.disciplina },
+                },
+              },
+            },
+            update: {
               horaFin: disp.horaFin,
               horaInicio: disp.horaInicio,
               precioReserva: disp.precioReserva,
