@@ -183,7 +183,7 @@ export default function NuevaCanchaPage() {
       disciplina: disp.disciplina !== "",
       horaFin: disp.horaFin !== "",
       horaInicio: disp.horaInicio !== "",
-      dias: disp.dias !== [],
+      dias: disp.dias.length !== 0,
       precioReserva: !Number.isNaN(disp.precioReserva),
       minutosReserva: !Number.isNaN(disp.minutosReserva),
     };
@@ -200,6 +200,12 @@ export default function NuevaCanchaPage() {
       onClose();
     } else {
       console.log("Alguna validación ha fallado");
+      toast({
+        title: "Datos faltantes",
+        description: `Verifique todos los datos ingresados y vuelva a intentar.`,
+        status: "warning",
+        isClosable: true,
+      });
     }
   };
 
