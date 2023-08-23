@@ -1,11 +1,9 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { Establecimiento } from "@/models";
 import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
 } from "@/utils/api/establecimientos";
 import { defImage } from "@/utils/const/const";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   Button,
@@ -20,23 +18,17 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
-import { InfoIcon, PhoneIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router";
 import { Box } from "@chakra-ui/react";
 
-export default function SelectEstab() {
+export default function SelectEstablecimiento() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
 
-  if (!currentAdmin) {
-    navigate("/login");
-    return;
-  }
+  const { data } = useEstablecimientosByAdminID(Number(currentAdmin?.id));
 
-  const { data } = useEstablecimientosByAdminID(Number(currentAdmin?.id))
-
-  const { mutate } = useEliminarEstablecimiento()
+  const { mutate } = useEliminarEstablecimiento();
   // array de los ids de los establecimientos a conservar. Los no seleccionados se eliminan.
   const [selected, setSelected] = useState<number[]>([]);
   const handleEstablecimientoToggle = (idEst: number) => {
@@ -46,6 +38,11 @@ export default function SelectEstab() {
       setSelected([...selected, idEst]);
     }
   };
+
+  if (!currentAdmin) {
+    navigate("/login");
+    return;
+  }
 
   const establecimientos = data?.map((e) => {
     const seleccionado = selected.includes(e.id);
@@ -84,7 +81,7 @@ export default function SelectEstab() {
           <HStack spacing={5}>
             <Button
               colorScheme={seleccionado ? "red" : "orange"}
-              variant={seleccionado? "solid" : "outline"}
+              variant={seleccionado ? "solid" : "outline"}
               onClick={() => handleEstablecimientoToggle(e.id)}
             >
               {seleccionado ? "Quitar" : "Seleccionar"}
@@ -100,9 +97,9 @@ export default function SelectEstab() {
     if (selected.length > currentAdmin.suscripcion.limiteEstablecimientos) {
     }
 
-    Promise.all(
-      eliminados.map((e) => mutate(e.id)) || []
-    ).then(() => navigate(`/admin/${currentAdmin?.id}`));
+    Promise.all(eliminados.map((e) => mutate(e.id)) || []).then(() =>
+      navigate(`/admin/${currentAdmin?.id}`)
+    );
   };
 
   const maximo = currentAdmin?.suscripcion.limiteEstablecimientos || 0;
@@ -113,7 +110,14 @@ export default function SelectEstab() {
         Seleccione los establecimientos que desea conservar
       </Heading>
       <br />
-      <Text color={(selected.length > maximo || selected.length === 0)? "red" : "black"}> {selected.length} / {maximo} </Text>
+      <Text
+        color={
+          selected.length > maximo || selected.length === 0 ? "red" : "black"
+        }
+      >
+        {" "}
+        {selected.length} / {maximo}{" "}
+      </Text>
       <HStack display="flex" flexWrap="wrap" justifyContent="center">
         {establecimientos}
       </HStack>

@@ -24,6 +24,28 @@ function modificarImagen(est: Establecimiento, imagen?: File) {
   );
 }
 
+export function useEstablecimientoByID(
+  id: number,
+  options?: UseApiQueryOptions<Establecimiento>
+) {
+  return useApiQuery(
+    ["establecimientos", id],
+    `${API_URL}/establecimientos/${id}`,
+    options
+  );
+}
+
+export function useEstablecimientosByAdminID(
+  idAdmin: number,
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "byAdmin", idAdmin],
+    `${API_URL}/establecimientos/byAdmin/${idAdmin}`,
+    { ...options, initialData: [] }
+  );
+}
+
 export function useCrearEstablecimiento(
   options?: UseApiMutationOptions<
     CrearEstablecimientoReq & { imagen?: File },
@@ -32,6 +54,7 @@ export function useCrearEstablecimiento(
 ) {
   return useApiMutation({
     ...options,
+    invalidateOnSuccess: () => ["establecimientos"],
     mutationFn: ({ imagen, ...est }) =>
       post<Establecimiento>(`${API_URL}/establecimientos`, est).then((est) =>
         modificarImagen(est, imagen)
@@ -47,6 +70,7 @@ export function useModificarEstablecimiento(
 ) {
   return useApiMutation({
     ...options,
+    invalidateOnSuccess: (est) => ["establecimientos", est.id],
     mutationFn: ({ imagen, ...est }) =>
       put<Establecimiento>(`${API_URL}/establecimientos/${est.id}`, est).then(
         (est) => modificarImagen(est, imagen)
@@ -54,33 +78,12 @@ export function useModificarEstablecimiento(
   });
 }
 
-export function useEstablecimientosByAdminID(
-  idAdmin: number,
-  options?: UseApiQueryOptions<Establecimiento[]>
-) {
-  return useApiQuery(
-    ["establecimientos", "byAdmin", idAdmin],
-    `${API_URL}/establecimientos/byAdmin/${idAdmin}`,
-    { ...options, initialData: [] }
-  );
-}
-
-export function useEstablecimientoByID(
-  id: number,
-  options?: UseApiQueryOptions<Establecimiento>
-) {
-  return useApiQuery(
-    ["establecimientos", id],
-    `${API_URL}/establecimientos/${id}`,
-    options
-  );
-}
-
 export function useEliminarEstablecimiento(
   options?: UseApiMutationOptions<number, Establecimiento>
 ) {
   return useApiMutation({
     ...options,
+    invalidateOnSuccess: () => ["establecimientos"],
     mutationFn: (idEst) => del(`${API_URL}/establecimientos/${idEst}`),
   });
 }
