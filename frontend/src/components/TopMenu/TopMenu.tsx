@@ -65,13 +65,6 @@ export default function TopMenu() {
             >
               <ChevronLeftIcon boxSize={6} />
             </Button>
-            <Button
-              size="xs"
-              backgroundColor="white"
-              onClick={() => next(true)}
-            >
-              <ChevronRightIcon boxSize={6} />
-            </Button>
             <Breadcrumb />
           </HStack>
         </>

@@ -182,13 +182,35 @@ export default function EditCourtPage() {
   }, [disp, disponibilidades, methods]);
 
   const handleAgregarDisponibilidad = () => {
-    // TODO: agregar validación de la disponibilidad.
-    append(disp);
-    setDisp(defaultDisponibilidad);
-    Object.keys(defaultDisponibilidad).forEach((name) =>
-      methods.resetField(name as keyof FormState)
-    );
-    onClose();
+
+    const validationRules = {
+      disciplina: disp.disciplina !== "",
+      horaFin: disp.horaFin !== "",
+      horaInicio: disp.horaInicio !== "",
+      dias: disp.dias.length !== 0,
+      precioReserva: !Number.isNaN(disp.precioReserva),
+      minutosReserva: !Number.isNaN(disp.minutosReserva),
+    };
+
+
+    const allValid = Object.values(validationRules).every((isValid) => isValid);
+  
+    if (allValid) {
+      append(disp);
+      setDisp(defaultDisponibilidad);
+      Object.keys(defaultDisponibilidad).forEach((name) =>
+        methods.resetField(name as keyof FormState)
+      );
+      onClose();
+    } else {
+      console.log("Alguna validación ha fallado");
+      toast({
+        title: "Datos faltantes",
+        description: `Verifique todos los datos ingresados y vuelva a intentar.`,
+        status: "warning",
+        isClosable: true,
+      });
+    }
   };
 
   const handleDeleteDisponibilidad = (index: number) => {

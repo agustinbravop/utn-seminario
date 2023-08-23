@@ -6,11 +6,11 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 export type Path =
   | `/`
   | `/admin/:idAdmin`
-  | `/admin/:idAdmin/editSuscripcion`
-  | `/admin/:idAdmin/editar`
   | `/admin/:idAdmin/mejorarSuscripcion`
   | `/admin/:idAdmin/nuevoEstablecimiento`
   | `/admin/:idAdmin/perfil`
+  | `/admin/:idAdmin/perfil/editar`
+  | `/admin/:idAdmin/perfil/editarSuscripcion`
   | `/admin/:idAdmin/selectEstab`
   | `/ests/:idEst`
   | `/ests/:idEst/canchas`
@@ -27,11 +27,11 @@ export type Path =
 
 export type Params = {
   '/admin/:idAdmin': { idAdmin: string }
-  '/admin/:idAdmin/editSuscripcion': { idAdmin: string }
-  '/admin/:idAdmin/editar': { idAdmin: string }
   '/admin/:idAdmin/mejorarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/nuevoEstablecimiento': { idAdmin: string }
   '/admin/:idAdmin/perfil': { idAdmin: string }
+  '/admin/:idAdmin/perfil/editar': { idAdmin: string }
+  '/admin/:idAdmin/perfil/editarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/selectEstab': { idAdmin: string }
   '/ests/:idEst': { idEst: string }
   '/ests/:idEst/canchas': { idEst: string }
