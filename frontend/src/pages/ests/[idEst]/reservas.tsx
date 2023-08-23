@@ -1,12 +1,7 @@
 import SubMenu from "@/components/SubMenu/SubMenu";
-import {
-  HStack,
-  Text,
-} from "@chakra-ui/react";
+import { HStack, Text } from "@chakra-ui/react";
 
 export default function CourtInfoPage() {
-  
-
   return (
     <div>
       <SubMenu />
@@ -17,8 +12,9 @@ export default function CourtInfoPage() {
         marginTop="0px"
       >
         <Text>
-          Estas son las reservas actuales de para este establecimiento. 
+          Estas son las reservas actuales de para este establecimiento.
         </Text>
-    </HStack>
+      </HStack>
     </div>
-  )}
+  );
+}

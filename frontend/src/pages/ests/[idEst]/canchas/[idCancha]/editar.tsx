@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Disponibilidad } from "@/models";
+import React, { useEffect, useState } from "react";
+import { Dia, Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import {
   Alert,
@@ -37,7 +37,6 @@ import {
   ModificarCanchaReq,
   useCanchaByID,
   useModificarCancha,
-  useEliminarCancha,
 } from "@/utils/api/canchas";
 import {
   CheckboxGroupControl,
@@ -106,11 +105,35 @@ const horas = [
   "23:00",
 ];
 
+const defaultDisponibilidad: Omit<Disponibilidad, "id"> & {
+  id?: number | undefined;
+} = {
+  horaFin: "",
+  horaInicio: "",
+  dias: [],
+  disciplina: "",
+  precioReserva: NaN,
+  precioSenia: undefined,
+  minutosReserva: NaN,
+};
+
 export default function EditCourtPage() {
+  const {
+    isOpen: confirmIsOpen,
+    onOpen: confirmOnOpen,
+    onClose: confirmOnClose,
+  } = useDisclosure();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { idEst, idCancha } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
+  const [disp, setDisp] = useState(defaultDisponibilidad);
+
+  const handleDispChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    console.log("handleDispChange");
+    setDisp({ ...disp, [name]: value });
+  };
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
 
@@ -143,72 +166,33 @@ export default function EditCourtPage() {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
   };
 
-  const { mutate: mutateDelete } = useEliminarCancha({
-    onSuccess: () => {
-      toast({
-        title: "Cancha Eliminada.",
-        description: `Cancha Eliminada exitosamente.`,
-        status: "success",
-        isClosable: true,
-      });
-      navigate(-2);
-    },
-    onError: () => {
-      toast({
-        title: "Error al eliminar la cancha",
-        description: `Intente de nuevo.`,
-        status: "error",
-        isClosable: true,
-      });
-    },
-  });
-
-  const { fields, append } = useFieldArray({
+  const {
+    fields: disponibilidades,
+    append,
+    remove,
+  } = useFieldArray({
     name: "disponibilidades",
     control: methods.control,
   });
 
-  const agregarHorario = () => {
-    append({
-      disciplina: "-",
-      horaInicio: "-",
-      horaFin: "",
-      minutosReserva: 0,
-      precioReserva: 0,
-      precioSenia: undefined,
-      dias: [],
-    });
-    onClose();
-  };
-
-  const handleDelete = (index: number) => {
-    const disponibilidades = methods.getValues("disponibilidades");
-    disponibilidades.splice(index, 1);
-    methods.setValue("disponibilidades", disponibilidades);
-  };
-
-  const disponibilidadesArray = methods.getValues("disponibilidades") || [];
-  console.log("Nuevo valor del array:", disponibilidadesArray);
-
-  const last = disponibilidadesArray.length - 1;
-  const lastFieldIndex = fields.length - 1;
-  const {
-    isOpen: formIsOpen,
-    onOpen: formOnOpen,
-    onClose: formOnClose,
-  } = useDisclosure();
-
   useEffect(() => {
-    append({
-      disciplina: "-",
-      horaInicio: "-",
-      horaFin: "",
-      minutosReserva: 0,
-      precioReserva: 0,
-      precioSenia: undefined,
-      dias: [],
-    });
-  }, [append]);
+    console.log(disponibilidades);
+    console.log(methods.formState);
+    console.log(disp);
+  }, [disp, disponibilidades, methods]);
+
+  const handleAgregarDisponibilidad = () => {
+    if (!disp) {
+      return;
+    }
+    append(disp);
+    setDisp(defaultDisponibilidad);
+   onClose();
+  };
+
+  const handleDeleteDisponibilidad = (index: number) => {
+    remove(index);
+  };
 
   return (
     <>
@@ -218,7 +202,7 @@ export default function EditCourtPage() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit(onOpen)}
+          onSubmit={methods.handleSubmit(confirmOnOpen)}
           spacing="24px"
           width="400px"
           m="auto"
@@ -271,68 +255,56 @@ export default function EditCourtPage() {
                 disciplinas.
               </Text>
               <VStack>
-                <Button
-                  leftIcon={<Icon as={GrAddCircle} />}
-                  onClick={formOnOpen}
-                >
-                  {" "}
-                  Agregar disponibilidad{" "}
+                <Button leftIcon={<Icon as={GrAddCircle} />} onClick={onOpen}>
+                  Agregar disponibilidad
                 </Button>
               </VStack>
             </VStack>
             <>
-              {disponibilidadesArray.length > 0 && (
-                <TableContainer paddingTop="20px" paddingBottom="5px">
-                  <Table variant="simple" size="sm">
-                    <Thead backgroundColor="lightgray">
-                      <Tr>
-                        <Th>disciplina</Th>
-                        <Th>hora inicio</Th>
-                        <Th>hora fin</Th>
-                        <Th>reserva (min.)</Th>
-                        <Th>p. reserva/seña</Th>
-                        <Th> dias </Th>
-                        <Th> Eliminar </Th>
+              <TableContainer paddingTop="20px" paddingBottom="5px">
+                <Table variant="simple" size="sm">
+                  <Thead backgroundColor="lightgray">
+                    <Tr>
+                      <Th>disciplina</Th>
+                      <Th>hora inicio</Th>
+                      <Th>hora fin</Th>
+                      <Th>reserva (min.)</Th>
+                      <Th>p. reserva/seña</Th>
+                      <Th> dias </Th>
+                      <Th> Eliminar </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {methods.getValues("disponibilidades").map((d, index) => (
+                      <Tr key={index}>
+                        <Td> {d.disciplina} </Td>
+                        <Td> {d.horaInicio} </Td>
+                        <Td> {d.horaFin} </Td>
+                        <Td> {d.minutosReserva} </Td>
+                        <Td>
+                          {d.precioReserva}/{d.precioSenia}
+                        </Td>
+                        <Td>
+                          {d.dias.map((dia, index) => (
+                            <React.Fragment key={index}>
+                              {dia}
+                              {index !== d.dias.length - 1 && " - "}
+                            </React.Fragment>
+                          ))}
+                        </Td>
+                        <Td>
+                          <Button
+                            type="button"
+                            onClick={() => handleDeleteDisponibilidad(index)}
+                          >
+                            <DeleteIcon />
+                          </Button>
+                        </Td>
                       </Tr>
-                    </Thead>
-                    <Tbody>
-                      {methods.getValues("disponibilidades").map((d, index) =>
-                        index < last + 1 ? (
-                          <Tr>
-                            <Td> {d.disciplina} </Td>
-                            <Td> {d.horaInicio} </Td>
-                            <Td> {d.horaFin} </Td>
-                            <Td> {d.minutosReserva} </Td>
-                            <Td>
-                              {" "}
-                              {d.precioReserva}/{d.precioSenia}{" "}
-                            </Td>
-                            <Td>
-                              {" "}
-                              {d.dias.map((dia, index) => (
-                                <React.Fragment key={index}>
-                                  {dia}
-                                  {index !== d.dias.length - 1 && " - "}
-                                </React.Fragment>
-                              ))}{" "}
-                            </Td>
-                            <Td>
-                              {" "}
-                              <Button
-                                type="button"
-                                onClick={() => handleDelete(index)}
-                              >
-                                {" "}
-                                <DeleteIcon />{" "}
-                              </Button>{" "}
-                            </Td>
-                          </Tr>
-                        ) : null
-                      )}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              )}
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
             </>
           </VStack>
 
@@ -348,7 +320,7 @@ export default function EditCourtPage() {
             )}
           </Container>
 
-          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <Modal isOpen={confirmIsOpen} onClose={confirmOnClose} isCentered>
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>Modificar cancha</ModalHeader>
@@ -358,7 +330,7 @@ export default function EditCourtPage() {
               </ModalBody>
 
               <ModalFooter>
-                <Button colorScheme="gray" mr={3} onClick={onClose}>
+                <Button colorScheme="gray" mr={3} onClick={confirmOnClose}>
                   Cancelar
                 </Button>
                 <Button
@@ -373,106 +345,114 @@ export default function EditCourtPage() {
           </Modal>
         </VStack>
 
-        <Modal size="2xl" isOpen={formIsOpen} onClose={formOnClose} isCentered>
+        <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Agregar disponibilidad</ModalHeader>
             <ModalBody>
-              {fields.length > 0 && (
-                <>
-                  <HStack width="600px" py="10px">
-                    <SelectControl
-                      placeholder="Elegir horario"
-                      label="Horario de Inicio"
-                      name={`disponibilidades[${lastFieldIndex}].horaInicio`}
-                      isRequired
-                    >
-                      {horas.map((hora, i) => (
-                        <option key={i} value={hora}>
-                          {hora}
-                        </option>
-                      ))}
-                    </SelectControl>
-                    <SelectControl
-                      placeholder="Elegir horario"
-                      label="Horario de Fin"
-                      name={`disponibilidades[${lastFieldIndex}].horaFin`}
-                      isRequired
-                    >
-                      {horas.map((hora, i) => (
-                        <option key={i} value={hora}>
-                          {hora}
-                        </option>
-                      ))}
-                    </SelectControl>
+              <HStack width="600px" py="10px">
+                <SelectControl
+                  placeholder="Elegir horario"
+                  label="Horario de Inicio"
+                  name="horaInicio"
+                  isRequired
+                  onChange={handleDispChange}
+                >
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </SelectControl>
+                <SelectControl
+                  placeholder="Elegir horario"
+                  label="Horario de Fin"
+                  name="horaFin"
+                  isRequired
+                  onChange={handleDispChange}
+                >
+                  {horas.map((hora, i) => (
+                    <option key={i} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </SelectControl>
+              </HStack>
+              <HStack width="600px" py="10px">
+                <SelectControl
+                  placeholder="Seleccionar disciplina "
+                  label=""
+                  name="disciplina"
+                  isRequired
+                  onChange={handleDispChange}
+                >
+                  {disciplinas.map((disciplina, i) => (
+                    <option key={i} value={disciplina}>
+                      {disciplina}
+                    </option>
+                  ))}
+                </SelectControl>
+                <SelectControl
+                  placeholder="Seleccionar duración (min)"
+                  label=""
+                  name="minutosReserva"
+                  isRequired
+                  onChange={handleDispChange}
+                >
+                  {duracionReserva.map((duracion, i) => (
+                    <option key={i} value={duracion}>
+                      {duracion}
+                    </option>
+                  ))}
+                </SelectControl>
+              </HStack>
+              <HStack width="600px" py="10px">
+                <InputControl
+                  placeholder=""
+                  name="precioReserva"
+                  type="number"
+                  label="Precio de reserva"
+                  isRequired
+                  onChange={handleDispChange}
+                ></InputControl>
+                <InputControl
+                  placeholder=""
+                  name="precioSenia"
+                  type="number"
+                  label="Seña de reserva"
+                  onChange={handleDispChange}
+                ></InputControl>
+              </HStack>
+              <HStack py="10px">
+                <CheckboxGroupControl
+                  name="dias"
+                  onValueChange={(values) =>
+                    setDisp({
+                      ...disp,
+                      dias: values as Dia[],
+                    })
+                  }
+                >
+                  <HStack>
+                    <Checkbox value="Lunes">Lunes</Checkbox>
+                    <Checkbox value="Martes">Martes</Checkbox>
+                    <Checkbox value="Miércoles">Miércoles</Checkbox>
+                    <Checkbox value="Jueves">Jueves</Checkbox>
+                    <Checkbox value="Viernes">Viernes</Checkbox>
+                    <Checkbox value="Sábado">Sábado</Checkbox>
+                    <Checkbox value="Domingo">Domingo</Checkbox>
                   </HStack>
-                  <HStack width="600px" py="10px">
-                    <SelectControl
-                      placeholder="Seleccionar disciplina "
-                      label=""
-                      name={`disponibilidades[${lastFieldIndex}].disciplina`}
-                      isRequired
-                    >
-                      {disciplinas.map((disciplina, i) => (
-                        <option key={i} value={disciplina}>
-                          {disciplina}
-                        </option>
-                      ))}
-                    </SelectControl>
-                    <SelectControl
-                      placeholder="Seleccionar duración (min)"
-                      label=""
-                      name={`disponibilidades[${lastFieldIndex}].minutosReserva`}
-                      isRequired
-                    >
-                      {duracionReserva.map((duracion, i) => (
-                        <option key={i} value={duracion}>
-                          {duracion}
-                        </option>
-                      ))}
-                    </SelectControl>
-                  </HStack>
-                  <HStack width="600px" py="10px">
-                    <InputControl
-                      placeholder=""
-                      name={`disponibilidades[${lastFieldIndex}].precioReserva`}
-                      type="number"
-                      label="Precio de reserva"
-                      isRequired
-                    ></InputControl>
-                    <InputControl
-                      placeholder=""
-                      name={`disponibilidades[${lastFieldIndex}].precioSenia`}
-                      type="number"
-                      label="Seña de reserva"
-                    ></InputControl>
-                  </HStack>
-                  <HStack py="10px">
-                    <CheckboxGroupControl
-                      name={`disponibilidades[${lastFieldIndex}].dias`}
-                    >
-                      <HStack>
-                        <Checkbox value="Lunes">Lunes</Checkbox>
-                        <Checkbox value="Martes">Martes</Checkbox>
-                        <Checkbox value="Miércoles">Miércoles</Checkbox>
-                        <Checkbox value="Jueves">Jueves</Checkbox>
-                        <Checkbox value="Viernes">Viernes</Checkbox>
-                        <Checkbox value="Sábado">Sábado</Checkbox>
-                        <Checkbox value="Domingo">Domingo</Checkbox>
-                      </HStack>
-                    </CheckboxGroupControl>
-                  </HStack>
-                </>
-              )}
+                </CheckboxGroupControl>
+              </HStack>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="gray" mr={3} onClick={formOnClose}>
+              <Button colorScheme="gray" mr={3} onClick={onClose}>
                 Cancelar
               </Button>
               <Button
                 colorScheme="blackAlpha"
                 backgroundColor="black"
-                onClick={agregarHorario}
+                onClick={handleAgregarDisponibilidad}
               >
                 Aceptar
               </Button>

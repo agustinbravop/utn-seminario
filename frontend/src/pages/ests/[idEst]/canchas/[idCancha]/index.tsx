@@ -76,7 +76,7 @@ export default function CanchaInfoPage() {
 
   return (
     <div>
-      <SubMenu canchas={true} nombreCancha={`: ${data.nombre}`} />
+      <SubMenu canchas={true} nombreCancha={data.nombre} />
       <HStack
         marginRight="16%"
         marginLeft="16%"

@@ -8,6 +8,9 @@ dist
 build
 backend/imagenes
 
+# utilities
+*.bat
+
 # Keep environment variables out of version control
 .env
 

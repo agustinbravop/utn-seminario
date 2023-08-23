@@ -196,7 +196,7 @@ export default function NuevaCanchaPage() {
   };
 
   return (
-    <div>
+    <>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
         Nueva cancha
       </Heading>
@@ -441,6 +441,6 @@ export default function NuevaCanchaPage() {
           </ModalContent>
         </Modal>
       </FormProvider>
-    </div>
+    </>
   );
 }

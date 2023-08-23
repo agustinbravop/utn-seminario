@@ -32,7 +32,7 @@ export default function SubMenu({
         <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
       ) : (
         <Heading textAlign="center" paddingBottom="7" mt="40px">
-          {establecimiento.nombre} {nombreCancha}
+          {establecimiento.nombre}: {nombreCancha}
         </Heading>
       )}
 

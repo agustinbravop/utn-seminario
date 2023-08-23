@@ -14,7 +14,11 @@ export type CrearCanchaReq = Omit<
   disponibilidades: Omit<Disponibilidad, "id">[];
 };
 
-export type ModificarCanchaReq = Omit<Cancha, "urlImagen">;
+export type ModificarCanchaReq = Omit<Cancha, "urlImagen"> & {
+  disponibilidades: (Omit<Disponibilidad, "id"> & {
+    id?: number | undefined;
+  })[];
+};
 
 function modificarImagen(cancha: Cancha, imagen?: File) {
   if (!imagen) {
