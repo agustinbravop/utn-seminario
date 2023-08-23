@@ -12,7 +12,7 @@ export class AdministradorServiceImpl implements AdministradorService {
   constructor(repository: AdministradorRepository) {
     this.repo = repository;
   }
-  
+
   async modificar(admin: Administrador): Promise<Administrador> {
     return await this.repo.modificarAdmin(admin);
   }
