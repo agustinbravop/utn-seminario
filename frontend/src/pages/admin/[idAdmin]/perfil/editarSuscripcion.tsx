@@ -25,7 +25,6 @@ import { useNavigate } from "react-router";
 import { useCambiarSuscripcion } from "@/utils/api/administrador";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { SubmitButton } from "@/components/forms";
 
 const iconos = [
   <Icon as={BsShop} fill="brand.500" fontSize={90} />,
@@ -47,7 +46,7 @@ export default function SuscripcionesPage() {
         status: "success",
         isClosable: true,
       });
-      navigate(-1);
+      navigate(-2);
     },
     onError: () => {
       toast({
