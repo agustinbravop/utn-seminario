@@ -36,7 +36,7 @@ export default function SubMenu({
         </Heading>
       )}
 
-      <HStack gap="30px" marginLeft="16%" marginTop="18px" marginBottom="30px">
+      <HStack gap="12px" marginLeft="16%" marginTop="18px" marginBottom="30px">
         {canchas ? (
           <>
             <Link to={`/ests/${establecimiento?.id}/canchas/${idCancha}`}>

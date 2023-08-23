@@ -179,13 +179,11 @@ export default function NuevaCanchaPage() {
   });
 
   const handleAgregarDisponibilidad = () => {
-    if (!methods.formState.isDirty) {
-      return;
-    }
+    if (disp.dias.length > 0 && disp.disciplina && disp.horaFin && disp.horaInicio && disp.minutosReserva && disp.precioReserva) {
     append(disp);
     setDisp(defaultDisponibilidad);
     onClose();
-  };
+  }};
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);

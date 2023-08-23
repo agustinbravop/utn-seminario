@@ -94,7 +94,7 @@ export default function CourtPage() {
           width="56%"
         >
           <CardBody height="100%" marginTop="0px">
-            <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%">
+            <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%" width="100%">
               <Box>
                 <Image
                   src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
@@ -105,7 +105,7 @@ export default function CourtPage() {
                 />
               </Box>
 
-              <Box marginTop="70px" marginLeft=" 50px" height="100%">
+              <Box marginTop="55px" marginLeft=" 50px" height="100%" >
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
@@ -131,18 +131,18 @@ export default function CourtPage() {
                     </Heading>
                     <Text fontSize="sm">{data?.telefono}</Text>
                   </Box>
-                  <Box>
+                  <Box height="100%">
                     <Heading size="xs" textTransform="uppercase">
                       Localidad
                     </Heading>
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>
-                    <Box justifyContent="center" alignItems="center" width="100%" >
+                    <Box width="100%" pt="33%" display="flex" justifyContent="center" alignItems="flex-end" >
                       <Link to="editar">
-                        <Button mt="50px" mr="30px" leftIcon={<EditIcon />}>Editar </Button>
+                        <Button mr="30px" leftIcon={<EditIcon />}>Editar </Button>
                       </Link>
-                      <Button mt="50px" onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                      <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
                         Eliminar
                       </Button>
                     </Box>            
