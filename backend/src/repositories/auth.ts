@@ -11,7 +11,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../utils/apierrors.js";
-import { Rol } from "../services/auth.js";
+import { Rol, Usuario } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
 
 export type AdministradorConClave = {
@@ -19,17 +19,7 @@ export type AdministradorConClave = {
   clave: string;
 };
 
-export type UsuarioConClave =
-  | {
-      admin: Administrador;
-      jugador?: never;
-      clave: string;
-    }
-  | {
-      admin?: never;
-      jugador: Jugador;
-      clave: string;
-    };
+export type UsuarioConClave = Usuario & { clave: string };
 
 export type JugadorConClave = {
   jugador: Jugador;

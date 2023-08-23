@@ -27,7 +27,17 @@ export interface AuthService {
   refreshJWT(token: string): Promise<string>;
 }
 
-export type JWTUserPayload = JWTPayload & { usuario: Administrador | Jugador };
+export type Usuario =
+  | {
+      admin: Administrador;
+      jugador?: never;
+    }
+  | {
+      admin?: never;
+      jugador: Jugador;
+    };
+
+export type JWTUserPayload = JWTPayload & Usuario;
 
 export class AuthServiceImpl implements AuthService {
   private repo: AuthRepository;
@@ -65,17 +75,7 @@ export class AuthServiceImpl implements AuthService {
    * @param usuario el Administrador que va a ir en el payload. Corresponde al usuario autenticado.
    * @returns un `Promise<string>` con el JWT firmado.
    */
-  private async signJWT(
-    usuario:
-      | {
-          admin: Administrador;
-          jugador?: never;
-        }
-      | {
-          admin?: never;
-          jugador: Jugador;
-        }
-  ): Promise<string> {
+  private async signJWT(usuario: Usuario): Promise<string> {
     let id;
     let payload;
     if (usuario.admin) {
@@ -122,7 +122,7 @@ export class AuthServiceImpl implements AuthService {
    */
   async loginUsuario(correoOUsuario: string, clave: string): Promise<string> {
     const userConClave = await this.repo.getUsuarioYClave(correoOUsuario);
-    
+
     const { clave: hash } = userConClave;
     const esValido = await bcrypt.compare(clave, hash);
     if (!esValido) {
@@ -145,9 +145,10 @@ export class AuthServiceImpl implements AuthService {
     }
 
     // Se obtienen los datos actuales del administrador al que corresponde el JWT.
-    const userConClave = await this.repo.getUsuarioYClave(jwt.usuario.correo);
+    const correo = jwt.admin ? jwt.admin.correo : jwt.jugador.correo;
+    const userConClave = await this.repo.getUsuarioYClave(correo);
 
-      return await this.signJWT(userConClave);
+    return await this.signJWT(userConClave);
   }
 
   /**

@@ -14,7 +14,6 @@ import {
   ArrowForwardIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
-  ChevronRightIcon,
   InfoIcon,
 } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
