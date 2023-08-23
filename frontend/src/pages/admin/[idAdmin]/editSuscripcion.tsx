@@ -21,7 +21,7 @@ import {
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { useSuscripciones } from "@/utils/api/auth";
 import { Administrador, Suscripcion } from "@/models";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { cambiarSuscripcion } from "@/utils/api/administrador";
 import { ApiError } from "@/utils/api";
@@ -37,7 +37,7 @@ const iconos = [
 
 export default function SuscripcionesPage() {
   const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const { currentAdmin } = useCurrentAdmin();
 
