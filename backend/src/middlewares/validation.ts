@@ -40,7 +40,6 @@ export function validateIDParams(...params: string[]) {
         );
       }
     }
-
     next();
   };
 }
