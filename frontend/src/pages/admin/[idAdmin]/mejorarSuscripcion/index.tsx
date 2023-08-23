@@ -48,7 +48,7 @@ export default function mejorarSuscripcion() {
                     <Text mb='3'>
                         ◉ Mejorar el posicionamiento de sus canchas en su zona.
                     </Text>
-                    <Link to={`cambiarSuscripcion`}>
+                    <Link to={`../editarSuscripcion`}>
                         <Button
                             mt="5"
                             type="button"

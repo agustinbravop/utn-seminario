@@ -6,7 +6,7 @@ import { components, hooks, utils } from '@generouted/react-router/client'
 export type Path =
   | `/`
   | `/admin/:idAdmin`
-  | `/admin/:idAdmin/editSuscripcion`
+  | `/admin/:idAdmin/editarSuscripcion`
   | `/admin/:idAdmin/mejorarSuscripcion`
   | `/admin/:idAdmin/nuevoEstablecimiento`
   | `/admin/:idAdmin/perfil`
@@ -25,7 +25,7 @@ export type Path =
 
 export type Params = {
   '/admin/:idAdmin': { idAdmin: string }
-  '/admin/:idAdmin/editSuscripcion': { idAdmin: string }
+  '/admin/:idAdmin/editarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/mejorarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/nuevoEstablecimiento': { idAdmin: string }
   '/admin/:idAdmin/perfil': { idAdmin: string }
