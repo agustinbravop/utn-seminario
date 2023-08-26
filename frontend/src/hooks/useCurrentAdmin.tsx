@@ -3,13 +3,11 @@ import { Administrador } from "../models";
 import { readLocalStorage } from "../utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
 import { JWT } from "../utils/api";
-import { apiLogin } from "../utils/api/auth";
 import { useToast } from "@chakra-ui/react";
 
 interface ICurrentAdminContext {
   currentAdmin?: Administrador;
   logout: () => void;
-  login: (correoOUsuario: string, clave: string) => Promise<Administrador>;
 }
 
 interface CurrentAdminProviderProps {
@@ -23,7 +21,7 @@ const CurrentAdminContext = createContext<ICurrentAdminContext | undefined>(
 function readAdminFromStorage(): Administrador | undefined {
   const token = readLocalStorage<JWT>("token");
   return token
-    ? (jwtDecode(token.token) as { usuario: Administrador }).usuario
+    ? (jwtDecode(token.token) as { admin: Administrador }).admin
     : undefined;
 }
 
@@ -65,20 +63,13 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     };
   }, [toast]);
 
-  const login = async (correoOUsuario: string, clave: string) => {
-    return apiLogin(correoOUsuario, clave).then((admin) => {
-      setCurrentAdmin(admin);
-      return admin;
-    });
-  };
-
   const logout = () => {
     localStorage.removeItem("token");
     setCurrentAdmin(undefined);
   };
 
   return (
-    <CurrentAdminContext.Provider value={{ currentAdmin, login, logout }}>
+    <CurrentAdminContext.Provider value={{ currentAdmin, logout }}>
       {children}
     </CurrentAdminContext.Provider>
   );

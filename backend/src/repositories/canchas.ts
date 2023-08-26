@@ -86,6 +86,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
+      console.log(cancha);
       // Creo las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
@@ -133,12 +134,27 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
-      // Modifico las disponibilidades por separado, por limitaciones de Prisma
+      // Modifico las disponibilidades por separado, por limitaciones de Prisma.
+      // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se crea.
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.prisma.disponibilidad.update({
+          await this.prisma.disponibilidad.upsert({
             where: { id: disp.id },
-            data: {
+            create: {
+              horaFin: disp.horaFin,
+              horaInicio: disp.horaInicio,
+              precioReserva: disp.precioReserva,
+              precioSenia: disp.precioSenia,
+              dias: { connect: disp.dias.map((dia) => ({ dia })) },
+              cancha: { connect: { id: id } },
+              disciplina: {
+                connectOrCreate: {
+                  where: { disciplina: disp.disciplina },
+                  create: { disciplina: disp.disciplina },
+                },
+              },
+            },
+            update: {
               horaFin: disp.horaFin,
               horaInicio: disp.horaInicio,
               precioReserva: disp.precioReserva,
@@ -206,7 +222,15 @@ function validarDisponibilidades(cancha:Cancha): void {
   if (disp.length>=1) { 
     throw new BadRequestError("La hora de finalizacion no puede ser menor que la hora de inicio. Intente de nuevo")
   }
- 
+
+  //Valida que el precio de la seña no supere el precio de la reserva 
+  cancha.disponibilidades.filter((elemento)=>{ 
+    if (elemento.precioSenia?.valueOf()!=='undefined' && Number(elemento.precioSenia)>Number(elemento.precioReserva)) { 
+      throw new BadRequestError("Error el precio de la seña no puede ser mayor que el precio de la reserva. Intenta de nuevo")
+    }
+  })
+  
+
 }
 
 async function awaitQuery(

@@ -1,17 +1,11 @@
-import { Administrador } from "@/models/index";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { Heading, VStack, Alert } from "@chakra-ui/react";
+import { Heading, VStack, Alert, Text } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import { ApiError } from "@/utils/api";
-import useMutationForm from "@/hooks/useMutationForm";
-
-interface LoginState {
-  correoOUsuario: string;
-  clave: string;
-}
+import { useLogin } from "@/utils/api/auth";
+import { useYupForm } from "@/hooks/useYupForm";
+import { Link } from "react-router-dom";
 
 const validationSchema = Yup.object({
   correoOUsuario: Yup.string().required("Obligatorio"),
@@ -22,16 +16,21 @@ const validationSchema = Yup.object({
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useCurrentAdmin();
-  const { methods, mutate, isLoading, isError} = useMutationForm<
-    Administrador,
-    ApiError,
-    LoginState
-  >({
+
+  const methods = useYupForm({
+
     validationSchema,
     defaultValues: { correoOUsuario: "", clave: "" },
-    mutationFn: ({ correoOUsuario, clave }) => login(correoOUsuario, clave),
-    onSuccess: (admin) => navigate(`/admin/${admin.id}`),
+  });
+
+  const { mutate, isLoading, isError } = useLogin({
+    onSuccess: (user) => {
+      if (user.admin) {
+        navigate(`/admin/${user.admin.id}`);
+      } else {
+        navigate(`/jugador/${user.jugador.id}`);
+      }
+    },
   });
   
  
@@ -74,6 +73,12 @@ export default function LoginPage() {
               Error al intentar iniciar sesión. Contraseña o usuario incorrecto.
             </Alert>
           )}
+          <Text>
+            ¿No tiene una cuenta?{" "}
+            <Link to="/register" style={{ color: "blue" }}>
+              Registrarse
+            </Link>
+          </Text>
         </VStack>
       </FormProvider>
     </>

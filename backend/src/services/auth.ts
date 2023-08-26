@@ -7,6 +7,8 @@ import { KeyLike, createSecretKey } from "crypto";
 import { AdministradorClave } from "../utils/AdministradorClave.js";
 import { enviarCorreo } from "../utils/mails.js";
 
+import { Jugador } from "../models/jugador.js";
+
 
 /**
  * Representa el tipo de un usuario.
@@ -23,12 +25,25 @@ export interface AuthService {
     admin: Administrador,
     clave: string
   ): Promise<Administrador>;
+  registrarJugador(jugador: Jugador, clave: string): Promise<Jugador>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(token: string): Rol[];
   cambiarContrasenia(admin:AdministradorClave, claveNueva:string):Promise<AdministradorClave | null>
+  refreshJWT(token: string): Promise<string>;
+
 }
 
-export type JWTUserPayload = JWTPayload & { usuario: Administrador };
+export type Usuario =
+  | {
+      admin: Administrador;
+      jugador?: never;
+    }
+  | {
+      admin?: never;
+      jugador: Jugador;
+    };
+
+export type JWTUserPayload = JWTPayload & Usuario;
 
 export class AuthServiceImpl implements AuthService {
   private repo: AuthRepository;
@@ -66,11 +81,21 @@ export class AuthServiceImpl implements AuthService {
    * @param usuario el Administrador que va a ir en el payload. Corresponde al usuario autenticado.
    * @returns un `Promise<string>` con el JWT firmado.
    */
-  private async signJWT(usuario: Administrador): Promise<string> {
-    const token = await new SignJWT({ usuario, roles: [Rol.Administrador] })
+  private async signJWT(usuario: Usuario): Promise<string> {
+    let id;
+    let payload;
+    if (usuario.admin) {
+      id = usuario.admin.id;
+      payload = { admin: usuario.admin, roles: [Rol.Administrador] };
+    } else {
+      id = usuario.jugador.id;
+      payload = { jugador: usuario.jugador, roles: [Rol.Jugador] };
+    }
+
+    const token = await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setSubject(usuario.id.toString())
+      .setSubject(id.toString())
       .setIssuer(process.env.JWT_ISSUER || "canchasapi")
       .setExpirationTime(process.env.JWT_EXPIRATION_TIME || "1h") // token expiration time, e.g., "1 day"
       .sign(this.secretKey as Uint8Array);
@@ -98,21 +123,38 @@ export class AuthServiceImpl implements AuthService {
    * Valida que el correo/usuario corresponda con la clave y que la clave sea correcta.
    * @param correoOUsuario el correo o username del usuario.
    * @param clave la contraseña en texto plano del usuario.
-   * @returns el JWT de la sesión si los datos son correctos. ApiError si alguna validación falla.
+   * @returns el JWT de la sesión si los datos son correctos.
+   * @throws un ApiError si alguna validación falla.
    */
   async loginUsuario(correoOUsuario: string, clave: string): Promise<string> {
-    const adminConClave = await this.repo.getAdministradorYClave(
-      correoOUsuario
-    );
+    const userConClave = await this.repo.getUsuarioYClave(correoOUsuario);
 
-    const { admin, clave: hash } = adminConClave;
+    const { clave: hash } = userConClave;
     const esValido = await bcrypt.compare(clave, hash);
     if (!esValido) {
       throw new UnauthorizedError("Contraseña incorrecta");
     }
 
-    const jwt = await this.signJWT(admin);
-    return jwt;
+    return await this.signJWT(userConClave);
+  }
+
+  /**
+   * Retorna un nuevo JWT con los datos **actualizados** del usuario.
+   * @param token el access token actual del usuario.
+   * @returns el nuevo JWT de la sesión, con una nueva expiry date.
+   * @throws un ApiError si alguna validación falla.
+   */
+  async refreshJWT(token: string): Promise<string> {
+    const jwt = await this.verifyJWT(token);
+    if (!jwt) {
+      throw new UnauthorizedError("Token inválido");
+    }
+
+    // Se obtienen los datos actuales del administrador al que corresponde el JWT.
+    const correo = jwt.admin ? jwt.admin.correo : jwt.jugador.correo;
+    const userConClave = await this.repo.getUsuarioYClave(correo);
+
+    return await this.signJWT(userConClave);
   }
 
   /**
@@ -141,6 +183,7 @@ export class AuthServiceImpl implements AuthService {
     return await this.repo.crearAdministrador(admin, hash);
   }
 
+
   async cambiarContrasenia(admin:AdministradorClave, claveNueva:string):Promise<AdministradorClave | null> 
   { 
     const administrador= await this.repo.getAdministradorYClave(String(admin.usuarioOCorreo))
@@ -164,6 +207,18 @@ export class AuthServiceImpl implements AuthService {
     
 
    
+  }
+
+  /**
+   * Se hashea la clave del usuario y luego se lo persiste en la base de datos.
+   * @param jugador el nuevo Jugador a registrar.
+   * @param clave la contraseña en texto plano del nuevo usuario jugador.
+   * @returns el Jugador creado.
+   */
+  async registrarJugador(jugador: Jugador, clave: string): Promise<Jugador> {
+    const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
+
+    return await this.repo.crearJugador(jugador, hash);
   }
 
 }

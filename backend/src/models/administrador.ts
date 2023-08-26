@@ -9,7 +9,7 @@ export const administradorSchema = z.object({
   nombre: z.string().nonempty(),
   apellido: z.string().nonempty(),
   correo: z.string().nonempty().email(),
-  telefono: z.string().nonempty().length(15),
+  telefono: z.string().nonempty(),
   usuario: z
     .string()
     .nonempty()

@@ -17,14 +17,17 @@ export const crearCanchaReqSchema = canchaSchema
     disponibilidades: z.array(disponibilidadSchema.omit({ id: true })),
   });
 
-export const modificarCanchaReqSchema = canchaSchema.omit({
-  id: true,
-  urlImagen: true,
-  eliminada: true,
-})
-.extend({ 
-  disponibilidades:z.array(disponibilidadSchema.omit({id:true}))
-}) 
+
+export const modificarCanchaReqSchema = canchaSchema
+  .omit({
+    id: true,
+    urlImagen: true,
+    eliminada: true,
+  })
+  .extend({
+    disponibilidades: z.array(disponibilidadSchema.partial({ id: true })),
+  });
+
 
 export class CanchaHandler {
   private service: CanchaService;
@@ -54,12 +57,23 @@ export class CanchaHandler {
 
   putCancha(): RequestHandler {
     return async (req, res) => {
+      console.log(res.locals.body);
+
       const cancha: Cancha = {
         ...req.body
       };
+
       
       cancha.id = Number(req.params["idCancha"]);
       console.log(cancha)
+
+      cancha.id = Number(req.params["idCancha"]);
+      // Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
+      cancha.disponibilidades = cancha.disponibilidades
+        .filter((d) => !d.id)
+        .map((d) => ({ ...d, id: 0 }));
+
+
       const canchaActualizada = await this.service.modificar(cancha);
       res.status(200).json(canchaActualizada);
     };
@@ -80,9 +94,9 @@ export class CanchaHandler {
 
   postCancha(): RequestHandler {
     return async (_req, res) => {
-      const cancha: Cancha = {
-        ...res.locals.body,
-      };
+      const cancha: Cancha = res.locals.body;
+
+      console.log("postHandler", cancha);
 
       const canchaCreada = await this.service.crear(cancha);
       res.status(201).json(canchaCreada);

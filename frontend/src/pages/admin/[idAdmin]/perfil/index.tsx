@@ -1,4 +1,5 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { EditIcon } from "@chakra-ui/icons";
 import {
   Card,
   CardHeader,
@@ -9,10 +10,14 @@ import {
   Box,
   Text,
   VStack,
+  Button,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+
 
 export default function PerfilPage() {
   const { currentAdmin } = useCurrentAdmin();
+
 
   return (
     <>
@@ -24,11 +29,18 @@ export default function PerfilPage() {
           height="70%"
           // marginLeft="32%"
           marginTop="5%"
-        >
+        > 
           <CardHeader>
             <Heading size="lg" textAlign="center">
               Mi perfil
             </Heading>
+            <Box width="100%" display="flex" flexDirection="column" alignItems="flex-end" >
+             <Link to="editar">
+              <Button mt="20%" leftIcon={<EditIcon />}>Editar </Button>
+            </Link> 
+            </Box>
+            
+            
           </CardHeader>
           <CardBody marginTop="28px">
             <Stack divider={<StackDivider />} spacing="2.5" marginTop="-2rem">
@@ -42,19 +54,19 @@ export default function PerfilPage() {
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  usuario
+                  Usuario
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.usuario}</Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  correo
+                  Correo
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.correo}</Text>
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  telefono
+                  Teléfono
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.telefono}</Text>
               </Box>
@@ -68,13 +80,22 @@ export default function PerfilPage() {
               </Box>
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  Suscripcion
+                  Suscripción
                 </Heading>
                 <Text fontSize="sm">{currentAdmin?.suscripcion.nombre}</Text>
               </Box>
+              <Link to="editSuscripcion">
+              <Box width="100%" display="flex" flexDirection="column" alignItems="center" >
+             <Link to="editarSuscripcion">
+             <Button>Actualizar Suscripción</Button> 
+            </Link> 
+            </Box>
+              
+            </Link>
             </Stack>
           </CardBody>
         </Card>
+            
       </VStack>
     </>
   );
