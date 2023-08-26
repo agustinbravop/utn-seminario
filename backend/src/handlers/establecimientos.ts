@@ -54,6 +54,15 @@ export class EstablecimientoHandler {
     };
   }
 
+  getEstablecimientosEliminadosByAdminID(): RequestHandler {
+    return async (req, res) => {
+      const idAdmin = Number(req.params.idAdmin);
+
+      const ests = await this.service.getDeletedByAdminID(idAdmin);
+      res.status(200).json(ests);
+    };
+  }
+
   putEstablecimiento(): RequestHandler {
     return async (req, res) => {
       const est: Establecimiento = {
