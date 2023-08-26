@@ -1,5 +1,5 @@
 import EstablecimientoCardList from "@/components/EstablecimientoCardList/EstablecimientoCardList";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import {
   Button,
   HStack,
@@ -17,6 +17,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { Establecimiento } from "@/models";
 import { GrAddCircle } from "react-icons/gr";
@@ -28,8 +29,11 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import {
   useEstablecimientosByAdminID,
+  useModificarEstablecimiento,
   useEstablecimientosEliminadosByAdminID,
 } from "@/utils/api/establecimientos";
+
+import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -47,9 +51,7 @@ function EstablecimientosList({ data }: EstablecimientosListProps) {
 
 export default function EstablecimientosPage() {
   const { currentAdmin } = useCurrentAdmin();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
@@ -70,6 +72,29 @@ export default function EstablecimientosPage() {
   const establecimientosFiltrados = data.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
+
+  const toast = useToast();
+  const navigate = useNavigate();
+  
+  const { mutate, isError: modError } = useModificarEstablecimiento({
+    onSuccess: () => {
+      toast({
+        title: "Establecimiento modificado",
+        description: `Establecimiento recuperado exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al recuperarel establecimiento",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
 
   return (
     <>
@@ -148,12 +173,10 @@ export default function EstablecimientosPage() {
               <Alerta
                 mensaje="Ha ocurrido un error inesperado"
                 status="error"
-              />
+              /> 
             ) : (
-              <EstablecimientosList
-                data={methods.data}
-                isLoading={methods.isLoading}
-                isError={methods.isError}
+              <DeletedEstablecimientoList
+                establecimientos={methods.data}
               />
             )}
           </ModalBody>
