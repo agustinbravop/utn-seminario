@@ -131,7 +131,7 @@ export default function PerfilPage() {
                   justifyContent="center"
                   width="100%"
                 >
-                  <SubmitButton widht="10px">Guardar cambios</SubmitButton>
+                  <SubmitButton width="140px">Guardar cambios</SubmitButton>
                 </Box>
               </Stack>
 
