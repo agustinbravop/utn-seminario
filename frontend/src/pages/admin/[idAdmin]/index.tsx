@@ -33,6 +33,7 @@ import {
 } from "@/utils/api/establecimientos";
 
 import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -75,6 +76,12 @@ export default function EstablecimientosPage() {
 
   return (
     <>
+      <Breadcrumb data={{
+        cancha: null,
+        establecimiento: null,
+        currentAdmin: currentAdmin
+      }}/>
+      
       <Heading textAlign="center" paddingBottom="12" mt="40px">
         Establecimientos
       </Heading>

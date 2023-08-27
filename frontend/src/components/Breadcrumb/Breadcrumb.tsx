@@ -1,4 +1,5 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { Administrador, Cancha, Establecimiento } from "@/models";
 import { useCanchaByID } from "@/utils/api/canchas";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import { ChevronRightIcon } from "@chakra-ui/icons";
@@ -8,13 +9,20 @@ import {
   BreadcrumbItem,
 } from "@chakra-ui/react";
 import { useLocation, useParams } from "react-router";
+import { Link } from "react-router-dom";
 
-export default function Breadcrumb() {
-  const { idEst, idCancha, idAdmin } = useParams();
-  const { currentAdmin } = useCurrentAdmin();
+type Params = {
+  cancha: Cancha | null;
+  establecimiento: Establecimiento | null
+  currentAdmin: Administrador | null
+}
 
-  const { data: establecimiento } = useEstablecimientoByID(Number(idEst));
-  const { data: cancha } = useCanchaByID(Number(idEst), Number(idCancha));
+export default function Breadcrumb({ data }: {data: Params}) {
+
+  const { cancha, establecimiento, currentAdmin } = data;
+
+
+
   const location = useLocation();
   let actualLink = "";
 
@@ -28,37 +36,37 @@ export default function Breadcrumb() {
         actualLink === "/admin" ? null : actualLink ===
         `/admin/${currentAdmin?.id}/perfil` ? (
         <BreadcrumbItem key={actualLink}>
-          <BreadcrumbLink href={actualLink}> Perfil </BreadcrumbLink>
+          <Link to={actualLink}> Perfil </Link>
         </BreadcrumbItem>
       ) : actualLink === `/ests` ? (
         <BreadcrumbItem key={actualLink}>
-          <BreadcrumbLink href={actualLink}>
+          <Link to={actualLink}>
             Establecimientos
-          </BreadcrumbLink>
+          </Link>
         </BreadcrumbItem>
         ): actualLink === `/ests/${crumb}` ? (
         <BreadcrumbItem key={actualLink}>
-          <BreadcrumbLink href={actualLink}>
+          <Link to={actualLink}>
             {establecimiento?.nombre}
-          </BreadcrumbLink>
+          </Link>
         </BreadcrumbItem>
-      ) : actualLink === `/ests/${idEst}/canchas/${cancha?.id}` ? (
+      ) : actualLink === `/ests/${establecimiento?.id}/canchas/${cancha?.id}` ? (
         <BreadcrumbItem key={actualLink}>
-          <BreadcrumbLink href={actualLink}>{cancha?.nombre}</BreadcrumbLink>
+          <Link to={actualLink}>{cancha?.nombre}</Link>
         </BreadcrumbItem>
       ) : actualLink === `/admin/${currentAdmin?.id}` &&
         actualLink === location.pathname ? (
         <BreadcrumbItem key={actualLink}>
-          <BreadcrumbLink href={actualLink}> Home </BreadcrumbLink>
+          <Link to={actualLink}> Home </Link>
         </BreadcrumbItem>
-      ) : crumb === idAdmin?.toString() ? null : (
+      ) : crumb === currentAdmin?.id.toString() ? null : (
         <BreadcrumbItem key={actualLink}>
-          <BreadcrumbLink href={actualLink}>
+          <Link to={actualLink}>
             {(crumb.charAt(0).toUpperCase() + crumb.slice(1)).replace(
               /([a-z])([A-Z])/g,
               "$1 $2"
             )}
-          </BreadcrumbLink>
+          </Link>
         </BreadcrumbItem>
       );
     });
