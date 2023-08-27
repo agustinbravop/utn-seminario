@@ -1,28 +1,22 @@
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Administrador, Cancha, Establecimiento } from "@/models";
-import { useCanchaByID } from "@/utils/api/canchas";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { ChevronRightIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
-  BreadcrumbLink,
   Breadcrumb as ChakraBreadcrumb,
   BreadcrumbItem,
+  Button,
+  HStack,
 } from "@chakra-ui/react";
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 type Params = {
   cancha: Cancha | null;
-  establecimiento: Establecimiento | null
+  establecimiento: Establecimiento | null | undefined
   currentAdmin: Administrador | null
 }
 
 export default function Breadcrumb({ data }: {data: Params}) {
-
   const { cancha, establecimiento, currentAdmin } = data;
-
-
-
   const location = useLocation();
   let actualLink = "";
 
@@ -70,12 +64,31 @@ export default function Breadcrumb({ data }: {data: Params}) {
         </BreadcrumbItem>
       );
     });
+
+    const navigate = useNavigate();
+    const next = (dir: boolean) => {
+      dir ? navigate(+1) : navigate(-1);
+    }; 
+
   return (
-    <ChakraBreadcrumb
-      spacing="8px"
-      separator={<ChevronRightIcon color="gray.500" />}
+    <HStack
+      paddingTop={2}
+      marginLeft="17.3%"
+      marginRight="17.%"
+      spacing={1}
     >
-      {crumbs}
+      <Button
+        size="xs"
+        backgroundColor="white"
+        onClick={() => next(false)}
+      >
+        <ChevronLeftIcon boxSize={6} />
+      </Button>
+      <ChakraBreadcrumb
+        spacing="8px"
+        separator={<ChevronRightIcon color="gray.500" />}>
+        {crumbs}
     </ChakraBreadcrumb>
+  </HStack>
   );
 }

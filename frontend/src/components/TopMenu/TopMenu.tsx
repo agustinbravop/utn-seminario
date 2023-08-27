@@ -14,11 +14,10 @@ import {
   ArrowForwardIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
-  ChevronRightIcon,
   InfoIcon,
 } from "@chakra-ui/icons";
 import { Administrador } from "@/models";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
+
 
 export default function TopMenu() {
   const navigate = useNavigate();
@@ -38,26 +37,6 @@ export default function TopMenu() {
       >
         <Nav admin={currentAdmin} logout={logout} />
       </HStack>
-
-      {currentAdmin && (
-        <>
-          <HStack
-            paddingTop={7}
-            marginLeft="17.3%"
-            marginRight="17.%"
-            spacing={1}
-          >
-            <Button
-              size="xs"
-              backgroundColor="white"
-              onClick={() => next(false)}
-            >
-              <ChevronLeftIcon boxSize={6} />
-            </Button>
-
-          </HStack>
-        </>
-      )}
     </>
   );
 }

@@ -27,6 +27,7 @@ import * as Yup from "yup";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { useYupForm } from "@/hooks/useYupForm";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 type FormState = ModificarEstablecimientoReq & {
   imagen: File | undefined;
@@ -86,6 +87,11 @@ export default function EditEstabPage() {
 
   return (
     <div>
+        <Breadcrumb data={{
+        cancha: null,
+        establecimiento: data,
+        currentAdmin: null
+      }} />
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
         Editar Establecimiento
       </Heading>

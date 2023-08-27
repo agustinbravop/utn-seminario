@@ -28,6 +28,7 @@ import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 export default function CourtPage() {
   const { idEst } = useParams();
@@ -64,6 +65,12 @@ export default function CourtPage() {
 
   return (
     <>
+      <Breadcrumb data={{
+        cancha: null,
+        establecimiento: data,
+        currentAdmin: null
+      }} />
+
       <SubMenu />
       <HStack
         marginRight="16%"
