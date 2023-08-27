@@ -15,7 +15,7 @@ export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
 export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
   urlImagen: true,
   id: true,
-  eliminado: true,
+  //eliminado: true,
 });
 
 export class EstablecimientoHandler {

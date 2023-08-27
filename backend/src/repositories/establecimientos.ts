@@ -110,9 +110,10 @@ export class PrismaEstablecimientoRepository
       this.prisma.establecimiento.update({
         where: { id: est.id },
         data: {
-          nombre: est.nombre,
+          nombre: est.nombre, 
           correo: est.correo,
           direccion: est.direccion,
+          eliminado: est.eliminado,
           telefono: est.telefono,
           urlImagen: est.urlImagen,
           horariosDeAtencion: est.horariosDeAtencion,

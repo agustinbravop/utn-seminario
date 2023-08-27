@@ -54,7 +54,7 @@ export default function TopMenu() {
             >
               <ChevronLeftIcon boxSize={6} />
             </Button>
-            <Breadcrumb />
+
           </HStack>
         </>
       )}

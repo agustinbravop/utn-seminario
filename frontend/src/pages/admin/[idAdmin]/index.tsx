@@ -25,11 +25,10 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Alerta from "@/components/Alerta/Alerta";
-import { SearchIcon } from "@chakra-ui/icons";
+import { DeleteIcon, SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import {
   useEstablecimientosByAdminID,
-  useModificarEstablecimiento,
   useEstablecimientosEliminadosByAdminID,
 } from "@/utils/api/establecimientos";
 
@@ -73,28 +72,6 @@ export default function EstablecimientosPage() {
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
-  const toast = useToast();
-  const navigate = useNavigate();
-  
-  const { mutate, isError: modError } = useModificarEstablecimiento({
-    onSuccess: () => {
-      toast({
-        title: "Establecimiento modificado",
-        description: `Establecimiento recuperado exitosamente.`,
-        status: "success",
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: () => {
-      toast({
-        title: "Error al recuperarel establecimiento",
-        description: `Intente de nuevo.`,
-        status: "error",
-        isClosable: true,
-      });
-    },
-  });
 
   return (
     <>
@@ -120,7 +97,7 @@ export default function EstablecimientosPage() {
             value={filtro}
           />
         </InputGroup>
-        <Button onClick={onOpen}>Eliminados</Button>
+        <Button onClick={onOpen}> <Icon as={DeleteIcon} /></Button>
         <HStack
           marginLeft="auto"
           display="flex"
@@ -174,11 +151,13 @@ export default function EstablecimientosPage() {
                 mensaje="Ha ocurrido un error inesperado"
                 status="error"
               /> 
-            ) : (
+            ) : 
+              methods.data.length === 0 ? (<Text> No hay establecimientos en la papelera </Text>):
+              (
               <DeletedEstablecimientoList
                 establecimientos={methods.data}
               />
-            )}
+            ) }
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>

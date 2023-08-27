@@ -7,24 +7,55 @@ import {
     Image,
     Text,
     VStack,
+    useToast,
   } from "@chakra-ui/react";
   import { MdPlace } from "react-icons/md";
   import { PhoneIcon } from "@chakra-ui/icons";
   import { Establecimiento } from "@/models/index";
   import { Box } from "@chakra-ui/react";
   import { defImage } from "@/utils/const/const";
-  
+  import { useModificarEstablecimiento } from "@/utils/api/establecimientos";
+import { useNavigate } from "react-router";
+
   type EstablecimientoCardProps = {
     establecimiento: Establecimiento;
   };
-  
- const handleRecuperar = () => {
 
- }
 
   export default function DeletedEstablecimiento({
     establecimiento,
   }: EstablecimientoCardProps) {
+
+    const toast = useToast();
+    const navigate = useNavigate();
+    
+    const { mutate } = useModificarEstablecimiento({
+        onSuccess: () => {
+          toast({
+            title: "Establecimiento recuperado",
+            description: `Establecimiento recuperado exitosamente.`,
+            status: "success",
+            isClosable: true,
+          });
+          navigate(-2)
+          navigate(`/admin/${establecimiento?.idAdministrador}`);
+        },
+        onError: () => {
+          toast({
+            title: "Error al recuperarel establecimiento",
+            description: `Intente de nuevo.`,
+            status: "error",
+            isClosable: true,
+          });
+        },
+      });
+      
+     const handleRecuperar = () => {
+        const alteredEstablecimiento = {...establecimiento, eliminado: false}
+        console.log(alteredEstablecimiento)
+        mutate(alteredEstablecimiento)
+     }
+
     return (
         <Card
           width="300px"
@@ -66,4 +97,4 @@ import {
         </Card>
     );
   }
-  
+

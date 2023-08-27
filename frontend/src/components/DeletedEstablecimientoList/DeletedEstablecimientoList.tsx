@@ -12,7 +12,7 @@ export default function DeletedEstablecimientoList({
   return (
     <HStack display="flex" flexWrap="wrap" justifyContent="left">
       {establecimientos.map((est) => (
-        <DeletedEstablecimiento key={est.id} establecimiento={est} />
+        <DeletedEstablecimiento key={est.id} establecimiento={est}  />
       ))}
     </HStack>
   );
