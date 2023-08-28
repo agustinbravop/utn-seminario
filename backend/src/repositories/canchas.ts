@@ -72,6 +72,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       throw new BadRequestError("La cancha ingresada ya existe. Ingrese el nombre de otra cancha")
     }
 
+    
     try {
       validarDisponibilidades(cancha)
       const { id } = await this.prisma.cancha.create({
@@ -86,7 +87,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
-      console.log(cancha);
+
       // Creo las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
@@ -109,6 +110,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         })
       );
 
+      console.log("endPoint crear cancha "+cancha.disponibilidades)
       return await this.getCanchaByID(id);
     } catch (e) {
       console.error(e);
@@ -171,7 +173,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
           });
         })
       );
-
+      
       return await this.getCanchaByID(id);
     } catch (e) {
       console.error(e);
@@ -196,7 +198,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
 
 type disponibilidadDB = Omit<disponibilidad, "idDisciplina" | "idCancha"> & {
   disciplina: disciplina;
-  dias: dia[];
+  dias: dia[]
 } ;
 
 type canchaDB = cancha & {

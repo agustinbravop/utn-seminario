@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
@@ -62,8 +63,7 @@ model disponibilidad {
 
 model dia {
   dia String @id
-
-  disponibilidad disponibilidad[]
+  disponibilidad disponibilidad[] 
 }
 
 

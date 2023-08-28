@@ -182,7 +182,6 @@ export default function EditCourtPage() {
   }, [disp, disponibilidades, methods]);
 
   const handleAgregarDisponibilidad = () => {
-
     const validationRules = {
       disciplina: disp.disciplina !== "",
       horaFin: disp.horaFin !== "",
@@ -192,9 +191,8 @@ export default function EditCourtPage() {
       minutosReserva: !Number.isNaN(disp.minutosReserva),
     };
 
-
     const allValid = Object.values(validationRules).every((isValid) => isValid);
-  
+
     if (allValid) {
       append(disp);
       setDisp(defaultDisponibilidad);

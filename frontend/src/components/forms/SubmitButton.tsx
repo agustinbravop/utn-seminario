@@ -20,7 +20,7 @@ export default function SubmitButton(props: SubmitButtonProps) {
   const { control, children, isLoading, ...rest } = props;
   const { isSubmitting } = useFormState({ control });
 
-  return ( 
+  return (
     <Button
       type="submit"
       colorScheme="brand"

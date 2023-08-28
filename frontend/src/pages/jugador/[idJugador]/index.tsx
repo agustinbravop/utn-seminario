@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 
 export default function PerfilPage() {
-  const { currentJugador } = useCurrentJugador();
+  const { jugador } = useCurrentJugador();
 
   return (
     <>
@@ -28,20 +28,20 @@ export default function PerfilPage() {
               <Box>
                 <Heading size="xs">Nombre</Heading>
                 <Text fontSize="sm">
-                  {currentJugador?.nombre} {currentJugador?.apellido}
+                  {jugador?.nombre} {jugador?.apellido}
                 </Text>
               </Box>
               <Box>
                 <Heading size="xs">Usuario</Heading>
-                <Text fontSize="sm">{currentJugador?.usuario}</Text>
+                <Text fontSize="sm">{jugador?.usuario}</Text>
               </Box>
               <Box>
                 <Heading size="xs">Correo</Heading>
-                <Text fontSize="sm">{currentJugador?.correo}</Text>
+                <Text fontSize="sm">{jugador?.correo}</Text>
               </Box>
               <Box>
                 <Heading size="xs">Teléfono</Heading>
-                <Text fontSize="sm">{currentJugador?.telefono}</Text>
+                <Text fontSize="sm">{jugador?.telefono}</Text>
               </Box>
             </Stack>
           </CardBody>

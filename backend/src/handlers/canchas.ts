@@ -73,7 +73,7 @@ export class CanchaHandler {
         .filter((d) => !d.id)
         .map((d) => ({ ...d, id: 0 }));
 
-
+      
       const canchaActualizada = await this.service.modificar(cancha);
       res.status(200).json(canchaActualizada);
     };

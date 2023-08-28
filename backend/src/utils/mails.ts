@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
-import { AdministradorConClave } from "../repositories/auth";
+import { UsuarioConClave } from "../repositories/auth";
 import { BadRequestError } from "./apierrors";
 
-export async function enviarCorreo(admin:AdministradorConClave) {
+export async function enviarCorreo(admin:UsuarioConClave) {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -15,9 +15,9 @@ export async function enviarCorreo(admin:AdministradorConClave) {
   try { 
   await transporter.sendMail({
     from: "Cambio de Contraseña <seminariointegrador21@gmail.com>",
-    to: admin.admin.correo,
+    to: admin.admin?.correo,
     subject: "Cambio de contraseña",
-    html: `<p>Estimado/a ${admin.admin.correo} su contraseña se ha cambiado con exito </p>`
+    html: `<p>Estimado/a ${admin.admin?.correo} su contraseña se ha cambiado con exito </p>`
   });
 }catch(error) { 
   console.log(error) 
