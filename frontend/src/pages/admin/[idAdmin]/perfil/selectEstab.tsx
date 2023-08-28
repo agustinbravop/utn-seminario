@@ -76,6 +76,12 @@ export default function SelectEstablecimiento() {
   const establecimientos = data?.map((e) => {
     const seleccionado = selected.includes(e.id);
     return (
+      <>
+      <Breadcrumb data={{
+        cancha: null,
+        establecimiento: null,
+        currentAdmin: currentAdmin
+      }}/>
       <Card
         key={e.id}
         width="300px"
@@ -118,6 +124,7 @@ export default function SelectEstablecimiento() {
           </HStack>
         </CardFooter>
       </Card>
+      </>
     );
   });
 
@@ -162,5 +169,6 @@ export default function SelectEstablecimiento() {
         </Button>
       )}
     </>
+
   );
 }
