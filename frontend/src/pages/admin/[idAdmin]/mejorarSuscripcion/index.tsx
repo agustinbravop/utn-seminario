@@ -10,24 +10,17 @@ import {
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 const iconos = [
     <Icon as={BsShop} fill="brand.500" fontSize={90} />,
     <Icon as={BsBuildings} fill="brand.500" fontSize={90} />,
     <Icon as={BsRocket} fill="brand.500" fontSize={90} />,
 ];
-const { currentAdmin } = useCurrentAdmin();
 
 export default function mejorarSuscripcion() {
 
     return (
         <>
-           <Breadcrumb data={{
-        cancha: null,
-        establecimiento: null,
-        currentAdmin: currentAdmin
-      }}/>
             <Box marginLeft="12%">
                 <Heading size="lg">Mejore su suscripción</Heading>
                 <br />

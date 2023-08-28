@@ -77,11 +77,7 @@ export default function SelectEstablecimiento() {
     const seleccionado = selected.includes(e.id);
     return (
       <>
-      <Breadcrumb data={{
-        cancha: null,
-        establecimiento: null,
-        currentAdmin: currentAdmin
-      }}/>
+
       <Card
         key={e.id}
         width="300px"

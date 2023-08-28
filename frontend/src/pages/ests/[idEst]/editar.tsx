@@ -87,11 +87,7 @@ export default function EditEstabPage() {
 
   return (
     <div>
-        <Breadcrumb data={{
-        cancha: null,
-        establecimiento: data,
-        currentAdmin: null
-      }} />
+       
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
         Editar Establecimiento
       </Heading>

@@ -65,11 +65,6 @@ export default function CourtPage() {
 
   return (
     <>
-      <Breadcrumb data={{
-        cancha: null,
-        establecimiento: data,
-        currentAdmin: null
-      }} />
 
       <SubMenu />
       <HStack

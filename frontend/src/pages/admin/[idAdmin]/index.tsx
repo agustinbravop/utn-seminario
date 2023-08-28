@@ -1,5 +1,5 @@
 import EstablecimientoCardList from "@/components/EstablecimientoCardList/EstablecimientoCardList";
-import { Navigate, useNavigate } from "react-router";
+import { Navigate } from "react-router";
 import {
   Button,
   HStack,
@@ -16,8 +16,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure,
-  useToast,
+  useDisclosure
 } from "@chakra-ui/react";
 import { Establecimiento } from "@/models";
 import { GrAddCircle } from "react-icons/gr";
@@ -32,7 +31,6 @@ import {
   useEstablecimientosEliminadosByAdminID,
 } from "@/utils/api/establecimientos";
 import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -75,11 +73,6 @@ export default function EstablecimientosPage() {
 
   return (
     <>
-      <Breadcrumb data={{
-        cancha: null,
-        establecimiento: null,
-        currentAdmin: currentAdmin
-      }}/>
       
       <Heading textAlign="center" paddingBottom="12" mt="40px">
         Establecimientos

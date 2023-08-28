@@ -25,7 +25,6 @@ import { InputControl, SubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useCurrentAdmin, useYupForm } from "@/hooks";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 const validationSchema = Yup.object({
   id: Yup.number(),
@@ -81,11 +80,7 @@ export default function PerfilPage() {
 
   return (
     <>
-       <Breadcrumb data={{
-        cancha: null,
-        establecimiento: null,
-        currentAdmin: currentAdmin
-      }}/>
+       
       <VStack>
         <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
           <CardHeader>
