@@ -25,6 +25,7 @@ import { useNavigate } from "react-router";
 import { useCambiarSuscripcion } from "@/utils/api/administrador";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
 
 const iconos = [
   <Icon as={BsShop} fill="brand.500" fontSize={90} />,
@@ -86,6 +87,8 @@ export default function SuscripcionesPage() {
     // const actual = currentAdmin?.suscripcion.id === s.id;
     const pepe = actual === s.id
 
+
+
     return (
       <Card
         bg="light"
@@ -113,6 +116,29 @@ export default function SuscripcionesPage() {
     );
   });
 
+  const { data: establecimientoData } = useEstablecimientosByAdminID(
+    Number(currentAdmin?.id)
+  );
+
+
+  function handleSuscripcion(): void {
+        console.log(newSus),
+        delete newSus.icono,
+        adminGG.suscripcion = newSus,
+        console.log(adminGG),
+    newSus.limiteEstablecimientos < establecimientoData.length ? 
+    ( localStorage.setItem('suscripcionNueva', JSON.stringify(adminGG)),
+      navigate("../selectEstab")): 
+    (   
+        console.log(newSus),
+        console.log(newSus),
+        delete newSus.icono,
+        adminGG.suscripcion = newSus,
+        console.log(adminGG),
+        mutate(adminGG))    
+  } 
+
+  
   return (
     <>
       <Box marginBottom="5px" marginLeft="12%" marginRight="12%">
@@ -142,16 +168,10 @@ export default function SuscripcionesPage() {
             <Button colorScheme="gray" mr={3} onClick={onClose}>
               Cancelar
             </Button>
-            <Button
+            <Button 
               colorScheme="brand"
               backgroundColor="black"
-              onClick={() => {
-                console.log(newSus);
-                delete newSus.icono;
-                adminGG.suscripcion = newSus;
-                console.log(adminGG)
-                mutate(adminGG)
-              }
+              onClick={() => handleSuscripcion()
               }
             >
               Aceptar

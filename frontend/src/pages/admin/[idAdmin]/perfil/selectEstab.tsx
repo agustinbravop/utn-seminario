@@ -16,22 +16,51 @@ import {
   Text,
   VStack,
   HStack,
+  useToast,
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router";
 import { Box } from "@chakra-ui/react";
+import { useCambiarSuscripcion } from "@/utils/api/administrador";
 
 export default function SelectEstablecimiento() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
+  const toast = useToast();
+  
+  const { mutate: mutateAdmin } = useCambiarSuscripcion({
+    onSuccess: () => {
+      toast({
+        title: "Nueva Suscripción",
+        description: `Suscripción actualizada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(`/admin/${currentAdmin?.id}`);
+    },
+    onError: () => {
+      toast({
+        title: "Error al intentar cambiar de suscripción",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const newAdminString = localStorage.getItem('suscripcionNueva') !== null ? localStorage.getItem('suscripcionNueva') : "pepe"
+  const newAdmin = JSON.parse(newAdminString)
+
 
   const { data } = useEstablecimientosByAdminID(Number(currentAdmin?.id));
 
   const { mutate } = useEliminarEstablecimiento();
   // array de los ids de los establecimientos a conservar. Los no seleccionados se eliminan.
   const [selected, setSelected] = useState<number[]>([]);
+
   const handleEstablecimientoToggle = (idEst: number) => {
+    console.log(newAdmin)
     if (selected.includes(idEst)) {
       setSelected(selected.filter((id) => id !== idEst));
     } else {
@@ -92,17 +121,19 @@ export default function SelectEstablecimiento() {
     );
   });
 
+
   const handleSubmit = async () => {
     const eliminados = data?.filter((e) => !selected.includes(e.id)) || [];
     if (selected.length > currentAdmin.suscripcion.limiteEstablecimientos) {
     }
-
+    console.log(newAdmin)
+    mutateAdmin(newAdmin)
     Promise.all(eliminados.map((e) => mutate(e.id)) || []).then(() =>
       navigate(`/admin/${currentAdmin?.id}`)
     );
   };
 
-  const maximo = currentAdmin?.suscripcion.limiteEstablecimientos || 0;
+  const maximo = newAdmin?.suscripcion.limiteEstablecimientos || 0;
 
   return (
     <>

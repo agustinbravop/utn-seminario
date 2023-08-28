@@ -31,7 +31,6 @@ import {
   useEstablecimientosByAdminID,
   useEstablecimientosEliminadosByAdminID,
 } from "@/utils/api/establecimientos";
-
 import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
