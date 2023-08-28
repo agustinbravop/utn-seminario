@@ -4,6 +4,7 @@ import { Administrador } from "../models/administrador.js";
 import {
   BadRequestError,
   ConflictError,
+  NotFoundError,
   UnauthorizedError,
 } from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
@@ -162,15 +163,18 @@ export class AuthServiceImpl implements AuthService {
   ): Promise<void> {
     try {
       await this.repo.getUsuarioYClave(correo);
-    } catch {
-      throw new ConflictError("Ya existe un usuario con ese correo");
-    }
-
-    try {
       await this.repo.getUsuarioYClave(usuario);
-    } catch {
-      throw new ConflictError("Ya existe un usuario con ese usuario");
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        // No existe usuario con ese correo o usuario, asi que la unicidad se mantiene.
+        return;
+      } else {
+        // Hubo otro tipo de error.
+        throw e;
+      }
     }
+    // Si `getUsuarioYClave()` no lanza error, es porque el correo o usuario ya está ocupado.
+    throw new ConflictError("Ya existe un usuario con ese correo o usuario");
   }
 
   /**
