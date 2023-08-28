@@ -183,11 +183,23 @@ export default function CanchaInfoPage() {
                         </Tbody>
                       </Table>
                     </TableContainer>
-                    <Box width="100%" display="flex" justifyContent="center" alignItems="flex-end" >
+                    <Box
+                      width="100%"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="flex-end"
+                    >
                       <Link to="editar">
-                        <Button mt="38px" mr="40px" leftIcon={<EditIcon />}>Editar</Button>
+                        <Button mt="38px" mr="40px" leftIcon={<EditIcon />}>
+                          Editar
+                        </Button>
                       </Link>
-                      <Button mt="38px" onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                      <Button
+                        mt="38px"
+                        onClick={onOpen}
+                        colorScheme="red"
+                        leftIcon={<DeleteIcon />}
+                      >
                         Eliminar
                       </Button>
                     </Box>

@@ -1,5 +1,4 @@
 import EstablecimientoCardList from "@/components/EstablecimientoCardList/EstablecimientoCardList";
-import { Navigate } from "react-router";
 import {
   Button,
   HStack,
@@ -35,7 +34,7 @@ function EstablecimientosList({ data }: EstablecimientosListProps) {
 }
 
 export default function EstablecimientosPage() {
-  const { currentAdmin } = useCurrentAdmin();
+  const { admin } = useCurrentAdmin();
 
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,12 +42,8 @@ export default function EstablecimientosPage() {
   };
 
   const { data, isLoading, isError } = useEstablecimientosByAdminID(
-    Number(currentAdmin?.id)
+    Number(admin.id)
   );
-
-  if (!currentAdmin) {
-    return <Navigate to="/login" />;
-  }
 
   const establecimientosFiltrados = data.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
@@ -86,17 +81,17 @@ export default function EstablecimientosPage() {
           align="center"
         >
           <Text mb="0">
-            {data.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
+            {data.length} / {admin.suscripcion.limiteEstablecimientos}{" "}
             establecimiento{data?.length === 1 || "s"}
           </Text>
-          {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
+          {data.length < admin.suscripcion.limiteEstablecimientos && (
             <Link to="nuevoEstablecimiento">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>
             </Link>
           )}
-          {data.length === currentAdmin.suscripcion.limiteEstablecimientos && (
+          {data.length === admin.suscripcion.limiteEstablecimientos && (
             <Link to="mejorarSuscripcion">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento

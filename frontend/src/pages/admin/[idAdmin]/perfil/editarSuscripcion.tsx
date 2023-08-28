@@ -36,7 +36,7 @@ export default function SuscripcionesPage() {
   const toast = useToast();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
-  const { currentAdmin } = useCurrentAdmin();
+  const { admin } = useCurrentAdmin();
 
   const { mutate } = useCambiarSuscripcion({
     onSuccess: () => {
@@ -58,7 +58,7 @@ export default function SuscripcionesPage() {
     },
   });
 
-  const [newSus, setNewSus] = useState<Suscripcion>(currentAdmin?.suscripcion);
+  const [newSus, setNewSus] = useState<Suscripcion>(admin.suscripcion);
 
   const { data, isError, isLoading } = useSuscripciones();
   let cards;
@@ -70,21 +70,14 @@ export default function SuscripcionesPage() {
     cards = <p>error!</p>;
   }
 
-  let adminGG = currentAdmin;
-
-  if (!currentAdmin) {
-    navigate("login");
-    return;
-  }
-
-  const actual = newSus.id
+  const actual = newSus.id;
 
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
     .map((s, idx) => ({ icono: iconos[idx], ...s }));
   cards = suscripciones?.map((s) => {
-    // const actual = currentAdmin?.suscripcion.id === s.id;
-    const pepe = actual === s.id
+    // const actual = admin.suscripcion.id === s.id;
+    const pepe = actual === s.id;
 
     return (
       <Card
@@ -106,7 +99,13 @@ export default function SuscripcionesPage() {
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
           {pepe || (
-            <Button colorScheme="brand" variant="outline" onClick={() => setNewSus(s)}>Elegir</Button>
+            <Button
+              colorScheme="brand"
+              variant="outline"
+              onClick={() => setNewSus(s)}
+            >
+              Elegir
+            </Button>
           )}
         </CardBody>
       </Card>
@@ -127,9 +126,13 @@ export default function SuscripcionesPage() {
       <HStack justifyContent="center" gap="95px" my="50px" as="form">
         {cards}
       </HStack>
-      <Box display="flex" justifyContent="center" >
-        <Button onClick={() => navigate(-1)} mr={15} >Cancelar</Button>
-        <Button onClick={onOpen} colorScheme="brand" >Aceptar</Button>
+      <Box display="flex" justifyContent="center">
+        <Button onClick={() => navigate(-1)} mr={15}>
+          Cancelar
+        </Button>
+        <Button onClick={onOpen} colorScheme="brand">
+          Aceptar
+        </Button>
       </Box>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -147,12 +150,9 @@ export default function SuscripcionesPage() {
               backgroundColor="black"
               onClick={() => {
                 console.log(newSus);
-                delete newSus.icono;
-                adminGG.suscripcion = newSus;
-                console.log(adminGG)
-                mutate(adminGG)
-              }
-              }
+                console.log(admin);
+                mutate({ idAdmin: admin.id, idSuscripcion: newSus.id });
+              }}
             >
               Aceptar
             </Button>

@@ -1,7 +1,12 @@
 import bcrypt from "bcrypt";
 import { AuthRepository } from "../repositories/auth.js";
 import { Administrador } from "../models/administrador.js";
-import { BadRequestError, UnauthorizedError } from "../utils/apierrors.js";
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
 import { Jugador } from "../models/jugador.js";
@@ -62,11 +67,12 @@ export class AuthServiceImpl implements AuthService {
       return [];
     }
 
-    // Traducción de String[] a Rol[]
+    // Se extraen los roles del payload del JWT.
     const rolesJwt: string[] = payload["roles"];
     const roles = (Object.keys(Rol) as unknown as (keyof typeof Rol)[])
       .filter((rol) => rolesJwt.includes(rol))
       .map((rolJwt) => Rol[rolJwt]);
+
     return roles;
   }
 
@@ -144,11 +150,31 @@ export class AuthServiceImpl implements AuthService {
       throw new UnauthorizedError("Token inválido");
     }
 
-    // Se obtienen los datos actuales del administrador al que corresponde el JWT.
+    // Se obtienen los datos actuales del usuario al que corresponde el JWT.
     const correo = jwt.admin ? jwt.admin.correo : jwt.jugador.correo;
     const userConClave = await this.repo.getUsuarioYClave(correo);
 
     return await this.signJWT(userConClave);
+  }
+
+  private async validarUnicidad(
+    correo: string,
+    usuario: string
+  ): Promise<void> {
+    try {
+      await this.repo.getUsuarioYClave(correo);
+      await this.repo.getUsuarioYClave(usuario);
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        // No existe usuario con ese correo o usuario, asi que la unicidad se mantiene.
+        return;
+      } else {
+        // Hubo otro tipo de error.
+        throw e;
+      }
+    }
+    // Si `getUsuarioYClave()` no lanza error, es porque el correo o usuario ya está ocupado.
+    throw new ConflictError("Ya existe un usuario con ese correo o usuario");
   }
 
   /**
@@ -162,6 +188,8 @@ export class AuthServiceImpl implements AuthService {
     clave: string
   ): Promise<Administrador> {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
+
+    await this.validarUnicidad(admin.correo, admin.usuario);
 
     const now = new Date();
     const anioActual = String(now.getUTCFullYear()).slice(-2);
@@ -185,6 +213,8 @@ export class AuthServiceImpl implements AuthService {
    */
   async registrarJugador(jugador: Jugador, clave: string): Promise<Jugador> {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
+
+    await this.validarUnicidad(jugador.correo, jugador.usuario);
 
     return await this.repo.crearJugador(jugador, hash);
   }

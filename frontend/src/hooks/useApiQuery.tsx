@@ -30,7 +30,7 @@ export function useApiQuery<
   TQueryKey extends QueryKey = QueryKey,
 >(
   queryKey: TQueryKey,
-  endpoint: string,
+  endpoint?: string,
   options?: Omit<
     UseApiQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
     "initialData"
@@ -44,7 +44,7 @@ export function useApiQuery<
   TQueryKey extends QueryKey = QueryKey,
 >(
   queryKey: TQueryKey,
-  endpoint: string,
+  endpoint?: string,
   options?: UseApiQueryOptions<TQueryFnData, TError, TData, TQueryKey>
 ): UseQueryResult<TData, TError>;
 
@@ -63,14 +63,12 @@ export function useApiQuery<
   TQueryKey extends QueryKey = QueryKey,
 >(
   queryKey: TQueryKey,
-  endpoint: string,
+  endpoint?: string,
   options: UseApiQueryOptions<TQueryFnData, TError, TData, TQueryKey> = {}
 ) {
-  const queryFn = () => get<TQueryFnData>(endpoint);
+  if (!options.queryFn && endpoint) {
+    options.queryFn = () => get<TQueryFnData>(endpoint);
+  }
 
-  return useQuery<TQueryFnData, TError, TData, TQueryKey>(
-    queryKey,
-    queryFn,
-    options
-  );
+  return useQuery<TQueryFnData, TError, TData, TQueryKey>(queryKey, options);
 }

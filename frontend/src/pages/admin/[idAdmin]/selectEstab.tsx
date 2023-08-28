@@ -23,10 +23,10 @@ import { useNavigate } from "react-router";
 import { Box } from "@chakra-ui/react";
 
 export default function SelectEstablecimiento() {
-  const { currentAdmin } = useCurrentAdmin();
+  const { admin } = useCurrentAdmin();
   const navigate = useNavigate();
 
-  const { data } = useEstablecimientosByAdminID(Number(currentAdmin?.id));
+  const { data } = useEstablecimientosByAdminID(Number(admin?.id));
 
   const { mutate } = useEliminarEstablecimiento();
   // array de los ids de los establecimientos a conservar. Los no seleccionados se eliminan.
@@ -38,11 +38,6 @@ export default function SelectEstablecimiento() {
       setSelected([...selected, idEst]);
     }
   };
-
-  if (!currentAdmin) {
-    navigate("/login");
-    return;
-  }
 
   const establecimientos = data?.map((e) => {
     const seleccionado = selected.includes(e.id);
@@ -94,15 +89,15 @@ export default function SelectEstablecimiento() {
 
   const handleSubmit = async () => {
     const eliminados = data?.filter((e) => !selected.includes(e.id)) || [];
-    if (selected.length > currentAdmin.suscripcion.limiteEstablecimientos) {
+    if (selected.length > admin.suscripcion.limiteEstablecimientos) {
     }
 
     Promise.all(eliminados.map((e) => mutate(e.id)) || []).then(() =>
-      navigate(`/admin/${currentAdmin?.id}`)
+      navigate(`/admin/${admin?.id}`)
     );
   };
 
-  const maximo = currentAdmin?.suscripcion.limiteEstablecimientos || 0;
+  const maximo = admin?.suscripcion.limiteEstablecimientos || 0;
 
   return (
     <>
@@ -115,8 +110,7 @@ export default function SelectEstablecimiento() {
           selected.length > maximo || selected.length === 0 ? "red" : "black"
         }
       >
-        {" "}
-        {selected.length} / {maximo}{" "}
+        {selected.length} / {maximo}
       </Text>
       <HStack display="flex" flexWrap="wrap" justifyContent="center">
         {establecimientos}

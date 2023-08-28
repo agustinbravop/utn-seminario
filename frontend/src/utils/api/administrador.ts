@@ -31,7 +31,7 @@ export function useCambiarSuscripcion(
   return useApiMutation({
     ...options,
     mutationFn: (data) =>
-      patch<Administrador>(`${API_URL}/administradores/${data.id}`, data)
+      patch<Administrador>(`${API_URL}/administradores/${data.idAdmin}`, data)
         .then(() => get<JWT>(`${API_URL}/auth/token`))
         .then((data) => {
           writeLocalStorage("token", data);

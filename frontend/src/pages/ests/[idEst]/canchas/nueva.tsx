@@ -179,7 +179,6 @@ export default function NuevaCanchaPage() {
   });
 
   const handleAgregarDisponibilidad = () => {
-
     const validationRules = {
       disciplina: disp.disciplina !== "",
       horaFin: disp.horaFin !== "",
@@ -189,9 +188,8 @@ export default function NuevaCanchaPage() {
       minutosReserva: !Number.isNaN(disp.minutosReserva),
     };
 
-
     const allValid = Object.values(validationRules).every((isValid) => isValid);
-  
+
     if (allValid) {
       append(disp);
       setDisp(defaultDisponibilidad);
@@ -208,7 +206,6 @@ export default function NuevaCanchaPage() {
         isClosable: true,
       });
     }
-
   };
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
