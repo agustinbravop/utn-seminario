@@ -23,7 +23,6 @@ import { useModificarAdministrador } from "@/utils/api/administrador";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import { useCurrentAdmin, useYupForm } from "@/hooks";
 
 const validationSchema = Yup.object({
@@ -55,9 +54,9 @@ export default function PerfilPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
 
-  const { currentAdmin } = useCurrentAdmin();
+  const { admin } = useCurrentAdmin();
 
-  const methods = useYupForm({ validationSchema, resetValues: currentAdmin });
+  const methods = useYupForm({ validationSchema, resetValues: admin });
   const { mutate, isLoading } = useModificarAdministrador({
     onSuccess: () => {
       toast({
@@ -126,11 +125,7 @@ export default function PerfilPage() {
                   </Heading>
                   <InputControl isRequired name="telefono" />
                 </Box>
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  width="100%"
-                >
+                <Box display="flex" justifyContent="center" width="100%">
                   <SubmitButton width="140px">Guardar cambios</SubmitButton>
                 </Box>
               </Stack>
@@ -150,9 +145,7 @@ export default function PerfilPage() {
                     <Button
                       colorScheme="brand"
                       backgroundColor="black"
-                      onClick={methods.handleSubmit((values) =>
-                        mutate(values)
-                      )}
+                      onClick={methods.handleSubmit((values) => mutate(values))}
                       isLoading={isLoading}
                     >
                       Aceptar

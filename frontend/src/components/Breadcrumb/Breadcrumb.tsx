@@ -11,7 +11,7 @@ import { useLocation, useParams } from "react-router";
 
 export default function Breadcrumb() {
   const { idEst, idCancha, idAdmin } = useParams();
-  const { currentAdmin } = useCurrentAdmin();
+  const { admin } = useCurrentAdmin();
 
   const { data: establecimiento } = useEstablecimientoByID(Number(idEst));
   const { data: cancha } = useCanchaByID(Number(idEst), Number(idCancha));
@@ -26,17 +26,15 @@ export default function Breadcrumb() {
 
       return actualLink === "/estsz" ||
         actualLink === "/admin" ? null : actualLink ===
-        `/admin/${currentAdmin?.id}/perfil` ? (
+        `/admin/${admin?.id}/perfil` ? (
         <BreadcrumbItem key={actualLink}>
           <BreadcrumbLink href={actualLink}> Perfil </BreadcrumbLink>
         </BreadcrumbItem>
       ) : actualLink === `/ests` ? (
         <BreadcrumbItem key={actualLink}>
-          <BreadcrumbLink href={actualLink}>
-            Establecimientos
-          </BreadcrumbLink>
+          <BreadcrumbLink href={actualLink}>Establecimientos</BreadcrumbLink>
         </BreadcrumbItem>
-        ): actualLink === `/ests/${crumb}` ? (
+      ) : actualLink === `/ests/${crumb}` ? (
         <BreadcrumbItem key={actualLink}>
           <BreadcrumbLink href={actualLink}>
             {establecimiento?.nombre}
@@ -46,7 +44,7 @@ export default function Breadcrumb() {
         <BreadcrumbItem key={actualLink}>
           <BreadcrumbLink href={actualLink}>{cancha?.nombre}</BreadcrumbLink>
         </BreadcrumbItem>
-      ) : actualLink === `/admin/${currentAdmin?.id}` &&
+      ) : actualLink === `/admin/${admin?.id}` &&
         actualLink === location.pathname ? (
         <BreadcrumbItem key={actualLink}>
           <BreadcrumbLink href={actualLink}> Home </BreadcrumbLink>

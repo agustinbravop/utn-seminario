@@ -6,13 +6,25 @@ import { JWT } from "@/utils/api";
 import { useToast } from "@chakra-ui/react";
 
 interface ICurrentJugadorContext {
-  currentJugador?: Jugador;
+  jugador: Jugador;
   logout: () => void;
+  /** isJugador indica si hay un jugador logueado actualmente. */
+  isJugador: boolean;
 }
 
 interface CurrentJugadorProviderProps {
   children?: React.ReactNode;
 }
+
+// Este jugador nunca debería ser utilizado.
+const PLACEHOLDER_JUGADOR = {
+  id: 0,
+  nombre: "Usuario",
+  apellido: "Jugador",
+  correo: "jugador@example.com",
+  telefono: "00000000",
+  usuario: "usuariojugador",
+};
 
 const CurrentJugadorContext = createContext<ICurrentJugadorContext | undefined>(
   undefined
@@ -70,8 +82,11 @@ export function CurrentJugadorProvider({
     setCurrentJugador(undefined);
   };
 
+  const isJugador = Boolean(currentJugador);
+  const jugador = currentJugador ?? PLACEHOLDER_JUGADOR;
+
   return (
-    <CurrentJugadorContext.Provider value={{ currentJugador, logout }}>
+    <CurrentJugadorContext.Provider value={{ jugador, isJugador, logout }}>
       {children}
     </CurrentJugadorContext.Provider>
   );

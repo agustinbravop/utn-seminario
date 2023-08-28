@@ -27,17 +27,13 @@ export type JugadorConClave = {
 };
 
 export interface AuthRepository {
+  getUsuarioYClave(correoOUsuario: string): Promise<UsuarioConClave>;
+  getRoles(correoOUsuario: string): Promise<Rol[]>;
   crearAdministrador(
     admin: Administrador,
     clave: string
   ): Promise<Administrador>;
-  getAdministradorYClave(
-    correoOUsuario: string
-  ): Promise<AdministradorConClave>;
-  getUsuarioYClave(correoOUsuario: string): Promise<UsuarioConClave>;
   crearJugador(jugador: Jugador, clave: string): Promise<Jugador>;
-  getJugadorYClave(correoOUsuario: string): Promise<JugadorConClave>;
-  getRoles(correoOUsuario: string): Promise<Rol[]>;
 }
 
 export class PrismaAuthRepository implements AuthRepository {
@@ -113,11 +109,15 @@ export class PrismaAuthRepository implements AuthRepository {
     }
   }
 
+  /**
+   * Primero busca un jugador. Si no lo encuentra, busca un administrador.
+   * Si tampoco encuentra un administrador, tira un error 404.
+   * @param correoOUsuario del usuario a buscar
+   */
   async getUsuarioYClave(correoOUsuario: string): Promise<UsuarioConClave> {
     try {
       return await this.getJugadorYClave(correoOUsuario);
-    } catch (e) {
-      // Si falla `getJugadorYClave()` no es un jugador y entonces es un administrador.
+    } catch {
       // Si `getAdministradorYClave()` también falla, entonces el usuario no existe.
       return await this.getAdministradorYClave(correoOUsuario);
     }
