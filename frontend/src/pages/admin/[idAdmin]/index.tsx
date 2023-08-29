@@ -155,6 +155,7 @@ export default function EstablecimientosPage() {
               (
               <DeletedEstablecimientoList
                 establecimientos={methods.data}
+                establecimientosActuales={data?.length}
               />
             ) }
           </ModalBody>

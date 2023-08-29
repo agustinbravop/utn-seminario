@@ -4,15 +4,16 @@ import DeletedEstablecimiento from "../DeletedEstablecimiento/DeletedEstablecimi
 
 interface EstablecimientoCardListProps {
   establecimientos: Establecimiento[];
+  establecimientosActuales: number;
 }
 
 export default function DeletedEstablecimientoList({
-  establecimientos,
+  establecimientos, establecimientosActuales
 }: EstablecimientoCardListProps) {
   return (
     <HStack display="flex" flexWrap="wrap" justifyContent="left">
       {establecimientos.map((est) => (
-        <DeletedEstablecimiento key={est.id} establecimiento={est}  />
+        <DeletedEstablecimiento key={est.id} establecimiento={est} establecimientosActuales={establecimientosActuales}  />
       ))}
     </HStack>
   );

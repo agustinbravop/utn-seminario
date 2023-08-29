@@ -16,18 +16,21 @@ import {
   import { defImage } from "@/utils/const/const";
   import { useModificarEstablecimiento } from "@/utils/api/establecimientos";
 import { useNavigate } from "react-router";
+import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 
   type EstablecimientoCardProps = {
     establecimiento: Establecimiento;
+    establecimientosActuales: number;
   };
 
 
   export default function DeletedEstablecimiento({
-    establecimiento,
+    establecimiento, establecimientosActuales
   }: EstablecimientoCardProps) {
 
     const toast = useToast();
     const navigate = useNavigate();
+    const { currentAdmin } = useCurrentAdmin();
     
     const { mutate } = useModificarEstablecimiento({
         onSuccess: () => {
@@ -51,9 +54,17 @@ import { useNavigate } from "react-router";
       });
       
      const handleRecuperar = () => {
-        const alteredEstablecimiento = {...establecimiento, eliminado: false}
-        console.log(alteredEstablecimiento)
-        mutate(alteredEstablecimiento)
+        
+        const limit = currentAdmin?.suscripcion?.limiteEstablecimientos
+        if (establecimientosActuales < limit) {
+          const alteredEstablecimiento = {...establecimiento, eliminado: false}
+          console.log(alteredEstablecimiento)
+          mutate(alteredEstablecimiento)
+        } else {
+          alert("No master")
+        }
+
+        
      }
 
     return (
