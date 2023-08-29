@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { Box } from "@chakra-ui/react";
 import { useCambiarSuscripcion } from "@/utils/api/administrador";
 
@@ -28,6 +28,10 @@ export default function SelectEstablecimiento() {
   const { currentAdmin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const IDSuscripcion = searchParams.get('suscripcion');
   
   const { mutate: mutateAdmin } = useCambiarSuscripcion({
     onSuccess: () => {

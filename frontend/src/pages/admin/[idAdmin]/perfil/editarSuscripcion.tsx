@@ -21,7 +21,7 @@ import {
 import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { useSuscripciones } from "@/utils/api/auth";
 import { Suscripcion } from "@/models";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useCambiarSuscripcion } from "@/utils/api/administrador";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
@@ -38,6 +38,7 @@ export default function SuscripcionesPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
   const { currentAdmin } = useCurrentAdmin();
+  const location = useLocation();
 
   const { mutate } = useCambiarSuscripcion({
     onSuccess: () => {
@@ -124,6 +125,11 @@ export default function SuscripcionesPage() {
   function handleSuscripcion(): void {
     console.log(newSus);
 
+    // alert(location.pathname);
+    // location.pathname = "/admin/1/perfil/editarSuscripcion?suscripcion=1";
+    // const { suscripcion } = location.pathname.searchParams
+    // alert(suscripcion);
+
     delete newSus.icono;
     console.log("Sus antes")
     console.log(currentAdmin.suscripcion)
@@ -133,7 +139,7 @@ export default function SuscripcionesPage() {
     console.log(actualAdmin);
     if (newSus.limiteEstablecimientos < establecimientoData.length) {
       localStorage.setItem('suscripcionNueva', JSON.stringify(actualAdmin));
-      navigate("../selectEstab")
+      navigate(`../selectEstab?suscripcion=${actualAdmin.suscripcion.id}`)
     } else {
       console.log(newSus);
       console.log(newSus);
