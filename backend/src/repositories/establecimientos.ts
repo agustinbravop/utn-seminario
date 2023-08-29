@@ -56,7 +56,6 @@ export class PrismaEstablecimientoRepository
       });
       return toModel(dbEst);
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo crear el establecimiento");
     }
   }
@@ -83,7 +82,6 @@ export class PrismaEstablecimientoRepository
 
       return estsDB.map((estDB) => toModel(estDB));
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
   }
@@ -164,7 +162,6 @@ async function awaitQuery(
       return toModel(estDB);
     }
   } catch (e) {
-    console.error(e);
     throw new InternalServerError(errorMsg);
   }
 

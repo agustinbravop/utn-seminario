@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Router } from "express";
+import cors from "cors";
 import multer from "multer";
 import { AuthHandler } from "./handlers/auth.js";
 import { PrismaAuthRepository } from "./repositories/auth.js";
@@ -22,6 +23,8 @@ import { canchasRouter } from "./routers/canchas.js";
 import { PrismaCanchaRepository } from "./repositories/canchas.js";
 import { CanchaServiceimpl } from "./services/canchas.js";
 import { CanchaHandler } from "./handlers/canchas.js";
+import morgan from "morgan";
+import { handleApiErrors } from "./middlewares/errors.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -49,18 +52,27 @@ export function createRouter(prismaClient: PrismaClient): Router {
 
   const upload = multer({ dest: "imagenes/" });
 
-  router.use("/suscripciones", suscripcionesRouter(suscripcionHandler));
+  // Middlewares globales a todos los endpoints
+  router.use(cors());
+  router.use(morgan("dev"));
+  router.use(express.urlencoded({ extended: true }));
+  router.use(express.json());
+
+  // Ubicar los subrouters
   router.use("/auth", authRouter(authHandler, authMiddle));
+  router.use("/suscripciones", suscripcionesRouter(suscripcionHandler));
   router.use(
     "/administradores",
     administradoresRouter(adminHandler, authMiddle)
   );
-
   router.use(
     "/establecimientos",
     establecimientosRouter(estHandler, authMiddle, upload),
     canchasRouter(canchaHandler, estHandler, authMiddle, upload)
   );
+
+  // Error handler global
+  router.use(handleApiErrors());
 
   return router;
 }

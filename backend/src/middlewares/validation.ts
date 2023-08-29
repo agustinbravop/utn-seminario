@@ -12,8 +12,6 @@ export function validateBody(schema: AnyZodObject) {
     const result = schema.safeParse(req.body);
 
     if (!result.success) {
-      console.error("Body recibido: ", req.body);
-
       const issues = result.error.issues;
       const msg = issues
         .map((issue) => `At ${issue.path}: ${issue.message}`)

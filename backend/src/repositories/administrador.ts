@@ -54,7 +54,6 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
         return dbAdmin;
       }
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo buscar el administrador");
     }
     throw new NotFoundError("No existe administrador con id " + id);
