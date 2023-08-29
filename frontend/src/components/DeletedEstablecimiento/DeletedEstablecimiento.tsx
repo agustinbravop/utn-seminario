@@ -17,6 +17,7 @@ import {
   import { useModificarEstablecimiento } from "@/utils/api/establecimientos";
 import { useNavigate } from "react-router";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { useQueryClient } from "@tanstack/react-query";
 
   type EstablecimientoCardProps = {
     establecimiento: Establecimiento;
@@ -32,6 +33,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
     const toast = useToast();
     const navigate = useNavigate();
     const { currentAdmin } = useCurrentAdmin();
+    const queryClient = useQueryClient()
     
     const { mutate } = useModificarEstablecimiento({
         onSuccess: () => {
@@ -43,6 +45,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
           });
           onRecuperar()
           // navigate(-2)
+          queryClient.refetchQueries(["establecimientos"]);
           navigate(`/admin/${establecimiento?.idAdministrador}`);
         },
         onError: () => {

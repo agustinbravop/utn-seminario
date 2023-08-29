@@ -31,7 +31,7 @@ import { defImage } from "@/utils/const/const";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 export default function CourtPage() {
-  const { idEst } = useParams();
+  const { idEst, idAdmin } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
