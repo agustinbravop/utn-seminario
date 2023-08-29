@@ -71,6 +71,8 @@ export default function SuscripcionesPage() {
     cards = <p>error!</p>;
   }
 
+  let actualAdmin = { ...currentAdmin }; //Para que actualAdmin no haga referencia al objeto currentAdmin sino que se crea una copia profunda
+
   if (!currentAdmin) {
     navigate("login");
     return;
@@ -120,23 +122,29 @@ export default function SuscripcionesPage() {
 
 
   function handleSuscripcion(): void {
-        console.log(newSus),
-        delete newSus.icono,
-        currentAdmin.suscripcion = newSus,
-        console.log(currentAdmin),
-    newSus.limiteEstablecimientos < establecimientoData.length ? 
-    ( localStorage.setItem('suscripcionNueva', JSON.stringify(currentAdmin)),
-      navigate("../selectEstab")): 
-    (   
-        console.log(newSus),
-        console.log(newSus),
-        delete newSus.icono,
-        currentAdmin.suscripcion = newSus,
-        console.log(currentAdmin),
-        mutate(currentAdmin))    
-  } 
+    console.log(newSus);
 
-  
+    delete newSus.icono;
+    console.log("Sus antes")
+    console.log(currentAdmin.suscripcion)
+    actualAdmin.suscripcion = newSus;
+    console.log("Sus despues")
+    console.log(currentAdmin.suscripcion)
+    console.log(actualAdmin);
+    if (newSus.limiteEstablecimientos < establecimientoData.length) {
+      localStorage.setItem('suscripcionNueva', JSON.stringify(actualAdmin));
+      navigate("../selectEstab")
+    } else {
+      console.log(newSus);
+      console.log(newSus);
+      delete newSus.icono;
+      actualAdmin.suscripcion = newSus;
+      console.log(actualAdmin);
+      mutate(actualAdmin);
+    }
+  }
+
+
   return (
     <>
       <Box marginBottom="5px" marginLeft="12%" marginRight="12%">
@@ -166,7 +174,7 @@ export default function SuscripcionesPage() {
             <Button colorScheme="gray" mr={3} onClick={onClose}>
               Cancelar
             </Button>
-            <Button 
+            <Button
               colorScheme="brand"
               backgroundColor="black"
               onClick={() => handleSuscripcion()
