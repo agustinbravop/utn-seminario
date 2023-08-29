@@ -71,21 +71,19 @@ export default function SuscripcionesPage() {
     cards = <p>error!</p>;
   }
 
-  let adminGG = currentAdmin;
-
   if (!currentAdmin) {
     navigate("login");
     return;
   }
 
-  const actual = newSus.id
+  const idSuscripcionActual = newSus.id
 
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
     .map((s, idx) => ({ icono: iconos[idx], ...s }));
   cards = suscripciones?.map((s) => {
     // const actual = currentAdmin?.suscripcion.id === s.id;
-    const pepe = actual === s.id
+    const suscripcionActual = idSuscripcionActual === s.id
 
 
 
@@ -95,7 +93,7 @@ export default function SuscripcionesPage() {
         key={s.id}
         color="dark"
         width="14rem"
-        variant={pepe ? "filled" : "elevated"}
+        variant={suscripcionActual ? "filled" : "elevated"}
       >
         <CardHeader margin="auto">{s.icono}</CardHeader>
         <CardBody textAlign="center">
@@ -108,7 +106,7 @@ export default function SuscripcionesPage() {
             {s.limiteEstablecimientos} establecimiento
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
-          {pepe || (
+          {suscripcionActual || (
             <Button colorScheme="brand" variant="outline" onClick={() => setNewSus(s)}>Elegir</Button>
           )}
         </CardBody>
@@ -124,18 +122,18 @@ export default function SuscripcionesPage() {
   function handleSuscripcion(): void {
         console.log(newSus),
         delete newSus.icono,
-        adminGG.suscripcion = newSus,
-        console.log(adminGG),
+        currentAdmin.suscripcion = newSus,
+        console.log(currentAdmin),
     newSus.limiteEstablecimientos < establecimientoData.length ? 
-    ( localStorage.setItem('suscripcionNueva', JSON.stringify(adminGG)),
+    ( localStorage.setItem('suscripcionNueva', JSON.stringify(currentAdmin)),
       navigate("../selectEstab")): 
     (   
         console.log(newSus),
         console.log(newSus),
         delete newSus.icono,
-        adminGG.suscripcion = newSus,
-        console.log(adminGG),
-        mutate(adminGG))    
+        currentAdmin.suscripcion = newSus,
+        console.log(currentAdmin),
+        mutate(currentAdmin))    
   } 
 
   

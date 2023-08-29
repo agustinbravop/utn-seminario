@@ -43,10 +43,9 @@ import { useQueryClient } from "@tanstack/react-query";
             status: "success",
             isClosable: true,
           });
-          onRecuperar()
-          // navigate(-2)
           queryClient.refetchQueries(["establecimientos"]);
-          navigate(`/admin/${establecimiento?.idAdministrador}`);
+          onRecuperar()
+          
         },
         onError: () => {
           toast({
