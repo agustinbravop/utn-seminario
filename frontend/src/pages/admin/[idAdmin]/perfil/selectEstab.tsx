@@ -23,6 +23,7 @@ import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router";
 import { Box } from "@chakra-ui/react";
 import { useCambiarSuscripcion } from "@/utils/api/administrador";
+import { useSuscripciones } from "@/utils/api/auth";
 
 export default function SelectEstablecimiento() {
   const { currentAdmin } = useCurrentAdmin();
@@ -31,7 +32,7 @@ export default function SelectEstablecimiento() {
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const IDSuscripcion = searchParams.get('suscripcion');
+  const IDSuscripcion = Number(searchParams.get('suscripcion'));
   
   const { mutate: mutateAdmin } = useCambiarSuscripcion({
     onSuccess: () => {
@@ -52,13 +53,20 @@ export default function SelectEstablecimiento() {
       });
     },
   });
-
-  const newAdminString = localStorage.getItem('suscripcionNueva') !== null ? localStorage.getItem('suscripcionNueva') : "pepe"
-  const newAdmin = JSON.parse(newAdminString)
-
-
+  
   const { data } = useEstablecimientosByAdminID(Number(currentAdmin?.id));
 
+  const { data: dataSuscripciones } = useSuscripciones();
+  let actualAdmin = { ...currentAdmin };
+
+
+  // const newAdminString = localStorage.getItem('suscripcionNueva') !== null ? localStorage.getItem('suscripcionNueva') : "pepe"
+  // const newAdmin = JSON.parse(newAdminString)
+
+  const suscriptionSelected = dataSuscripciones?.find(suscripcion => suscripcion.id === IDSuscripcion);
+  const newAdmin = { ...currentAdmin }
+  newAdmin.suscripcion = suscriptionSelected;
+  
   const { mutate } = useEliminarEstablecimiento();
   // array de los ids de los establecimientos a conservar. Los no seleccionados se eliminan.
   const [selected, setSelected] = useState<number[]>([]);

@@ -138,7 +138,7 @@ export default function SuscripcionesPage() {
     console.log(currentAdmin.suscripcion)
     console.log(actualAdmin);
     if (newSus.limiteEstablecimientos < establecimientoData.length) {
-      localStorage.setItem('suscripcionNueva', JSON.stringify(actualAdmin));
+      // localStorage.setItem('suscripcionNueva', JSON.stringify(actualAdmin));
       navigate(`../selectEstab?suscripcion=${actualAdmin.suscripcion.id}`)
     } else {
       console.log(newSus);
