@@ -21,11 +21,12 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
   type EstablecimientoCardProps = {
     establecimiento: Establecimiento;
     establecimientosActuales: number;
+    onRecuperar: () => void;
   };
 
 
   export default function DeletedEstablecimiento({
-    establecimiento, establecimientosActuales
+    establecimiento, establecimientosActuales, onRecuperar
   }: EstablecimientoCardProps) {
 
     const toast = useToast();
@@ -40,7 +41,8 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
             status: "success",
             isClosable: true,
           });
-          navigate(-2)
+          onRecuperar()
+          // navigate(-2)
           navigate(`/admin/${establecimiento?.idAdministrador}`);
         },
         onError: () => {
@@ -61,7 +63,12 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
           console.log(alteredEstablecimiento)
           mutate(alteredEstablecimiento)
         } else {
-          alert("No master")
+          toast({
+            title: "Límite de establecimientos alcanzado",
+            description: `Elimine otro establecimiento para recuperar este o mejore su suscripción`,
+            status: "warning",
+            isClosable: true,
+          });
         }
 
         
