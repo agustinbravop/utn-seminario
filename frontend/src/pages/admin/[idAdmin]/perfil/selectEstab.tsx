@@ -176,6 +176,7 @@ export default function SelectEstablecimiento() {
             justifyContent="center"
             textAlign="center"
             onClick={handleSubmit}
+            colorScheme='brand'
           >
             Continuar
           </Button>
