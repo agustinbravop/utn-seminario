@@ -6,8 +6,10 @@ export interface EstablecimientoRepository {
   crear(est: Establecimiento): Promise<Establecimiento>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
+  getEstablecimientoByNombre(NombreEstablecimiento: string):Promise<Establecimiento[]>; 
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
+
 }
 
 export class PrismaEstablecimientoRepository
@@ -138,6 +140,23 @@ export class PrismaEstablecimientoRepository
       "Error al intentar modificar el establecimiento"
     );
   }
+
+  async getEstablecimientoByNombre(NombreEstablecimiento:string):Promise<Establecimiento[]> { 
+   const establecimiento=await this.prisma.establecimiento.findMany({ 
+    where: { 
+        AND: [
+          {nombre:{
+          equals:NombreEstablecimiento, 
+          mode:'insensitive'}}, 
+        {eliminado:false}],
+      },
+   
+    include:this.include, 
+   });
+   return (establecimiento.map((ests)=>toModel(ests)))
+   
+}
+
 }
 
 type establecimientoDB = establecimiento & {

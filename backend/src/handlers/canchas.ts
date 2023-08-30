@@ -64,12 +64,12 @@ export class CanchaHandler {
       
       cancha.id = Number(req.params["idCancha"]);
       
-      //Dejo este codigo comentado pero ya no es necesario tenerlo la actualizacion de 
-      //las disponibilidades funciona bien tenga o no id. 
+      
+      
        //Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
-      /*cancha.disponibilidades = cancha.disponibilidades
+      cancha.disponibilidades = cancha.disponibilidades
         .filter((d) => !d.id)
-        .map((d) => ({ ...d, id: 0 }));*/
+        .map((d) => ({ ...d, id: 0 }));
       
       
       const canchaActualizada = await this.service.modificar(cancha);

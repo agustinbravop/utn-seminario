@@ -87,6 +87,15 @@ export class EstablecimientoHandler {
     };
   }
 
+  getEstablecimientoByNombre(): RequestHandler { 
+    return async (req, res)=> { 
+      const NombreEstablecimiento=String(req.query.nombre_establecimiento); 
+      const establecimiento=await this.service.getEstablecimientoByNombre(NombreEstablecimiento); 
+     
+      res.status(200).json(establecimiento); 
+    }
+  }
+
   /**
    * Valida que el param `idEst` corresponda a un establecimiento del `idAdmin` del JWT.
    * Este middleware **asume que el JWT del administrador ya fue autenticado.**

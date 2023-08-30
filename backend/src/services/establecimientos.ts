@@ -12,6 +12,7 @@ export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEst: number): Promise<Establecimiento>;
+  getEstablecimientoByNombre(NombreEstablecimiento:string):Promise<Establecimiento[]>; 
   modificar(est: Establecimiento): Promise<Establecimiento>;
   modificarImagen(
     idEst: number,
@@ -85,5 +86,11 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
   async eliminar(idEst: number) {
     return await this.repo.eliminar(idEst);
+  }
+
+  async getEstablecimientoByNombre(NombreEstablecimiento:string):Promise<Establecimiento[]> 
+  { 
+    
+    return await this.repo.getEstablecimientoByNombre(NombreEstablecimiento); 
   }
 }

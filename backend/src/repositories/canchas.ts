@@ -123,14 +123,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
   async modificarCancha(cancha: Cancha): Promise<Cancha> {
     
     try {
-      //Elimina las disponibilidades para volver a cargar las disponibilidades ya sean nueva o las existentes
-      //Esto resuelve el problema que al dar click en el icono de eliminar disponibilidades no se actualizaba los datos en la base de datos
-      
-      await this.prisma.disponibilidad.deleteMany({ 
-        where: { 
-          idCancha:cancha.id
-        }
-      })
+            
      
       const { id } = await this.prisma.cancha.update({
         where: { id: cancha.id },
@@ -150,7 +143,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
           await this.prisma.disponibilidad.upsert({
-            where: { id: 0 }, 
+            where: { id: disp.id}, 
             create: {
               horaFin: disp.horaFin,
               horaInicio: disp.horaInicio,
@@ -246,12 +239,7 @@ function validarDisponibilidades(cancha:Cancha): void {
   var dict={}
   var Lista=new Array()
 
-
-
-
-  
-
-  cancha.disponibilidades.map((elemento)=>{elemento.dias.map((dia)=>{dict={"dia":dia, "horaI":elemento.horaInicio, "horaF":elemento.horaFin} 
+  cancha.disponibilidades.map((elemento)=>{elemento.dias.map((dia)=>{dict={"dia":dia, "horaInicio":elemento.horaInicio, "horaFinal":elemento.horaFin} 
   
   Lista.push(dict)})})
   //Verifica que dos o mas disponibilidades no esten solapadas en los horarios 
