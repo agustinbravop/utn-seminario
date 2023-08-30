@@ -57,22 +57,20 @@ export class CanchaHandler {
 
   putCancha(): RequestHandler {
     return async (req, res) => {
-      console.log(res.locals.body);
+      //console.log(res.locals.body);
 
-      const cancha: Cancha = {
-        ...req.body
-      };
-
+      const cancha: Cancha = res.locals.body
+      
       
       cancha.id = Number(req.params["idCancha"]);
-      console.log(cancha)
-
-      cancha.id = Number(req.params["idCancha"]);
-      // Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
-      cancha.disponibilidades = cancha.disponibilidades
+      
+      //Dejo este codigo comentado pero ya no es necesario tenerlo la actualizacion de 
+      //las disponibilidades funciona bien tenga o no id. 
+       //Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
+      /*cancha.disponibilidades = cancha.disponibilidades
         .filter((d) => !d.id)
-        .map((d) => ({ ...d, id: 0 }));
-
+        .map((d) => ({ ...d, id: 0 }));*/
+      
       
       const canchaActualizada = await this.service.modificar(cancha);
       res.status(200).json(canchaActualizada);

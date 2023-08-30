@@ -1,4 +1,3 @@
-
 import { Cancha, Dia } from "../models/cancha.js";
 import { BadRequestError, InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import {
@@ -74,6 +73,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
 
     
     try {
+
       validarDisponibilidades(cancha)
       const { id } = await this.prisma.cancha.create({
         data: {
@@ -110,7 +110,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         })
       );
 
-      console.log("endPoint crear cancha "+cancha.disponibilidades)
+      
       return await this.getCanchaByID(id);
     } catch (e) {
       console.error(e);
@@ -123,6 +123,15 @@ export class PrismaCanchaRepository implements CanchaRepository {
   async modificarCancha(cancha: Cancha): Promise<Cancha> {
     
     try {
+      //Elimina las disponibilidades para volver a cargar las disponibilidades ya sean nueva o las existentes
+      //Esto resuelve el problema que al dar click en el icono de eliminar disponibilidades no se actualizaba los datos en la base de datos
+      
+      await this.prisma.disponibilidad.deleteMany({ 
+        where: { 
+          idCancha:cancha.id
+        }
+      })
+     
       const { id } = await this.prisma.cancha.update({
         where: { id: cancha.id },
         data: {
@@ -133,15 +142,15 @@ export class PrismaCanchaRepository implements CanchaRepository {
           urlImagen: cancha.urlImagen,
           idEstablecimiento: cancha.idEstablecimiento,
         },
-        include: this.include,
+        include: this.include, 
       });
-
+     
       // Modifico las disponibilidades por separado, por limitaciones de Prisma.
       // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se crea.
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
           await this.prisma.disponibilidad.upsert({
-            where: { id: disp.id },
+            where: { id: 0 }, 
             create: {
               horaFin: disp.horaFin,
               horaInicio: disp.horaInicio,
@@ -173,7 +182,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
           });
         })
       );
-      
+     
       return await this.getCanchaByID(id);
     } catch (e) {
       console.error(e);
@@ -219,6 +228,8 @@ function toModel(cancha: canchaDB): Cancha {
 }
 
 function validarDisponibilidades(cancha:Cancha): void { 
+  
+
   const disp=cancha.disponibilidades.filter((disp)=>(Number(disp.horaFin)<=Number(disp.horaInicio)))
   //Valida que la hora de finalizacion no sea menor que la hora de inicio
   if (disp.length>=1) { 
@@ -231,9 +242,33 @@ function validarDisponibilidades(cancha:Cancha): void {
       throw new BadRequestError("Error el precio de la seña no puede ser mayor que el precio de la reserva. Intenta de nuevo")
     }
   })
+
+  var dict={}
+  var Lista=new Array()
+
+
+
+
+  
+
+  cancha.disponibilidades.map((elemento)=>{elemento.dias.map((dia)=>{dict={"dia":dia, "horaI":elemento.horaInicio, "horaF":elemento.horaFin} 
+  
+  Lista.push(dict)})})
+  //Verifica que dos o mas disponibilidades no esten solapadas en los horarios 
+ for (var i=0; i<Lista.length; i++) { 
+  for (var j=i+1; j<Lista.length;j++) { 
+    if (Lista[i].dia==Lista[j].dia) { 
+      if (Lista[j].horaI>=Lista[i].horaI && Lista[j].horaI<Lista[i].horaF) { 
+        throw new BadRequestError("Error en el registro de disponibilidades. Intente de nuevo")
+      }
+    }
+  }
+ }
   
 
 }
+
+ 
 
 async function awaitQuery(
   promise: Promise<canchaDB | null>,

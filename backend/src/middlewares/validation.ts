@@ -22,6 +22,7 @@ export function validateBody(schema: AnyZodObject) {
     }
 
     res.locals.body = result.data;
+    
     next();
   };
 }
