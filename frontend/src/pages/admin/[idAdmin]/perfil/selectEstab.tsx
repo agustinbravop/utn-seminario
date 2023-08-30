@@ -33,7 +33,7 @@ export default function SelectEstablecimiento() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const IDSuscripcion = Number(searchParams.get('suscripcion'));
-  
+
   const { mutate: mutateAdmin } = useCambiarSuscripcion({
     onSuccess: () => {
       toast({
@@ -53,7 +53,7 @@ export default function SelectEstablecimiento() {
       });
     },
   });
-  
+
   const { data } = useEstablecimientosByAdminID(Number(currentAdmin?.id));
 
   const { data: dataSuscripciones } = useSuscripciones();
@@ -66,7 +66,7 @@ export default function SelectEstablecimiento() {
   const suscriptionSelected = dataSuscripciones?.find(suscripcion => suscripcion.id === IDSuscripcion);
   const newAdmin = { ...currentAdmin }
   newAdmin.suscripcion = suscriptionSelected;
-  
+
   const { mutate } = useEliminarEstablecimiento();
   // array de los ids de los establecimientos a conservar. Los no seleccionados se eliminan.
   const [selected, setSelected] = useState<number[]>([]);
@@ -90,48 +90,44 @@ export default function SelectEstablecimiento() {
     return (
       <>
 
-      <Card
-        key={e.id}
-        width="300px"
-        height="450px"
-        variant={seleccionado ? "filled" : "elevated"}
-      >
-        <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
-          <Image
-            src={e.urlImagen || defImage}
-            borderTopRadius="lg"
-            alt={`Imagen del establecimiento ${e.nombre}`}
-            objectFit="cover"
-            height="100%"
-            width="100%"
-          />
-        </Box>
-        <CardBody height="300px">
-          <VStack spacing="0">
-            <Heading size="md" marginBottom="10px">
-              {e.nombre}
-            </Heading>
-            <Text marginBottom="0">
-              <Icon as={MdPlace} boxSize={5} color="gray" /> {e.direccion}
-            </Text>
-            <Text>
-              <PhoneIcon boxSize={3.5} color="gray" /> {e.telefono}
-            </Text>
-            <Text>{e.horariosDeAtencion}</Text>
-          </VStack>
-        </CardBody>
-        <CardFooter display="flex" justify="center">
-          <HStack spacing={5}>
-            <Button
-              colorScheme={seleccionado ? "red" : "orange"}
-              variant={seleccionado ? "solid" : "outline"}
-              onClick={() => handleEstablecimientoToggle(e.id)}
-            >
-              {seleccionado ? "Quitar" : "Seleccionar"}
-            </Button>
-          </HStack>
-        </CardFooter>
-      </Card>
+        <Card
+          width="300px"
+          height="400px"
+        >
+          <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
+            <Image
+              src={e.urlImagen || defImage}
+              borderTopRadius="lg"
+              alt={`Imagen del establecimiento ${e.nombre}`}
+              objectFit="cover"
+              height="100%"
+              width="100%"
+            />
+          </Box>
+          <CardBody height="300px">
+            <VStack spacing="0">
+              <Heading size="md" marginBottom="10px">
+                {e.nombre}
+              </Heading>
+              <Text marginBottom="0">
+                <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
+                {e.direccion}
+              </Text>
+              <Text>
+                <PhoneIcon boxSize={4} mr="2" /> {e.telefono}
+              </Text>
+              <Text >{e.horariosDeAtencion}</Text>
+              <Button
+                mt='15px'
+                colorScheme={seleccionado ? "red" : "orange"}
+                variant={seleccionado ? "solid" : "outline"}
+                onClick={() => handleEstablecimientoToggle(e.id)}
+              >
+                {seleccionado ? "Quitar" : "Seleccionar"}
+              </Button>
+            </VStack>
+          </CardBody>
+        </Card>
       </>
     );
   });
@@ -152,30 +148,41 @@ export default function SelectEstablecimiento() {
 
   return (
     <>
-      <Heading textAlign="center" as="h1">
-        Seleccione los establecimientos que desea conservar
-      </Heading>
+      <Box marginLeft="12%">
+        <Heading size="lg" mb='10px'>Seleccione los establecimientos que desea conservar</Heading>
+        <HStack>
+          <Text>
+            Establecimientos seleccionados:
+          </Text>
+          <Text
+            color={
+              selected.length > maximo || selected.length === 0 ? "red" : "black"
+            }
+          >
+            {" "}
+            {selected.length} / {maximo}{" "}
+          </Text>
+        </HStack>
+
+      </Box>
       <br />
-      <Text
-        color={
-          selected.length > maximo || selected.length === 0 ? "red" : "black"
-        }
-      >
-        {" "}
-        {selected.length} / {maximo}{" "}
-      </Text>
       <HStack display="flex" flexWrap="wrap" justifyContent="center">
         {establecimientos}
       </HStack>
+
       {selected.length > 0 && selected.length < maximo + 1 && (
-        <Button
-          justifyContent="center"
-          textAlign="center"
-          onClick={handleSubmit}
-        >
-          Continuar
-        </Button>
+        <Box width='100%' display='flex' justifyContent='center' mt='30px' >
+          <Button
+            justifyContent="center"
+            textAlign="center"
+            onClick={handleSubmit}
+          >
+            Continuar
+          </Button>
+        </Box>
       )}
+
+
     </>
 
   );

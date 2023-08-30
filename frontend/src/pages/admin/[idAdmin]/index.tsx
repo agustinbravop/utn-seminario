@@ -161,7 +161,7 @@ export default function EstablecimientosPage() {
             ) }
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="brand" mr={3} onClick={onClose}>
               Cerrar
             </Button>
           </ModalFooter>

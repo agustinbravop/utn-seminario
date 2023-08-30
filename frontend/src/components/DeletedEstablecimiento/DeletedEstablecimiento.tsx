@@ -80,9 +80,6 @@ import { useQueryClient } from "@tanstack/react-query";
         <Card
           width="300px"
           height="390px"
-          _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
             <Image

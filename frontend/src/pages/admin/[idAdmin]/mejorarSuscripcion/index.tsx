@@ -22,8 +22,7 @@ export default function mejorarSuscripcion() {
     return (
         <>
             <Box marginLeft="12%">
-                <Heading size="lg">Mejore su suscripción</Heading>
-                <br />
+                <Heading size="lg" mb='10px'>Mejore su suscripción</Heading>
                 <Text>
                     Ha alcanzado el límite de establecimientos para su suscripción actual. Le recomendamos mejorar su suscripción.
                 </Text>
