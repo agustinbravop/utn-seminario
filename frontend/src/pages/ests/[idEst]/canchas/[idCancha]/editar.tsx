@@ -50,6 +50,7 @@ import { GrAddCircle } from "react-icons/gr";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
+import { DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -67,43 +68,6 @@ const validationSchema = Yup.object({
     []
   ),
 });
-
-const disciplinas = [
-  "Basket",
-  "Futbol",
-  "Tenis",
-  "Padel",
-  "Hokey",
-  "Ping-Pong",
-];
-
-const duracionReserva = [30, 60];
-
-const horas = [
-  "1:00",
-  "2:00",
-  "3:00",
-  "4:00",
-  "5:00",
-  "6:00",
-  "7:00",
-  "8:00",
-  "9:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
-  "19:00",
-  "20:00",
-  "21:00",
-  "22:00",
-  "23:00",
-];
 
 const defaultDisponibilidad: Omit<Disponibilidad, "id"> & {
   id?: number | undefined;
@@ -379,7 +343,7 @@ export default function EditCourtPage() {
                   isRequired
                   onChange={handleDispChange}
                 >
-                  {horas.map((hora, i) => (
+                  {HORAS.map((hora, i) => (
                     <option key={i} value={hora}>
                       {hora}
                     </option>
@@ -392,7 +356,7 @@ export default function EditCourtPage() {
                   isRequired
                   onChange={handleDispChange}
                 >
-                  {horas.map((hora, i) => (
+                  {HORAS.map((hora, i) => (
                     <option key={i} value={hora}>
                       {hora}
                     </option>
@@ -407,7 +371,7 @@ export default function EditCourtPage() {
                   isRequired
                   onChange={handleDispChange}
                 >
-                  {disciplinas.map((disciplina, i) => (
+                  {DISCIPLINAS.map((disciplina, i) => (
                     <option key={i} value={disciplina}>
                       {disciplina}
                     </option>
@@ -420,7 +384,7 @@ export default function EditCourtPage() {
                   isRequired
                   onChange={handleDispChange}
                 >
-                  {duracionReserva.map((duracion, i) => (
+                  {DURACION_RESERVA.map((duracion, i) => (
                     <option key={i} value={duracion}>
                       {duracion}
                     </option>

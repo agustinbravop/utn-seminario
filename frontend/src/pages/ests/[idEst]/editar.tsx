@@ -92,7 +92,6 @@ export default function EditEstabPage() {
       <FormProvider {...methods}>
         <VStack
           as="form"
-          // onSubmit={methods.handleSubmit((values) => mutate(values))}
           onSubmit={methods.handleSubmit(onOpen)}
           spacing="4"
           width="400px"

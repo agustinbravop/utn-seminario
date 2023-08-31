@@ -42,6 +42,7 @@ import {
 import { DeleteIcon } from "@chakra-ui/icons";
 import { GrAddCircle } from "react-icons/gr";
 import { useYupForm } from "@/hooks";
+import { DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
 
 type FormState = CrearCanchaReq & {
   imagen: File | undefined;
@@ -70,43 +71,6 @@ const validationSchema = Yup.object({
     })
   ).required(),
 });
-
-const disciplinas = [
-  "Basket",
-  "Futbol",
-  "Tenis",
-  "Padel",
-  "Hokey",
-  "Ping-Pong",
-];
-
-const duracionReserva = [30, 60];
-
-const horas = [
-  "1:00",
-  "2:00",
-  "3:00",
-  "4:00",
-  "5:00",
-  "6:00",
-  "7:00",
-  "8:00",
-  "9:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
-  "19:00",
-  "20:00",
-  "21:00",
-  "22:00",
-  "23:00",
-];
 
 const defaultDisponibilidad: Omit<Disponibilidad, "id"> = {
   horaFin: "",
@@ -359,7 +323,7 @@ export default function NuevaCanchaPage() {
                     isRequired
                     onChange={handleDispChange}
                   >
-                    {horas.map((hora, i) => (
+                    {HORAS.map((hora, i) => (
                       <option key={i} value={hora}>
                         {hora}
                       </option>
@@ -372,7 +336,7 @@ export default function NuevaCanchaPage() {
                     onChange={handleDispChange}
                     isRequired
                   >
-                    {horas.map((hora, i) => (
+                    {HORAS.map((hora, i) => (
                       <option key={i} value={hora}>
                         {hora}
                       </option>
@@ -387,7 +351,7 @@ export default function NuevaCanchaPage() {
                     onChange={handleDispChange}
                     isRequired
                   >
-                    {disciplinas.map((disciplina, i) => (
+                    {DISCIPLINAS.map((disciplina, i) => (
                       <option key={i} value={disciplina}>
                         {disciplina}
                       </option>
@@ -400,7 +364,7 @@ export default function NuevaCanchaPage() {
                     onChange={handleDispChange}
                     isRequired
                   >
-                    {duracionReserva.map((duracion, i) => (
+                    {DURACION_RESERVA.map((duracion, i) => (
                       <option key={i} value={duracion}>
                         {duracion}
                       </option>

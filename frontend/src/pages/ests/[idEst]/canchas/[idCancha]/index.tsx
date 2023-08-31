@@ -32,7 +32,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCanchaByID, useEliminarCancha } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
-import { defImage } from "@/utils/const/const";
+import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
 import React from "react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
@@ -105,7 +105,11 @@ export default function CanchaInfoPage() {
             >
               <Box>
                 <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
+                  src={
+                    !(data?.urlImagen === null)
+                      ? data?.urlImagen
+                      : DEFAULT_IMAGE_SRC
+                  }
                   width="1000px"
                   height="400px"
                   objectFit="cover"

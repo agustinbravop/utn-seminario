@@ -1,5 +1,5 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Button,
   HStack,
@@ -10,21 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
-import {
-  ArrowForwardIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  InfoIcon,
-} from "@chakra-ui/icons";
+import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
 
 export default function TopMenu() {
-  const navigate = useNavigate();
-  const next = (dir: boolean) => {
-    dir ? navigate(+1) : navigate(-1);
-  };
   const { admin, isAdmin, logout: adminLogout } = useCurrentAdmin();
   const { jugador, isJugador, logout: jugadorLogout } = useCurrentJugador();
 
@@ -47,26 +37,6 @@ export default function TopMenu() {
       >
         {nav}
       </HStack>
-
-      {admin && (
-        <>
-          <HStack
-            paddingTop={7}
-            marginLeft="17.3%"
-            marginRight="17.%"
-            spacing={1}
-          >
-            <Button
-              size="xs"
-              backgroundColor="white"
-              onClick={() => next(false)}
-            >
-              <ChevronLeftIcon boxSize={6} />
-            </Button>
-            <Breadcrumb />
-          </HStack>
-        </>
-      )}
     </>
   );
 }
