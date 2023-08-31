@@ -10,6 +10,10 @@ const images = [
   "https://media.istockphoto.com/id/183064576/es/foto/voleibol-en-un-gimnasio-de-vac%C3%ADo.jpg?s=612x612&w=0&k=20&c=TS3CIvJBhSTacaWRCMjcphi8B95yVlG1ELTwor1mYHw=",
 ];
 
+/*
+Test para probar prettier en github actinos
+*/
+
 export default function LandingPage() {
   return (
     <>
