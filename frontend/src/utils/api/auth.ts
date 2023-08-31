@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 import { post, JWT, API_URL } from ".";
-import { Administrador, Suscripcion, Tarjeta } from "@/models";
+import { Administrador, Jugador, Suscripcion, Tarjeta } from "@/models";
 import { writeLocalStorage } from "../storage/localStorage";
 import {
   UseApiQueryOptions,
@@ -16,21 +16,34 @@ export interface RegistrarAdminReq
   clave: string;
 }
 
+export interface RegistrarJugadorReq extends Omit<Jugador, "id"> {
+  clave: string;
+}
+
+type Usuario =
+  | {
+      admin: Administrador;
+      jugador?: never;
+    }
+  | {
+      admin?: never;
+      jugador: Jugador;
+    };
+
 export function useLogin(
   options?: UseApiMutationOptions<
     { correoOUsuario: string; clave: string },
-    Administrador
+    Usuario
   >
 ) {
   return useApiMutation({
     ...options,
     mutationFn: (loginAdminReq) =>
-      post<JWT>(`${API_URL}/auth/login`, loginAdminReq)
-        .then((data) => {
-          writeLocalStorage("token", data);
-          return jwtDecode(data.token) as { usuario: Administrador };
-        })
-        .then((payload) => payload.usuario),
+      post<JWT>(`${API_URL}/auth/login`, loginAdminReq).then((data) => {
+        writeLocalStorage("token", data);
+        const payload: Usuario = jwtDecode(data.token);
+        return payload;
+      }),
   });
 }
 
@@ -40,10 +53,26 @@ export function useRegistrarAdmin(
   return useApiMutation({
     ...options,
     mutationFn: (registrarAdminReq) =>
-      post<Administrador>(`${API_URL}/auth/register`, registrarAdminReq),
+      post<Administrador>(
+        `${API_URL}/auth/register/administrador`,
+        registrarAdminReq
+      ),
+  });
+}
+
+export function useRegistrarJugador(
+  options?: UseApiMutationOptions<RegistrarJugadorReq, Jugador>
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: (registrarJugadorReq) =>
+      post<Jugador>(`${API_URL}/auth/register/jugador`, registrarJugadorReq),
   });
 }
 
 export function useSuscripciones(options?: UseApiQueryOptions<Suscripcion[]>) {
-  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, options);
+  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, {
+    ...options,
+    initialData: [],
+  });
 }

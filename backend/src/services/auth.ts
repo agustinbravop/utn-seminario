@@ -1,9 +1,15 @@
 import bcrypt from "bcrypt";
 import { AuthRepository } from "../repositories/auth.js";
 import { Administrador } from "../models/administrador.js";
-import { BadRequestError, UnauthorizedError } from "../utils/apierrors.js";
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
+import { Jugador } from "../models/jugador.js";
 
 /**
  * Representa el tipo de un usuario.
@@ -20,12 +26,23 @@ export interface AuthService {
     admin: Administrador,
     clave: string
   ): Promise<Administrador>;
+  registrarJugador(jugador: Jugador, clave: string): Promise<Jugador>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(token: string): Rol[];
   refreshJWT(token: string): Promise<string>;
 }
 
-export type JWTUserPayload = JWTPayload & { usuario: Administrador };
+export type Usuario =
+  | {
+      admin: Administrador;
+      jugador?: never;
+    }
+  | {
+      admin?: never;
+      jugador: Jugador;
+    };
+
+export type JWTUserPayload = JWTPayload & Usuario;
 
 export class AuthServiceImpl implements AuthService {
   private repo: AuthRepository;
@@ -50,11 +67,12 @@ export class AuthServiceImpl implements AuthService {
       return [];
     }
 
-    // Traducción de String[] a Rol[]
+    // Se extraen los roles del payload del JWT.
     const rolesJwt: string[] = payload["roles"];
     const roles = (Object.keys(Rol) as unknown as (keyof typeof Rol)[])
       .filter((rol) => rolesJwt.includes(rol))
       .map((rolJwt) => Rol[rolJwt]);
+
     return roles;
   }
 
@@ -63,11 +81,21 @@ export class AuthServiceImpl implements AuthService {
    * @param usuario el Administrador que va a ir en el payload. Corresponde al usuario autenticado.
    * @returns un `Promise<string>` con el JWT firmado.
    */
-  private async signJWT(usuario: Administrador): Promise<string> {
-    const token = await new SignJWT({ usuario, roles: [Rol.Administrador] })
+  private async signJWT(usuario: Usuario): Promise<string> {
+    let id;
+    let payload;
+    if (usuario.admin) {
+      id = usuario.admin.id;
+      payload = { admin: usuario.admin, roles: [Rol.Administrador] };
+    } else {
+      id = usuario.jugador.id;
+      payload = { jugador: usuario.jugador, roles: [Rol.Jugador] };
+    }
+
+    const token = await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setSubject(usuario.id.toString())
+      .setSubject(id.toString())
       .setIssuer(process.env.JWT_ISSUER || "canchasapi")
       .setExpirationTime(process.env.JWT_EXPIRATION_TIME || "1h") // token expiration time, e.g., "1 day"
       .sign(this.secretKey as Uint8Array);
@@ -99,17 +127,15 @@ export class AuthServiceImpl implements AuthService {
    * @throws un ApiError si alguna validación falla.
    */
   async loginUsuario(correoOUsuario: string, clave: string): Promise<string> {
-    const adminConClave =
-      await this.repo.getAdministradorYClave(correoOUsuario);
+    const userConClave = await this.repo.getUsuarioYClave(correoOUsuario);
 
-    const { admin, clave: hash } = adminConClave;
+    const { clave: hash } = userConClave;
     const esValido = await bcrypt.compare(clave, hash);
     if (!esValido) {
       throw new UnauthorizedError("Contraseña incorrecta");
     }
 
-    const jwt = await this.signJWT(admin);
-    return jwt;
+    return await this.signJWT(userConClave);
   }
 
   /**
@@ -124,13 +150,31 @@ export class AuthServiceImpl implements AuthService {
       throw new UnauthorizedError("Token inválido");
     }
 
-    // Se obtienen los datos actuales del administrador al que corresponde el JWT.
-    const { admin } = await this.repo.getAdministradorYClave(
-      jwt.usuario.correo
-    );
+    // Se obtienen los datos actuales del usuario al que corresponde el JWT.
+    const correo = jwt.admin ? jwt.admin.correo : jwt.jugador.correo;
+    const userConClave = await this.repo.getUsuarioYClave(correo);
 
-    const newJwt = await this.signJWT(admin);
-    return newJwt;
+    return await this.signJWT(userConClave);
+  }
+
+  private async validarUnicidad(
+    correo: string,
+    usuario: string
+  ): Promise<void> {
+    try {
+      await this.repo.getUsuarioYClave(correo);
+      await this.repo.getUsuarioYClave(usuario);
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        // No existe usuario con ese correo o usuario, asi que la unicidad se mantiene.
+        return;
+      } else {
+        // Hubo otro tipo de error.
+        throw e;
+      }
+    }
+    // Si `getUsuarioYClave()` no lanza error, es porque el correo o usuario ya está ocupado.
+    throw new ConflictError("Ya existe un usuario con ese correo o usuario");
   }
 
   /**
@@ -145,6 +189,8 @@ export class AuthServiceImpl implements AuthService {
   ): Promise<Administrador> {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
 
+    await this.validarUnicidad(admin.correo, admin.usuario);
+
     const now = new Date();
     const anioActual = String(now.getUTCFullYear()).slice(-2);
     const mesActual = String(now.getUTCMonth() + 1);
@@ -157,5 +203,19 @@ export class AuthServiceImpl implements AuthService {
     }
 
     return await this.repo.crearAdministrador(admin, hash);
+  }
+
+  /**
+   * Se hashea la clave del usuario y luego se lo persiste en la base de datos.
+   * @param jugador el nuevo Jugador a registrar.
+   * @param clave la contraseña en texto plano del nuevo usuario jugador.
+   * @returns el Jugador creado.
+   */
+  async registrarJugador(jugador: Jugador, clave: string): Promise<Jugador> {
+    const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
+
+    await this.validarUnicidad(jugador.correo, jugador.usuario);
+
+    return await this.repo.crearJugador(jugador, hash);
   }
 }

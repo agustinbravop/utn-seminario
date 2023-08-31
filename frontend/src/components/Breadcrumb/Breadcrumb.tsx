@@ -5,18 +5,18 @@ import {
   BreadcrumbItem,
   Button,
   HStack,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 type Params = {
-  cancha: Cancha | null;
-  establecimiento: Establecimiento | null | undefined
-  currentAdmin: Administrador | null
-}
+  cancha?: Cancha;
+  establecimiento?: Establecimiento;
+  admin?: Administrador;
+};
 
-export default function Breadcrumb({ data }: {data: Params}) {
-  const { cancha, establecimiento, currentAdmin } = data;
+export default function Breadcrumb({ cancha, establecimiento, admin }: Params) {
   const location = useLocation();
   let actualLink = "";
 
@@ -28,32 +28,29 @@ export default function Breadcrumb({ data }: {data: Params}) {
 
       return actualLink === "/estsz" ||
         actualLink === "/admin" ? null : actualLink ===
-        `/admin/${currentAdmin?.id}/perfil` ? (
+        `/admin/${admin?.id}/perfil` ? (
         <BreadcrumbItem key={actualLink}>
           <Link to={actualLink}> Perfil </Link>
         </BreadcrumbItem>
       ) : actualLink === `/ests` ? (
         <BreadcrumbItem key={actualLink}>
-          <Link to={actualLink}>
-            Establecimientos
-          </Link>
+          <BreadcrumbLink href={actualLink}>Establecimientos</BreadcrumbLink>
         </BreadcrumbItem>
-        ): actualLink === `/ests/${crumb}` ? (
+      ) : actualLink === `/ests/${crumb}` ? (
         <BreadcrumbItem key={actualLink}>
-          <Link to={actualLink}>
-            {establecimiento?.nombre}
-          </Link>
+          <Link to={actualLink}>{establecimiento?.nombre}</Link>
         </BreadcrumbItem>
-      ) : actualLink === `/ests/${establecimiento?.id}/canchas/${cancha?.id}` ? (
+      ) : actualLink ===
+        `/ests/${establecimiento?.id}/canchas/${cancha?.id}` ? (
         <BreadcrumbItem key={actualLink}>
           <Link to={actualLink}>{cancha?.nombre}</Link>
         </BreadcrumbItem>
-      ) : actualLink === `/admin/${currentAdmin?.id}` &&
+      ) : actualLink === `/admin/${admin?.id}` &&
         actualLink === location.pathname ? (
         <BreadcrumbItem key={actualLink}>
           <Link to={actualLink}> Home </Link>
         </BreadcrumbItem>
-      ) : crumb === currentAdmin?.id.toString() ? null : (
+      ) : crumb === admin?.id.toString() ? null : (
         <BreadcrumbItem key={actualLink}>
           <Link to={actualLink}>
             {(crumb.charAt(0).toUpperCase() + crumb.slice(1)).replace(
@@ -65,30 +62,22 @@ export default function Breadcrumb({ data }: {data: Params}) {
       );
     });
 
-    const navigate = useNavigate();
-    const next = (dir: boolean) => {
-      dir ? navigate(+1) : navigate(-1);
-    }; 
+  const navigate = useNavigate();
+  const next = (dir: boolean) => {
+    dir ? navigate(+1) : navigate(-1);
+  };
 
   return (
-    <HStack
-      paddingTop={2}
-      marginLeft="17.3%"
-      marginRight="17.%"
-      spacing={1}
-    >
-      <Button
-        size="xs"
-        backgroundColor="white"
-        onClick={() => next(false)}
-      >
+    <HStack paddingTop={2} marginLeft="17.3%" marginRight="17.%" spacing={1}>
+      <Button size="xs" backgroundColor="white" onClick={() => next(false)}>
         <ChevronLeftIcon boxSize={6} />
       </Button>
       <ChakraBreadcrumb
         spacing="8px"
-        separator={<ChevronRightIcon color="gray.500" />}>
+        separator={<ChevronRightIcon color="gray.500" />}
+      >
         {crumbs}
-    </ChakraBreadcrumb>
-  </HStack>
+      </ChakraBreadcrumb>
+    </HStack>
   );
 }

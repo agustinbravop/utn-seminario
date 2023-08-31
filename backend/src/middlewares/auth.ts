@@ -11,6 +11,7 @@ export class AuthMiddleware {
 
   /**
    * Valida que la request tenga un JWT válido y que sea de un usuario **administrador**.
+   * Setea `res.locals.idAdmin` con el idAdmin que vino en el JWT.
    */
   public isAdmin(): Handler {
     return async (req, res, next) => {
@@ -21,8 +22,8 @@ export class AuthMiddleware {
           .send(new UnauthorizedError("Authorization header inválido"));
       }
 
-      const jwtPayload = await this.service.verifyJWT(token);
-      if (jwtPayload == null) {
+      const jwt = await this.service.verifyJWT(token);
+      if (jwt == null) {
         return res.status(401).send(new UnauthorizedError("Token inválido"));
       }
 
@@ -34,7 +35,7 @@ export class AuthMiddleware {
       }
 
       // Los handlers subsiguientes tienen acceso al idAdmin que vino en el JWT.
-      res.locals.idAdmin = Number(jwtPayload.usuario.id);
+      res.locals.idAdmin = Number(jwt?.admin?.id);
       next();
     };
   }

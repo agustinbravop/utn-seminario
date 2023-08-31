@@ -10,8 +10,8 @@ export class AdministradorHandler {
   }
 
   getAdministradorByID(): RequestHandler {
-    return async (req, res) => {
-      const idAdmin = Number(req.params["idAdmin"]);
+    return async (_req, res) => {
+      const idAdmin = Number(res.locals.idAdmin);
       const result = await this.service.getAdministradorByID(idAdmin);
       res.status(200).json(result);
     };
@@ -21,8 +21,8 @@ export class AdministradorHandler {
     return async (req, res) => {
       const admin: Administrador = {
         ...res.locals.body,
+        id: Number(req.params["idAdmin"]),
       };
-      admin.id = Number(req.params["idAdmin"]);
       const adminActualizado = await this.service.modificar(admin);
       res.status(200).json(adminActualizado);
     };

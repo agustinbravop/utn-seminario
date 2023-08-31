@@ -104,13 +104,11 @@ export async function put<T>(endpoint: string, body: any): Promise<T> {
   });
 }
 
-
 export async function patch<T>(endpoint: string, body: any): Promise<T> {
   return request("PATCH", endpoint, JSON.stringify(body), {
     "Content-Type": "application/json",
   });
 }
-
 
 export async function del<T = void>(endpoint: string): Promise<T> {
   return request("DELETE", endpoint);

@@ -28,10 +28,9 @@ import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 
 export default function CourtPage() {
-  const { idEst, idAdmin } = useParams();
+  const { idEst } = useParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
@@ -65,7 +64,6 @@ export default function CourtPage() {
 
   return (
     <>
-
       <SubMenu />
       <HStack
         marginRight="16%"
@@ -83,8 +81,7 @@ export default function CourtPage() {
           alignContent="column"
           spacing={5}
           align="center"
-        >
-        </HStack>
+        ></HStack>
       </HStack>
       <Box display="flex" justifyContent="center">
         <Card
@@ -96,18 +93,24 @@ export default function CourtPage() {
           width="56%"
         >
           <CardBody height="100%" marginTop="0px">
-            <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%" width="100%">
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              height="100%"
+              width="100%"
+            >
               <Box>
                 <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
+                  src={data?.urlImagen}
                   width="1000px"
+                  fallbackSrc={defImage}
                   height="400px"
                   objectFit="cover"
                   borderRadius="10px"
                 />
               </Box>
 
-              <Box marginTop="55px" marginLeft=" 50px" height="100%" >
+              <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
@@ -140,14 +143,26 @@ export default function CourtPage() {
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>
-                    <Box width="100%" pt="25%" display="flex" justifyContent="center" alignItems="flex-end" >
+                    <Box
+                      width="100%"
+                      pt="25%"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="flex-end"
+                    >
                       <Link to="editar">
-                        <Button mr="30px" leftIcon={<EditIcon />}>Editar </Button>
+                        <Button mr="30px" leftIcon={<EditIcon />}>
+                          Editar{" "}
+                        </Button>
                       </Link>
-                      <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                      <Button
+                        onClick={onOpen}
+                        colorScheme="red"
+                        leftIcon={<DeleteIcon />}
+                      >
                         Eliminar
                       </Button>
-                    </Box>            
+                    </Box>
                   </Box>
                 </Stack>
               </Box>

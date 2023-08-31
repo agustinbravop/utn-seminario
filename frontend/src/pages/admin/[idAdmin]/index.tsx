@@ -1,5 +1,4 @@
 import EstablecimientoCardList from "@/components/EstablecimientoCardList/EstablecimientoCardList";
-import { Navigate } from "react-router";
 import {
   Button,
   HStack,
@@ -16,7 +15,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Establecimiento } from "@/models";
 import { GrAddCircle } from "react-icons/gr";
@@ -47,33 +46,26 @@ function EstablecimientosList({ data }: EstablecimientosListProps) {
 }
 
 export default function EstablecimientosPage() {
-  const { currentAdmin } = useCurrentAdmin();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { admin } = useCurrentAdmin();
+
   const [filtro, setFiltro] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
   };
 
   const { data, isLoading, isError } = useEstablecimientosByAdminID(
-    Number(currentAdmin?.id)
+    Number(admin.id)
   );
 
-  const methods = useEstablecimientosEliminadosByAdminID(
-    Number(currentAdmin?.id)
-  );
-
-  if (!currentAdmin) {
-    return <Navigate to="/login" />;
-  }
+  const methods = useEstablecimientosEliminadosByAdminID(Number(admin.id));
 
   const establecimientosFiltrados = data.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
-
   return (
     <>
-      
       <Heading textAlign="center" paddingBottom="12" mt="40px">
         Establecimientos
       </Heading>
@@ -96,7 +88,10 @@ export default function EstablecimientosPage() {
             value={filtro}
           />
         </InputGroup>
-        <Button onClick={onOpen}> <Icon as={DeleteIcon} /></Button>
+        <Button onClick={onOpen}>
+          {" "}
+          <Icon as={DeleteIcon} />
+        </Button>
         <HStack
           marginLeft="auto"
           display="flex"
@@ -105,17 +100,17 @@ export default function EstablecimientosPage() {
           align="center"
         >
           <Text mb="0">
-            {data.length} / {currentAdmin.suscripcion.limiteEstablecimientos}{" "}
+            {data.length} / {admin.suscripcion.limiteEstablecimientos}{" "}
             establecimiento{data?.length === 1 || "s"}
           </Text>
-          {data.length < currentAdmin.suscripcion.limiteEstablecimientos && (
+          {data.length < admin.suscripcion.limiteEstablecimientos && (
             <Link to="nuevoEstablecimiento">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>
             </Link>
           )}
-          {data.length === currentAdmin.suscripcion.limiteEstablecimientos && (
+          {data.length === admin.suscripcion.limiteEstablecimientos && (
             <Link to="mejorarSuscripcion">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
@@ -149,16 +144,16 @@ export default function EstablecimientosPage() {
               <Alerta
                 mensaje="Ha ocurrido un error inesperado"
                 status="error"
-              /> 
-            ) : 
-              methods.data.length === 0 ? (<Text> No hay establecimientos en la papelera </Text>):
-              (
+              />
+            ) : methods.data.length === 0 ? (
+              <Text> No hay establecimientos en la papelera </Text>
+            ) : (
               <DeletedEstablecimientoList
                 establecimientos={methods.data}
                 establecimientosActuales={data?.length}
                 onRecuperar={onClose}
               />
-            ) }
+            )}
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="brand" mr={3} onClick={onClose}>

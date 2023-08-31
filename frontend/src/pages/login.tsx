@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
-import { Heading, VStack, Alert } from "@chakra-ui/react";
+import { Heading, VStack, Alert, Text } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
 import { useLogin } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
+import { Link } from "react-router-dom";
 
 const validationSchema = Yup.object({
   correoOUsuario: Yup.string().required("Obligatorio"),
@@ -22,7 +23,13 @@ export default function LoginPage() {
   });
 
   const { mutate, isLoading, isError } = useLogin({
-    onSuccess: (admin) => navigate(`/admin/${admin.id}`),
+    onSuccess: (user) => {
+      if (user.admin) {
+        navigate(`/admin/${user.admin.id}`);
+      } else {
+        navigate(`/jugador/${user.jugador.id}`);
+      }
+    },
   });
 
   return (
@@ -63,6 +70,12 @@ export default function LoginPage() {
               Error al intentar iniciar sesión. Contraseña o usuario incorrecto.
             </Alert>
           )}
+          <Text>
+            ¿No tiene una cuenta?{" "}
+            <Link to="/register" style={{ color: "blue" }}>
+              Registrarse
+            </Link>
+          </Text>
         </VStack>
       </FormProvider>
     </>

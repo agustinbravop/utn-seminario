@@ -58,7 +58,7 @@ const validationSchema = Yup.object({
 });
 
 function NewEstab() {
-  const { currentAdmin } = useCurrentAdmin();
+  const { admin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
   const [localidades, setLocalidades] = useState<string[]>([]);
@@ -75,7 +75,7 @@ function NewEstab() {
   const methods = useYupForm<FormState>({
     validationSchema,
     defaultValues: {
-      idAdministrador: Number(currentAdmin?.id),
+      idAdministrador: Number(admin?.id),
     },
   });
 
