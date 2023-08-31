@@ -79,6 +79,7 @@ export default function PerfilPage() {
 
   return (
     <>
+       
       <VStack>
         <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
           <CardHeader>

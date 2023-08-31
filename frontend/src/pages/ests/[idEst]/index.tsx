@@ -101,8 +101,9 @@ export default function CourtPage() {
             >
               <Box>
                 <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
+                  src={data?.urlImagen}
                   width="1000px"
+                  fallbackSrc={defImage}
                   height="400px"
                   objectFit="cover"
                   borderRadius="10px"

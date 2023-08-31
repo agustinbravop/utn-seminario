@@ -71,5 +71,8 @@ export function useRegistrarJugador(
 }
 
 export function useSuscripciones(options?: UseApiQueryOptions<Suscripcion[]>) {
-  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, options);
+  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, {
+    ...options,
+    initialData: [],
+  });
 }

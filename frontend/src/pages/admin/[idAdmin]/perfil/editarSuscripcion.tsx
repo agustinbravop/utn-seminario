@@ -25,6 +25,7 @@ import { useNavigate } from "react-router";
 import { useCambiarSuscripcion } from "@/utils/api/administrador";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
 
 const iconos = [
   <Icon as={BsShop} fill="brand.500" fontSize={90} />,
@@ -58,7 +59,7 @@ export default function SuscripcionesPage() {
     },
   });
 
-  const [newSus, setNewSus] = useState<Suscripcion>(admin.suscripcion);
+  const [nuevaSus, setNuevaSus] = useState<Suscripcion>(admin.suscripcion);
 
   const { data, isError, isLoading } = useSuscripciones();
   let cards;
@@ -70,14 +71,12 @@ export default function SuscripcionesPage() {
     cards = <p>error!</p>;
   }
 
-  const actual = newSus.id;
-
   const suscripciones = data
-    ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
+    .sort((s1, s2) => s1.costoMensual - s2.costoMensual)
     .map((s, idx) => ({ icono: iconos[idx], ...s }));
-  cards = suscripciones?.map((s) => {
-    // const actual = admin.suscripcion.id === s.id;
-    const pepe = actual === s.id;
+
+  cards = suscripciones.map((s) => {
+    const esSuscripcionActual = nuevaSus.id === s.id;
 
     return (
       <Card
@@ -85,7 +84,7 @@ export default function SuscripcionesPage() {
         key={s.id}
         color="dark"
         width="14rem"
-        variant={pepe ? "filled" : "elevated"}
+        variant={esSuscripcionActual ? "filled" : "elevated"}
       >
         <CardHeader margin="auto">{s.icono}</CardHeader>
         <CardBody textAlign="center">
@@ -98,11 +97,11 @@ export default function SuscripcionesPage() {
             {s.limiteEstablecimientos} establecimiento
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
-          {pepe || (
+          {esSuscripcionActual || (
             <Button
               colorScheme="brand"
               variant="outline"
-              onClick={() => setNewSus(s)}
+              onClick={() => setNuevaSus(s)}
             >
               Elegir
             </Button>
@@ -111,6 +110,18 @@ export default function SuscripcionesPage() {
       </Card>
     );
   });
+
+  const { data: establecimiento } = useEstablecimientosByAdminID(
+    Number(admin.id)
+  );
+
+  function handleSuscripcion() {
+    if (nuevaSus.limiteEstablecimientos < establecimiento.length) {
+      navigate(`../selectEstab?suscripcion=${nuevaSus.id}`);
+    } else {
+      mutate({ id: admin.id, idSuscripcion: nuevaSus.id });
+    }
+  }
 
   return (
     <>
@@ -148,11 +159,7 @@ export default function SuscripcionesPage() {
             <Button
               colorScheme="brand"
               backgroundColor="black"
-              onClick={() => {
-                console.log(newSus);
-                console.log(admin);
-                mutate({ idAdmin: admin.id, idSuscripcion: newSus.id });
-              }}
+              onClick={() => handleSuscripcion()}
             >
               Aceptar
             </Button>
