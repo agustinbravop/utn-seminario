@@ -87,12 +87,12 @@ export class EstablecimientoHandler {
     };
   }
 
-  getEstablecimientoByNombre(): RequestHandler { 
-    return async (req, res)=> { 
-      const NombreEstablecimiento=String(req.query.nombre_establecimiento); 
-      const establecimiento=await this.service.getEstablecimientoByNombre(NombreEstablecimiento); 
-     
-      res.status(200).json(establecimiento); 
+  getEstablecimientoSearch():RequestHandler { 
+    return async (req, res)=>{ 
+      const query=req.query; 
+      const result=await this.service.getConsulta(query)
+      res.status(200).json(result)
+
     }
   }
 
