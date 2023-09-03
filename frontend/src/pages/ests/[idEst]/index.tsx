@@ -28,6 +28,7 @@ import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
+import { useEffect } from "react";
 
 export default function CourtPage() {
   const { idEst } = useParams();
@@ -56,6 +57,9 @@ export default function CourtPage() {
       });
     },
   });
+  useEffect(() => {
+    console.log(data)
+  })
 
   const handleEliminar = () => {
     mutateDelete(Number(data?.id));

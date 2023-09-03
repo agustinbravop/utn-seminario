@@ -34,6 +34,7 @@ export type Establecimiento = {
   nombre: string;
   telefono: string;
   direccion: string;
+  habilitado: boolean;
   localidad: string;
   provincia: string;
   urlImagen?: string;
