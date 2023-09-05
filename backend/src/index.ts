@@ -6,12 +6,12 @@ import "express-async-errors";
 const prismaClient = new PrismaClient();
 prismaClient
   .$connect()
-  .then(() => console.log("Conexión exitosa con la base de datos"));
+  .then(() => console.info("Conexión exitosa con la base de datos"));
 
 const app: Application = express();
 
 app.use("/", createRouter(prismaClient));
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log("Servidor desplegado en el puerto " + process.env.PORT || 3000);
+  console.info("Servidor desplegado en el puerto " + process.env.PORT || 3000);
 });

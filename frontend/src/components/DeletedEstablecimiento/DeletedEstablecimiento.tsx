@@ -58,12 +58,11 @@ export default function DeletedEstablecimiento({
     const limit = admin?.suscripcion?.limiteEstablecimientos;
     if (establecimientosActuales < limit) {
       const alteredEstablecimiento = { ...establecimiento, eliminado: false };
-      console.log(alteredEstablecimiento);
       mutate(alteredEstablecimiento);
     } else {
       toast({
         title: "Límite de establecimientos alcanzado",
-        description: `Elimine otro establecimiento para recuperar este o mejore su suscripción`,
+        description: `Elimine otro establecimiento para recuperar este o mejore su suscripción para tener más establecimientos.`,
         status: "warning",
         isClosable: true,
       });

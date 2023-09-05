@@ -97,8 +97,7 @@ export class PrismaEstablecimientoRepository
       });
 
       return estsDB.map((estDB) => toModel(estDB));
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
   }

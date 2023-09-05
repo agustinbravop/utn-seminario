@@ -46,17 +46,17 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const adminService = new AdministradorServiceImpl(adminRepo);
   const adminHandler = new AdministradorHandler(adminService);
 
-  const estRepo = new PrismaEstablecimientoRepository(prismaClient);
-  const estService = new EstablecimientoServiceImpl(estRepo, adminService);
-  const estHandler = new EstablecimientoHandler(estService);
-
-  const canchaRepo = new PrismaCanchaRepository(prismaClient);
-  const canchaService = new CanchaServiceimpl(canchaRepo);
-  const canchaHandler = new CanchaHandler(canchaService);
-
   const dispRepo = new PrismaDisponibilidadRepository(prismaClient);
   const dispService = new DisponibilidadServiceimpl(dispRepo);
   const dispHandler = new DisponibilidadHandler(dispService);
+
+  const canchaRepo = new PrismaCanchaRepository(prismaClient, dispRepo);
+  const canchaService = new CanchaServiceimpl(canchaRepo);
+  const canchaHandler = new CanchaHandler(canchaService);
+
+  const estRepo = new PrismaEstablecimientoRepository(prismaClient);
+  const estService = new EstablecimientoServiceImpl(estRepo, adminService);
+  const estHandler = new EstablecimientoHandler(estService);
 
   const upload = multer({ dest: "imagenes/" });
 

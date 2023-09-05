@@ -1,16 +1,31 @@
+import { Dia } from "@/models";
+
 export const DEFAULT_IMAGE_SRC =
   "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg";
 
+export const LOGO_IMAGE_SRC =
+  "https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png";
+
 export const DISCIPLINAS = [
-  "Basket",
-  "Futbol",
+  "Básquet",
+  "Fútbol",
   "Tenis",
-  "Padel",
-  "Hokey",
-  "Ping-Pong",
+  "Pádel",
+  "Hockey",
+  "Ping Pong",
 ];
 
-export const DURACION_RESERVA = [30, 60];
+export const DIAS: Dia[] = [
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
+];
+
+export const DURACION_RESERVA = [30, 60, 120];
 
 export const HORAS = [
   "1:00",

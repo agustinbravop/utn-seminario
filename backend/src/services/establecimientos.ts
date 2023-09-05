@@ -84,7 +84,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     const ests = await this.repo.getByAdminID(admin.id);
 
     if (admin.suscripcion.limiteEstablecimientos <= ests.length) {
-      throw new ConflictError("Limite de establecimientos alcanzado");
+      throw new ConflictError("Límite de establecimientos alcanzado");
     }
   }
 

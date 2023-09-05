@@ -52,8 +52,6 @@ export class CanchaHandler {
 
   putCancha(): RequestHandler {
     return async (req, res) => {
-      console.log(res.locals.body);
-
       const cancha: Cancha = {
         ...res.locals.body,
       };
@@ -84,8 +82,6 @@ export class CanchaHandler {
   postCancha(): RequestHandler {
     return async (_req, res) => {
       const cancha: Cancha = res.locals.body;
-
-      console.log("postHandler", cancha);
 
       const canchaCreada = await this.service.crear(cancha);
       res.status(201).json(canchaCreada);

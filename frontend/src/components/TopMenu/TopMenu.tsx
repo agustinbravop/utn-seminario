@@ -13,6 +13,11 @@ import { Menu, MenuButton } from "@chakra-ui/react";
 import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
+import { LOGO_IMAGE_SRC } from "@/utils/consts";
+
+function LogoImage() {
+  return <Image src={LOGO_IMAGE_SRC} alt="logo" width={177} />;
+}
 
 export default function TopMenu() {
   const { admin, isAdmin, logout: adminLogout } = useCurrentAdmin();
@@ -54,11 +59,7 @@ function AdminNav({
   return (
     <>
       <Link to={`/admin/${admin.id}`}>
-        <Image
-          src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-          alt="logo"
-          width={177}
-        />
+        <LogoImage />
       </Link>
       <nav style={{ paddingRight: "15px" }}>
         <HStack>
@@ -102,11 +103,7 @@ function JugadorNav({
   return (
     <>
       <Link to={`/jugador/${jugador.id}`}>
-        <Image
-          src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-          alt="logo"
-          width={177}
-        />
+        <LogoImage />
       </Link>
       <nav style={{ paddingRight: "15px" }}>
         <HStack>
@@ -144,11 +141,7 @@ function UnregisteredNav() {
   return (
     <>
       <Link to="/">
-        <Image
-          src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-          alt="logo"
-          width={177}
-        />
+        <LogoImage />
       </Link>
       <nav>
         <HStack>
