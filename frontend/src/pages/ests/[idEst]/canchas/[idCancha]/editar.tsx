@@ -1,21 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Dia, Disponibilidad } from "@/models";
+import React from "react";
+import { Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import {
   Alert,
-  Checkbox,
   Container,
+  FormHelperText,
   HStack,
   Heading,
-  Icon,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -38,19 +29,10 @@ import {
   useCanchaByID,
   useModificarCancha,
 } from "@/utils/api/canchas";
-import {
-  CheckboxGroupControl,
-  InputControl,
-  SelectControl,
-  SubmitButton,
-  SwitchControl,
-} from "@/components/forms";
-import { FormProvider, useFieldArray } from "react-hook-form";
-import { GrAddCircle } from "react-icons/gr";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { InputControl, SubmitButton, SwitchControl } from "@/components/forms";
+import { FormProvider } from "react-hook-form";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
-import { DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -69,35 +51,15 @@ const validationSchema = Yup.object({
   ),
 });
 
-const defaultDisponibilidad: Omit<Disponibilidad, "id"> & {
-  id?: number | undefined;
-} = {
-  horaFin: "",
-  horaInicio: "",
-  dias: [],
-  disciplina: "",
-  precioReserva: NaN,
-  precioSenia: undefined,
-  minutosReserva: NaN,
-};
-
 export default function EditCourtPage() {
   const {
     isOpen: confirmIsOpen,
     onOpen: confirmOnOpen,
     onClose: confirmOnClose,
   } = useDisclosure();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { idEst, idCancha } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
-  const [disp, setDisp] = useState(defaultDisponibilidad);
-
-  const handleDispChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    console.log("handleDispChange");
-    setDisp({ ...disp, [name]: value });
-  };
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
 
@@ -105,7 +67,7 @@ export default function EditCourtPage() {
     onSuccess: () => {
       toast({
         title: "Cancha modificada.",
-        description: `Cancha modificada exitosamente.`,
+        description: "Cancha modificada exitosamente.",
         status: "success",
         isClosable: true,
       });
@@ -114,7 +76,7 @@ export default function EditCourtPage() {
     onError: () => {
       toast({
         title: "Error al modificar la cancha",
-        description: `Intente de nuevo.`,
+        description: "Intente de nuevo.",
         status: "error",
         isClosable: true,
       });
@@ -128,55 +90,6 @@ export default function EditCourtPage() {
 
   const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
-  };
-
-  const {
-    fields: disponibilidades,
-    append,
-    remove,
-  } = useFieldArray({
-    name: "disponibilidades",
-    control: methods.control,
-  });
-
-  useEffect(() => {
-    console.log(disponibilidades);
-    console.log(methods.formState);
-    console.log(disp);
-  }, [disp, disponibilidades, methods]);
-
-  const handleAgregarDisponibilidad = () => {
-    const validationRules = {
-      disciplina: disp.disciplina !== "",
-      horaFin: disp.horaFin !== "",
-      horaInicio: disp.horaInicio !== "",
-      dias: disp.dias.length !== 0,
-      precioReserva: !Number.isNaN(disp.precioReserva),
-      minutosReserva: !Number.isNaN(disp.minutosReserva),
-    };
-
-    const allValid = Object.values(validationRules).every((isValid) => isValid);
-
-    if (allValid) {
-      append(disp);
-      setDisp(defaultDisponibilidad);
-      Object.keys(defaultDisponibilidad).forEach((name) =>
-        methods.resetField(name as keyof FormState)
-      );
-      onClose();
-    } else {
-      console.log("Alguna validación ha fallado");
-      toast({
-        title: "Datos faltantes",
-        description: `Verifique todos los datos ingresados y vuelva a intentar.`,
-        status: "warning",
-        isClosable: true,
-      });
-    }
-  };
-
-  const handleDeleteDisponibilidad = (index: number) => {
-    remove(index);
   };
 
   return (
@@ -226,72 +139,11 @@ export default function EditCourtPage() {
             />
           </FormControl>
           <FormControl>
-            <SwitchControl
-              name="habilitada"
-              label="¿Esta habilitada?"
-            ></SwitchControl>
+            <SwitchControl name="habilitada" label="¿Habilitada?" />
+            <FormHelperText m="0">
+              Una cancha deshabilitada no puede ser reservada por jugadores.
+            </FormHelperText>
           </FormControl>
-
-          <VStack width="1100px" align="center">
-            <VStack marginTop="20px" align="start" width="100%" px="281px">
-              <Text fontWeight="bold">Disponibilidad horaria</Text>
-              <Text>
-                En qué rangos horarios la cancha estará disponible y para qué
-                disciplinas.
-              </Text>
-              <VStack>
-                <Button leftIcon={<Icon as={GrAddCircle} />} onClick={onOpen}>
-                  Agregar disponibilidad
-                </Button>
-              </VStack>
-            </VStack>
-            <>
-              <TableContainer paddingTop="20px" paddingBottom="5px">
-                <Table variant="simple" size="sm">
-                  <Thead backgroundColor="lightgray">
-                    <Tr>
-                      <Th>disciplina</Th>
-                      <Th>hora inicio</Th>
-                      <Th>hora fin</Th>
-                      <Th>reserva (min.)</Th>
-                      <Th>p. reserva/seña</Th>
-                      <Th> dias </Th>
-                      <Th> Eliminar </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {methods.getValues("disponibilidades").map((d, index) => (
-                      <Tr key={index}>
-                        <Td> {d.disciplina} </Td>
-                        <Td> {d.horaInicio} </Td>
-                        <Td> {d.horaFin} </Td>
-                        <Td> {d.minutosReserva} </Td>
-                        <Td>
-                          {d.precioReserva}/{d.precioSenia}
-                        </Td>
-                        <Td>
-                          {d.dias.map((dia, index) => (
-                            <React.Fragment key={index}>
-                              {dia}
-                              {index !== d.dias.length - 1 && " - "}
-                            </React.Fragment>
-                          ))}
-                        </Td>
-                        <Td>
-                          <Button
-                            type="button"
-                            onClick={() => handleDeleteDisponibilidad(index)}
-                          >
-                            <DeleteIcon />
-                          </Button>
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-            </>
-          </VStack>
 
           <Container centerContent mt="10px">
             <HStack justifyContent="flex-end" spacing={30}>
@@ -300,7 +152,8 @@ export default function EditCourtPage() {
             </HStack>
             {isError && (
               <Alert status="error">
-                Error al intentar registrar el establecimiento. Intente de nuevo
+                Error al intentar registrar el establecimiento. Intente de
+                nuevo.
               </Alert>
             )}
           </Container>
@@ -329,121 +182,6 @@ export default function EditCourtPage() {
             </ModalContent>
           </Modal>
         </VStack>
-
-        <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Agregar disponibilidad</ModalHeader>
-            <ModalBody>
-              <HStack width="600px" py="10px">
-                <SelectControl
-                  placeholder="Elegir horario"
-                  label="Horario de Inicio"
-                  name="horaInicio"
-                  isRequired
-                  onChange={handleDispChange}
-                >
-                  {HORAS.map((hora, i) => (
-                    <option key={i} value={hora}>
-                      {hora}
-                    </option>
-                  ))}
-                </SelectControl>
-                <SelectControl
-                  placeholder="Elegir horario"
-                  label="Horario de Fin"
-                  name="horaFin"
-                  isRequired
-                  onChange={handleDispChange}
-                >
-                  {HORAS.map((hora, i) => (
-                    <option key={i} value={hora}>
-                      {hora}
-                    </option>
-                  ))}
-                </SelectControl>
-              </HStack>
-              <HStack width="600px" py="10px">
-                <SelectControl
-                  placeholder="Seleccionar disciplina "
-                  label=""
-                  name="disciplina"
-                  isRequired
-                  onChange={handleDispChange}
-                >
-                  {DISCIPLINAS.map((disciplina, i) => (
-                    <option key={i} value={disciplina}>
-                      {disciplina}
-                    </option>
-                  ))}
-                </SelectControl>
-                <SelectControl
-                  placeholder="Seleccionar duración (min)"
-                  label=""
-                  name="minutosReserva"
-                  isRequired
-                  onChange={handleDispChange}
-                >
-                  {DURACION_RESERVA.map((duracion, i) => (
-                    <option key={i} value={duracion}>
-                      {duracion}
-                    </option>
-                  ))}
-                </SelectControl>
-              </HStack>
-              <HStack width="600px" py="10px">
-                <InputControl
-                  placeholder=""
-                  name="precioReserva"
-                  type="number"
-                  label="Precio de reserva"
-                  isRequired
-                  onChange={handleDispChange}
-                ></InputControl>
-                <InputControl
-                  placeholder=""
-                  name="precioSenia"
-                  type="number"
-                  label="Seña de reserva"
-                  onChange={handleDispChange}
-                ></InputControl>
-              </HStack>
-              <HStack py="10px">
-                <CheckboxGroupControl
-                  name="dias"
-                  onValueChange={(values) =>
-                    setDisp({
-                      ...disp,
-                      dias: values as Dia[],
-                    })
-                  }
-                >
-                  <HStack>
-                    <Checkbox value="Lunes">Lunes</Checkbox>
-                    <Checkbox value="Martes">Martes</Checkbox>
-                    <Checkbox value="Miércoles">Miércoles</Checkbox>
-                    <Checkbox value="Jueves">Jueves</Checkbox>
-                    <Checkbox value="Viernes">Viernes</Checkbox>
-                    <Checkbox value="Sábado">Sábado</Checkbox>
-                    <Checkbox value="Domingo">Domingo</Checkbox>
-                  </HStack>
-                </CheckboxGroupControl>
-              </HStack>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="gray" mr={3} onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button
-                colorScheme="blackAlpha"
-                backgroundColor="black"
-                onClick={handleAgregarDisponibilidad}
-              >
-                Aceptar
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
       </FormProvider>
     </>
   );
