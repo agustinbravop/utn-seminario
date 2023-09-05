@@ -35,15 +35,20 @@ import { useCanchaByID, useEliminarCancha, useModificarCancha } from "@/utils/ap
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { defImage } from "@/utils/const/const";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Cancha } from "@/models";
-
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
+
+  const [hab, setHab] = useState(data?.habilitada);
+
+  useEffect(() => {
+    setHab(() => data?.habilitada)
+  }, [data])
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
@@ -73,7 +78,7 @@ export default function CanchaInfoPage() {
     onSuccess: () => {
       toast({
         title: "Cancha modificada.",
-        description: `Cancha modificada PRUEBA exitosamente.`,
+        description: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}`,
         status: "success",
         isClosable: true,
       });
@@ -88,25 +93,20 @@ export default function CanchaInfoPage() {
     },
   });
 
-  const [hab, setHab]= useState(data?.habilitada);
+
 
   const handleSwitchChange = async () => {
-    await new Promise((resolve) => {
-      setHab((prevHab) => {
-        const newHab = !prevHab;
-        resolve(newHab);
-        return newHab;
-      });
-    });
-
-    const dataCancha: Cancha = { ...data, habilitada: hab };
-    console.log(dataCancha)
+    const dataCancha: Cancha = { ...data, habilitada: !data.habilitada };
     mutate(dataCancha)
   };
 
+  // useEffect(() => {
+  //   console.log(hab)
+  // }, [hab])
+
   const handleHabilitar = () => {
 
-    
+
     console.log(data)
 
 
@@ -134,7 +134,7 @@ export default function CanchaInfoPage() {
         marginTop="0px"
       >
         <Text>
-          Esta es la información que se muestra al usuario de su cancha. jjj
+          Esta es la información que se muestra al usuario de su cancha.
         </Text>
       </HStack>
       <Box display="flex" justifyContent="center">
@@ -167,21 +167,9 @@ export default function CanchaInfoPage() {
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Descripción 
+                      Descripción
                     </Heading>
                     <Text fontSize="sm">{data.descripcion}</Text>
-                  </Box>
-                  <Box>
-                 
-                 
-                  <FormControl display='flex' alignItems='center'>
-                  <Switch isChecked={hab} 
-                    onChange={handleSwitchChange}
-                  />
-                </FormControl>
-
-                <Button onClick={()=> handleHabilitar()}> pepito </Button>
-          
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
@@ -197,9 +185,14 @@ export default function CanchaInfoPage() {
                     </Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Habilitación
-                    </Heading>
+                    <HStack width='100%' display='flex' justifyContent='space-between'>
+                      <Heading size="xs" textTransform="uppercase">
+                        Habilitación
+                      </Heading>
+                      <Switch isChecked={hab}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
                     <Text fontSize="sm">
                       Esta cancha {data.habilitada ? "" : "no"} se encuentra
                       habilitada
