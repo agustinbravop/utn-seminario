@@ -15,6 +15,7 @@ import {
   ModalOverlay,
   Stack,
   StackDivider,
+  Switch,
   Text,
   useDisclosure,
   useToast,
@@ -22,13 +23,15 @@ import {
 import {
   useEliminarEstablecimiento,
   useEstablecimientoByID,
+  useModificarEstablecimiento,
 } from "@/utils/api/establecimientos";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Establecimiento } from "@/models";
 
 export default function CourtPage() {
   const { idEst } = useParams();
@@ -65,6 +68,34 @@ export default function CourtPage() {
     mutateDelete(Number(data?.id));
     onClose();
   };
+
+
+  const { mutate } = useModificarEstablecimiento({
+    onSuccess: () => {
+      toast({
+        title: "Cancha modificada.",
+        description: `Cancha ${!est ? 'habilitada' : 'deshabilitada'}`,
+        status: "success",
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error al modificar la cancha",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const [hab, setHab] = useState(data?.habilitado);
+
+  const handleSwitchChange = async () => {
+    const dataEst: Establecimiento = { ...data, habilitado: !data?.habilitado };
+    mutate(dataEst)
+  };
+
 
   return (
     <>
@@ -132,11 +163,19 @@ export default function CourtPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Correo de contacto
                     </Heading>
+                    <HStack width='100%' display='flex' justifyContent='space-between'>
+                      <Heading size="xs" textTransform="uppercase">
+                        Habilitación
+                      </Heading>
+                      <Switch isChecked={hab}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
                     <Text fontSize="sm">{data?.correo}</Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Numero de teléfono
+                      Numero de teléfono jaja
                     </Heading>
                     <Text fontSize="sm">{data?.telefono}</Text>
                   </Box>
