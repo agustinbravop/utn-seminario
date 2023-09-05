@@ -1,11 +1,8 @@
 import { RequestHandler } from "express";
 import { CanchaService } from "../services/canchas.js";
-import {
-  Cancha,
-  canchaSchema,
-  disponibilidadSchema,
-} from "../models/cancha.js";
+import { Cancha, canchaSchema } from "../models/cancha.js";
 import { z } from "zod";
+import { disponibilidadSchema } from "../models/disponibilidad.js";
 
 export const crearCanchaReqSchema = canchaSchema
   .omit({
