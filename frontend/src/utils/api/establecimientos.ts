@@ -46,6 +46,17 @@ export function useEstablecimientosByAdminID(
   );
 }
 
+//PROVISIONAL
+export function useEstablecimientosPlayer(
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "jugador"],
+    `${API_URL}/establecimientos/jugador`,
+    { ...options, initialData: [] }
+  );
+}
+
 export function useCrearEstablecimiento(
   options?: UseApiMutationOptions<
     CrearEstablecimientoReq & { imagen?: File },

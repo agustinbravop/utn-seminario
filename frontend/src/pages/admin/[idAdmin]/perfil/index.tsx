@@ -87,7 +87,7 @@ export default function PerfilPage() {
               <Link to="editSuscripcion">
               <Box width="100%" display="flex" flexDirection="column" alignItems="center" >
              <Link to="editarSuscripcion">
-             <Button>Actualizar Suscripción</Button> 
+             <Button>Actualizar Suscripcióncdc</Button> 
             </Link> 
             </Box>
               

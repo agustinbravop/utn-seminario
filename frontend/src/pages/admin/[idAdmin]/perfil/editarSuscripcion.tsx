@@ -18,7 +18,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
+import { BsRocket, BsShop, BsBuildings } from "react-icons/bs"; 
 import { useSuscripciones } from "@/utils/api/auth";
 import { Suscripcion } from "@/models";
 import { useNavigate } from "react-router";
@@ -116,7 +116,7 @@ export default function SuscripcionesPage() {
   return (
     <>
       <Box marginBottom="5px" marginLeft="12%" marginRight="12%">
-        <Heading size="lg">Seleccione el plan al que mejor se adapte</Heading>
+        <Heading size="lg">Seleccione el plan al que mejor se adapte </Heading>
         <br />
         <Text>
           Puedes adaptar tu suscripción en función de tus necesidades. Cambia de

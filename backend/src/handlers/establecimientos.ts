@@ -24,6 +24,13 @@ export class EstablecimientoHandler {
     this.service = service;
   }
 
+  getAllEstablecimientos(): RequestHandler{
+    return async (_req, res)=>{
+      const ests = await this.service.getAll();
+      res.status(200).json(ests);
+    }
+  }
+
   postEstablecimiento(): RequestHandler {
     return async (_req, res) => {
       const est: Establecimiento = {

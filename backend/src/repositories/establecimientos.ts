@@ -8,6 +8,7 @@ export interface EstablecimientoRepository {
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
+  getAll(): Promise<Establecimiento[]>;
 }
 
 export class PrismaEstablecimientoRepository
@@ -18,6 +19,17 @@ export class PrismaEstablecimientoRepository
 
   constructor(client: PrismaClient) {
     this.prisma = client;
+  }
+  async getAll(): Promise<Establecimiento[]> {
+    try {
+     const allEstab = await this.prisma.establecimiento.findMany({
+      include: this.include
+     });
+     return allEstab.map((e) => toModel(e));
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerError("No se pudo obtener los establecimientos");
+    }
   }
 
   async crear(est: Establecimiento): Promise<Establecimiento> {

@@ -16,10 +16,13 @@ export type Path =
   | `/ests/:idEst/canchas`
   | `/ests/:idEst/canchas/:idCancha`
   | `/ests/:idEst/canchas/:idCancha/editar`
+  | `/ests/:idEst/canchas/:idCancha/vistaJugadorCancha`
   | `/ests/:idEst/canchas/nueva`
   | `/ests/:idEst/editar`
   | `/ests/:idEst/reservas`
+  | `/ests/:idEst/vistaJugador`
   | `/jugador/:idJugador`
+  | `/jugador/:idJugador/perfil`
   | `/login`
   | `/register`
   | `/subscribe`
@@ -37,10 +40,13 @@ export type Params = {
   '/ests/:idEst/canchas': { idEst: string }
   '/ests/:idEst/canchas/:idCancha': { idEst: string; idCancha: string }
   '/ests/:idEst/canchas/:idCancha/editar': { idEst: string; idCancha: string }
+  '/ests/:idEst/canchas/:idCancha/vistaJugadorCancha': { idEst: string; idCancha: string }
   '/ests/:idEst/canchas/nueva': { idEst: string }
   '/ests/:idEst/editar': { idEst: string }
   '/ests/:idEst/reservas': { idEst: string }
+  '/ests/:idEst/vistaJugador': { idEst: string }
   '/jugador/:idJugador': { idJugador: string }
+  '/jugador/:idJugador/perfil': { idJugador: string }
 }
 
 export type ModalPath = never

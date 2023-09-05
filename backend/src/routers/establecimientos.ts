@@ -22,6 +22,9 @@ export function establecimientosRouter(
     handler.getEstablecimientosByAdminID()
   );
 
+  //PROVISIONAL
+  router.get("/jugador", handler.getAllEstablecimientos());
+
   router.post(
     "/",
     authMiddle.isAdmin(),

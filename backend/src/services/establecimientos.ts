@@ -18,6 +18,7 @@ export interface EstablecimientoService {
     imagen?: Express.Multer.File
   ): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
+  getAll(): Promise<Establecimiento[]>
 }
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
@@ -30,6 +31,9 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   ) {
     this.repo = repo;
     this.adminService = adminService;
+  }
+  async getAll(): Promise<Establecimiento[]> {
+    return await this.repo.getAll();
   }
 
   async getByID(idEst: number) {
