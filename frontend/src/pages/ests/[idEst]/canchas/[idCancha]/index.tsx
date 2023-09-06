@@ -77,15 +77,15 @@ export default function CanchaInfoPage() {
   const { mutate } = useModificarCancha({
     onSuccess: () => {
       toast({
-        title: "Cancha modificada.",
-        description: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}`,
-        status: "success",
+        title: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}.`,
+        // description: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}`,
+        status: `${!hab ? 'info' : 'warning'}`,
         isClosable: true,
       });
     },
     onError: () => {
       toast({
-        title: "Error al modificar la cancha",
+        title: `Error al ${!hab ? 'habilitar' : 'deshabilitar'} la cancha`,
         description: `Intente de nuevo.`,
         status: "error",
         isClosable: true,
@@ -93,27 +93,10 @@ export default function CanchaInfoPage() {
     },
   });
 
-
-
   const handleSwitchChange = async () => {
     const dataCancha: Cancha = { ...data, habilitada: !data.habilitada };
     mutate(dataCancha)
   };
-
-  // useEffect(() => {
-  //   console.log(hab)
-  // }, [hab])
-
-  const handleHabilitar = () => {
-
-
-    console.log(data)
-
-
-  };
-
-
-
 
   if (!data) {
     return <p>Cargando...</p>;

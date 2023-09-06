@@ -41,6 +41,12 @@ export default function CourtPage() {
 
   const { data } = useEstablecimientoByID(Number(idEst));
 
+  const [habilitado, setHabilitado] = useState(data?.habilitado);
+
+  useEffect(() => {
+    setHabilitado(() => data?.habilitado)
+  }, [data])
+
   const { mutate: mutateDelete } = useEliminarEstablecimiento({
     onSuccess: () => {
       toast({
@@ -60,8 +66,24 @@ export default function CourtPage() {
       });
     },
   });
-  useEffect(() => {
-    console.log(data)
+
+  const { mutate } = useModificarEstablecimiento({
+    onSuccess: () => {
+      toast({
+        title: `Establecimiento ${!habilitado ? 'habilitado' : 'deshabilitado'}.`,
+        // description: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}`,
+        status: `${!habilitado ? 'info' : 'warning'}`,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: `Error al ${!habilitado ? 'habilitar' : 'deshabilitar'} el establecimiento`,
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
   })
 
   const handleEliminar = () => {
@@ -69,33 +91,12 @@ export default function CourtPage() {
     onClose();
   };
 
-
-  const { mutate } = useModificarEstablecimiento({
-    onSuccess: () => {
-      toast({
-        title: "Cancha modificada.",
-        description: `Cancha ${!est ? 'habilitada' : 'deshabilitada'}`,
-        status: "success",
-        isClosable: true,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error al modificar la cancha",
-        description: `Intente de nuevo.`,
-        status: "error",
-        isClosable: true,
-      });
-    },
-  });
-
-  const [hab, setHab] = useState(data?.habilitado);
-
-  const handleSwitchChange = async () => {
-    const dataEst: Establecimiento = { ...data, habilitado: !data?.habilitado };
-    mutate(dataEst)
-  };
-
+  const handleSwitchChange = () => {
+    const dataEstab: Establecimiento = { ...data, habilitado: !data.habilitado };
+    console.log('tengo', data)
+    console.log('enviando', dataEstab)
+    mutate(dataEstab)
+  }
 
   return (
     <>
@@ -148,8 +149,23 @@ export default function CourtPage() {
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
+                    <HStack width='100%' display='flex' justifyContent='space-between'>
+                      <Heading size="xs" textTransform="uppercase">
+                        Habilitación
+                      </Heading>
+                      <Switch
+                        isChecked={habilitado}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
+                    <Text fontSize="sm">
+                      Este establecimiento {data.habilitado ? "" : "no"} se encuentra
+                      habilitado
+                    </Text>
+                  </Box>
+                  <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Dirección
+                      Dirección sdf
                     </Heading>
                     <Text fontSize="sm">{data?.direccion}</Text>
                   </Box>
@@ -163,14 +179,6 @@ export default function CourtPage() {
                     <Heading size="xs" textTransform="uppercase">
                       Correo de contacto
                     </Heading>
-                    <HStack width='100%' display='flex' justifyContent='space-between'>
-                      <Heading size="xs" textTransform="uppercase">
-                        Habilitación
-                      </Heading>
-                      <Switch isChecked={hab}
-                        onChange={handleSwitchChange}
-                      />
-                    </HStack>
                     <Text fontSize="sm">{data?.correo}</Text>
                   </Box>
                   <Box>
