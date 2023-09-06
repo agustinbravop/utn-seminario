@@ -1,4 +1,5 @@
-import { Cancha, Dia } from "../models/cancha.js";
+import { Cancha } from "../models/cancha.js";
+import { Dia } from "../models/disponibilidad.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import {
   PrismaClient,
@@ -7,6 +8,7 @@ import {
   disciplina,
   disponibilidad,
 } from "@prisma/client";
+import { DisponibilidadRepository } from "./disponibilidades.js";
 
 export interface CanchaRepository {
   getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
@@ -26,9 +28,14 @@ export class PrismaCanchaRepository implements CanchaRepository {
       },
     },
   };
+  private dispRepository: DisponibilidadRepository;
 
-  constructor(prismaClient: PrismaClient) {
+  constructor(
+    prismaClient: PrismaClient,
+    dispRepository: DisponibilidadRepository
+  ) {
     this.prisma = prismaClient;
+    this.dispRepository = dispRepository;
   }
 
   async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {
@@ -38,16 +45,11 @@ export class PrismaCanchaRepository implements CanchaRepository {
           idEstablecimiento: idEst,
           eliminada: false,
         },
-        orderBy: [
-          {
-            nombre: "asc",
-          },
-        ],
+        orderBy: [{ nombre: "asc" }],
         include: this.include,
       });
       return canchas.map((c) => toModel(c));
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError("Error al intentar listar las canchas");
     }
   }
@@ -77,32 +79,15 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
-      console.log(cancha);
       // Creo las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.prisma.disponibilidad.create({
-            data: {
-              horaFin: disp.horaFin,
-              horaInicio: disp.horaInicio,
-              precioReserva: disp.precioReserva,
-              precioSenia: disp.precioSenia,
-              dias: { connect: disp.dias.map((dia) => ({ dia })) },
-              cancha: { connect: { id } },
-              disciplina: {
-                connectOrCreate: {
-                  where: { disciplina: disp.disciplina },
-                  create: { disciplina: disp.disciplina },
-                },
-              },
-            },
-          });
+          await this.dispRepository.crearDisponibilidad(disp);
         })
       );
 
       return await this.getCanchaByID(id);
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError(
         "Error interno al intentar cargar la cancha"
       );
@@ -125,46 +110,15 @@ export class PrismaCanchaRepository implements CanchaRepository {
       });
 
       // Modifico las disponibilidades por separado, por limitaciones de Prisma.
-      // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se crea.
+      // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se lanza un error.
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.prisma.disponibilidad.upsert({
-            where: { id: disp.id },
-            create: {
-              horaFin: disp.horaFin,
-              horaInicio: disp.horaInicio,
-              precioReserva: disp.precioReserva,
-              precioSenia: disp.precioSenia,
-              dias: { connect: disp.dias.map((dia) => ({ dia })) },
-              cancha: { connect: { id: id } },
-              disciplina: {
-                connectOrCreate: {
-                  where: { disciplina: disp.disciplina },
-                  create: { disciplina: disp.disciplina },
-                },
-              },
-            },
-            update: {
-              horaFin: disp.horaFin,
-              horaInicio: disp.horaInicio,
-              precioReserva: disp.precioReserva,
-              precioSenia: disp.precioSenia,
-              dias: { connect: disp.dias.map((dia) => ({ dia })) },
-              cancha: { connect: { id: id } },
-              disciplina: {
-                connectOrCreate: {
-                  where: { disciplina: disp.disciplina },
-                  create: { disciplina: disp.disciplina },
-                },
-              },
-            },
-          });
+          await this.dispRepository.modificarDisponibilidad(disp);
         })
       );
 
       return await this.getCanchaByID(id);
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError(
         "Error interno al intentar modificar la cancha"
       );
@@ -184,7 +138,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 }
 
-type disponibilidadDB = Omit<disponibilidad, "idDisciplina" | "idCancha"> & {
+type disponibilidadDB = Omit<disponibilidad, "idDisciplina"> & {
   disciplina: disciplina;
   dias: dia[];
 };
@@ -217,8 +171,7 @@ async function awaitQuery(
     if (cancha) {
       return toModel(cancha);
     }
-  } catch (e) {
-    console.error(e);
+  } catch {
     throw new InternalServerError(errorMsg);
   }
   throw new NotFoundError(notFoundMsg);

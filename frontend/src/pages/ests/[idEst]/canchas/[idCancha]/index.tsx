@@ -20,15 +20,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   useCanchaByID,
@@ -37,9 +28,9 @@ import {
 } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
-import { defImage } from "@/utils/const/const";
-import React from "react";
+import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { GrSchedules } from "react-icons/gr";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function CanchaInfoPage() {
@@ -104,7 +95,7 @@ export default function CanchaInfoPage() {
   };
 
   return (
-    <div>
+    <>
       <SubMenu canchas={true} nombreCancha={data.nombre} />
       <HStack
         marginRight="16%"
@@ -123,7 +114,7 @@ export default function CanchaInfoPage() {
           display="flex"
           style={{ marginTop: "10px", marginBottom: "1rem" }}
           height="75%"
-          width="56%"
+          width="76%"
         >
           <CardBody height="100%" marginTop="0px">
             <Box
@@ -132,15 +123,14 @@ export default function CanchaInfoPage() {
               height="100%"
               width="100%"
             >
-              <Box>
-                <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
-                  width="1000px"
-                  height="400px"
-                  objectFit="cover"
-                  borderRadius="10px"
-                />
-              </Box>
+              <Image
+                src={data?.urlImagen}
+                fallbackSrc={DEFAULT_IMAGE_SRC}
+                width="1000px"
+                height="400px"
+                objectFit="cover"
+                borderRadius="10px"
+              />
 
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
@@ -170,78 +160,35 @@ export default function CanchaInfoPage() {
                     <Text fontSize="sm">{data.descripcion}</Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Disciplinas
-                    </Heading>
+                    <Heading size="xs">Disciplinas</Heading>
+                    <Text fontSize="sm">{data.disciplinas.join(" - ")}</Text>
+                  </Box>
+                  <Box>
+                    <Heading size="xs">Habilitación</Heading>
                     <Text fontSize="sm">
-                      {data.disciplinas.map((disciplina, index) => (
-                        <React.Fragment key={index}>
-                          {disciplina}
-                          {index !== data.disciplinas.length - 1 && " - "}
-                        </React.Fragment>
-                      ))}
+                      Esta cancha {data.habilitada ? "" : "no"} se encuentra
+                      habilitada
                     </Text>
                   </Box>
 
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Disponibilidades
-                    </Heading>
-                    <Text fontSize="sm">
-                      Estas son las disponibilidades de la cancha.
-                    </Text>
-
-                    <TableContainer paddingTop="15px" paddingBottom="20px">
-                      <Table variant="simple" size="sm">
-                        <Thead>
-                          <Tr>
-                            <Th>disciplina</Th>
-                            <Th>horario</Th>
-                            <Th>precio</Th>
-                            <Th> dias </Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {data.disponibilidades.map((d) => (
-                            <Tr key={d.id}>
-                              <Td> {d.disciplina} </Td>
-                              <Td>
-                                {d.horaInicio}- {d.horaFin}
-                              </Td>
-                              <Td> ${d.precioReserva} </Td>
-                              <Td>
-                                {d.dias.map((dia, index) => (
-                                  <React.Fragment key={index}>
-                                    {dia}
-                                    {index !== d.dias.length - 1 && " - "}
-                                  </React.Fragment>
-                                ))}
-                              </Td>
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
-                    <Box
-                      width="100%"
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="flex-end"
-                    >
-                      <Link to="editar">
-                        <Button mt="38px" mr="40px" leftIcon={<EditIcon />}>
-                          Editar
+                    <HStack justifyContent="center" mt="1em" spacing="1.5em">
+                      <Link to="disps">
+                        <Button leftIcon={<GrSchedules />}>
+                          Disponibilidades
                         </Button>
                       </Link>
+                      <Link to="editar">
+                        <Button leftIcon={<EditIcon />}>Editar</Button>
+                      </Link>
                       <Button
-                        mt="38px"
                         onClick={onOpen}
                         colorScheme="red"
                         leftIcon={<DeleteIcon />}
                       >
                         Eliminar
                       </Button>
-                    </Box>
+                    </HStack>
                   </Box>
                 </Stack>
               </Box>
@@ -249,6 +196,7 @@ export default function CanchaInfoPage() {
           </CardBody>
         </Card>
       </Box>
+
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
@@ -269,6 +217,6 @@ export default function CanchaInfoPage() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </div>
+    </>
   );
 }

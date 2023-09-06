@@ -50,7 +50,6 @@ export function useEstablecimientosEliminadosByAdminID(
   idAdmin: number,
   options?: UseApiQueryOptions<Establecimiento[]>
 ) {
-  console.log("Eliminados")
   return useApiQuery(
     ["establecimientos", "deleted", "byAdmin", idAdmin],
     `${API_URL}/establecimientos/byAdmin/deleted/${idAdmin}`,

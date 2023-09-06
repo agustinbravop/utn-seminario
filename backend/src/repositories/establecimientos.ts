@@ -57,7 +57,6 @@ export class PrismaEstablecimientoRepository
       });
       return toModel(dbEst);
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo crear el establecimiento");
     }
   }
@@ -84,7 +83,6 @@ export class PrismaEstablecimientoRepository
 
       return estsDB.map((estDB) => toModel(estDB));
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
   }
@@ -99,8 +97,7 @@ export class PrismaEstablecimientoRepository
       });
 
       return estsDB.map((estDB) => toModel(estDB));
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
   }
@@ -110,7 +107,7 @@ export class PrismaEstablecimientoRepository
       this.prisma.establecimiento.update({
         where: { id: est.id },
         data: {
-          nombre: est.nombre, 
+          nombre: est.nombre,
           correo: est.correo,
           habilitado: est.habilitado,
           direccion: est.direccion,
@@ -183,7 +180,6 @@ async function awaitQuery(
       return toModel(estDB);
     }
   } catch (e) {
-    console.error(e);
     throw new InternalServerError(errorMsg);
   }
 

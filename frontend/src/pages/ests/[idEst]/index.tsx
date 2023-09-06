@@ -29,7 +29,7 @@ import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { defImage } from "@/utils/const/const";
+import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function CourtPage() {
@@ -140,7 +140,7 @@ export default function CourtPage() {
                 <Image
                   src={data?.urlImagen}
                   width="1000px"
-                  fallbackSrc={defImage}
+                  fallbackSrc={DEFAULT_IMAGE_SRC}
                   height="400px"
                   objectFit="cover"
                   borderRadius="10px"

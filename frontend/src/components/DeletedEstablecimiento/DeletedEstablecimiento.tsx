@@ -13,7 +13,7 @@ import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Box } from "@chakra-ui/react";
-import { defImage } from "@/utils/const/const";
+import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
 import { useModificarEstablecimiento } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useQueryClient } from "@tanstack/react-query";
@@ -58,12 +58,11 @@ export default function DeletedEstablecimiento({
     const limit = admin?.suscripcion?.limiteEstablecimientos;
     if (establecimientosActuales < limit) {
       const alteredEstablecimiento = { ...establecimiento, eliminado: false };
-      console.log(alteredEstablecimiento);
       mutate(alteredEstablecimiento);
     } else {
       toast({
         title: "Límite de establecimientos alcanzado",
-        description: `Elimine otro establecimiento para recuperar este o mejore su suscripción`,
+        description: `Elimine otro establecimiento para recuperar este o mejore su suscripción para tener más establecimientos.`,
         status: "warning",
         isClosable: true,
       });
@@ -77,7 +76,7 @@ export default function DeletedEstablecimiento({
           src={
             !(establecimiento?.urlImagen === null)
               ? establecimiento?.urlImagen
-              : defImage
+              : DEFAULT_IMAGE_SRC
           }
           borderTopRadius="lg"
           alt={`Imagen del establecimiento ${establecimiento.nombre}`}

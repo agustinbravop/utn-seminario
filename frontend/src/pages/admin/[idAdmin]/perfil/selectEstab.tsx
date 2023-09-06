@@ -3,7 +3,7 @@ import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
 } from "@/utils/api/establecimientos";
-import { defImage } from "@/utils/const/const";
+import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
 import { useState } from "react";
 import {
   Button,
@@ -81,7 +81,7 @@ export default function SelectEstablecimiento() {
         <Card width="300px" height="400px">
           <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
             <Image
-              src={est.urlImagen || defImage}
+              src={est.urlImagen || DEFAULT_IMAGE_SRC}
               borderTopRadius="lg"
               alt={`Imagen del establecimiento ${est.nombre}`}
               objectFit="cover"

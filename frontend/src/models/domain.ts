@@ -55,11 +55,11 @@ export type Disponibilidad = {
   id: number;
   horaInicio: string;
   horaFin: string;
-  minutosReserva: number;
   precioReserva: number;
   precioSenia?: number | undefined;
   disciplina: string;
   dias: Dia[];
+  idCancha: number;
 };
 
 export type Dia =

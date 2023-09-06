@@ -6,18 +6,11 @@ import {
   CardHeader,
   HStack,
   Heading,
-  Icon,
   Text,
 } from "@chakra-ui/react";
-import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { useSuscripciones } from "@/utils/api/auth";
 import { Link } from "react-router-dom";
-
-const iconos = [
-  <Icon as={BsShop} fill="brand.500" fontSize={90} />,
-  <Icon as={BsBuildings} fill="brand.500" fontSize={90} />,
-  <Icon as={BsRocket} fill="brand.500" fontSize={90} />,
-];
+import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
 
 export default function SuscripcionesPage() {
   const { data, isLoading, isError } = useSuscripciones();
@@ -30,11 +23,10 @@ export default function SuscripcionesPage() {
   if (isError) {
     cards = <p>error!</p>;
   }
-  console.log(data);
 
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
-    .map((s, idx) => ({ icono: iconos[idx], ...s }));
+    .map((s, idx) => ({ icono: ICONOS_SUSCRIPCIONES[idx], ...s }));
   cards = suscripciones?.map((s) => {
     return (
       <Card bg="light" key={s.id} color="dark" width="14rem">

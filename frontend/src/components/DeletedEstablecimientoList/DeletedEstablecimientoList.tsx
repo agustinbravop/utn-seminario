@@ -9,12 +9,19 @@ interface EstablecimientoCardListProps {
 }
 
 export default function DeletedEstablecimientoList({
-  establecimientos, establecimientosActuales, onRecuperar
+  establecimientos,
+  establecimientosActuales,
+  onRecuperar,
 }: EstablecimientoCardListProps) {
   return (
     <HStack display="flex" flexWrap="wrap" justifyContent="left">
       {establecimientos.map((est) => (
-        <DeletedEstablecimiento key={est.id} establecimiento={est} establecimientosActuales={establecimientosActuales} onRecuperar={onRecuperar} />
+        <DeletedEstablecimiento
+          key={est.id}
+          establecimiento={est}
+          establecimientosActuales={establecimientosActuales}
+          onRecuperar={onRecuperar}
+        />
       ))}
     </HStack>
   );

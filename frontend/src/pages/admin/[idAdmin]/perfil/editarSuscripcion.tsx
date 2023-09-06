@@ -6,7 +6,6 @@ import {
   CardHeader,
   HStack,
   Heading,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,7 +17,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { BsRocket, BsShop, BsBuildings } from "react-icons/bs";
 import { useSuscripciones } from "@/utils/api/auth";
 import { Suscripcion } from "@/models";
 import { useNavigate } from "react-router";
@@ -26,12 +24,7 @@ import { useCambiarSuscripcion } from "@/utils/api/administrador";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
-
-const iconos = [
-  <Icon as={BsShop} fill="brand.500" fontSize={90} />,
-  <Icon as={BsBuildings} fill="brand.500" fontSize={90} />,
-  <Icon as={BsRocket} fill="brand.500" fontSize={90} />,
-];
+import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
 
 export default function SuscripcionesPage() {
   const toast = useToast();
@@ -73,7 +66,7 @@ export default function SuscripcionesPage() {
 
   const suscripciones = data
     .sort((s1, s2) => s1.costoMensual - s2.costoMensual)
-    .map((s, idx) => ({ icono: iconos[idx], ...s }));
+    .map((s, idx) => ({ icono: ICONOS_SUSCRIPCIONES[idx], ...s }));
 
   cards = suscripciones.map((s) => {
     const esSuscripcionActual = nuevaSus.id === s.id;

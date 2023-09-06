@@ -87,7 +87,6 @@ export class PrismaAuthRepository implements AuthRepository {
         clave: dbAdmin.clave,
       };
     } catch (e) {
-      console.error(e);
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
   }
@@ -104,7 +103,6 @@ export class PrismaAuthRepository implements AuthRepository {
         clave: dbJugador.clave,
       };
     } catch (e) {
-      console.error(e);
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
   }
@@ -149,7 +147,6 @@ export class PrismaAuthRepository implements AuthRepository {
         return [Rol.Jugador];
       }
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("Error interno con la base de datos");
     }
     throw new UnauthorizedError("Correo o usuario incorrecto");
@@ -184,7 +181,6 @@ export class PrismaAuthRepository implements AuthRepository {
       });
       return this.toAdmin(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta);
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo registrar al administrador");
     }
   }
@@ -203,7 +199,6 @@ export class PrismaAuthRepository implements AuthRepository {
       });
       return this.toJugador(dbJugador);
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo registrar al jugador");
     }
   }
