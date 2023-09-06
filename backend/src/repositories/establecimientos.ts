@@ -112,6 +112,7 @@ export class PrismaEstablecimientoRepository
         data: {
           nombre: est.nombre, 
           correo: est.correo,
+          habilitado: est.habilitado,
           direccion: est.direccion,
           eliminado: est.eliminado,
           telefono: est.telefono,
