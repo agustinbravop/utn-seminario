@@ -44,8 +44,8 @@ export default function CourtPage() {
   const [habilitado, setHabilitado] = useState(data?.habilitado);
 
   useEffect(() => {
-    setHabilitado(() => data?.habilitado)
-  }, [data])
+    setHabilitado(() => data?.habilitado);
+  }, [data]);
 
   const { mutate: mutateDelete } = useEliminarEstablecimiento({
     onSuccess: () => {
@@ -70,21 +70,25 @@ export default function CourtPage() {
   const { mutate } = useModificarEstablecimiento({
     onSuccess: () => {
       toast({
-        title: `Establecimiento ${!habilitado ? 'habilitado' : 'deshabilitado'}.`,
+        title: `Establecimiento ${
+          !habilitado ? "habilitado" : "deshabilitado"
+        }.`,
         // description: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}`,
-        status: `${!habilitado ? 'info' : 'warning'}`,
+        status: `${!habilitado ? "info" : "warning"}`,
         isClosable: true,
       });
     },
     onError: () => {
       toast({
-        title: `Error al ${!habilitado ? 'habilitar' : 'deshabilitar'} el establecimiento`,
+        title: `Error al ${
+          !habilitado ? "habilitar" : "deshabilitar"
+        } el establecimiento`,
         description: `Intente de nuevo.`,
         status: "error",
         isClosable: true,
       });
     },
-  })
+  });
 
   const handleEliminar = () => {
     mutateDelete(Number(data?.id));
@@ -92,11 +96,14 @@ export default function CourtPage() {
   };
 
   const handleSwitchChange = () => {
-    const dataEstab: Establecimiento = { ...data, habilitado: !data.habilitado };
-    console.log('tengo', data)
-    console.log('enviando', dataEstab)
-    mutate(dataEstab)
-  }
+    const dataEstab: Establecimiento = {
+      ...data,
+      habilitado: !data.habilitado,
+    };
+    console.log("tengo", data);
+    console.log("enviando", dataEstab);
+    mutate(dataEstab);
+  };
 
   return (
     <>
@@ -149,7 +156,11 @@ export default function CourtPage() {
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
-                    <HStack width='100%' display='flex' justifyContent='space-between'>
+                    <HStack
+                      width="100%"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
                       <Heading size="xs" textTransform="uppercase">
                         Habilitación
                       </Heading>
@@ -159,13 +170,13 @@ export default function CourtPage() {
                       />
                     </HStack>
                     <Text fontSize="sm">
-                      Este establecimiento {data.habilitado ? "" : "no"} se encuentra
-                      habilitado
+                      Este establecimiento {data.habilitado ? "" : "no"} se
+                      encuentra habilitado
                     </Text>
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Dirección sdf
+                      Dirección
                     </Heading>
                     <Text fontSize="sm">{data?.direccion}</Text>
                   </Box>
