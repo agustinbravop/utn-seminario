@@ -1,26 +1,14 @@
 import {
   Box,
-  Button,
   Card,
   CardBody,
   CardHeader,
-  HStack,
   Heading,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Select,
   Stack,
   StackDivider,
   Text,
-  VStack,
-  useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import {
   Table,
@@ -31,13 +19,10 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
-import { useCanchaByID, useEliminarCancha } from "@/utils/api/canchas";
+import { useCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import SubMenu from "@/components/SubMenu/SubMenu";
 import { defImage } from "@/utils/const/const";
 import React, { useState } from "react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -80,11 +65,9 @@ export default function VistaJugadorCancha() {
             <Box
               display="flex"
               justifyContent='left'
-              //gridTemplateColumns="20rem 1fr"
               height="100%"
               width="100%"
             >
-
               <Box marginTop="55px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>

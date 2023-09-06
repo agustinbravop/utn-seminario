@@ -22,15 +22,15 @@ export default function EstablecimientoJugador({
   establecimiento,
 }: EstablecimientoCardProps) {
   return (
-    <Link to={`/ests/${establecimiento.id}/vistaJugador`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
+    <Link to={`/play/${establecimiento.id}/vistaJugador`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
       <Card
-        width="300px"
-        height="370px"
+        width="200px"
+        height="280px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
+        <Box width="220px" height="200px">
           <Image
             src={
               !(establecimiento?.urlImagen === null)
@@ -40,23 +40,26 @@ export default function EstablecimientoJugador({
             borderTopRadius="lg"
             alt={`Imagen del establecimiento ${establecimiento.nombre}`}
             objectFit="cover"
-            height="100%"
-            width="100%"
+            height="60%"
+            width="80%"
+            mt='5px'
+            ml='0.8rem'
+            
           />
         </Box>
-        <CardBody height="300px">
-          <VStack spacing="0">
-            <Heading size="md" marginBottom="10px">
+        <CardBody height="100%">
+          <VStack spacing="0" textAlign='start'>
+            <Heading fontSize='15px' marginBottom="10px">
               {establecimiento.nombre}
             </Heading>
-            <Text marginBottom="0">
+            <Text marginBottom="0" fontSize='sm'>
               <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
               {establecimiento.direccion}
             </Text>
-            <Text>
+            <Text fontSize='sm' mr='3rem'>
               <PhoneIcon boxSize={4} mr="2" /> {establecimiento.telefono}
             </Text>
-            <Text>{establecimiento.horariosDeAtencion}</Text>
+            <Text fontSize='sm'>{establecimiento.horariosDeAtencion}</Text>
           </VStack>
         </CardBody>
       </Card>

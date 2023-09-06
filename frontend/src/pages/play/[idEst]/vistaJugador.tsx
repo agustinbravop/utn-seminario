@@ -10,13 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import { useState } from "react";
-import EstablecimientoJugador from "@/components/EstablecimientoJugador/EstablecimientoJugador";
-import ReservaCardList from "@/components/ReservaCardList/ReservaCardList";
-import PerfilPage from "@/pages/admin/[idAdmin]/perfil";
 import SwipeableViews from "react-swipeable-views";
 import DetailEstablecimiento from "@/components/DetailEstablecimiento/DetailEstablecimiento";
 import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
-import Court from "@/components/Court/Court";
 import CanchaJugador from "@/components/CanchaJugador/CanchaJugador";
 import ReservaForm from "@/components/ReservaForm/ReservaForm";
 

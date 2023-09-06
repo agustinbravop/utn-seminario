@@ -8,7 +8,7 @@ interface Props {
 
 export default function ReservaCardList() {
 
-    //TODO: Agregar a CardList los props para que resiva una reserva y muestre los datos
+  //TODO: Agregar a CardList los props para que resiva una reserva y muestre los datos
 
   return (
     <>

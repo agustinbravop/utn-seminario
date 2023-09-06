@@ -14,6 +14,8 @@ import SwipeableViews from "react-swipeable-views";
 import PerfilPage from "./perfil";
 import { useEstablecimientosPlayer } from "@/utils/api/establecimientos";
 import EstablecimientoJugador from "@/components/EstablecimientoJugador/EstablecimientoJugador";
+import { Link } from "react-router-dom";
+import SearchEstab from "@/pages/search/searchEstab";
 
 export default function JugadorPage() {
   //TODO: AGREGR A ReservaCardList LOS PROPS DEL ARRAY DE RESERVAS
@@ -22,7 +24,7 @@ export default function JugadorPage() {
 
   const { data } = useEstablecimientosPlayer();
 
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const handleChangeIndex = (index: number) => {
     setActiveIndex(index);
@@ -37,13 +39,12 @@ export default function JugadorPage() {
         <HStack justifyContent="center">
           <Tabs
             position="relative"
-            pb='15px'
+            pb="15px"
             variant="unstyled"
             index={activeIndex}
             onChange={handleChangeIndex}
           >
             <TabList>
-              <Tab>Perfil</Tab>
               <Tab>Reservar</Tab>
               <Tab>Establecimientos</Tab>
             </TabList>
@@ -56,13 +57,8 @@ export default function JugadorPage() {
           </Tabs>
         </HStack>
         <SwipeableViews index={activeIndex} onChangeIndex={handleChangeIndex}>
-          <PerfilPage />
           <ReservaCardList />
-          <HStack display="flex" flexWrap="wrap" justifyContent="center">
-            {data.map((est) => (
-              <EstablecimientoJugador key={est.id} establecimiento={est} />
-            ))}
-          </HStack>
+          <SearchEstab />
         </SwipeableViews>
       </Box>
     </>
