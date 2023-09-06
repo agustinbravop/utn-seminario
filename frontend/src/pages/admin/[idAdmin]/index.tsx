@@ -88,10 +88,6 @@ export default function EstablecimientosPage() {
             value={filtro}
           />
         </InputGroup>
-        <Button onClick={onOpen}>
-          {" "}
-          <Icon as={DeleteIcon} />
-        </Button>
         <HStack
           marginLeft="auto"
           display="flex"
@@ -103,20 +99,22 @@ export default function EstablecimientosPage() {
             {data.length} / {admin.suscripcion.limiteEstablecimientos}{" "}
             establecimiento{data?.length === 1 || "s"}
           </Text>
-          {data.length < admin.suscripcion.limiteEstablecimientos && (
+          {data.length < admin.suscripcion.limiteEstablecimientos ? (
             <Link to="nuevoEstablecimiento">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>
             </Link>
-          )}
-          {data.length === admin.suscripcion.limiteEstablecimientos && (
+          ) : (
             <Link to="mejorarSuscripcion">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>
             </Link>
           )}
+          <Button onClick={onOpen}>
+            <Icon as={DeleteIcon} />
+          </Button>
         </HStack>
       </HStack>
       <HStack marginLeft="16%" marginRight="16%">
