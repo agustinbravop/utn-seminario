@@ -30,8 +30,7 @@ import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { defImage } from "@/utils/const/const";
-import { useEffect, useState } from "react";
-import { Establecimiento } from "@/models";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function CourtPage() {
   const { idEst } = useParams();
@@ -40,12 +39,6 @@ export default function CourtPage() {
   const toast = useToast();
 
   const { data } = useEstablecimientoByID(Number(idEst));
-
-  const [habilitado, setHabilitado] = useState(data?.habilitado);
-
-  useEffect(() => {
-    setHabilitado(() => data?.habilitado);
-  }, [data]);
 
   const { mutate: mutateDelete } = useEliminarEstablecimiento({
     onSuccess: () => {
@@ -69,19 +62,19 @@ export default function CourtPage() {
 
   const { mutate } = useModificarEstablecimiento({
     onSuccess: () => {
+      // Usa `!data?.habilitado` porque data es el valor previo al cambio del back end.
       toast({
         title: `Establecimiento ${
-          !habilitado ? "habilitado" : "deshabilitado"
+          !data?.habilitado ? "habilitado" : "deshabilitado"
         }.`,
-        // description: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}`,
-        status: `${!habilitado ? "info" : "warning"}`,
+        status: `${!data?.habilitado ? "info" : "warning"}`,
         isClosable: true,
       });
     },
     onError: () => {
       toast({
         title: `Error al ${
-          !habilitado ? "habilitar" : "deshabilitar"
+          data?.habilitado ? "habilitar" : "deshabilitar"
         } el establecimiento`,
         description: `Intente de nuevo.`,
         status: "error",
@@ -90,19 +83,20 @@ export default function CourtPage() {
     },
   });
 
+  if (!data) {
+    return <LoadingSpinner />;
+  }
+
   const handleEliminar = () => {
     mutateDelete(Number(data?.id));
     onClose();
   };
 
   const handleSwitchChange = () => {
-    const dataEstab: Establecimiento = {
+    mutate({
       ...data,
       habilitado: !data.habilitado,
-    };
-    console.log("tengo", data);
-    console.log("enviando", dataEstab);
-    mutate(dataEstab);
+    });
   };
 
   return (
@@ -165,7 +159,7 @@ export default function CourtPage() {
                         Habilitación
                       </Heading>
                       <Switch
-                        isChecked={habilitado}
+                        isChecked={data.habilitado}
                         onChange={handleSwitchChange}
                       />
                     </HStack>
@@ -182,7 +176,7 @@ export default function CourtPage() {
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Horario atencion
+                      Horario de atención
                     </Heading>
                     <Text fontSize="sm">{data?.horariosDeAtencion}</Text>
                   </Box>
@@ -194,7 +188,7 @@ export default function CourtPage() {
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Numero de teléfono jaja
+                      Numero de teléfono
                     </Heading>
                     <Text fontSize="sm">{data?.telefono}</Text>
                   </Box>

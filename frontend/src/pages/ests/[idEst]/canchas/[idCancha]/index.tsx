@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   CardBody,
-  FormControl,
   HStack,
   Heading,
   Image,
@@ -31,25 +30,22 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCanchaByID, useEliminarCancha, useModificarCancha } from "@/utils/api/canchas";
+import {
+  useCanchaByID,
+  useEliminarCancha,
+  useModificarCancha,
+} from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { defImage } from "@/utils/const/const";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { Cancha } from "@/models";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
-
-  const [hab, setHab] = useState(data?.habilitada);
-
-  useEffect(() => {
-    setHab(() => data?.habilitada)
-  }, [data])
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
@@ -77,15 +73,16 @@ export default function CanchaInfoPage() {
   const { mutate } = useModificarCancha({
     onSuccess: () => {
       toast({
-        title: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}.`,
-        // description: `Cancha ${!hab ? 'habilitada' : 'deshabilitada'}`,
-        status: `${!hab ? 'info' : 'warning'}`,
+        title: `Cancha ${!data?.habilitada ? "habilitada" : "deshabilitada"}.`,
+        status: `${!data?.habilitada ? "info" : "warning"}`,
         isClosable: true,
       });
     },
     onError: () => {
       toast({
-        title: `Error al ${!hab ? 'habilitar' : 'deshabilitar'} la cancha`,
+        title: `Error al ${
+          !data?.habilitada ? "habilitar" : "deshabilitar"
+        } la cancha`,
         description: `Intente de nuevo.`,
         status: "error",
         isClosable: true,
@@ -93,14 +90,13 @@ export default function CanchaInfoPage() {
     },
   });
 
-  const handleSwitchChange = async () => {
-    const dataCancha: Cancha = { ...data, habilitada: !data.habilitada };
-    mutate(dataCancha)
-  };
-
   if (!data) {
-    return <p>Cargando...</p>;
+    return <LoadingSpinner />;
   }
+
+  const handleSwitchChange = () => {
+    mutate({ ...data, habilitada: !data.habilitada });
+  };
 
   const handleEliminar = () => {
     mutateDelete({ idEst: data.idEstablecimiento, idCancha: data.id });
@@ -148,12 +144,17 @@ export default function CanchaInfoPage() {
 
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
-                <Box>
-                    <HStack width='100%' display='flex' justifyContent='space-between'>
+                  <Box>
+                    <HStack
+                      width="100%"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
                       <Heading size="xs" textTransform="uppercase">
                         Habilitación
                       </Heading>
-                      <Switch isChecked={hab}
+                      <Switch
+                        isChecked={data.habilitada}
                         onChange={handleSwitchChange}
                       />
                     </HStack>
