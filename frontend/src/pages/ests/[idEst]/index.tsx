@@ -15,6 +15,7 @@ import {
   ModalOverlay,
   Stack,
   StackDivider,
+  Switch,
   Text,
   useDisclosure,
   useToast,
@@ -22,12 +23,14 @@ import {
 import {
   useEliminarEstablecimiento,
   useEstablecimientoByID,
+  useModificarEstablecimiento,
 } from "@/utils/api/establecimientos";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function CourtPage() {
   const { idEst } = useParams();
@@ -57,9 +60,43 @@ export default function CourtPage() {
     },
   });
 
+  const { mutate } = useModificarEstablecimiento({
+    onSuccess: () => {
+      // Usa `!data?.habilitado` porque data es el valor previo al cambio del back end.
+      toast({
+        title: `Establecimiento ${
+          !data?.habilitado ? "habilitado" : "deshabilitado"
+        }.`,
+        status: `${!data?.habilitado ? "info" : "warning"}`,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: `Error al ${
+          data?.habilitado ? "habilitar" : "deshabilitar"
+        } el establecimiento`,
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  if (!data) {
+    return <LoadingSpinner />;
+  }
+
   const handleEliminar = () => {
     mutateDelete(Number(data?.id));
     onClose();
+  };
+
+  const handleSwitchChange = () => {
+    mutate({
+      ...data,
+      habilitado: !data.habilitado,
+    });
   };
 
   return (
@@ -113,6 +150,25 @@ export default function CourtPage() {
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
+                    <HStack
+                      width="100%"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
+                      <Heading size="xs" textTransform="uppercase">
+                        Habilitación
+                      </Heading>
+                      <Switch
+                        isChecked={data.habilitado}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
+                    <Text fontSize="sm">
+                      Este establecimiento {data.habilitado ? "" : "no"} se
+                      encuentra habilitado
+                    </Text>
+                  </Box>
+                  <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Dirección
                     </Heading>
@@ -120,7 +176,7 @@ export default function CourtPage() {
                   </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
-                      Horario atencion
+                      Horario de atención
                     </Heading>
                     <Text fontSize="sm">{data?.horariosDeAtencion}</Text>
                   </Box>

@@ -15,23 +15,28 @@ import {
   ModalOverlay,
   Stack,
   StackDivider,
+  Switch,
   Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCanchaByID, useEliminarCancha } from "@/utils/api/canchas";
+import {
+  useCanchaByID,
+  useEliminarCancha,
+  useModificarCancha,
+} from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { GrSchedules } from "react-icons/gr";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
@@ -56,9 +61,33 @@ export default function CanchaInfoPage() {
     },
   });
 
+  const { mutate } = useModificarCancha({
+    onSuccess: () => {
+      toast({
+        title: `Cancha ${!data?.habilitada ? "habilitada" : "deshabilitada"}.`,
+        status: `${!data?.habilitada ? "info" : "warning"}`,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: `Error al ${
+          !data?.habilitada ? "habilitar" : "deshabilitar"
+        } la cancha`,
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
   if (!data) {
-    return <p>Cargando...</p>;
+    return <LoadingSpinner />;
   }
+
+  const handleSwitchChange = () => {
+    mutate({ ...data, habilitada: !data.habilitada });
+  };
 
   const handleEliminar = () => {
     mutateDelete({ idEst: data.idEstablecimiento, idCancha: data.id });
@@ -106,7 +135,28 @@ export default function CanchaInfoPage() {
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
-                    <Heading size="xs">Descripción</Heading>
+                    <HStack
+                      width="100%"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
+                      <Heading size="xs" textTransform="uppercase">
+                        Habilitación
+                      </Heading>
+                      <Switch
+                        isChecked={data.habilitada}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
+                    <Text fontSize="sm">
+                      Esta cancha {data.habilitada ? "" : "no"} se encuentra
+                      habilitada
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Heading size="xs" textTransform="uppercase">
+                      Descripción
+                    </Heading>
                     <Text fontSize="sm">{data.descripcion}</Text>
                   </Box>
                   <Box>
