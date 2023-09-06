@@ -148,6 +148,20 @@ export default function CanchaInfoPage() {
 
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
+                <Box>
+                    <HStack width='100%' display='flex' justifyContent='space-between'>
+                      <Heading size="xs" textTransform="uppercase">
+                        Habilitación
+                      </Heading>
+                      <Switch isChecked={hab}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
+                    <Text fontSize="sm">
+                      Esta cancha {data.habilitada ? "" : "no"} se encuentra
+                      habilitada
+                    </Text>
+                  </Box>
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Descripción
@@ -165,20 +179,6 @@ export default function CanchaInfoPage() {
                           {index !== data.disciplinas.length - 1 && " - "}
                         </React.Fragment>
                       ))}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <HStack width='100%' display='flex' justifyContent='space-between'>
-                      <Heading size="xs" textTransform="uppercase">
-                        Habilitación
-                      </Heading>
-                      <Switch isChecked={hab}
-                        onChange={handleSwitchChange}
-                      />
-                    </HStack>
-                    <Text fontSize="sm">
-                      Esta cancha {data.habilitada ? "" : "no"} se encuentra
-                      habilitada
                     </Text>
                   </Box>
 

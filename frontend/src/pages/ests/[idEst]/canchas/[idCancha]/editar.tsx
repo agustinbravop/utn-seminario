@@ -43,7 +43,6 @@ import {
   InputControl,
   SelectControl,
   SubmitButton,
-  SwitchControl,
 } from "@/components/forms";
 import { FormProvider, useFieldArray } from "react-hook-form";
 import { GrAddCircle } from "react-icons/gr";
@@ -261,13 +260,6 @@ export default function EditCourtPage() {
               }}
             />
           </FormControl>
-          <FormControl>
-            <SwitchControl
-              name="habilitada"
-              label="¿Esta habilitada?"
-            ></SwitchControl>
-          </FormControl>
-
           <VStack width="1100px" align="center">
             <VStack marginTop="20px" align="start" width="100%" px="281px">
               <Text fontWeight="bold">Disponibilidad horaria</Text>
