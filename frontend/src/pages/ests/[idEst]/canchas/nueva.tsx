@@ -1,18 +1,8 @@
-import React from "react";
 import { Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Heading,
-  HStack,
-  Input,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Heading, HStack, useToast, VStack } from "@chakra-ui/react";
 import { CrearCanchaReq, useCrearCancha } from "@/utils/api/canchas";
-import { InputControl, SubmitButton } from "@/components/forms";
+import { ImageControl, InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import * as Yup from "yup";
 import { useYupForm } from "@/hooks";
@@ -66,10 +56,6 @@ export default function NuevaCanchaPage() {
     },
   });
 
-  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
-  };
-
   return (
     <>
       <Heading textAlign="center" mt="40px" paddingBottom="60px">
@@ -101,27 +87,7 @@ export default function NuevaCanchaPage() {
               placeholder="Descripción"
               isRequired
             />
-            <FormControl>
-              <FormLabel marginTop="10px" marginLeft="10px">
-                Imagen
-              </FormLabel>
-              <Input
-                type="file"
-                name="imagen"
-                onChange={handleImagenChange}
-                accept="image/*"
-                sx={{
-                  "::file-selector-button": {
-                    height: 10,
-                    padding: 0,
-                    mr: 4,
-                    background: "none",
-                    border: "none",
-                    fontWeight: "bold",
-                  },
-                }}
-              />
-            </FormControl>
+            <ImageControl label="Imagen" name="imagen" />
           </VStack>
 
           <HStack justifyContent="flex-end" spacing={30}>

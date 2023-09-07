@@ -22,7 +22,8 @@ export type ModificarCanchaReq = Omit<Cancha, "urlImagen"> & {
 
 function modificarImagen(cancha: Cancha, imagen?: File) {
   if (!imagen) {
-    return cancha;
+    // No hay imagen nueva para modificar.
+    return Promise.resolve(cancha);
   }
 
   const formData = new FormData();

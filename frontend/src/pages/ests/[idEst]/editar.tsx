@@ -1,11 +1,8 @@
 import { useNavigate, useParams } from "@/router";
 import {
   Alert,
-  FormControl,
-  FormLabel,
   HStack,
   Heading,
-  Input,
   VStack,
   useToast,
   Button,
@@ -25,7 +22,7 @@ import {
 } from "@/utils/api/establecimientos";
 import * as Yup from "yup";
 import { FormProvider } from "react-hook-form";
-import { InputControl, SubmitButton } from "@/components/forms";
+import { ImageControl, InputControl, SubmitButton } from "@/components/forms";
 import { useYupForm } from "@/hooks/useYupForm";
 
 type FormState = ModificarEstablecimientoReq & {
@@ -53,14 +50,14 @@ export default function EditEstabPage() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data, isLoading } = useEstablecimientoByID(Number(idEst));
+  const { data } = useEstablecimientoByID(Number(idEst));
 
   const methods = useYupForm<FormState>({
     validationSchema,
     resetValues: data,
   });
 
-  const { mutate, isError } = useModificarEstablecimiento({
+  const { mutate, isLoading, isError } = useModificarEstablecimiento({
     onSuccess: () => {
       toast({
         title: "Establecimiento modificado",
@@ -79,10 +76,6 @@ export default function EditEstabPage() {
       });
     },
   });
-
-  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
-  };
 
   return (
     <div>
@@ -142,27 +135,7 @@ export default function EditEstabPage() {
             label="Horarios de Atención"
             placeholder="8:00-12:00"
           />
-          <FormControl>
-            <FormLabel marginTop="10px" marginLeft="10px">
-              Imagen
-            </FormLabel>
-            <Input
-              type="file"
-              name="imagen"
-              onChange={handleImagenChange}
-              accept="image/*"
-              sx={{
-                "::file-selector-button": {
-                  height: 10,
-                  padding: 0,
-                  mr: 4,
-                  background: "none",
-                  border: "none",
-                  fontWeight: "bold",
-                },
-              }}
-            />
-          </FormControl>
+          <ImageControl label="Imagen" name="imagen" />
 
           <HStack justifyContent="flex-end" spacing={30}>
             <Button onClick={() => navigate(-1)}>Cancelar</Button>
