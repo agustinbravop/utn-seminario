@@ -87,7 +87,6 @@ function NewEstab() {
         title: "Establecimiento creado.",
         description: `Establecimiento registrado correctamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -96,7 +95,6 @@ function NewEstab() {
         title: "Error al crear el establecimiento.",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

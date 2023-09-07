@@ -32,7 +32,6 @@ export default function FormDeleteDisponibilidad({
         title: "Disponibilidad eliminada.",
         description: `Disponibilidad eliminada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
     },
     onError: () => {
@@ -40,7 +39,6 @@ export default function FormDeleteDisponibilidad({
         title: "Error al eliminar la cancha",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

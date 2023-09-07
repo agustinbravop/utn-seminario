@@ -65,7 +65,6 @@ export default function EditCourtPage() {
         title: "Cancha modificada.",
         description: "Cancha modificada exitosamente.",
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -74,7 +73,6 @@ export default function EditCourtPage() {
         title: "Error al modificar la cancha",
         description: "Intente de nuevo.",
         status: "error",
-        isClosable: true,
       });
     },
   });

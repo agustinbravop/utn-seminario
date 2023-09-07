@@ -42,7 +42,6 @@ export default function NuevaCanchaPage() {
         title: "Cancha creada",
         description: `Cancha creada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -51,7 +50,6 @@ export default function NuevaCanchaPage() {
         title: "Error al crear la cancha",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

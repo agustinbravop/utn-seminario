@@ -63,7 +63,6 @@ export default function EditEstabPage() {
         title: "Establecimiento modificado",
         description: `Establecimiento modificado exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -72,7 +71,6 @@ export default function EditEstabPage() {
         title: "Error al modificar el establecimiento",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

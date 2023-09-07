@@ -38,7 +38,6 @@ export default function SuscripcionesPage() {
         title: "Nueva Suscripción",
         description: `Suscripción actualizada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-2);
     },
@@ -47,7 +46,6 @@ export default function SuscripcionesPage() {
         title: "Error al intentar cambiar de suscripción",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

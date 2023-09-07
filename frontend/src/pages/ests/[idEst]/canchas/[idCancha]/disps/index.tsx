@@ -49,7 +49,6 @@ export default function CanchaInfoPage() {
         title: "Disponibilidad modificada.",
         description: `El cambio se guardó exitosamente.`,
         status: "success",
-        isClosable: true,
       });
     },
     onError: () => {
@@ -57,7 +56,6 @@ export default function CanchaInfoPage() {
         title: "Error al modificar la disponibilidad.",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

@@ -2,7 +2,7 @@
  * Se sobreescriben los colores, para ajustarlos a nuestras paletas personalizadas.
  * Los valores por defecto se pueden ver en:
  * https://github.com/chakra-ui/chakra-ui/blob/main/packages/components/theme/src/foundations/colors.ts
- * App para generar una paleta: https://themera.vercel.app/
+ * Herramienta útil para generar una paleta: https://themera.vercel.app/
  */
 const colors = {
   // Se define el color `brand`, que representa el color principal de la app/marca/proyecto.

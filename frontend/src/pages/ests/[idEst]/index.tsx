@@ -46,7 +46,6 @@ export default function CourtPage() {
         title: "Establecimiento eliminado.",
         description: `Establecimiento eliminado exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(`/admin/${data?.idAdministrador}`);
     },
@@ -55,7 +54,6 @@ export default function CourtPage() {
         title: "Error al eliminar el establecimiento",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
@@ -68,7 +66,6 @@ export default function CourtPage() {
           !data?.habilitado ? "habilitado" : "deshabilitado"
         }.`,
         status: `${!data?.habilitado ? "info" : "warning"}`,
-        isClosable: true,
       });
     },
     onError: () => {
@@ -78,7 +75,6 @@ export default function CourtPage() {
         } el establecimiento`,
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

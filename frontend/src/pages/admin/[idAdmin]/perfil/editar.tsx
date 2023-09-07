@@ -63,7 +63,6 @@ export default function PerfilPage() {
         title: "Perfil actualizado",
         description: `Perfil actualizado exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -72,7 +71,6 @@ export default function PerfilPage() {
         title: "Error al intentar editar el perfil",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

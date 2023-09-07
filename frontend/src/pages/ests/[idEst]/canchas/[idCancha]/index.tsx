@@ -47,7 +47,6 @@ export default function CanchaInfoPage() {
         title: "Cancha Eliminada.",
         description: `Cancha Eliminada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -56,7 +55,6 @@ export default function CanchaInfoPage() {
         title: "Error al eliminar la cancha",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
@@ -66,7 +64,6 @@ export default function CanchaInfoPage() {
       toast({
         title: `Cancha ${!data?.habilitada ? "habilitada" : "deshabilitada"}.`,
         status: `${!data?.habilitada ? "info" : "warning"}`,
-        isClosable: true,
       });
     },
     onError: () => {
@@ -76,7 +73,6 @@ export default function CanchaInfoPage() {
         } la cancha`,
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

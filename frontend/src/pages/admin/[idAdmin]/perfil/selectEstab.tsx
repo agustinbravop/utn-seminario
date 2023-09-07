@@ -39,7 +39,6 @@ export default function SelectEstablecimiento() {
         title: "Nueva Suscripción",
         description: `Suscripción actualizada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(`/admin/${admin?.id}`);
     },
@@ -48,7 +47,6 @@ export default function SelectEstablecimiento() {
         title: "Error al intentar cambiar de suscripción",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
