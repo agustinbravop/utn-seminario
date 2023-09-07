@@ -10,6 +10,7 @@ import SubmitButton from "./SubmitButton";
 import SwitchControl from "./SwitchControl";
 import TextareaControl from "./TextareaControl";
 import BaseFormControl from "./BaseFormControl";
+import ImageControl from "./ImageControl";
 
 export {
   CheckboxGroupControl,
@@ -24,4 +25,5 @@ export {
   SwitchControl,
   TextareaControl,
   BaseFormControl,
+  ImageControl,
 };

@@ -13,7 +13,7 @@ import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Box } from "@chakra-ui/react";
-import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { useModificarEstablecimiento } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useQueryClient } from "@tanstack/react-query";
@@ -76,7 +76,7 @@ export default function DeletedEstablecimiento({
           src={
             !(establecimiento?.urlImagen === null)
               ? establecimiento?.urlImagen
-              : DEFAULT_IMAGE_SRC
+              : FALLBACK_IMAGE_SRC
           }
           borderTopRadius="lg"
           alt={`Imagen del establecimiento ${establecimiento.nombre}`}

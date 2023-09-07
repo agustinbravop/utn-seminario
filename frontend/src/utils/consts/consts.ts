@@ -1,7 +1,7 @@
 import { Dia } from "@/models";
+import fallbackImage from "@/assets/fallback_image.png";
 
-export const DEFAULT_IMAGE_SRC =
-  "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg";
+export const FALLBACK_IMAGE_SRC = fallbackImage;
 
 export const LOGO_IMAGE_SRC =
   "https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png";

@@ -56,7 +56,7 @@ export default function FormDisponibilidad({
 
   const button =
     variant === "crear" ? (
-      <Button my="0.5em"  leftIcon={<Icon as={GrAddCircle} />} onClick={onOpen}>
+      <Button my="0.5em" leftIcon={<Icon as={GrAddCircle} />} onClick={onOpen}>
         Agregar disponibilidad
       </Button>
     ) : (

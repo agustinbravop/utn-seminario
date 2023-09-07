@@ -28,7 +28,7 @@ import {
 } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import SubMenu from "@/components/SubMenu/SubMenu";
-import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { GrSchedules } from "react-icons/gr";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -120,8 +120,8 @@ export default function CanchaInfoPage() {
             >
               <Image
                 src={data?.urlImagen}
-                fallbackSrc={DEFAULT_IMAGE_SRC}
-                width="1000px"
+                fallbackSrc={FALLBACK_IMAGE_SRC}
+                maxWidth="20vw"
                 height="400px"
                 objectFit="cover"
                 borderRadius="10px"

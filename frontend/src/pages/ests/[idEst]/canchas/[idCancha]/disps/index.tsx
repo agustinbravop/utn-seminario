@@ -113,7 +113,7 @@ export default function CanchaInfoPage() {
           Hubo un error inesperado al intentar crear la disponibilidad. Intente
           de nuevo.
         </Alert>
-      )}  
+      )}
       <TableContainer pt="15px" pb="20px" mr="700px">
         <Table variant="simple" m="auto" size="sm">
           <Thead>

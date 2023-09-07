@@ -1,4 +1,3 @@
-import React from "react";
 import { Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import {
@@ -9,9 +8,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
-  FormControl,
-  FormLabel,
-  Input,
   VStack,
   Button,
   useToast,
@@ -32,6 +28,7 @@ import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
+import ImageControl from "@/components/forms/ImageControl";
 
 type FormState = ModificarCanchaReq & {
   imagen: File | undefined;
@@ -43,7 +40,7 @@ const validationSchema = Yup.object({
   descripcion: Yup.string().required("Obligatorio"),
   habilitada: Yup.bool().default(true),
   idEstablecimiento: Yup.number().required(),
-  imagen: Yup.mixed<File>().optional(),
+  imagen: Yup.mixed<File>().optional().nullable(),
   disciplinas: Yup.array(Yup.string().required()).required("Obligatorio"),
   disponibilidades: Yup.array(Yup.mixed<Disponibilidad>().required()).default(
     []
@@ -87,10 +84,6 @@ export default function EditCourtPage() {
     resetValues: data,
   });
 
-  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
-  };
-
   return (
     <>
       <Heading m="40px" textAlign="center">
@@ -116,27 +109,13 @@ export default function EditCourtPage() {
             placeholder="Descripción"
             isRequired
           />
-          <FormControl>
-            <FormLabel marginTop="10px" marginLeft="10px">
-              Imagen
-            </FormLabel>
-            <Input
-              type="file"
-              name="imagen"
-              onChange={handleImagenChange}
-              accept="image/*"
-              sx={{
-                "::file-selector-button": {
-                  height: 10,
-                  padding: 0,
-                  mr: 4,
-                  background: "none",
-                  border: "none",
-                  fontWeight: "bold",
-                },
-              }}
-            />
-          </FormControl>
+          <ImageControl
+            defaultImg={data?.urlImagen}
+            label="Imagen"
+            name="imagen"
+            mx="10px"
+          />
+
           <Container centerContent mt="10px">
             <HStack justifyContent="flex-end" spacing={30}>
               <Button onClick={() => navigate(-1)}>Cancelar</Button>
@@ -166,7 +145,10 @@ export default function EditCourtPage() {
                 <Button
                   colorScheme="blackAlpha"
                   backgroundColor="black"
-                  onClick={methods.handleSubmit((values) => mutate(values))}
+                  onClick={methods.handleSubmit((values) => {
+                    console.log(values);
+                    mutate(values);
+                  })}
                 >
                   Aceptar
                 </Button>

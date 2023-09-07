@@ -3,11 +3,8 @@ import {
   Alert,
   Button,
   Container,
-  FormControl,
-  FormLabel,
   HStack,
   Heading,
-  Input,
   VStack,
   useToast,
 } from "@chakra-ui/react";
@@ -17,7 +14,12 @@ import {
   useCrearEstablecimiento,
 } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { InputControl, SelectControl, SubmitButton } from "@/components/forms";
+import {
+  ImageControl,
+  InputControl,
+  SelectControl,
+  SubmitButton,
+} from "@/components/forms";
 import { useEffect, useState } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
@@ -111,10 +113,6 @@ function NewEstab() {
     methods.resetField("localidad");
   }, [provincia, methods]);
 
-  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    methods.setValue("imagen", e.target.files ? e.target.files[0] : undefined);
-  };
-
   return (
     <div>
       <Heading size="xl" margin="50px" textAlign="center">
@@ -189,27 +187,7 @@ function NewEstab() {
               label="Horarios de Atención"
               placeholder="8:00-12:00"
             />
-            <FormControl>
-              <FormLabel marginTop="10px" marginLeft="10px">
-                Imagen
-              </FormLabel>
-              <Input
-                type="file"
-                name="imagen"
-                onChange={handleImagenChange}
-                accept="image/*"
-                sx={{
-                  "::file-selector-button": {
-                    height: 10,
-                    padding: 0,
-                    mr: 4,
-                    background: "none",
-                    border: "none",
-                    fontWeight: "bold",
-                  },
-                }}
-              />
-            </FormControl>
+            <ImageControl label="Imagen" name="imagen" />
             <HStack justifyContent="flex-end" spacing={30}>
               <Button onClick={() => navigate(-1)}>Cancelar</Button>
               <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
