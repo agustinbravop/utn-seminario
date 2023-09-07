@@ -155,9 +155,7 @@ export default function CourtPage() {
                       display="flex"
                       justifyContent="space-between"
                     >
-                      <Heading size="xs" textTransform="uppercase">
-                        Habilitación
-                      </Heading>
+                      <Heading size="xs">Habilitación</Heading>
                       <Switch
                         isChecked={data.habilitado}
                         onChange={handleSwitchChange}
@@ -169,33 +167,23 @@ export default function CourtPage() {
                     </Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Dirección
-                    </Heading>
+                    <Heading size="xs">Dirección</Heading>
                     <Text fontSize="sm">{data?.direccion}</Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Horario de atención
-                    </Heading>
+                    <Heading size="xs">Horario de atención</Heading>
                     <Text fontSize="sm">{data?.horariosDeAtencion}</Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Correo de contacto
-                    </Heading>
+                    <Heading size="xs">Correo de contacto</Heading>
                     <Text fontSize="sm">{data?.correo}</Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Numero de teléfono
-                    </Heading>
+                    <Heading size="xs">Numero de teléfono</Heading>
                     <Text fontSize="sm">{data?.telefono}</Text>
                   </Box>
                   <Box height="100%">
-                    <Heading size="xs" textTransform="uppercase">
-                      Localidad
-                    </Heading>
+                    <Heading size="xs">Localidad</Heading>
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>

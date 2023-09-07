@@ -96,33 +96,23 @@ export default function PerfilPage() {
                 onSubmit={methods.handleSubmit(onOpen)}
               >
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Nombre
-                  </Heading>
+                  <Heading size="xs">Nombre</Heading>
                   <InputControl isRequired name="nombre" />
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    Apellido
-                  </Heading>
+                  <Heading size="xs">Apellido</Heading>
                   <InputControl isRequired name="apellido" />
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    usuario
-                  </Heading>
+                  <Heading size="xs">usuario</Heading>
                   <InputControl isRequired name="usuario" />
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    correo
-                  </Heading>
+                  <Heading size="xs">correo</Heading>
                   <InputControl isRequired name="correo" />
                 </Box>
                 <Box>
-                  <Heading size="xs" textTransform="uppercase">
-                    telefono
-                  </Heading>
+                  <Heading size="xs">telefono</Heading>
                   <InputControl isRequired name="telefono" />
                 </Box>
                 <Box display="flex" justifyContent="center" width="100%">

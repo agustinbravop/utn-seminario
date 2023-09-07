@@ -97,12 +97,7 @@ export default function CanchaInfoPage() {
   return (
     <>
       <SubMenu canchas={true} nombreCancha={data.nombre} />
-      <HStack
-        marginRight="16%"
-        marginLeft="16%"
-        marginBottom="30px"
-        marginTop="0px"
-      >
+      <HStack mr="16%" ml="16%" mb="30px" mt="0px">
         <Text>
           Esta es la información que se muestra al usuario de su cancha.
         </Text>
@@ -140,9 +135,7 @@ export default function CanchaInfoPage() {
                       display="flex"
                       justifyContent="space-between"
                     >
-                      <Heading size="xs" textTransform="uppercase">
-                        Habilitación
-                      </Heading>
+                      <Heading size="xs">Habilitación</Heading>
                       <Switch
                         isChecked={data.habilitada}
                         onChange={handleSwitchChange}
@@ -154,20 +147,13 @@ export default function CanchaInfoPage() {
                     </Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Descripción
-                    </Heading>
+                    <Heading size="xs">Descripción</Heading>
                     <Text fontSize="sm">{data.descripcion}</Text>
                   </Box>
                   <Box>
                     <Heading size="xs">Disciplinas</Heading>
-                    <Text fontSize="sm">{data.disciplinas.join(" - ")}</Text>
-                  </Box>
-                  <Box>
-                    <Heading size="xs">Habilitación</Heading>
                     <Text fontSize="sm">
-                      Esta cancha {data.habilitada ? "" : "no"} se encuentra
-                      habilitada
+                      {[...new Set(data.disciplinas)].join(" - ")}
                     </Text>
                   </Box>
 

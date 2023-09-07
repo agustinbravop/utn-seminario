@@ -3,13 +3,11 @@ import { useNavigate, useParams } from "react-router";
 import {
   Alert,
   Container,
-  FormHelperText,
   HStack,
   Heading,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
-  FormControl,
   VStack,
   Button,
   useToast,
@@ -26,7 +24,7 @@ import {
   useCanchaByID,
   useModificarCancha,
 } from "@/utils/api/canchas";
-import { InputControl, SubmitButton, SwitchControl } from "@/components/forms";
+import { InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
@@ -117,12 +115,6 @@ export default function EditCourtPage() {
             name="imagen"
             mx="10px"
           />
-          <FormControl>
-            <SwitchControl name="habilitada" label="¿Habilitada?" />
-            <FormHelperText m="0">
-              Una cancha deshabilitada no puede ser reservada por jugadores.
-            </FormHelperText>
-          </FormControl>
 
           <Container centerContent mt="10px">
             <HStack justifyContent="flex-end" spacing={30}>

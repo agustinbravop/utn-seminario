@@ -52,9 +52,11 @@ export default function FormDisponibilidad({
     resetValues,
   });
 
+  console.log(methods.getValues());
+
   const button =
     variant === "crear" ? (
-      <Button leftIcon={<Icon as={GrAddCircle} />} onClick={onOpen}>
+      <Button my="0.5em" leftIcon={<Icon as={GrAddCircle} />} onClick={onOpen}>
         Agregar disponibilidad
       </Button>
     ) : (
@@ -76,7 +78,9 @@ export default function FormDisponibilidad({
             onClose();
           })}
         >
-          <ModalHeader>Agregar disponibilidad</ModalHeader>
+          <ModalHeader>
+            {variant === "crear" ? "Agregar" : "Modificar"} disponibilidad
+          </ModalHeader>
           <ModalBody>
             <HStack width="600px" py="10px">
               <SelectControl

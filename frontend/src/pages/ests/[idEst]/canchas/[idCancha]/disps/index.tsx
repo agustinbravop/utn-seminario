@@ -103,8 +103,19 @@ export default function CanchaInfoPage() {
         Las reservas que sus clientes vayan a realizar, ocuparán una
         disponibilidad en la fecha reservada.
       </Text>
-      <TableContainer paddingTop="15px" paddingBottom="20px">
-        <Table variant="simple" size="sm">
+      <FormDisponibilidad
+        variant="crear"
+        onSubmit={handleCrearDisponibilidad}
+        resetValues={defaultDisponibilidad}
+      />
+      {isError && (
+        <Alert status="error" margin="20px">
+          Hubo un error inesperado al intentar crear la disponibilidad. Intente
+          de nuevo.
+        </Alert>
+      )}
+      <TableContainer pt="15px" pb="20px" mr="700px">
+        <Table variant="simple" m="auto" size="sm">
           <Thead>
             <Tr>
               <Th>Disciplina</Th>
@@ -122,7 +133,7 @@ export default function CanchaInfoPage() {
                   {d.horaInicio} - {d.horaFin}
                 </Td>
                 <Td> ${d.precioReserva} </Td>
-                <Td>{d.dias.join(" - ")}</Td>
+                <Td>{d.dias.sort().join(" - ")}</Td>
                 <Td display="flex" gap="10px" p="0.2em">
                   <FormDisponibilidad
                     variant="modificar"
@@ -145,18 +156,6 @@ export default function CanchaInfoPage() {
           </Tbody>
         </Table>
       </TableContainer>
-
-      <FormDisponibilidad
-        variant="crear"
-        onSubmit={handleCrearDisponibilidad}
-        resetValues={defaultDisponibilidad}
-      />
-      {isError && (
-        <Alert status="error" margin="20px">
-          Hubo un error inesperado al intentar crear la disponibilidad. Intente
-          de nuevo.
-        </Alert>
-      )}
     </>
   );
 }
