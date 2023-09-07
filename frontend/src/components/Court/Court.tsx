@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
-import { DEFAULT_IMAGE_SRC } from "@/utils/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons";
 
 type estabProps = {
@@ -30,7 +30,7 @@ export default function Court({ cancha }: estabProps) {
           src={
             !(cancha?.urlImagen === null)
               ? cancha?.urlImagen
-              : DEFAULT_IMAGE_SRC
+              : FALLBACK_IMAGE_SRC
           }
           alt={`Imagen del cancha ${cancha.nombre}`}
           objectFit="cover"

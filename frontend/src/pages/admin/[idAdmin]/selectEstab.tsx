@@ -3,7 +3,7 @@ import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
 } from "@/utils/api/establecimientos";
-import { DEFAULT_IMAGE_SRC } from "@/utils/consts/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import { useState } from "react";
 import {
   Button,
@@ -50,7 +50,7 @@ export default function SelectEstablecimiento() {
       >
         <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
           <Image
-            src={e.urlImagen || DEFAULT_IMAGE_SRC}
+            src={e.urlImagen || FALLBACK_IMAGE_SRC}
             borderTopRadius="lg"
             alt={`Imagen del establecimiento ${e.nombre}`}
             objectFit="cover"
