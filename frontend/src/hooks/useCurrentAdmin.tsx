@@ -80,7 +80,6 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
             title: "La sesión actual venció.",
             description: "Por favor inicie sesión de nuevo.",
             status: "error",
-            isClosable: true,
           });
         }
       }

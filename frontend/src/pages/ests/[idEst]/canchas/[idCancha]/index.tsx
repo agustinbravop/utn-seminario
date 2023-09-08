@@ -6,18 +6,10 @@ import {
   HStack,
   Heading,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   StackDivider,
   Switch,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,12 +24,12 @@ import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { GrSchedules } from "react-icons/gr";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { ConfirmSubmitButton } from "@/components/forms";
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -47,7 +39,6 @@ export default function CanchaInfoPage() {
         title: "Cancha Eliminada.",
         description: `Cancha Eliminada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -56,7 +47,6 @@ export default function CanchaInfoPage() {
         title: "Error al eliminar la cancha",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
@@ -66,7 +56,6 @@ export default function CanchaInfoPage() {
       toast({
         title: `Cancha ${!data?.habilitada ? "habilitada" : "deshabilitada"}.`,
         status: `${!data?.habilitada ? "info" : "warning"}`,
-        isClosable: true,
       });
     },
     onError: () => {
@@ -76,7 +65,6 @@ export default function CanchaInfoPage() {
         } la cancha`,
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
@@ -87,11 +75,6 @@ export default function CanchaInfoPage() {
 
   const handleSwitchChange = () => {
     mutate({ ...data, habilitada: !data.habilitada });
-  };
-
-  const handleEliminar = () => {
-    mutateDelete({ idEst: data.idEstablecimiento, idCancha: data.id });
-    onClose();
   };
 
   return (
@@ -167,13 +150,20 @@ export default function CanchaInfoPage() {
                       <Link to="editar">
                         <Button leftIcon={<EditIcon />}>Editar</Button>
                       </Link>
-                      <Button
-                        onClick={onOpen}
+                      <ConfirmSubmitButton
                         colorScheme="red"
+                        onSubmit={() =>
+                          mutateDelete({
+                            idEst: data.idEstablecimiento,
+                            idCancha: data.id,
+                          })
+                        }
+                        header="Eliminar cancha"
+                        body="¿Está seguro de eliminar la cancha?"
                         leftIcon={<DeleteIcon />}
                       >
                         Eliminar
-                      </Button>
+                      </ConfirmSubmitButton>
                     </HStack>
                   </Box>
                 </Stack>
@@ -182,27 +172,6 @@ export default function CanchaInfoPage() {
           </CardBody>
         </Card>
       </Box>
-
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Eliminar cancha</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>¿Está seguro de eliminar la cancha?</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button
-              colorScheme="blackAlpha"
-              backgroundColor="black"
-              onClick={handleEliminar}
-            >
-              Aceptar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </>
   );
 }

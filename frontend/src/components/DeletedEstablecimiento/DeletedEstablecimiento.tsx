@@ -39,7 +39,6 @@ export default function DeletedEstablecimiento({
         title: "Establecimiento recuperado",
         description: `Establecimiento recuperado exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       queryClient.refetchQueries(["establecimientos"]);
       onRecuperar();
@@ -49,7 +48,6 @@ export default function DeletedEstablecimiento({
         title: "Error al recuperarel establecimiento",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
@@ -64,7 +62,6 @@ export default function DeletedEstablecimiento({
         title: "Límite de establecimientos alcanzado",
         description: `Elimine otro establecimiento para recuperar este o mejore su suscripción para tener más establecimientos.`,
         status: "warning",
-        isClosable: true,
       });
     }
   };

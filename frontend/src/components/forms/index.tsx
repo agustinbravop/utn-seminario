@@ -7,6 +7,7 @@ import RadioGroupControl from "./RadioGroupControl";
 import SelectControl from "./SelectControl";
 import SliderControl from "./SliderControl";
 import SubmitButton from "./SubmitButton";
+import ConfirmSubmitButton from "./ConfirmSubmitButton";
 import SwitchControl from "./SwitchControl";
 import TextareaControl from "./TextareaControl";
 import BaseFormControl from "./BaseFormControl";
@@ -22,6 +23,7 @@ export {
   SelectControl,
   SliderControl,
   SubmitButton,
+  ConfirmSubmitButton,
   SwitchControl,
   TextareaControl,
   BaseFormControl,

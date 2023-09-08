@@ -6,18 +6,10 @@ import {
   CardBody,
   HStack,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   StackDivider,
   Switch,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import {
@@ -31,10 +23,10 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { ConfirmSubmitButton } from "@/components/forms";
 
 export default function CourtPage() {
   const { idEst } = useParams();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -46,7 +38,6 @@ export default function CourtPage() {
         title: "Establecimiento eliminado.",
         description: `Establecimiento eliminado exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(`/admin/${data?.idAdministrador}`);
     },
@@ -55,7 +46,6 @@ export default function CourtPage() {
         title: "Error al eliminar el establecimiento",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
@@ -68,7 +58,6 @@ export default function CourtPage() {
           !data?.habilitado ? "habilitado" : "deshabilitado"
         }.`,
         status: `${!data?.habilitado ? "info" : "warning"}`,
-        isClosable: true,
       });
     },
     onError: () => {
@@ -78,7 +67,6 @@ export default function CourtPage() {
         } el establecimiento`,
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
@@ -86,11 +74,6 @@ export default function CourtPage() {
   if (!data) {
     return <LoadingSpinner />;
   }
-
-  const handleEliminar = () => {
-    mutateDelete(Number(data?.id));
-    onClose();
-  };
 
   const handleSwitchChange = () => {
     mutate({
@@ -196,16 +179,18 @@ export default function CourtPage() {
                     >
                       <Link to="editar">
                         <Button mr="30px" leftIcon={<EditIcon />}>
-                          Editar{" "}
+                          Editar
                         </Button>
                       </Link>
-                      <Button
-                        onClick={onOpen}
+                      <ConfirmSubmitButton
                         colorScheme="red"
                         leftIcon={<DeleteIcon />}
+                        header="Eliminar establecimiento"
+                        body="¿Está seguro de eliminar el establecimiento?"
+                        onSubmit={() => mutateDelete(Number(data?.id))}
                       >
                         Eliminar
-                      </Button>
+                      </ConfirmSubmitButton>
                     </Box>
                   </Box>
                 </Stack>
@@ -213,26 +198,6 @@ export default function CourtPage() {
             </Box>
           </CardBody>
         </Card>
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Eliminar establecimiento</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>¿Está seguro de eliminar el establecimiento?</ModalBody>
-            <ModalFooter>
-              <Button colorScheme="gray" mr={3} onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button
-                colorScheme="blackAlpha"
-                backgroundColor="black"
-                onClick={handleEliminar}
-              >
-                Aceptar
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
       </Box>
     </>
   );

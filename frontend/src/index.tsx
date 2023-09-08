@@ -5,12 +5,13 @@ import { CurrentAdminProvider } from "./hooks/useCurrentAdmin";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "./themes";
 import { CurrentJugadorProvider } from "./hooks/useCurrentJugador";
+import toastOptions from "./themes/toastOptions";
 
 const queryClient = new QueryClient();
 
 const root = document.getElementById("root")!;
 ReactDOM.createRoot(root).render(
-  <ChakraProvider theme={theme}>
+  <ChakraProvider theme={theme} toastOptions={toastOptions}>
     <QueryClientProvider client={queryClient}>
       <CurrentAdminProvider>
         <CurrentJugadorProvider>
