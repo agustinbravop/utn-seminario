@@ -1,30 +1,13 @@
 import { Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
-import {
-  Alert,
-  Container,
-  HStack,
-  Heading,
-  useDisclosure,
-} from "@chakra-ui/react";
-import {
-  VStack,
-  Button,
-  useToast,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from "@chakra-ui/react";
+import { Alert, Container, HStack, Heading } from "@chakra-ui/react";
+import { VStack, Button, useToast } from "@chakra-ui/react";
 import {
   ModificarCanchaReq,
   useCanchaByID,
   useModificarCancha,
 } from "@/utils/api/canchas";
-import { InputControl, SubmitButton } from "@/components/forms";
+import { ConfirmSubmitButton, InputControl } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
@@ -48,11 +31,6 @@ const validationSchema = Yup.object({
 });
 
 export default function EditCourtPage() {
-  const {
-    isOpen: confirmIsOpen,
-    onOpen: confirmOnOpen,
-    onClose: confirmOnClose,
-  } = useDisclosure();
   const { idEst, idCancha } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
@@ -88,13 +66,7 @@ export default function EditCourtPage() {
         Editar Cancha
       </Heading>
       <FormProvider {...methods}>
-        <VStack
-          as="form"
-          onSubmit={methods.handleSubmit(confirmOnOpen)}
-          spacing="24px"
-          width="400px"
-          m="auto"
-        >
+        <VStack as="form" spacing="24px" width="400px" m="auto">
           <InputControl
             name="nombre"
             label="Nombre de la cancha"
@@ -117,7 +89,14 @@ export default function EditCourtPage() {
           <Container centerContent mt="10px">
             <HStack justifyContent="flex-end" spacing={30}>
               <Button onClick={() => navigate(-1)}>Cancelar</Button>
-              <SubmitButton isLoading={isLoading}>Modificar</SubmitButton>
+              <ConfirmSubmitButton
+                isLoading={isLoading}
+                header="Modificar cancha"
+                body="¿Está seguro de modificar la información de la cancha?"
+                onSubmit={methods.handleSubmit((values) => mutate(values))}
+              >
+                Modificar
+              </ConfirmSubmitButton>
             </HStack>
             {isError && (
               <Alert status="error">
@@ -126,33 +105,6 @@ export default function EditCourtPage() {
               </Alert>
             )}
           </Container>
-
-          <Modal isOpen={confirmIsOpen} onClose={confirmOnClose} isCentered>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Modificar cancha</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                ¿Está seguro de modificar la información de la cancha?
-              </ModalBody>
-
-              <ModalFooter>
-                <Button colorScheme="gray" mr={3} onClick={confirmOnClose}>
-                  Cancelar
-                </Button>
-                <Button
-                  colorScheme="blackAlpha"
-                  backgroundColor="black"
-                  onClick={methods.handleSubmit((values) => {
-                    console.log(values);
-                    mutate(values);
-                  })}
-                >
-                  Aceptar
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
         </VStack>
       </FormProvider>
     </>
