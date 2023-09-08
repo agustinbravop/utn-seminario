@@ -1,5 +1,5 @@
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { defImage } from "@/utils/const/const";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import {
   Card,
   CardBody,
@@ -31,7 +31,7 @@ export default function DetailEstablecimiento() {
         <CardHeader>
           <Box>
             <Image
-              src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
+              src={!(data?.urlImagen === null) ? data?.urlImagen : FALLBACK_IMAGE_SRC}
               width="500px"
               height="200px"
               objectFit="cover"

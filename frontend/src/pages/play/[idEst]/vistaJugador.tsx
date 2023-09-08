@@ -3,9 +3,6 @@ import {
   Box,
   HStack,
   Heading,
-  Tab,
-  TabIndicator,
-  TabList,
   Tabs,
 } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
@@ -43,12 +40,6 @@ export default function VistaJugador() {
             onChange={handleChangeIndex}
             pb='10px'
           >
-            <TabIndicator
-              mt="-1.5px"
-              height="2px"
-              bg="blue.500"
-              borderRadius="1px"
-            />
           </Tabs>
         </HStack>
         <SwipeableViews index={activeIndex} onChangeIndex={handleChangeIndex}>

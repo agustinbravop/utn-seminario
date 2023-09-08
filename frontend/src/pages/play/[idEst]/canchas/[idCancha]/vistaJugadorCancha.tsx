@@ -21,8 +21,9 @@ import {
 } from "@chakra-ui/react";
 import { useCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import { defImage } from "@/utils/const/const";
+
 import React, { useState } from "react";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -53,7 +54,7 @@ export default function VistaJugadorCancha() {
           <CardHeader>
           <Box justifyContent='center' display='flex'>
                 <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
+                  src={!(data?.urlImagen === null) ? data?.urlImagen : FALLBACK_IMAGE_SRC}
                   width="300px"
                   height="200px"
                   objectFit="cover"

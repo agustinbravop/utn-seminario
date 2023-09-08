@@ -35,12 +35,6 @@ export default function JugadorPage() {
             index={activeIndex}
             onChange={handleChangeIndex}
           >
-            <TabIndicator
-              mt="-1.5px"
-              height="2px"
-              bg="blue.500"
-              borderRadius="1px"
-            />
           </Tabs>
         </HStack>
         <SwipeableViews index={activeIndex} onChangeIndex={handleChangeIndex}>

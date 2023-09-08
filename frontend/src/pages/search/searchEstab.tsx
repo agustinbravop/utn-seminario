@@ -31,7 +31,7 @@ type Provincia = {
 };
 
 export default function SearchEstab() {
-  const { data } = useEstablecimientosPlayer();
+  const {data} = useEstablecimientosPlayer();
 
   const [filtro, setFiltro] = useState("");
   const [localidades, setLocalidades] = useState<string[]>([]);
