@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { AdministradorServiceImpl } from "../services/administrador";
-import { Administrador } from "../models/administrador";
+import { Administrador } from "../models/administrador.js";
 
 export class AdministradorHandler {
   private service: AdministradorServiceImpl;

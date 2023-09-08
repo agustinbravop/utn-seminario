@@ -18,7 +18,9 @@ type estabProps = {
 
 export default function CanchaJugador({ cancha }: estabProps) {
   return (
-    <Link to={`/play/${cancha.idEstablecimiento}/canchas/${cancha.id}/vistaJugadorCancha`}>
+    <Link
+      to={`/play/${cancha.idEstablecimiento}/canchas/${cancha.id}/vistaJugadorCancha`}
+    >
       <Card
         width="300px"
         height="370px"
@@ -27,7 +29,11 @@ export default function CanchaJugador({ cancha }: estabProps) {
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
         <Image
-          src={!(cancha?.urlImagen === null) ? cancha?.urlImagen : FALLBACK_IMAGE_SRC}
+          src={
+            !(cancha?.urlImagen === null)
+              ? cancha?.urlImagen
+              : FALLBACK_IMAGE_SRC
+          }
           alt={`Imagen del cancha ${cancha.nombre}`}
           objectFit="cover"
           borderTopRadius="lg"

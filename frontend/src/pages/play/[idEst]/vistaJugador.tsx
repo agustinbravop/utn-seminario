@@ -1,10 +1,5 @@
 import { useParams } from "react-router";
-import {
-  Box,
-  HStack,
-  Heading,
-  Tabs,
-} from "@chakra-ui/react";
+import { Box, HStack, Heading, Tabs } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
@@ -38,22 +33,22 @@ export default function VistaJugador() {
             variant="unstyled"
             index={activeIndex}
             onChange={handleChangeIndex}
-            pb='10px'
-          >
-          </Tabs>
+            pb="10px"
+          ></Tabs>
         </HStack>
         <SwipeableViews index={activeIndex} onChangeIndex={handleChangeIndex}>
           <DetailEstablecimiento />
           <>
-            <Heading textAlign='center'>¡Reservá ahora!</Heading>
+            <Heading textAlign="center">¡Reservá ahora!</Heading>
             <ReservaForm />
           </>
           <>
             <Heading>Canchas</Heading>
             <HStack display="flex" flexWrap="wrap" justifyContent="left">
-              {canchas.data.map((c, index) => c.habilitada && (
-                <CanchaJugador key={index} cancha={c} />
-              ))}
+              {canchas.data.map(
+                (c, index) =>
+                  c.habilitada && <CanchaJugador key={index} cancha={c} />
+              )}
             </HStack>
           </>
         </SwipeableViews>

@@ -67,7 +67,7 @@ export default function SearchEstab() {
     const provinciaSelect = prov.toLowerCase();
     const localidadSelect = localidad.toLowerCase();
     const deporteSelect = deporte.toLowerCase(); //Este filtro necesita realizar la validacion con el back directamente
-                                                //xq a nivel front no tengo las disponibilidades
+    //xq a nivel front no tengo las disponibilidades
 
     //Aca me fijo si cuales son los fltros que cumplen y los devuelvo
     //Van en variables para que no se haga tan largo abajo
@@ -80,7 +80,9 @@ export default function SearchEstab() {
       !localidadSelect ||
       establecimiento.localidad.toLowerCase() === localidadSelect;
 
-    return filtroNombre && filtroProvincia && filtroLocalidad /* && filtroDeporte*/;
+    return (
+      filtroNombre && filtroProvincia && filtroLocalidad /* && filtroDeporte*/
+    );
   });
 
   return (
@@ -127,7 +129,9 @@ export default function SearchEstab() {
           </HStack>
           <Select
             placeholder="Disciplina"
-            onChange={(e) => {setDeporte(e.target.value)}}
+            onChange={(e) => {
+              setDeporte(e.target.value);
+            }}
           >
             <option key="Basket">Basket</option>
             <option key="Futbol">Futbol</option>

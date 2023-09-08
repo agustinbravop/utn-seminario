@@ -1,11 +1,5 @@
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
-import {
-  Box,
-  HStack,
-  Heading,
-  TabIndicator,
-  Tabs,
-} from "@chakra-ui/react";
+import { Box, HStack, Heading, TabIndicator, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import SearchEstab from "@/pages/search/searchEstab";
