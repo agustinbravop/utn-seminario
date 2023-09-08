@@ -17,15 +17,15 @@ import {
   useEstablecimientoByID,
   useModificarEstablecimiento,
 } from "@/utils/api/establecimientos";
-import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { ConfirmSubmitButton } from "@/components/forms";
+import { EstablecimientoMenu } from "@/components/navigation";
 
-export default function CourtPage() {
+export default function EstablecimientoInfoPage() {
   const { idEst } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
@@ -84,7 +84,7 @@ export default function CourtPage() {
 
   return (
     <>
-      <SubMenu />
+      <EstablecimientoMenu />
       <HStack
         marginRight="16%"
         marginLeft="16%"

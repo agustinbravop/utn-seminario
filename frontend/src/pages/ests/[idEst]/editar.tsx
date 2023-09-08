@@ -40,7 +40,7 @@ const validationSchema = Yup.object({
   imagen: Yup.mixed<File>().optional(),
 });
 
-export default function EditEstabPage() {
+export default function EstablecimientoEditarPage() {
   const navigate = useNavigate();
   const { idEst } = useParams("/ests/:idEst");
   const toast = useToast();
