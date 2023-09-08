@@ -1,5 +1,5 @@
 import { Button, HStack, Image, Text } from "@chakra-ui/react";
-import NotFoundPageIllustrationSvg from "@/assets/svg/not_found_page_illustration.svg";
+import NotFoundPageIllustrationSvg from "@/assets/not_found_page_illustration.svg";
 import { useNavigate } from "@/router";
 
 // `NotFoundPage` es tratado por el generouted plugin, si no encuentra una página correspondiente a la url.

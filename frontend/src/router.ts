@@ -11,10 +11,12 @@ export type Path =
   | `/admin/:idAdmin/perfil`
   | `/admin/:idAdmin/perfil/editar`
   | `/admin/:idAdmin/perfil/editarSuscripcion`
+  | `/admin/:idAdmin/perfil/selectEstab`
   | `/admin/:idAdmin/selectEstab`
   | `/ests/:idEst`
   | `/ests/:idEst/canchas`
   | `/ests/:idEst/canchas/:idCancha`
+  | `/ests/:idEst/canchas/:idCancha/disps`
   | `/ests/:idEst/canchas/:idCancha/editar`
   | `/ests/:idEst/canchas/nueva`
   | `/ests/:idEst/editar`
@@ -36,10 +38,12 @@ export type Params = {
   '/admin/:idAdmin/perfil': { idAdmin: string }
   '/admin/:idAdmin/perfil/editar': { idAdmin: string }
   '/admin/:idAdmin/perfil/editarSuscripcion': { idAdmin: string }
+  '/admin/:idAdmin/perfil/selectEstab': { idAdmin: string }
   '/admin/:idAdmin/selectEstab': { idAdmin: string }
   '/ests/:idEst': { idEst: string }
   '/ests/:idEst/canchas': { idEst: string }
   '/ests/:idEst/canchas/:idCancha': { idEst: string; idCancha: string }
+  '/ests/:idEst/canchas/:idCancha/disps': { idEst: string; idCancha: string }
   '/ests/:idEst/canchas/:idCancha/editar': { idEst: string; idCancha: string }
   '/ests/:idEst/canchas/nueva': { idEst: string }
   '/ests/:idEst/editar': { idEst: string }

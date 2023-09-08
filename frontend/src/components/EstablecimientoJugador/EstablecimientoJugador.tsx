@@ -12,7 +12,7 @@ import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
-import { defImage } from "@/utils/const/const";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
@@ -35,7 +35,7 @@ export default function EstablecimientoJugador({
             src={
               !(establecimiento?.urlImagen === null)
                 ? establecimiento?.urlImagen
-                : defImage
+                : FALLBACK_IMAGE_SRC
             }
             borderTopRadius="lg"
             alt={`Imagen del establecimiento ${establecimiento.nombre}`}
@@ -44,7 +44,6 @@ export default function EstablecimientoJugador({
             width="80%"
             mt='5px'
             ml='0.8rem'
-            
           />
         </Box>
         <CardBody height="100%">

@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import { post, JWT, API_URL } from ".";
+import { post, JWT, API_URL, get } from ".";
 import { Administrador, Jugador, Suscripcion, Tarjeta } from "@/models";
 import { writeLocalStorage } from "../storage/localStorage";
 import {
@@ -30,6 +30,20 @@ type Usuario =
       jugador: Jugador;
     };
 
+/**
+ * Helper function que toma un token, lo escribe a localStorage,
+ * y devuelve su payload decodificado.
+ */
+function captureToken(jwt: JWT) {
+  writeLocalStorage("token", jwt);
+  const payload: Usuario = jwtDecode(jwt.token);
+  return payload;
+}
+
+export async function refreshToken() {
+  return get<JWT>(`${API_URL}/auth/token`).then(captureToken);
+}
+
 export function useLogin(
   options?: UseApiMutationOptions<
     { correoOUsuario: string; clave: string },
@@ -39,11 +53,7 @@ export function useLogin(
   return useApiMutation({
     ...options,
     mutationFn: (loginAdminReq) =>
-      post<JWT>(`${API_URL}/auth/login`, loginAdminReq).then((data) => {
-        writeLocalStorage("token", data);
-        const payload: Usuario = jwtDecode(data.token);
-        return payload;
-      }),
+      post<JWT>(`${API_URL}/auth/login`, loginAdminReq).then(captureToken),
   });
 }
 
@@ -71,5 +81,8 @@ export function useRegistrarJugador(
 }
 
 export function useSuscripciones(options?: UseApiQueryOptions<Suscripcion[]>) {
-  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, options);
+  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, {
+    ...options,
+    initialData: [],
+  });
 }

@@ -15,7 +15,7 @@ export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
 export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
   urlImagen: true,
   id: true,
-  eliminado: true,
+  //eliminado: true,
 });
 
 export class EstablecimientoHandler {
@@ -57,6 +57,15 @@ export class EstablecimientoHandler {
       const idAdmin = Number(req.params.idAdmin);
 
       const ests = await this.service.getByAdminID(idAdmin);
+      res.status(200).json(ests);
+    };
+  }
+
+  getEstablecimientosEliminadosByAdminID(): RequestHandler {
+    return async (req, res) => {
+      const idAdmin = Number(req.params.idAdmin);
+
+      const ests = await this.service.getDeletedByAdminID(idAdmin);
       res.status(200).json(ests);
     };
   }

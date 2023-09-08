@@ -4,15 +4,41 @@ import { readLocalStorage } from "../utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
 import { JWT } from "../utils/api";
 import { useToast } from "@chakra-ui/react";
+import { refreshToken } from "@/utils/api/auth";
 
 interface ICurrentAdminContext {
-  currentAdmin?: Administrador;
+  admin: Administrador;
   logout: () => void;
+  /** isAdmin indica si hay un administrador logueado actualmente. */
+  isAdmin: boolean;
 }
 
 interface CurrentAdminProviderProps {
   children?: React.ReactNode;
 }
+
+// Este admin nunca debería ser utilizado.
+const PLACEHOLDER_ADMIN = {
+  id: 0,
+  nombre: "Usuario",
+  apellido: "Admin",
+  correo: "admin@example.com",
+  suscripcion: {
+    id: 0,
+    nombre: "Suscripción",
+    limiteEstablecimientos: 0,
+    costoMensual: 4000,
+  },
+  telefono: "00000000",
+  usuario: "usuarioadmin",
+  tarjeta: {
+    id: 0,
+    cvv: 0,
+    numero: "0000000000000000",
+    nombre: "USUARIO ADMIN",
+    vencimiento: "01/31",
+  },
+};
 
 const CurrentAdminContext = createContext<ICurrentAdminContext | undefined>(
   undefined
@@ -36,8 +62,11 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     setCurrentAdmin(usuario);
   };
 
+  useEffect(() => {});
+
   useEffect(() => {
     updateCurrentAdmin();
+    refreshToken();
 
     // Se ejecuta cuando el token del localStorage cambia, normalmente al login o logout.
     // También se borra cuando una request es rechazada con un status `401 Unauthorized`.
@@ -51,7 +80,6 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
             title: "La sesión actual venció.",
             description: "Por favor inicie sesión de nuevo.",
             status: "error",
-            isClosable: true,
           });
         }
       }
@@ -68,17 +96,27 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     setCurrentAdmin(undefined);
   };
 
+  const isAdmin = Boolean(currentAdmin);
+  const admin: Administrador = currentAdmin ?? PLACEHOLDER_ADMIN;
+
   return (
-    <CurrentAdminContext.Provider value={{ currentAdmin, logout }}>
+    <CurrentAdminContext.Provider value={{ admin, logout, isAdmin }}>
       {children}
     </CurrentAdminContext.Provider>
   );
 }
 
+/**
+ * Este hook asume que siempre es usado desde una página accesible por un administrador y
+ * que por ende siempre existe un admin logueado, por eso siempre habrá un valor en `admin`
+ * .
+ * Si se desea validar si el usuario está logueado como admin o no, se debe usar `isAdmin`.
+ */
 export function useCurrentAdmin() {
   const context = useContext(CurrentAdminContext);
   if (context === undefined) {
     throw new Error("Usar context dentro de un CurrentAdminProvider");
   }
+
   return context;
 }

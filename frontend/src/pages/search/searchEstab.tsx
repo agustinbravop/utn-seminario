@@ -127,13 +127,13 @@ export default function SearchEstab() {
           </HStack>
           <Select
             placeholder="Disciplina"
-            onChange={(e) => {setDeporte(e.target.value); console.log(e.target.value)}}
+            onChange={(e) => {setDeporte(e.target.value)}}
           >
             <option key="Basket">Basket</option>
             <option key="Futbol">Futbol</option>
             <option key="Tenis">Tenis</option>
             <option key="Padel">Padel</option>
-            <option key="Nada">Nada</option>
+            <option key="Otra">Otra</option>
           </Select>
         </VStack>
       </Box>

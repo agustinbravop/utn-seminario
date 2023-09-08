@@ -24,14 +24,17 @@ export function useModificarAdministrador(
 
 export function useCambiarSuscripcion(
   options?: UseApiMutationOptions<
-    { idAdmin: number; idSuscripcion: number },
+    { id: number; idSuscripcion: number },
     Administrador
   >
 ) {
   return useApiMutation({
     ...options,
-    mutationFn: (data) =>
-      patch<Administrador>(`${API_URL}/administradores/${data.id}`, data)
+    mutationFn: ({ id, idSuscripcion }) =>
+      patch<Administrador>(`${API_URL}/administradores/${id}`, {
+        id,
+        suscripcion: { id: idSuscripcion },
+      })
         .then(() => get<JWT>(`${API_URL}/auth/token`))
         .then((data) => {
           writeLocalStorage("token", data);

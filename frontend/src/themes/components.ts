@@ -1,7 +1,8 @@
 /**
- * A los componentes `Input` y `Form` se les agrega una variant 'floating' que genera un floating label.
- * Cuando el Input no tiene valores ni está focuseado, el label está por encima suyo y
- * tapa el placeholder. Caso contrario, el label flota hacia arriba.
+ * A los componentes `Input` y `Form` se les agrega una variant 'floating'
+ * que simula un "floating label". Cuando el Input no tiene valores ni está focuseado,
+ * el label está por encima suyo y tapa el placeholder.
+ * Caso contrario, el label flota hacia arriba.
  */
 const components = {
   Input: {

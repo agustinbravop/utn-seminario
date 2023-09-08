@@ -46,6 +46,7 @@ export function useEstablecimientosByAdminID(
   );
 }
 
+<<<<<<< HEAD
 //PROVISIONAL
 export function useEstablecimientosPlayer(
   options?: UseApiQueryOptions<Establecimiento[]>
@@ -53,6 +54,15 @@ export function useEstablecimientosPlayer(
   return useApiQuery(
     ["establecimientos", "jugador"],
     `${API_URL}/establecimientos/jugador`,
+=======
+export function useEstablecimientosEliminadosByAdminID(
+  idAdmin: number,
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "deleted", "byAdmin", idAdmin],
+    `${API_URL}/establecimientos/byAdmin/deleted/${idAdmin}`,
+>>>>>>> 1c57dccc7624e6c15b4fd444e37c9360d4663979
     { ...options, initialData: [] }
   );
 }

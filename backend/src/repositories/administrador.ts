@@ -32,7 +32,7 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
         },
       });
       return await this.getAdministradorByID(id);
-    } catch (e) {
+    } catch {
       throw new InternalServerError(
         "Error interno al intentar modificar los datos del administrador"
       );
@@ -53,8 +53,7 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
       if (dbAdmin) {
         return dbAdmin;
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError("No se pudo buscar el administrador");
     }
     throw new NotFoundError("No existe administrador con id " + id);

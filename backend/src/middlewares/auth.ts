@@ -11,6 +11,7 @@ export class AuthMiddleware {
 
   /**
    * Valida que la request tenga un JWT válido y que sea de un usuario **administrador**.
+   * Setea `res.locals.idAdmin` con el idAdmin que vino en el JWT.
    */
   public isAdmin(): Handler {
     return async (req, res, next) => {

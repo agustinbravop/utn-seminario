@@ -41,7 +41,6 @@ export default function RegisterPage() {
         title: "Cuenta registrada correctamente.", 
         description: "Inicie sesión para continuar.",
         status: "success",
-        isClosable: true,
       });
       navigate("/login");
     },
@@ -50,7 +49,6 @@ export default function RegisterPage() {
         title: "Error al registrar su cuenta.",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

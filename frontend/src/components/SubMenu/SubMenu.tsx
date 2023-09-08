@@ -13,7 +13,7 @@ export default function SubMenu({
   canchas?: boolean;
   nombreCancha?: string;
 }) {
-  const { idEst, idCancha } = useParams();
+  const { idEst } = useParams();
   const location = useLocation();
 
   const {
@@ -22,9 +22,8 @@ export default function SubMenu({
     isError,
   } = useEstablecimientoByID(Number(idEst));
 
-  const subrayado = !location.pathname.endsWith("canchas");
-  const shouldSubrayar = (targetPath: string) => location.pathname.endsWith(targetPath);
-
+  const shouldSubrayar = (targetPath: string) =>
+    location.pathname.endsWith(targetPath);
 
   return (
     <>
@@ -34,12 +33,14 @@ export default function SubMenu({
         <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
       ) : (
         <Heading textAlign="center" paddingBottom="7" mt="40px">
-         {canchas ? `${establecimiento.nombre}: ${nombreCancha}` : `${establecimiento.nombre}`}
+          {canchas
+            ? `${establecimiento.nombre}: ${nombreCancha}`
+            : `${establecimiento.nombre}`}
         </Heading>
       )}
 
-      <HStack gap="12px" marginLeft="16%" marginTop="18px" marginBottom="30px">
-        {canchas ? ( null
+      <HStack gap="12px" marginLeft="16%" marginTop="18px" marginBottom="0px">
+        {canchas ? null : (
           /*<>
             <Link to={`/ests/${establecimiento?.id}/canchas/${idCancha}`}>
               <Button backgroundColor="white">
@@ -55,12 +56,15 @@ export default function SubMenu({
             </Link>
           </>
           */
-        ) : (
           <>
             <Link to={`/ests/${establecimiento?.id}`}>
               <Button backgroundColor="white">
                 <Text
-                  textDecoration={shouldSubrayar(`/${establecimiento?.id}`) ? "underline" : "none"}
+                  textDecoration={
+                    shouldSubrayar(`/${establecimiento?.id}`)
+                      ? "underline"
+                      : "none"
+                  }
                   textDecorationThickness="3px"
                   marginBottom="0px"
                   textUnderlineOffset="11px"
@@ -72,7 +76,11 @@ export default function SubMenu({
             <Link to={`/ests/${establecimiento?.id}/canchas`}>
               <Button backgroundColor="white">
                 <Text
-                  textDecoration={shouldSubrayar(`/${establecimiento?.id}/canchas`) ? "underline" : "none"}
+                  textDecoration={
+                    shouldSubrayar(`/${establecimiento?.id}/canchas`)
+                      ? "underline"
+                      : "none"
+                  }
                   textDecorationThickness="3px"
                   marginBottom="0px"
                   textUnderlineOffset="11px"
@@ -84,7 +92,11 @@ export default function SubMenu({
             <Link to={`/ests/${establecimiento?.id}/reservas`}>
               <Button backgroundColor="white">
                 <Text
-                  textDecoration={shouldSubrayar(`/${establecimiento?.id}/reservas`) ? "underline" : "none"}
+                  textDecoration={
+                    shouldSubrayar(`/${establecimiento?.id}/reservas`)
+                      ? "underline"
+                      : "none"
+                  }
                   textDecorationThickness="3px"
                   marginBottom="0px"
                   textUnderlineOffset="11px"

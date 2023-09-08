@@ -4,39 +4,27 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Center,
   HStack,
   Heading,
-  Icon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { BsRocket, BsShop, BsBuildings } from "react-icons/bs"; 
 import { useSuscripciones } from "@/utils/api/auth";
 import { Suscripcion } from "@/models";
 import { useNavigate } from "react-router";
 import { useCambiarSuscripcion } from "@/utils/api/administrador";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-
-const iconos = [
-  <Icon as={BsShop} fill="brand.500" fontSize={90} />,
-  <Icon as={BsBuildings} fill="brand.500" fontSize={90} />,
-  <Icon as={BsRocket} fill="brand.500" fontSize={90} />,
-];
+import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
+import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
+import { ConfirmSubmitButton } from "@/components/forms";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function SuscripcionesPage() {
   const toast = useToast();
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
-  const { currentAdmin } = useCurrentAdmin();
+  const { admin } = useCurrentAdmin();
 
   const { mutate } = useCambiarSuscripcion({
     onSuccess: () => {
@@ -44,7 +32,6 @@ export default function SuscripcionesPage() {
         title: "Nueva Suscripción",
         description: `Suscripción actualizada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-2);
     },
@@ -53,46 +40,39 @@ export default function SuscripcionesPage() {
         title: "Error al intentar cambiar de suscripción",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
 
-  const [newSus, setNewSus] = useState<Suscripcion>(currentAdmin?.suscripcion);
+  const [nuevaSus, setNuevaSus] = useState<Suscripcion>(admin.suscripcion);
+
+  const { data: establecimientos } = useEstablecimientosByAdminID(
+    Number(admin.id)
+  );
 
   const { data, isError, isLoading } = useSuscripciones();
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {
-    cards = <p>Cargando!</p>;
+    cards = <LoadingSpinner />;
   }
   if (isError) {
     cards = <p>error!</p>;
   }
 
-  let adminGG = currentAdmin;
-
-  if (!currentAdmin) {
-    navigate("login");
-    return;
-  }
-
-  const actual = newSus.id
-
   const suscripciones = data
-    ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
-    .map((s, idx) => ({ icono: iconos[idx], ...s }));
-  cards = suscripciones?.map((s) => {
-    // const actual = currentAdmin?.suscripcion.id === s.id;
-    const pepe = actual === s.id
+    .sort((s1, s2) => s1.costoMensual - s2.costoMensual)
+    .map((s, idx) => ({ icono: ICONOS_SUSCRIPCIONES[idx], ...s }));
 
+  cards = suscripciones.map((s) => {
+    const esSuscripcionActual = nuevaSus.id === s.id;
     return (
       <Card
         bg="light"
         key={s.id}
         color="dark"
         width="14rem"
-        variant={pepe ? "filled" : "elevated"}
+        variant={esSuscripcionActual ? "filled" : "elevated"}
       >
         <CardHeader margin="auto">{s.icono}</CardHeader>
         <CardBody textAlign="center">
@@ -105,13 +85,27 @@ export default function SuscripcionesPage() {
             {s.limiteEstablecimientos} establecimiento
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
-          {pepe || (
-            <Button colorScheme="brand" variant="outline" onClick={() => setNewSus(s)}>Elegir</Button>
+          {esSuscripcionActual || (
+            <Button
+              colorScheme="brand"
+              variant="outline"
+              onClick={() => setNuevaSus(s)}
+            >
+              Elegir
+            </Button>
           )}
         </CardBody>
       </Card>
     );
   });
+
+  const handleSuscripcion = () => {
+    if (nuevaSus.limiteEstablecimientos < establecimientos.length) {
+      navigate(`../selectEstab?suscripcion=${nuevaSus.id}`);
+    } else {
+      mutate({ id: admin.id, idSuscripcion: nuevaSus.id });
+    }
+  };
 
   return (
     <>
@@ -127,38 +121,19 @@ export default function SuscripcionesPage() {
       <HStack justifyContent="center" gap="95px" my="50px" as="form">
         {cards}
       </HStack>
-      <Box display="flex" justifyContent="center" >
-        <Button onClick={() => navigate(-1)} mr={15} >Cancelar</Button>
-        <Button onClick={onOpen} colorScheme="brand" >Aceptar</Button>
-      </Box>
-
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Confirmación</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>¿Está seguro que quiere cambiar su suscripción?</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button
-              colorScheme="brand"
-              backgroundColor="black"
-              onClick={() => {
-                console.log(newSus);
-                delete newSus.icono;
-                adminGG.suscripcion = newSus;
-                console.log(adminGG)
-                mutate(adminGG)
-              }
-              }
-            >
-              Aceptar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <Center>
+        <Button onClick={() => navigate(-1)} mr={15}>
+          Cancelar
+        </Button>
+        <ConfirmSubmitButton
+          header="Confirmación"
+          body="¿Está seguro que quiere cambiar su suscripción?"
+          isLoading={isLoading}
+          onSubmit={handleSuscripcion}
+        >
+          Aceptar
+        </ConfirmSubmitButton>
+      </Center>
     </>
   );
 }

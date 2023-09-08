@@ -12,7 +12,7 @@ export default function ReservaCardList() {
 
   return (
     <>
-    <Heading size="lg">Reservas activas</Heading>
+    <Heading size="lg" textAlign='center'>Reservas Activas</Heading>
       <SimpleGrid
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(200px, 1fr))"

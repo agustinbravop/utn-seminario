@@ -6,32 +6,27 @@ import {
   CardBody,
   HStack,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   StackDivider,
+  Switch,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import {
   useEliminarEstablecimiento,
   useEstablecimientoByID,
+  useModificarEstablecimiento,
 } from "@/utils/api/establecimientos";
 import SubMenu from "@/components/SubMenu/SubMenu";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { defImage } from "@/utils/const/const";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { ConfirmSubmitButton } from "@/components/forms";
 
 export default function CourtPage() {
   const { idEst } = useParams();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -43,7 +38,6 @@ export default function CourtPage() {
         title: "Establecimiento eliminado.",
         description: `Establecimiento eliminado exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(`/admin/${data?.idAdministrador}`);
     },
@@ -52,14 +46,40 @@ export default function CourtPage() {
         title: "Error al eliminar el establecimiento",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });
 
-  const handleEliminar = () => {
-    mutateDelete(Number(data?.id));
-    onClose();
+  const { mutate } = useModificarEstablecimiento({
+    onSuccess: () => {
+      // Usa `!data?.habilitado` porque data es el valor previo al cambio del back end.
+      toast({
+        title: `Establecimiento ${
+          !data?.habilitado ? "habilitado" : "deshabilitado"
+        }.`,
+        status: `${!data?.habilitado ? "info" : "warning"}`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: `Error al ${
+          data?.habilitado ? "habilitar" : "deshabilitar"
+        } el establecimiento`,
+        description: `Intente de nuevo.`,
+        status: "error",
+      });
+    },
+  });
+
+  if (!data) {
+    return <LoadingSpinner />;
+  }
+
+  const handleSwitchChange = () => {
+    mutate({
+      ...data,
+      habilitado: !data.habilitado,
+    });
   };
 
   return (
@@ -81,8 +101,7 @@ export default function CourtPage() {
           alignContent="column"
           spacing={5}
           align="center"
-        >
-        </HStack>
+        ></HStack>
       </HStack>
       <Box display="flex" justifyContent="center">
         <Card
@@ -94,84 +113,91 @@ export default function CourtPage() {
           width="56%"
         >
           <CardBody height="100%" marginTop="0px">
-            <Box display="grid" gridTemplateColumns="1fr 1fr" height="100%" width="100%">
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              height="100%"
+              width="100%"
+            >
               <Box>
                 <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
+                  src={data?.urlImagen}
                   width="1000px"
+                  fallbackSrc={FALLBACK_IMAGE_SRC}
                   height="400px"
                   objectFit="cover"
                   borderRadius="10px"
                 />
               </Box>
 
-              <Box marginTop="55px" marginLeft=" 50px" height="100%" >
+              <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Dirección
-                    </Heading>
+                    <HStack
+                      width="100%"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
+                      <Heading size="xs">Habilitación</Heading>
+                      <Switch
+                        isChecked={data.habilitado}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
+                    <Text fontSize="sm">
+                      Este establecimiento {data.habilitado ? "" : "no"} se
+                      encuentra habilitado
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Heading size="xs">Dirección</Heading>
                     <Text fontSize="sm">{data?.direccion}</Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Horario atencion
-                    </Heading>
+                    <Heading size="xs">Horario de atención</Heading>
                     <Text fontSize="sm">{data?.horariosDeAtencion}</Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Correo de contacto
-                    </Heading>
+                    <Heading size="xs">Correo de contacto</Heading>
                     <Text fontSize="sm">{data?.correo}</Text>
                   </Box>
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Numero de teléfono
-                    </Heading>
+                    <Heading size="xs">Numero de teléfono</Heading>
                     <Text fontSize="sm">{data?.telefono}</Text>
                   </Box>
                   <Box height="100%">
-                    <Heading size="xs" textTransform="uppercase">
-                      Localidad
-                    </Heading>
+                    <Heading size="xs">Localidad</Heading>
                     <Text fontSize="sm">
                       {data?.localidad}, {data?.provincia}
                     </Text>
-                    <Box width="100%" pt="25%" display="flex" justifyContent="center" alignItems="flex-end" >
+                    <Box
+                      width="100%"
+                      pt="25%"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="flex-end"
+                    >
                       <Link to="editar">
-                        <Button mr="30px" leftIcon={<EditIcon />}>Editar </Button>
+                        <Button mr="30px" leftIcon={<EditIcon />}>
+                          Editar
+                        </Button>
                       </Link>
-                      <Button onClick={onOpen} colorScheme="red" leftIcon={<DeleteIcon />}>
+                      <ConfirmSubmitButton
+                        colorScheme="red"
+                        leftIcon={<DeleteIcon />}
+                        header="Eliminar establecimiento"
+                        body="¿Está seguro de eliminar el establecimiento?"
+                        onSubmit={() => mutateDelete(Number(data?.id))}
+                      >
                         Eliminar
-                      </Button>
-                    </Box>            
+                      </ConfirmSubmitButton>
+                    </Box>
                   </Box>
                 </Stack>
               </Box>
             </Box>
           </CardBody>
         </Card>
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Eliminar establecimiento</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>¿Está seguro de eliminar el establecimiento?</ModalBody>
-            <ModalFooter>
-              <Button colorScheme="gray" mr={3} onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button
-                colorScheme="blackAlpha"
-                backgroundColor="black"
-                onClick={handleEliminar}
-              >
-                Aceptar
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
       </Box>
     </>
   );

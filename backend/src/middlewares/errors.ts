@@ -1,18 +1,27 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import { ApiError, InternalServerError } from "../utils/apierrors.js";
 
+function logError(error: ApiError, req: Request, res: Response) {
+  console.error("⛔ ApiError: ", error);
+  console.error("⛔ Body: ", res.locals.body);
+  console.error("⛔ URL: ", req.url);
+}
+/**
+ * Este middleware ataja los errores que sucedan en la aplicación,
+ * y devuelve su `message` en el JSON body de la response.
+ *
+ * La response para los errores de tipo `ApiError` respeta su status code.
+ * Un `Error` que no es `ApiError` provoca una response con status 500.
+ */
 export function handleApiErrors(): ErrorRequestHandler {
-  return (err: Error, _req: Request, res: Response, next: NextFunction) => {
+  return (err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof ApiError) {
+      logError(err, req, res);
       res.status(err.status).json(err);
     } else {
-      res
-        .status(500)
-        .json(
-          new InternalServerError(
-            "Sucedió un error inesperado y desconocido: " + err.message
-          )
-        );
+      const e = new InternalServerError(`Error desconocido: ${err.message}`);
+      logError(e, req, res);
+      res.status(e.status).json(e);
     }
 
     next(err);

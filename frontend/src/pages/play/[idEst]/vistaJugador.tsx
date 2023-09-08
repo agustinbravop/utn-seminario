@@ -43,11 +43,6 @@ export default function VistaJugador() {
             onChange={handleChangeIndex}
             pb='10px'
           >
-            <TabList>
-              <Tab>Información</Tab>
-              <Tab>Reservar</Tab>
-              <Tab>Canchas</Tab>
-            </TabList>
             <TabIndicator
               mt="-1.5px"
               height="2px"

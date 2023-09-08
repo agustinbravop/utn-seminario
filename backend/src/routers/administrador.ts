@@ -12,7 +12,7 @@ export function administradoresRouter(
 
   router.use("/:idAdmin", validateIDParams("idAdmin"));
 
-  router.get("/:idAdmin", handler.getAdministradorByID());
+  router.get("/:idAdmin", authMiddle.isAdmin(), handler.getAdministradorByID());
   router.patch(
     "/:idAdmin",
     authMiddle.isAdmin(),

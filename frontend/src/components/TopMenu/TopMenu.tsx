@@ -1,5 +1,5 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Button,
   HStack,
@@ -10,32 +10,26 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
-import {
-  ArrowForwardIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  InfoIcon,
-} from "@chakra-ui/icons";
+import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
+import { LOGO_IMAGE_SRC } from "@/utils/consts";
+
+function LogoImage() {
+  return <Image src={LOGO_IMAGE_SRC} alt="logo" width={177} />;
+}
 
 export default function TopMenu() {
-  const navigate = useNavigate();
-  const next = (dir: boolean) => {
-    dir ? navigate(+1) : navigate(-1);
-  };
-  const { currentAdmin, logout: adminLogout } = useCurrentAdmin();
-  const { currentJugador, logout: jugadorLogout } = useCurrentJugador();
+  const { admin, isAdmin, logout: adminLogout } = useCurrentAdmin();
+  const { jugador, isJugador, logout: jugadorLogout } = useCurrentJugador();
 
-  const logout = () => {
-    if (adminLogout) {
-      adminLogout();
-    }
-    if (jugadorLogout) {
-      jugadorLogout();
-    }
-  };
+  let nav = <UnregisteredNav />;
+  if (isAdmin) {
+    nav = <AdminNav admin={admin} logout={adminLogout} />;
+  }
+  if (isJugador) {
+    nav = <JugadorNav jugador={jugador} logout={jugadorLogout} />;
+  }
 
   return (
     <>
@@ -46,127 +40,113 @@ export default function TopMenu() {
         height="3.6rem"
         backgroundColor="#f8fafd"
       >
-        <Nav admin={currentAdmin} jugador={currentJugador} logout={logout} />
+        {nav}
       </HStack>
-
-      {currentAdmin && (
-        <>
-          <HStack
-            paddingTop={7}
-            marginLeft="17.3%"
-            marginRight="17.%"
-            spacing={1}
-          >
-            <Button
-              size="xs"
-              backgroundColor="white"
-              onClick={() => next(false)}
-            >
-              <ChevronLeftIcon boxSize={6} />
-            </Button>
-            <Breadcrumb />
-          </HStack>
-        </>
-      )}
     </>
   );
 }
 
-function Nav({
+/**
+ * La barra superior que se le muestra a un administrador.
+ */
+function AdminNav({
   admin,
+  logout,
+}: {
+  admin: Administrador;
+  logout: VoidFunction;
+}) {
+  return (
+    <>
+      <Link to={`/admin/${admin.id}`}>
+        <LogoImage />
+      </Link>
+      <nav style={{ paddingRight: "15px" }}>
+        <HStack>
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
+              leftIcon={<AiOutlineUser size="20" />}
+            >
+              {admin.usuario}
+            </MenuButton>
+            <MenuList>
+              <Link to={`/admin/${admin.id}/perfil`}>
+                <MenuItem>
+                  <InfoIcon mr="20px" /> Mi perfil
+                </MenuItem>
+              </Link>
+              <Link to={`/`}>
+                <MenuItem onClick={logout}>
+                  <ArrowForwardIcon mr="20px" /> Logout
+                </MenuItem>
+              </Link>
+            </MenuList>
+          </Menu>
+        </HStack>
+      </nav>
+    </>
+  );
+}
+
+/**
+ * La barra superior que se le muestra a un jugador.
+ */
+function JugadorNav({
   jugador,
   logout,
 }: {
-  admin: Administrador | undefined;
-  jugador: Jugador | undefined;
+  jugador: Jugador;
   logout: VoidFunction;
 }) {
-  if (jugador) {
-    return (
-      <>
-        <Link to={`/jugador/${jugador.id}`}>
-          <Image
-            src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-            alt="logo"
-            width={177}
-          />
-        </Link>
-        <nav style={{ paddingRight: "15px" }}>
-          <HStack>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
-                leftIcon={<AiOutlineUser size="20" />}
-              >
-                {jugador.usuario}
-              </MenuButton>
-              <MenuList>
-                <Link to={`/jugador/${jugador.id}/perfil`}>
-                  <MenuItem>
-                    <InfoIcon mr="20px" /> Mi perfil
-                  </MenuItem>
-                </Link>
-                <Link to={`/`}>
-                  <MenuItem onClick={logout}>
-                    <ArrowForwardIcon mr="20px" /> Logout
-                  </MenuItem>
-                </Link>
-              </MenuList>
-            </Menu>
-          </HStack>
-        </nav>
-      </>
-    );
-  }
+  return (
+    <>
+      <Link to={`/jugador/${jugador.id}`}>
+        <LogoImage />
+      </Link>
+      <nav style={{ paddingRight: "15px" }}>
+        <HStack>
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
+              leftIcon={<AiOutlineUser size="20" />}
+            >
+              {jugador.usuario}
+            </MenuButton>
+            <MenuList>
+              <Link to={`/jugador/${jugador.id}/reservas`}>
+                <MenuItem>
+                  <InfoIcon mr="20px" /> Mis reservas
+                </MenuItem>
+              </Link>
+              <Link to={`/jugador/${jugador.id}`}>
+                <MenuItem>
+                  <InfoIcon mr="20px" /> Mi perfil
+                </MenuItem>
+              </Link>
+              <Link to={`/`}>
+                <MenuItem onClick={logout}>
+                  <ArrowForwardIcon mr="20px" /> Logout
+                </MenuItem>
+              </Link>
+            </MenuList>
+          </Menu>
+        </HStack>
+      </nav>
+    </>
+  );
+}
 
-  if (admin) {
-    return (
-      <>
-        <Link to={`/admin/${admin.id}`}>
-          <Image
-            src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-            alt="logo"
-            width={177}
-          />
-        </Link>
-        <nav style={{ paddingRight: "15px" }}>
-          <HStack>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
-                leftIcon={<AiOutlineUser size="20" />}
-              >
-                {admin.usuario}
-              </MenuButton>
-              <MenuList>
-                <Link to={`/admin/${admin.id}/perfil`}>
-                  <MenuItem>
-                    <InfoIcon mr="20px" /> Mi perfil
-                  </MenuItem>
-                </Link>
-                <Link to={`/`}>
-                  <MenuItem onClick={logout}>
-                    <ArrowForwardIcon mr="20px" /> Logout
-                  </MenuItem>
-                </Link>
-              </MenuList>
-            </Menu>
-          </HStack>
-        </nav>
-      </>
-    );
-  }
-
+/**
+ * La barra superior que se le muestra a alguien que no inició sesión.
+ */
+function UnregisteredNav() {
   return (
     <>
       <Link to="/">
-        <Image
-          src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-          alt="logo"
-          width={177}
-        />
+        <LogoImage />
       </Link>
       <nav>
         <HStack>

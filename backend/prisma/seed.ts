@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Dia } from "../src/models/cancha";
+import { Dia } from "../src/models/disponibilidad";
 
 const prisma = new PrismaClient();
 
@@ -33,7 +33,7 @@ async function main() {
   const premium = await upsertSuscripcion("Premium", 3, 5999.0);
   const enterprise = await upsertSuscripcion("Enterprise", 10, 8999.0);
 
-  console.log({ startup, premium, enterprise });
+  console.info({ startup, premium, enterprise });
 
   // Se cargan los días de la semana.
   const lun = await upsertDia(Dia.Lunes);
@@ -44,7 +44,7 @@ async function main() {
   const sab = await upsertDia(Dia.Sabado);
   const dom = await upsertDia(Dia.Domingo);
 
-  console.log({ lun, mar, mie, jue, vie, sab, dom });
+  console.info({ lun, mar, mie, jue, vie, sab, dom });
 }
 
 main()
