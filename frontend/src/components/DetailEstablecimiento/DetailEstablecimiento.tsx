@@ -1,5 +1,5 @@
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { defImage } from "@/utils/const/const";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import {
   Card,
   CardBody,
@@ -15,7 +15,6 @@ import { useParams } from "react-router-dom";
 
 export default function DetailEstablecimiento() {
   const { idEst } = useParams();
-  
 
   const { data } = useEstablecimientoByID(Number(idEst));
 
@@ -31,7 +30,11 @@ export default function DetailEstablecimiento() {
         <CardHeader>
           <Box>
             <Image
-              src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
+              src={
+                !(data?.urlImagen === null)
+                  ? data?.urlImagen
+                  : FALLBACK_IMAGE_SRC
+              }
               width="500px"
               height="200px"
               objectFit="cover"
@@ -41,7 +44,7 @@ export default function DetailEstablecimiento() {
         </CardHeader>
         <CardBody height="100%" marginTop="0px">
           <Box display="grid" height="100%" width="100%">
-            <Box marginTop="35px" ml='10px' height="100%">
+            <Box marginTop="35px" ml="10px" height="100%">
               <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                 <Box>
                   <Heading size="xs" textTransform="uppercase">

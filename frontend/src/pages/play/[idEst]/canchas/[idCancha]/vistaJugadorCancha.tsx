@@ -21,8 +21,9 @@ import {
 } from "@chakra-ui/react";
 import { useCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import { defImage } from "@/utils/const/const";
+
 import React, { useState } from "react";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -33,15 +34,15 @@ export default function VistaJugadorCancha() {
     return <p>Cargando...</p>;
   }
 
-  const [disciplina, setDisciplina] = useState("")
+  const [disciplina, setDisciplina] = useState("");
 
-  const handleSelectChange = (event : React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDisciplina(event.target.value);
   };
 
   return (
     <div>
-      <Box justifyContent="center" width='25rem'>
+      <Box justifyContent="center" width="25rem">
         <Card
           boxSize="1rem"
           justifyContent="center"
@@ -51,20 +52,24 @@ export default function VistaJugadorCancha() {
           width="90%"
         >
           <CardHeader>
-          <Box justifyContent='center' display='flex'>
-                <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
-                  width="300px"
-                  height="200px"
-                  objectFit="cover"
-                  borderRadius="10px"
-                />
-              </Box>
+            <Box justifyContent="center" display="flex">
+              <Image
+                src={
+                  !(data?.urlImagen === null)
+                    ? data?.urlImagen
+                    : FALLBACK_IMAGE_SRC
+                }
+                width="300px"
+                height="200px"
+                objectFit="cover"
+                borderRadius="10px"
+              />
+            </Box>
           </CardHeader>
           <CardBody height="100%" marginTop="-10px">
             <Box
               display="flex"
-              justifyContent='left'
+              justifyContent="left"
               height="100%"
               width="100%"
             >
@@ -100,47 +105,53 @@ export default function VistaJugadorCancha() {
                   </Box>
 
                   <Box>
-                    <Heading size="xs" textTransform="uppercase" >
+                    <Heading size="xs" textTransform="uppercase">
                       Disponibilidades
                     </Heading>
                     <Text fontSize="sm">
                       Estas son las disponibilidades de la cancha.
                     </Text>
-                    
-                    <Select placeholder="Disciplina" width='150px' mt='10px' fontSize='sm' onChange={handleSelectChange}>
-                        {data.disciplinas.map(d => <option value={d} >{d}</option>)}
+
+                    <Select
+                      placeholder="Disciplina"
+                      width="150px"
+                      mt="10px"
+                      fontSize="sm"
+                      onChange={handleSelectChange}
+                    >
+                      {data.disciplinas.map((d) => (
+                        <option value={d}>{d}</option>
+                      ))}
                     </Select>
                     <TableContainer paddingTop="15px" paddingBottom="20px">
                       <Table variant="simple" size="sm">
                         <Thead>
                           <Tr>
-                          
                             <Th>horario</Th>
                             <Th>precio</Th>
                             <Th> dias </Th>
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {data.disponibilidades.map((d) => (
-                            d.disciplina === disciplina &&
-                            <Tr key={d.id}>
-                              
-                              <Td>
-                                {d.horaInicio}- {d.horaFin}
-                              </Td>
-                              <Td> ${d.precioReserva} </Td>
-                              <Td>
-                                
-                                  {d.dias.map((dia, index) => (
-                                    <React.Fragment key={index}>
-                                      {dia}
-                                      {index !== d.dias.length - 1 && " - "}
-                                    </React.Fragment>
-                                  ))}
-                                
-                              </Td>
-                            </Tr>
-                          ))}
+                          {data.disponibilidades.map(
+                            (d) =>
+                              d.disciplina === disciplina && (
+                                <Tr key={d.id}>
+                                  <Td>
+                                    {d.horaInicio}- {d.horaFin}
+                                  </Td>
+                                  <Td> ${d.precioReserva} </Td>
+                                  <Td>
+                                    {d.dias.map((dia, index) => (
+                                      <React.Fragment key={index}>
+                                        {dia}
+                                        {index !== d.dias.length - 1 && " - "}
+                                      </React.Fragment>
+                                    ))}
+                                  </Td>
+                                </Tr>
+                              )
+                          )}
                         </Tbody>
                       </Table>
                     </TableContainer>

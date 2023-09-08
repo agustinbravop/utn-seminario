@@ -1,11 +1,5 @@
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
-import {
-  Box,
-  HStack,
-  Heading,
-  TabIndicator,
-  Tabs,
-} from "@chakra-ui/react";
+import { Box, HStack, Heading, TabIndicator, Tabs } from "@chakra-ui/react";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import SearchEstab from "@/pages/search/searchEstab";
@@ -34,14 +28,7 @@ export default function JugadorPage() {
             variant="unstyled"
             index={activeIndex}
             onChange={handleChangeIndex}
-          >
-            <TabIndicator
-              mt="-1.5px"
-              height="2px"
-              bg="blue.500"
-              borderRadius="1px"
-            />
-          </Tabs>
+          ></Tabs>
         </HStack>
         <SwipeableViews index={activeIndex} onChangeIndex={handleChangeIndex}>
           <SearchEstab />
