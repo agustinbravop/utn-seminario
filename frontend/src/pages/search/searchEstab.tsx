@@ -12,7 +12,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useWatch } from "react-hook-form";
 import React, { useEffect, useState } from "react";
 
 type ApiGobProv = {
@@ -38,6 +37,7 @@ export default function SearchEstab() {
   const [localidades, setLocalidades] = useState<string[]>([]);
   const [localidad, setLocalidad] = useState("");
   const [prov, setProv] = useState("");
+  const [deporte, setDeporte] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
@@ -52,7 +52,6 @@ export default function SearchEstab() {
         ),
   });
 
-  
   useEffect(() => {
     fetch(
       `https://apis.datos.gob.ar/georef/api/municipios?provincia=${prov}&campos=nombre&max=150`
@@ -67,10 +66,13 @@ export default function SearchEstab() {
     const nombre = establecimiento.nombre.toLowerCase();
     const provinciaSelect = prov.toLowerCase();
     const localidadSelect = localidad.toLowerCase();
+    const deporteSelect = deporte.toLowerCase(); //Este filtro necesita realizar la validacion con el back directamente
+                                                //xq a nivel front no tengo las disponibilidades
 
     //Aca me fijo si cuales son los fltros que cumplen y los devuelvo
     //Van en variables para que no se haga tan largo abajo
     const filtroNombre = nombre.includes(filtro.toLowerCase());
+    //const filtroDeporte = establecimiento.includes(deporte.toLowerCase());
     const filtroProvincia =
       !provinciaSelect ||
       establecimiento.provincia.toLowerCase() === provinciaSelect;
@@ -78,7 +80,7 @@ export default function SearchEstab() {
       !localidadSelect ||
       establecimiento.localidad.toLowerCase() === localidadSelect;
 
-    return filtroNombre && filtroProvincia && filtroLocalidad;
+    return filtroNombre && filtroProvincia && filtroLocalidad /* && filtroDeporte*/;
   });
 
   return (
@@ -87,56 +89,60 @@ export default function SearchEstab() {
 
       <Box display="flex" justifyContent="center">
         <VStack>
-        <InputGroup width="300px">
-          <InputRightElement pointerEvents="none">
-            <SearchIcon color="gray.300" />
-          </InputRightElement>
-          <Input
-            focusBorderColor="lightblue"
-            placeholder="Nombre del establecimiento"
-            size="md"
-            width="100%"
-            onChange={handleChange}
-            value={filtro}
-          />
-        </InputGroup>
+          <InputGroup width="300px">
+            <InputRightElement pointerEvents="none">
+              <SearchIcon color="gray.300" />
+            </InputRightElement>
+            <Input
+              focusBorderColor="lightblue"
+              placeholder="Nombre del establecimiento"
+              size="md"
+              width="100%"
+              onChange={handleChange}
+              value={filtro}
+            />
+          </InputGroup>
 
-        <HStack>
-
-        <Select
-          name="provincia"
-          placeholder="Provincia"
-          value={prov}
-          onChange={(e) => setProv(e.target.value)}
-          children={provincias.data?.sort().map((p) => (
-            <option key={p} value={p}>
-              {p}
-            </option>
-          ))}
-        />
-        <Select
-          name="localidad"
-          placeholder="Localidad"
-          value={localidad}
-          onChange={(e) => setLocalidad(e.target.value)}
-        >
-          {localidades.sort().map((l) => (
-            <option key={l} value={l}>
-              {l}
-            </option>
-          ))}
-          <option key="Otra" value="Otra">
-            Otra
-          </option>
-        </Select>
-        </HStack>
+          <HStack>
+            <Select
+              placeholder="Provincia"
+              onChange={(e) => setProv(e.target.value)}
+              children={provincias.data?.sort().map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            />
+            <Select
+              placeholder="Localidad"
+              onChange={(e) => setLocalidad(e.target.value)}
+            >
+              {localidades.sort().map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+              <option key="Otra">Otra</option>
+            </Select>
+          </HStack>
+          <Select
+            placeholder="Disciplina"
+            onChange={(e) => {setDeporte(e.target.value); console.log(e.target.value)}}
+          >
+            <option key="Basket">Basket</option>
+            <option key="Futbol">Futbol</option>
+            <option key="Tenis">Tenis</option>
+            <option key="Padel">Padel</option>
+            <option key="Nada">Nada</option>
+          </Select>
         </VStack>
       </Box>
-
       <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
-        {(filtro ? establecimientosFiltrados : data).map((est) => (
-          <EstablecimientoJugador key={est.id} establecimiento={est} />
-        ))}
+        {(establecimientosFiltrados ? establecimientosFiltrados : data).map(
+          (est) => (
+            <EstablecimientoJugador key={est.id} establecimiento={est} />
+          )
+        )}
       </HStack>
     </>
   );

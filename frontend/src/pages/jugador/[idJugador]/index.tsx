@@ -22,8 +22,6 @@ export default function JugadorPage() {
 
   const { currentJugador } = useCurrentJugador();
 
-  const { data } = useEstablecimientosPlayer();
-
   const [activeIndex, setActiveIndex] = useState(0);
 
   const handleChangeIndex = (index: number) => {
@@ -44,10 +42,6 @@ export default function JugadorPage() {
             index={activeIndex}
             onChange={handleChangeIndex}
           >
-            <TabList>
-              <Tab>Reservar</Tab>
-              <Tab>Establecimientos</Tab>
-            </TabList>
             <TabIndicator
               mt="-1.5px"
               height="2px"
