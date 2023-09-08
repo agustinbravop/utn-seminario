@@ -19,7 +19,7 @@ const validationSchema = Yup.object({
   disponibilidades: Yup.array<Disponibilidad>().required().default([]),
 });
 
-export default function NuevaCanchaPage() {
+export default function CanchaNuevaPage() {
   const { idEst } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
