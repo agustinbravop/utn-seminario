@@ -15,7 +15,8 @@ export function establecimientosRouter(
   upload: multer.Multer
 ): Router {
   const router = express.Router();
-
+  //PROVISIONAL
+  router.get("/jugador", handler.getAllEstablecimientos());
   router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
   router.get(
     "/byAdmin/deleted/:idAdmin",
@@ -27,9 +28,6 @@ export function establecimientosRouter(
     validateIDParams("idAdmin"),
     handler.getEstablecimientosByAdminID()
   );
-
-  //PROVISIONAL
-  router.get("/jugador", handler.getAllEstablecimientos());
 
   router.post(
     "/",
