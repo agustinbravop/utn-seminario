@@ -23,6 +23,7 @@ export type Path =
   | `/ests/:idEst/reservas`
   | `/jugador/:idJugador`
   | `/jugador/:idJugador/est/:idEst`
+  | `/jugador/:idJugador/est/:idEst/reservar`
   | `/jugador/:idJugador/perfil`
   | `/jugador/:idJugador/reservas`
   | `/login`
@@ -52,6 +53,7 @@ export type Params = {
   '/ests/:idEst/reservas': { idEst: string }
   '/jugador/:idJugador': { idJugador: string }
   '/jugador/:idJugador/est/:idEst': { idJugador: string; idEst: string }
+  '/jugador/:idJugador/est/:idEst/reservar': { idJugador: string; idEst: string }
   '/jugador/:idJugador/perfil': { idJugador: string }
   '/jugador/:idJugador/reservas': { idJugador: string }
   '/play/:idEst/canchas/:idCancha/vistaJugadorCancha': { idEst: string; idCancha: string }

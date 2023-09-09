@@ -29,15 +29,15 @@ export default function DetailEstablecimiento() {
         display="flex"
         flexDirection={{ base: "column", md: "row" }} // Cambio de dirección en dispositivos móviles
       >
-        <CardHeader>
-          <Box>
+        <CardHeader width="100%" >
+          <Box width="100%" >
             <Image
               src={
                 !(data?.urlImagen === null)
                   ? data?.urlImagen
                   : FALLBACK_IMAGE_SRC
               }
-              width="500px"
+              width="100%"
               height="200px"
               objectFit="cover"
               borderRadius="10px"
@@ -47,38 +47,38 @@ export default function DetailEstablecimiento() {
         <CardBody marginTop="0px" flex="1">
           <Stack divider={<StackDivider />} spacing="1">
             <Box>
-              <Heading size="xs" textTransform="uppercase" margin="0">
+              <Heading size="xs"  margin="0">
                 Dirección
               </Heading>
               <Text fontSize="sm">{data?.direccion}</Text>
             </Box>
             <Box>
-              <Heading size="xs" textTransform="uppercase">
+              <Heading size="xs" >
                 Horario atencion
               </Heading>
               <Text fontSize="sm">{data?.horariosDeAtencion}</Text>
             </Box>
             <Box>
-              <Heading size="xs" textTransform="uppercase">
-                Correo de contacto
+              <Heading size="xs" >
+                Correo de contacto 
               </Heading>
               <Text fontSize="sm">{data?.correo}</Text>
             </Box>
             <Box>
-              <Heading size="xs" textTransform="uppercase">
+              <Heading size="xs" >
                 Numero de teléfono
               </Heading>
               <Text fontSize="sm">{data?.telefono}</Text>
             </Box>
             <Box>
-              <Heading size="xs" textTransform="uppercase">
+              <Heading size="xs" >
                 Localidad
               </Heading>
               <Text fontSize="sm">
                 {data?.localidad}, {data?.provincia}
               </Text>
             </Box>
-            <Box width='100%' display='flex' justifyContent='center'>
+            <Box width='100%' display='flex' justifyContent='center' pt="10px">
               <Stack direction="row" spacing={50}>
                 <Link to="canchas"><Button colorScheme='gray'>Ver canchas</Button></Link>
                 <Link to="reservar"><Button colorScheme='green'>Reservar</Button></Link>

@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
-import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, CalendarIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
 import { LOGO_IMAGE_SRC } from "@/utils/consts";
@@ -118,10 +118,10 @@ function JugadorNav({
             <MenuList>
               <Link to={`/jugador/${jugador.id}/reservas`}>
                 <MenuItem>
-                  <InfoIcon mr="20px" /> Mis reservas
+                  <CalendarIcon mr="20px" /> Mis reservas
                 </MenuItem>
               </Link>
-              <Link to={`/jugador/${jugador.id}`}>
+              <Link to={`/jugador/${jugador.id}/perfil`}>
                 <MenuItem>
                   <InfoIcon mr="20px" /> Mi perfil
                 </MenuItem>

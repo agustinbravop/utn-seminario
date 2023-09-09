@@ -20,6 +20,12 @@ export interface RegistrarJugadorReq extends Omit<Jugador, "id"> {
   clave: string;
 }
 
+export interface RegistrarReserva {
+  cancha: string;
+  horario: string;
+  duracion: string;
+}        
+
 type Usuario =
   | {
       admin: Administrador;

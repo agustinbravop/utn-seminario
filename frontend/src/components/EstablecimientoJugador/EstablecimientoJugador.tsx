@@ -22,7 +22,7 @@ export default function EstablecimientoJugador({
   establecimiento,
 }: EstablecimientoCardProps) {
   return (
-    <Link to={`est/${establecimiento.id}/`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
+    <Link to={`est/${establecimiento.id}`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
       <Card
         width="200px"
         height="280px"
