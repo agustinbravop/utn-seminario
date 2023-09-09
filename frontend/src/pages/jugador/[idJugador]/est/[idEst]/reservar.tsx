@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import { DIAS, DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
 
 const validationSchema = Yup.object({
-  hora: Yup.string().required("Obligatorio"),
+  horario: Yup.string().required("Obligatorio"),
   cancha: Yup.string().required("Obligatorio"),
   duracion: Yup.string().required("Obligatorio"),
 });
@@ -74,7 +74,7 @@ export default function ReservarEstablecimiento() {
           <HStack>
           <SelectControl minWidth="160px"
                 label="Horario "
-                name="hora"
+                name="horario"
                 isRequired
               >
                 {HORAS.map((hora, i) => (
@@ -120,10 +120,23 @@ export default function ReservarEstablecimiento() {
             </SelectControl>
           </HStack>
           <ConfirmSubmitButton header="Datos reserva"
+                onSubmit={()=> console.log(methods.getValues())}
                 body= {
                 <>
-                    <Text> Hora inicio {methods.getValues("cancha")} </Text>
-                
+                 <VStack
+                    as="form" 
+                    spacing="4"
+                    width="-webkit-fit-content"
+                    justifyContent="center"
+                    margin="auto"
+                    >
+                        <HStack spacing="20px">
+                        <Text> Hora inicio {methods.getValues("horario")} </Text>
+                        <Text> Hora fin {methods.getValues("horario") } </Text>
+
+                    </HStack>
+
+                </VStack>             
                 </>
                 }
 
