@@ -144,7 +144,7 @@ export default function SearchEstab() {
       <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
         {(establecimientosFiltrados ? establecimientosFiltrados : data).map(
           (est) => (
-            <EstablecimientoJugador key={est.id} establecimiento={est} />
+            <EstablecimientoJugador key={est.id} establecimiento={est} /> 
           )
         )}
       </HStack>

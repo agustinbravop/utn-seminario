@@ -24,6 +24,7 @@ export interface RegistrarReserva {
   cancha: string;
   horario: string;
   duracion: string;
+  deporte: string
 }        
 
 type Usuario =

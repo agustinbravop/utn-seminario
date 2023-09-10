@@ -20,6 +20,7 @@ const validationSchema = Yup.object({
   horario: Yup.string().required("Obligatorio"),
   cancha: Yup.string().required("Obligatorio"),
   duracion: Yup.string().required("Obligatorio"),
+  deporte: Yup.string().required("Obligatorio"),
 });
 
 export default function ReservarEstablecimiento() {
@@ -75,6 +76,7 @@ export default function ReservarEstablecimiento() {
           <SelectControl minWidth="160px"
                 label="Horario "
                 name="horario"
+                placeholder="Elegir"
                 isRequired
               >
                 {HORAS.map((hora, i) => (
@@ -86,6 +88,7 @@ export default function ReservarEstablecimiento() {
               <SelectControl minWidth="160px"
                 label="Duración "
                 name="duracion"
+                placeholder="Elegir"
                 isRequired
               >
                 {DURACION_RESERVA.map((duracion, i) => (
@@ -99,6 +102,7 @@ export default function ReservarEstablecimiento() {
           <SelectControl minWidth="160px"
                 label="Cancha "
                 name="cancha"
+                placeholder="Elegir"
                 isRequired
               >
                 {canchas.map((cancha, i) => (
@@ -108,13 +112,14 @@ export default function ReservarEstablecimiento() {
                 ))}
               </SelectControl>
               <SelectControl minWidth="160px"
-                label="Duración "
-                name="duracion"
+                label="Deporte "
+                name="deporte"
+                placeholder="Elegir"
                 isRequired
               >
-                {DURACION_RESERVA.map((hora, i) => (
-                  <option key={i} value={hora}>
-                    {hora}
+                {canchas.map((hora, i) => (
+                  <option key={i} value={hora.disciplinas}>
+                    {hora.disciplinas}
                   </option>
                 ))}
             </SelectControl>
@@ -130,12 +135,22 @@ export default function ReservarEstablecimiento() {
                     justifyContent="center"
                     margin="auto"
                     >
+                      <HStack spacing="20px">
+                        <Text> Fecha: <strong> 13/03/24 </strong> </Text>
+                        <Text> Precio: <strong> $1500 </strong></Text>
+
+                    </HStack>
+
                         <HStack spacing="20px">
                         <Text> Hora inicio {methods.getValues("horario")} </Text>
                         <Text> Hora fin {methods.getValues("horario") } </Text>
 
                     </HStack>
+                    <HStack spacing="20px">
+                        <Text> Cancha {methods.getValues("cancha")} </Text>
+                        <Text> Deporte {methods.getValues("deporte") } </Text>
 
+                    </HStack>
                 </VStack>             
                 </>
                 }
