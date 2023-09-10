@@ -24,11 +24,13 @@ import { Link, useParams } from "@/router";
 
 import React, { useState } from "react";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
+import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 
 export default function VistaJugadorCancha() {
-  const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
+  const { idEst, idCancha } = useParams("/est/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
+  const { data: dataEstab } = useEstablecimientoByID(Number(idEst))
 
   if (!data) {
     return <p>Cargando...</p>;
@@ -46,6 +48,9 @@ export default function VistaJugadorCancha() {
 
   return (
     <div>
+      <Heading textAlign="center" paddingBottom="12" mt="40px">
+        {dataEstab?.nombre} - {data?.nombre}
+      </Heading>
 
       <Box justifyContent="center">
         <Card
@@ -140,7 +145,7 @@ export default function VistaJugadorCancha() {
                               <Td>
                                 {d.dias.map((dia, index) => (
                                   <React.Fragment key={index}>
-                                    {dia}
+                                    {dia === "Miércoles" ? "X" : dia.charAt(0)}
                                     {index !== d.dias.length - 1 && " - "}
                                   </React.Fragment>
                                 ))}
@@ -163,7 +168,7 @@ export default function VistaJugadorCancha() {
         </Card>
       </Box>
 
-      
+
     </div>
   );
 }
