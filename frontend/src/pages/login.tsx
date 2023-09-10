@@ -51,7 +51,11 @@ export default function LoginPage() {
           as="form"
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="24px"
-          width="400px"
+          width={[
+            "-webkit-fit-content", // 0-30em || mobile
+            "400px", // 62em+ || pantalla escritorio
+            //No contemplo medidas intermedias de tablets
+          ]}
           m="auto"
         >
           <InputControl

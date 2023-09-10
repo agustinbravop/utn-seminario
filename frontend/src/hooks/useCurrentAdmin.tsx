@@ -4,6 +4,7 @@ import { readLocalStorage } from "../utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
 import { JWT } from "../utils/api";
 import { useToast } from "@chakra-ui/react";
+import { refreshToken } from "@/utils/api/auth";
 
 interface ICurrentAdminContext {
   admin: Administrador;
@@ -61,8 +62,11 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     setCurrentAdmin(usuario);
   };
 
+  useEffect(() => {});
+
   useEffect(() => {
     updateCurrentAdmin();
+    refreshToken();
 
     // Se ejecuta cuando el token del localStorage cambia, normalmente al login o logout.
     // También se borra cuando una request es rechazada con un status `401 Unauthorized`.
@@ -76,7 +80,6 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
             title: "La sesión actual venció.",
             description: "Por favor inicie sesión de nuevo.",
             status: "error",
-            isClosable: true,
           });
         }
       }

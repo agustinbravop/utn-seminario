@@ -10,6 +10,7 @@ import { AdministradorService } from "./administrador.js";
 
 export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
+  getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEst: number): Promise<Establecimiento>;
   getConsulta(consulta: object): Promise<Establecimiento[]>;
@@ -19,6 +20,7 @@ export interface EstablecimientoService {
     imagen?: Express.Multer.File
   ): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
+  getAll(): Promise<Establecimiento[]>
 }
 
 type Busqueda = {
@@ -42,6 +44,9 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     this.adminService = adminService;
   
   }
+  async getAll(): Promise<Establecimiento[]> {
+    return await this.repo.getAll();
+  }
 
   async getByID(idEst: number) {
     return await this.repo.getByID(idEst);
@@ -49,6 +54,10 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
   async getByAdminID(idAdmin: number) {
     return await this.repo.getByAdminID(idAdmin);
+  }
+
+  async getDeletedByAdminID(idAdmin: number) {
+    return await this.repo.getDeletedByAdminID(idAdmin);
   }
 
   async crear(est: Establecimiento) {
@@ -90,7 +99,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     const ests = await this.repo.getByAdminID(admin.id);
 
     if (admin.suscripcion.limiteEstablecimientos <= ests.length) {
-      throw new ConflictError("Limite de establecimientos alcanzado");
+      throw new ConflictError("Límite de establecimientos alcanzado");
     }
   }
 

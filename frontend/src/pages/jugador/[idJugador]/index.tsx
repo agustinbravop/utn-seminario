@@ -1,52 +1,40 @@
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Heading,
-  Stack,
-  StackDivider,
-  Box,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, HStack, Heading, TabIndicator, Tabs } from "@chakra-ui/react";
+import { useState } from "react";
+import SwipeableViews from "react-swipeable-views";
+import SearchEstab from "@/pages/search/searchEstab";
 
-export default function PerfilPage() {
-  const { jugador } = useCurrentJugador();
+export default function JugadorPage() {
+  //TODO: AGREGR A ReservaCardList LOS PROPS DEL ARRAY DE RESERVAS
+
+  const currentJugador = useCurrentJugador();
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleChangeIndex = (index: number) => {
+    setActiveIndex(index);
+  };
 
   return (
     <>
-      <VStack>
-        <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
-          <CardHeader>
-            <Heading size="lg" textAlign="center">
-              Mi perfil
-            </Heading>
-          </CardHeader>
-          <CardBody marginTop="28px">
-            <Stack divider={<StackDivider />} spacing="2.5" marginTop="-2rem">
-              <Box>
-                <Heading size="xs">Nombre</Heading>
-                <Text fontSize="sm">
-                  {jugador?.nombre} {jugador?.apellido}
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs">Usuario</Heading>
-                <Text fontSize="sm">{jugador?.usuario}</Text>
-              </Box>
-              <Box>
-                <Heading size="xs">Correo</Heading>
-                <Text fontSize="sm">{jugador?.correo}</Text>
-              </Box>
-              <Box>
-                <Heading size="xs">Teléfono</Heading>
-                <Text fontSize="sm">{jugador?.telefono}</Text>
-              </Box>
-            </Stack>
-          </CardBody>
-        </Card>
-      </VStack>
+      <Heading textAlign="center" paddingBottom="12" mt="40px">
+        ¡Bienvenido {currentJugador?.jugador.usuario}!
+      </Heading>
+      <Box>
+        <HStack justifyContent="center">
+          <Tabs
+            position="relative"
+            pb="15px"
+            variant="unstyled"
+            index={activeIndex}
+            onChange={handleChangeIndex}
+          >
+          </Tabs>
+        </HStack>
+        <SwipeableViews index={activeIndex} onChangeIndex={handleChangeIndex}>
+          <SearchEstab />
+        </SwipeableViews>
+      </Box>
     </>
   );
 }

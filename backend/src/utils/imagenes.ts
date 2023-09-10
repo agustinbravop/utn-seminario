@@ -21,7 +21,6 @@ export async function subirImagen(
     const result = await cloudinary.v2.uploader.upload(img.path);
     return Promise.resolve(result.url);
   } catch (e) {
-    console.error(e);
     throw error ?? new InternalServerError("Error al subir la imagen");
   }
 }

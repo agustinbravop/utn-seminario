@@ -7,7 +7,15 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Establecimiento } from "@/models";
 import { GrAddCircle } from "react-icons/gr";
@@ -15,9 +23,13 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Alerta from "@/components/Alerta/Alerta";
-import { SearchIcon } from "@chakra-ui/icons";
+import { DeleteIcon, SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
+import {
+  useEstablecimientosByAdminID,
+  useEstablecimientosEliminadosByAdminID,
+} from "@/utils/api/establecimientos";
+import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -34,6 +46,7 @@ function EstablecimientosList({ data }: EstablecimientosListProps) {
 }
 
 export default function EstablecimientosPage() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { admin } = useCurrentAdmin();
 
   const [filtro, setFiltro] = useState("");
@@ -44,6 +57,8 @@ export default function EstablecimientosPage() {
   const { data, isLoading, isError } = useEstablecimientosByAdminID(
     Number(admin.id)
   );
+
+  const methods = useEstablecimientosEliminadosByAdminID(Number(admin.id));
 
   const establecimientosFiltrados = data.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
@@ -84,20 +99,22 @@ export default function EstablecimientosPage() {
             {data.length} / {admin.suscripcion.limiteEstablecimientos}{" "}
             establecimiento{data?.length === 1 || "s"}
           </Text>
-          {data.length < admin.suscripcion.limiteEstablecimientos && (
+          {data.length < admin.suscripcion.limiteEstablecimientos ? (
             <Link to="nuevoEstablecimiento">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>
             </Link>
-          )}
-          {data.length === admin.suscripcion.limiteEstablecimientos && (
+          ) : (
             <Link to="mejorarSuscripcion">
               <Button leftIcon={<Icon as={GrAddCircle} />}>
                 Agregar Establecimiento
               </Button>
             </Link>
           )}
+          <Button onClick={onOpen}>
+            <Icon as={DeleteIcon} />
+          </Button>
         </HStack>
       </HStack>
       <HStack marginLeft="16%" marginRight="16%">
@@ -113,6 +130,36 @@ export default function EstablecimientosPage() {
           />
         )}
       </HStack>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Establecimientos Eliminados</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {methods.isLoading ? (
+              <LoadingSpinner />
+            ) : methods.isError ? (
+              <Alerta
+                mensaje="Ha ocurrido un error inesperado"
+                status="error"
+              />
+            ) : methods.data.length === 0 ? (
+              <Text> No hay establecimientos en la papelera </Text>
+            ) : (
+              <DeletedEstablecimientoList
+                establecimientos={methods.data}
+                establecimientosActuales={data?.length}
+                onRecuperar={onClose}
+              />
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="brand" mr={3} onClick={onClose}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

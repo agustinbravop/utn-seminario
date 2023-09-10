@@ -46,6 +46,26 @@ export function useEstablecimientosByAdminID(
   );
 }
 
+//PROVISIONAL
+export function useEstablecimientosPlayer(
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "jugador"],
+    `${API_URL}/establecimientos/jugador`,
+    { ...options, initialData: [] }
+  );
+}
+export function useEstablecimientosEliminadosByAdminID(
+  idAdmin: number,
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "deleted", "byAdmin", idAdmin],
+    `${API_URL}/establecimientos/byAdmin/deleted/${idAdmin}`,
+    { ...options, initialData: [] })
+}
+
 export function useCrearEstablecimiento(
   options?: UseApiMutationOptions<
     CrearEstablecimientoReq & { imagen?: File },
