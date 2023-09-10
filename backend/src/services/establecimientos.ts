@@ -105,6 +105,13 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   async getConsulta(
     consulta: Busqueda,
   ): Promise<Establecimiento[]> {
-    return await this.repo.getEstabsByFiltro(consulta);
+    
+    const estabFilter = await this.repo.getEstabsByFiltro(consulta);
+    
+    if(consulta.disciplina){
+      const estabDisciplina = await this.repo.getEstablecimientoDisciplina(consulta.disciplina);
+      return estabFilter.filter(e => estabDisciplina.find(({id}) => id === e.id));
+    }
+    return estabFilter;
   }
 }

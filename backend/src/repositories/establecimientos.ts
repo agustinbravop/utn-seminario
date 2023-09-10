@@ -1,6 +1,5 @@
 import { PrismaClient, establecimiento, localidad } from "@prisma/client";
 import {
-  BadRequestError,
   InternalServerError,
   NotFoundError,
 } from "../utils/apierrors.js";
@@ -12,6 +11,7 @@ export interface EstablecimientoRepository {
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   getEstablecimientoAll(): Promise<Establecimiento[]>;
   getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
+  getEstablecimientoDisciplina(disciplina:string): Promise<Establecimiento[]>
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
 }
@@ -151,11 +151,7 @@ export class PrismaEstablecimientoRepository
   ): Promise<Establecimiento[]> {
     const disDB = await this.prisma.disponibilidad.findMany({
       where: {
-        disciplina: {
-          disciplina: {
-            equals: String(disciplina),
-          },
-        },
+       idDisciplina:disciplina
       },
       include: {
         cancha: {
@@ -170,31 +166,11 @@ export class PrismaEstablecimientoRepository
       },
     });
 
-    if (disDB.length == 0) {
-      throw new BadRequestError(
-        `No se encontro ningun establecimiento con la disciplina ${disciplina}`
-      );
-    }
     const arreglo = new Array();
     disDB.map((dis) => {
       arreglo.push(dis.cancha.establecimiento);
     });
-
-    let ests = arreglo.filter((valorActual, indiceActual, arreglo) => {
-      return (
-        arreglo.findIndex(
-          (valorDelArreglo) =>
-            JSON.stringify(valorDelArreglo) === JSON.stringify(valorActual)
-        ) === indiceActual
-      );
-    });
-    const dbEst = new Array();
-    ests.map((c) => {
-      if (c.eliminado !== true) {
-        dbEst.push(c);
-      }
-    });
-    return dbEst;
+    return arreglo;
   }
 
   //Busca los establecimientos por nombre
