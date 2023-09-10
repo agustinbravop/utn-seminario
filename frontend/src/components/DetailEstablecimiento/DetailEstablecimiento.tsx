@@ -29,16 +29,16 @@ export default function DetailEstablecimiento() {
         display="flex"
         flexDirection={{ base: "column", md: "row" }} // Cambio de dirección en dispositivos móviles
       >
-        <CardHeader width="100%" >
-          <Box width="100%" >
+        <CardHeader>
+          <Box>
             <Image
               src={
                 !(data?.urlImagen === null)
                   ? data?.urlImagen
                   : FALLBACK_IMAGE_SRC
               }
-              width="100%"
-              height="200px"
+              width="500px"
+              // height="200px"
               objectFit="cover"
               borderRadius="10px"
             />

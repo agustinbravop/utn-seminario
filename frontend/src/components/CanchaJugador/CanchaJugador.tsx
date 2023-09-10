@@ -19,7 +19,7 @@ type estabProps = {
 export default function CanchaJugador({ cancha }: estabProps) {
   return (
     <Link
-      to={`/play/${cancha.idEstablecimiento}/canchas/${cancha.id}/vistaJugadorCancha`}
+      to={`${cancha.id}`}
     >
       <Card
         width="300px"
@@ -37,7 +37,7 @@ export default function CanchaJugador({ cancha }: estabProps) {
           alt={`Imagen del cancha ${cancha.nombre}`}
           objectFit="cover"
           borderTopRadius="lg"
-          maxWidth="80%"
+          // maxWidth="80%"
           height="200px"
         />
         <CardBody height="300px">
