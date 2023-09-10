@@ -15,13 +15,15 @@ import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
+  date: string
 };
 
 export default function EstablecimientoJugador({
   establecimiento,
+  date
 }: EstablecimientoCardProps) {
   return (
-    <Link to={`est/${establecimiento.id}`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
+    <Link to={`est/${establecimiento.id}?date=${date}`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
       <Card
         width="360px"
         height="240px"

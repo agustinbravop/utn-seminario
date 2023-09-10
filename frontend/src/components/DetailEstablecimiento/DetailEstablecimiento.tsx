@@ -14,10 +14,15 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router";
 
 export default function DetailEstablecimiento() {
   const { idEst } = useParams();
   const { data } = useEstablecimientoByID(Number(idEst));
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const date = searchParams.get("date");
 
   return (
     <Box justifyContent="center">
@@ -80,8 +85,8 @@ export default function DetailEstablecimiento() {
             </Box>
             <Box width='100%' display='flex' justifyContent='center' pt="10px">
               <Stack direction="row" spacing={50}>
-                <Link to="canchas"><Button colorScheme='gray'>Ver canchas</Button></Link>
-                <Link to="reservar"><Button colorScheme='green'>Reservar</Button></Link>
+                <Link to={`canchas?date=${date}`}><Button colorScheme='gray'>Ver canchas</Button></Link>
+                <Link to={`reservar?date=${date}`}><Button colorScheme='green'>Reservar</Button></Link>
               </Stack>
             </Box>
           </Stack>

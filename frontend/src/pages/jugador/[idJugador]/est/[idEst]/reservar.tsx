@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useParams, useLocation } from "react-router";
 import { Box, Button, HStack, Heading, Tabs } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
@@ -24,10 +24,27 @@ const validationSchema = Yup.object({
   deporte: Yup.string().required("Obligatorio"),
 });
 
+function formatearFecha(fechaEnFormatoOriginal) {
+  // Parsea la fecha en el formato "aaaa-mm-dd"
+  const fechaParseada = new Date(fechaEnFormatoOriginal);
 
+  // Obtiene el día, el mes y el año de la fecha parseada
+  const dia = (fechaParseada.getDate() + 1).toString().padStart(2, '0');
+  const mes = (fechaParseada.getMonth() + 1).toString().padStart(2, '0'); // Suma 1 al mes, ya que en JavaScript los meses van de 0 a 11.
+  const anio = fechaParseada.getFullYear();
+
+  // Formatea la fecha en "dd/mm/aaaa"
+  const fechaFormateada = `${dia}/${mes}/${anio}`;
+
+  return fechaFormateada;
+}
 
 export default function ReservarEstablecimiento() {
   const { idEst } = useParams();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const date = formatearFecha(searchParams.get("date"));
 
   const [cancha, setCancha] = useState("")
   const [duration, setDuration] = useState("")
@@ -167,7 +184,7 @@ export default function ReservarEstablecimiento() {
                   margin="auto"
                 >
                   <HStack spacing="20px">
-                    <Text> Fecha: <strong> 13/03/24 </strong> </Text>
+                    <Text> Fecha: <strong> {date} </strong> </Text>
                     <Text> Precio: <strong> $1500 </strong></Text>
 
                   </HStack>
