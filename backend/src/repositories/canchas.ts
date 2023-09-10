@@ -14,6 +14,7 @@ export interface CanchaRepository {
   crearCancha(cancha: Cancha): Promise<Cancha>;
   modificarCancha(canchaUpdate: Cancha): Promise<Cancha>;
   eliminarCancha(idCancha: number): Promise<Cancha>;
+  getCanchasByEstabIdHabilitadas(idEst:number): Promise<Cancha[]>;
 }
 
 export class PrismaCanchaRepository implements CanchaRepository {
@@ -29,6 +30,28 @@ export class PrismaCanchaRepository implements CanchaRepository {
 
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
+  }
+
+  async getCanchasByEstabIdHabilitadas(idEst:number) : Promise<Cancha[]>{
+    try {
+      const canchas = await this.prisma.cancha.findMany({
+        where: {
+          idEstablecimiento: idEst,
+          eliminada: false,
+          habilitada: true
+        },
+        orderBy: [
+          {
+            nombre: "asc",
+          },
+        ],
+        include: this.include,
+      });
+      return canchas.map((c) => toModel(c));
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerError("Error al obtener las canchas");
+    }
   }
 
   async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {

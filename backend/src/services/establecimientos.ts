@@ -8,12 +8,11 @@ import {
 import { subirImagen } from "../utils/imagenes.js";
 import { AdministradorService } from "./administrador.js";
 
-
 export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
-  getByID(idEst: number): Promise<Establecimiento>; 
-  getConsulta(consulta:object):Promise<Establecimiento[] | null| Establecimiento>; 
+  getByID(idEst: number): Promise<Establecimiento>;
+  getConsulta(consulta: object): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   modificarImagen(
     idEst: number,
@@ -22,16 +21,26 @@ export interface EstablecimientoService {
   eliminar(idEst: number): Promise<Establecimiento>;
 }
 
+type Busqueda = {
+  nombre?: string;
+  provincia?: string;
+  localidad?: string;
+  disciplina?: string;
+};
+
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
   private adminService: AdministradorService;
+  
 
   constructor(
     repo: EstablecimientoRepository,
-    adminService: AdministradorService
+    adminService: AdministradorService,
+    
   ) {
     this.repo = repo;
     this.adminService = adminService;
+  
   }
 
   async getByID(idEst: number) {
@@ -89,64 +98,13 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     return await this.repo.eliminar(idEst);
   }
 
-  async getEstablecimientoByNombre(NombreEstablecimiento:string):Promise<Establecimiento> 
-  { 
-    
-    return await this.repo.getEstablecimientoByNombre(NombreEstablecimiento); 
+  async getEstablecimientoAll(): Promise<Establecimiento[]> {
+    return await this.repo.getEstablecimientoAll();
   }
 
-  async getEstablecimientoByLocalidad(NombreLocalidad:string): Promise<Establecimiento[]> 
-  { 
-    return await this.repo.getEstablecimientoByLocalidad(NombreLocalidad); 
+  async getConsulta(
+    consulta: Busqueda,
+  ): Promise<Establecimiento[]> {
+    return await this.repo.getEstabsByFiltro(consulta);
   }
-
-  async getEstablecimientoByProvincia(NombreProvincia:string):Promise<Establecimiento[]>
-  { 
-    return await this.repo.getEstablecimientoByProvincia(NombreProvincia); 
-  }
-
-  async getEstablecimientoByLocalidadANDProvincia(NombreLocalidad:string, NombreProvincia:string):Promise<Establecimiento[]>
-  { 
-    
-    return await this.repo.getEstablecimientoByLocalidadAndProvincia(NombreLocalidad,NombreProvincia); 
-  }
-
-  async getEstablecimientoDisciplina(disciplina:string):Promise<Establecimiento[]> { 
-    return await this.repo.getEstablecimientoDisciplina(disciplina); 
-  }
-
-  async getEstablecimientoAll():Promise<Establecimiento[]> { 
-    return await this.repo.getEstablecimientoAll()
-  }
-
-  async getConsulta(consulta:object):Promise<Establecimiento[] | null | Establecimiento> 
-  { 
-    let respuesta=null; 
-   if ('localidad' in consulta && 'provincia' in consulta) { 
-    respuesta=await this.repo.getEstablecimientoByLocalidadAndProvincia(String(consulta.localidad), String(consulta.provincia));
-   }else{ 
-    if ('localidad' in consulta) { 
-      respuesta=await this.repo.getEstablecimientoByLocalidad(String(consulta.localidad));
-    }else { 
-      if ('provincia' in consulta) { 
-        respuesta=await this.repo.getEstablecimientoByProvincia(String(consulta.provincia)); 
-      }else { 
-        if ('nombre_establecimiento' in consulta) { 
-          respuesta=await this.repo.getEstablecimientoByNombre(String(consulta.nombre_establecimiento));
-        }else { 
-          if ('disciplina' in consulta) { 
-            respuesta=await this.repo.getEstablecimientoDisciplina(String(consulta.disciplina))
-          }else { 
-            respuesta=await this.repo.getEstablecimientoAll(); 
-          }
-        }
-      }
-    }
-   }
-   
-
-   return respuesta;
-
-  }
-  
 }

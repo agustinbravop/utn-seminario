@@ -96,6 +96,8 @@ export class EstablecimientoHandler {
     }
   }
 
+  
+
   /**
    * Valida que el param `idEst` corresponda a un establecimiento del `idAdmin` del JWT.
    * Este middleware **asume que el JWT del administrador ya fue autenticado.**
