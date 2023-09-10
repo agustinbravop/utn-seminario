@@ -11,10 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { ConfirmSubmitButton, InputControl, SelectControl, SubmitButton } from "@/components/forms";
-import {  RegistrarReserva } from "@/utils/api/auth";
+import { RegistrarReserva } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 import { DIAS, DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
+import { useEffect, useState } from "react";
 
 const validationSchema = Yup.object({
   horario: Yup.string().required("Obligatorio"),
@@ -23,39 +24,60 @@ const validationSchema = Yup.object({
   deporte: Yup.string().required("Obligatorio"),
 });
 
+
+
 export default function ReservarEstablecimiento() {
   const { idEst } = useParams();
 
+  const [cancha, setCancha] = useState("")
+  const [duration, setDuration] = useState("")
+  const [horaInicio, setHoraInicio] = useState("")
+  const [disc, setDisc] = useState("")
+  const [canchaData, setCanchaData] = useState()
+
+  useEffect(() => {
+    console.log('Cambio de cancha', cancha)
+    setCanchaData(() => canchas.find(canchaA => Number(cancha) === Number(canchaA.id)))
+    console.log(canchaData)
+  }, [cancha])
+
+  useEffect(() => {
+    console.log(canchaData)
+  }, [canchaData])
+
+  function sumarTiempo(tiempoHHMM, minutos) {
+    // Convertir tiempoHHMM a minutos
+    const tiempoArray = tiempoHHMM.split(":");
+    const horas = parseInt(tiempoArray[0], 10);
+    const minutosOriginales = parseInt(tiempoArray[1], 10);
+    const tiempoEnMinutos = horas * 60 + minutosOriginales;
+
+    // Sumar los minutos
+    const tiempoTotalEnMinutos = tiempoEnMinutos + parseInt(minutos, 10);
+
+    // Calcular las nuevas horas y minutos
+    const nuevasHoras = Math.floor(tiempoTotalEnMinutos / 60);
+    const nuevosMinutos = tiempoTotalEnMinutos % 60;
+
+    // Formatear el resultado
+    const horasFormateadas = nuevasHoras.toString().padStart(2, "0");
+    const minutosFormateados = nuevosMinutos.toString().padStart(2, "0");
+
+    return `${horasFormateadas}:${minutosFormateados}`;
+  }
+
   const { data } = useEstablecimientoByID(Number(idEst));
-  const { data: canchas} = useCanchasByEstablecimientoID(
+  const { data: canchas } = useCanchasByEstablecimientoID(
     Number(idEst)
   );
 
-  const toast = useToast();
+  useEffect(() => {
+    console.log(canchas)
+  }, [canchas])
 
   const methods = useYupForm<RegistrarReserva>({
     validationSchema,
   });
-
-  /*
-    const { mutate, isLoading, isError } = useRegistrarJugador({
-        onSuccess: () => {
-        toast({
-            title: "Cuenta registrada correctamente.", 
-            description: "Inicie sesión para continuar.",
-            status: "success",
-        });
-        navigate("/login");
-        },
-        onError: () => {
-        toast({
-            title: "Error al registrar su cuenta.",
-            description: `Intente de nuevo.`,
-            status: "error",
-        });
-        },
-    });
-*/
 
   return (
     <>
@@ -65,7 +87,7 @@ export default function ReservarEstablecimiento() {
 
       <FormProvider {...methods}>
         <VStack
-          as="form" 
+          as="form"
           spacing="4"
           width="-webkit-fit-content"
           justifyContent="center"
@@ -73,89 +95,97 @@ export default function ReservarEstablecimiento() {
           my="5px"
         >
           <HStack>
-          <SelectControl minWidth="160px"
-                label="Horario "
-                name="horario"
-                placeholder="Elegir"
-                isRequired
-              >
-                {HORAS.map((hora, i) => (
-                  <option key={i} value={hora}>
-                    {hora}
-                  </option>
-                ))}
-              </SelectControl>
-              <SelectControl minWidth="160px"
-                label="Duración "
-                name="duracion"
-                placeholder="Elegir"
-                isRequired
-              >
-                {DURACION_RESERVA.map((duracion, i) => (
-                  <option key={i} value={duracion}>
-                    {duracion}
-                  </option>
-                ))}
+            <SelectControl minWidth="160px"
+              label="Horario "
+              name="horario"
+              placeholder="Elegir"
+              isRequired
+              onChange={(e) => setHoraInicio(e.target.value)}
+            >
+              {HORAS.map((hora, i) => (
+                <option key={i} value={hora}>
+                  {hora}
+                </option>
+              ))}
+            </SelectControl>
+            <SelectControl minWidth="160px"
+              label="Duración "
+              name="duracion"
+              placeholder="Elegir"
+              isRequired
+              onChange={(e) => setDuration(e.target.value)}
+            >
+              {DURACION_RESERVA.map((duracion, i) => (
+                <option key={i} value={duracion}>
+                  {duracion}
+                </option>
+              ))}
             </SelectControl>
           </HStack>
           <HStack>
-          <SelectControl minWidth="160px"
-                label="Cancha "
-                name="cancha"
-                placeholder="Elegir"
-                isRequired
-              >
-                {canchas.map((cancha, i) => (
-                  <option key={i} value={cancha.nombre}>
+            <SelectControl minWidth="160px"
+              label="Cancha "
+              name="cancha"
+              placeholder="Elegir"
+              isRequired
+              onChange={(e) => setCancha(e.target.value)}
+            >
+              {canchas.map((cancha, i) => {
+                console.log(cancha)
+                return (
+                  <option key={i} value={cancha.id}>
                     {cancha.nombre}
                   </option>
-                ))}
-              </SelectControl>
-              <SelectControl minWidth="160px"
-                label="Deporte "
-                name="deporte"
-                placeholder="Elegir"
-                isRequired
-              >
-                {canchas.map((hora, i) => (
-                  <option key={i} value={hora.disciplinas}>
-                    {hora.disciplinas}
+                )
+              })}
+            </SelectControl>
+            <SelectControl minWidth="160px"
+              label="Deporte "
+              name="deporte"
+              placeholder="Elegir"
+              isRequired
+              onChange={(e) => setDisc(e.target.value)}
+            >
+              {canchaData?.disciplinas
+                ? [...new Set(canchaData.disciplinas)].map((c, i) => (
+                  <option key={i} value={c}>
+                    {c}
                   </option>
-                ))}
+                ))
+                : null}
             </SelectControl>
           </HStack>
           <ConfirmSubmitButton header="Datos reserva"
-                onSubmit={()=> console.log(methods.getValues())}
-                body= {
-                <>
-                 <VStack
-                    as="form" 
-                    spacing="4"
-                    width="-webkit-fit-content"
-                    justifyContent="center"
-                    margin="auto"
-                    >
-                      <HStack spacing="20px">
-                        <Text> Fecha: <strong> 13/03/24 </strong> </Text>
-                        <Text> Precio: <strong> $1500 </strong></Text>
+            onSubmit={() => console.log(methods.getValues())}
+            body={
+              <>
+                <VStack
+                  as="form"
+                  spacing="4"
+                  width="-webkit-fit-content"
+                  justifyContent="center"
+                  margin="auto"
+                >
+                  <HStack spacing="20px">
+                    <Text> Fecha: <strong> 13/03/24 </strong> </Text>
+                    <Text> Precio: <strong> $1500 </strong></Text>
 
-                    </HStack>
+                  </HStack>
 
-                        <HStack spacing="20px">
-                        <Text> Hora inicio {methods.getValues("horario")} </Text>
-                        <Text> Hora fin {methods.getValues("horario") } </Text>
+                  <HStack spacing="20px">
+                    <Text> Hora inicio <strong>{horaInicio} hs</strong></Text>
+                    <Text> Hora fin <strong>{sumarTiempo(horaInicio, duration)} hs</strong></Text>
 
-                    </HStack>
-                    <HStack spacing="20px">
-                        <Text> Cancha {methods.getValues("cancha")} </Text>
-                        <Text> Deporte {methods.getValues("deporte") } </Text>
-
-                    </HStack>
-                </VStack>             
-                </>
-                }
-
-                > Rerservar </ConfirmSubmitButton>
+                  </HStack>
+                  <HStack spacing="20px">
+                    {/* <Text> Cancha {methods.getValues("cancha")} </Text> */}
+                    <Text> Cancha <strong>{canchaData?.nombre}</strong> </Text>
+                    <Text> Deporte <strong>{disc}</strong> </Text>
+                  </HStack>
+                </VStack>
+              </>
+            }
+          > Rerservar </ConfirmSubmitButton>
         </VStack>
       </FormProvider>
       <Box>
