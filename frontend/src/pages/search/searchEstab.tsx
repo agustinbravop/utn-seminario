@@ -39,6 +39,15 @@ export default function SearchEstab() {
   const [prov, setProv] = useState("");
   const [deporte, setDeporte] = useState("");
 
+  const obtenerFechaActual = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); 
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  const [dateSelect, setDateSelect] = useState(obtenerFechaActual)
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiltro(e.target.value);
   };
@@ -139,12 +148,21 @@ export default function SearchEstab() {
             <option key="Padel">Padel</option>
             <option key="Otra">Otra</option>
           </Select>
+          <Input
+            type='date'
+            focusBorderColor="lightblue"
+            placeholder="Nombre del establecimiento"
+            size="md"
+            width="100%"
+            onChange={(e) => setDateSelect(e.target.value)}
+            value={dateSelect}
+          />
         </VStack>
       </Box>
       <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
         {(establecimientosFiltrados ? establecimientosFiltrados : data).map(
           (est) => (
-            <EstablecimientoJugador key={est.id} establecimiento={est} /> 
+            <EstablecimientoJugador key={est.id} establecimiento={est} />
           )
         )}
       </HStack>
