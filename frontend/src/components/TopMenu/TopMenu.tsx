@@ -61,7 +61,7 @@ function AdminNav({
       <Link to={`/admin/${admin.id}`}>
         <LogoImage />
       </Link>
-      <nav style={{ paddingRight: "15px" }}>
+      <nav style={{ paddingRight: "0px" }}>
         <HStack>
           <Menu>
             <MenuButton
@@ -105,7 +105,7 @@ function JugadorNav({
       <Link to={`/jugador/${jugador.id}`}>
         <LogoImage />
       </Link>
-      <nav style={{ paddingRight: "15px" }}>
+      <nav style={{ paddingRight: "0px" }}>
         <HStack>
           <Menu>
             <MenuButton

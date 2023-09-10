@@ -12,23 +12,8 @@ export default function ReservaCardList() {
 
   return (
     <>
-    <Heading size="lg" textAlign='center'>Reservas Activas</Heading>
-      <SimpleGrid
-        spacing={4}
-        templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
-        borderWidth="1px"
-        borderRadius="5px"
-        maxWidth="800px"
-        ml={["0%", "20%"]}
-      >
+    <Heading pb="10px" size="lg" textAlign='center'>Reservas Activas</Heading>    
         <ReservaCard />
-      
-      </SimpleGrid>
-      <HStack justifyContent="center">
-        <Button fontSize="25px" colorScheme="green">
-          Reservar
-        </Button>
-      </HStack>
     </>
   );
 }

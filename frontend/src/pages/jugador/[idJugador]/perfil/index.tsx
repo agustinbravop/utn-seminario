@@ -20,14 +20,14 @@ export default function PerfilPage() {
   return (
     <>
       <VStack>
-        <Card boxSize="40rem" width="90%" height="70%" marginTop="5%">
+        <Card boxSize="40rem" width="100%" height="70%" marginTop="5%">
           <CardHeader>
             <Heading size="lg" textAlign="center">
               Mi perfil
             </Heading>
             <Box width="100%" display="flex" flexDirection="column" alignItems="flex-end" >
              <Link to="#">
-              <Button mt='10%' height='40px' justifyContent='center' leftIcon={<EditIcon />}>Editar </Button>
+              <Button size='sm' mt='15%' height='40px' justifyContent='center' leftIcon={<EditIcon boxSize="3" />}>Editar </Button>
             </Link> 
             </Box>
           </CardHeader>
