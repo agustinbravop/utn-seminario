@@ -12,15 +12,14 @@ export interface EstablecimientoRepository {
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   getEstablecimientoAll(): Promise<Establecimiento[]>;
   getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
-  getEstablecimientoDisciplina(disciplina:string): Promise<Establecimiento[]>
+  getEstablecimientoDisciplina(disciplina: string): Promise<Establecimiento[]>
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
 }
 
 export class PrismaEstablecimientoRepository
-  implements EstablecimientoRepository
-{
+  implements EstablecimientoRepository {
   private prisma: PrismaClient;
   private include = { localidad: true };
 
@@ -29,10 +28,10 @@ export class PrismaEstablecimientoRepository
   }
   async getAll(): Promise<Establecimiento[]> {
     try {
-     const allEstab = await this.prisma.establecimiento.findMany({
-      include: this.include
-     });
-     return allEstab.map((e) => toModel(e));
+      const allEstab = await this.prisma.establecimiento.findMany({
+        include: this.include
+      });
+      return allEstab.map((e) => toModel(e));
     } catch (e) {
       console.error(e);
       throw new InternalServerError("No se pudo obtener los establecimientos");
@@ -221,36 +220,39 @@ export class PrismaEstablecimientoRepository
           {
             ...(params.nombre
               ? {
-                  nombre: params.nombre,
-                }
+                nombre: {
+                  contains: params.nombre,
+                  mode: "insensitive", // Hace que la búsqueda sea insensible a mayúsculas y minúsculas.
+                },
+              }
               : {}),
           },
           {
             ...(params.localidad
               ? {
-                  localidad: {
-                    nombre: {
-                      equals: params.localidad,
-                      mode: "insensitive",
-                    },
-                    idProvincia: {
-                      equals: params.provincia,
-                      mode: "insensitive",
-                    },
+                localidad: {
+                  nombre: {
+                    equals: params.localidad,
+                    mode: "insensitive",
                   },
-                }
+                  idProvincia: {
+                    equals: params.provincia,
+                    mode: "insensitive",
+                  },
+                },
+              }
               : {}),
           },
           {
             ...(params.provincia
               ? {
-                  localidad: {
-                    idProvincia: {
-                      equals: params.provincia,
-                      mode: "insensitive",
-                    },
+                localidad: {
+                  idProvincia: {
+                    equals: params.provincia,
+                    mode: "insensitive",
                   },
-                }
+                },
+              }
               : {}),
           },
         ],
@@ -261,7 +263,6 @@ export class PrismaEstablecimientoRepository
       },
     });
 
-    
     return estsDB.map((ests) => toModel(ests));
   }
 }

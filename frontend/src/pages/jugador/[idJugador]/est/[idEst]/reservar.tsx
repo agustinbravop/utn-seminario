@@ -16,6 +16,7 @@ import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 import { DIAS, DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
 import { useEffect, useState } from "react";
+import { formatearFecha } from "@/utils/dates";
 
 const validationSchema = Yup.object({
   horario: Yup.string().required("Obligatorio"),
@@ -23,21 +24,6 @@ const validationSchema = Yup.object({
   duracion: Yup.string().required("Obligatorio"),
   deporte: Yup.string().required("Obligatorio"),
 });
-
-function formatearFecha(fechaEnFormatoOriginal) {
-  // Parsea la fecha en el formato "aaaa-mm-dd"
-  const fechaParseada = new Date(fechaEnFormatoOriginal);
-
-  // Obtiene el día, el mes y el año de la fecha parseada
-  const dia = (fechaParseada.getDate() + 1).toString().padStart(2, '0');
-  const mes = (fechaParseada.getMonth() + 1).toString().padStart(2, '0'); // Suma 1 al mes, ya que en JavaScript los meses van de 0 a 11.
-  const anio = fechaParseada.getFullYear();
-
-  // Formatea la fecha en "dd/mm/aaaa"
-  const fechaFormateada = `${dia}/${mes}/${anio}`;
-
-  return fechaFormateada;
-}
 
 export default function ReservarEstablecimiento() {
   const { idEst } = useParams();
