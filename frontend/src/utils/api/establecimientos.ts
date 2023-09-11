@@ -46,6 +46,17 @@ export function useEstablecimientosByAdminID(
   );
 }
 
+export function useEstablecimientosEliminadosByAdminID(
+  idAdmin: number,
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "deleted", "byAdmin", idAdmin],
+    `${API_URL}/establecimientos/byAdmin/deleted/${idAdmin}`,
+    { ...options, initialData: [] }
+  );
+}
+
 export function useCrearEstablecimiento(
   options?: UseApiMutationOptions<
     CrearEstablecimientoReq & { imagen?: File },

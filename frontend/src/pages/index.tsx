@@ -50,7 +50,7 @@ export default function LandingPage() {
               width="35%"
             >
               <Heading style={{ fontSize: "20px" }}>
-                ¿Queres publicitar tu Establecimiento?
+                ¿Querés publicitar tu establecimiento?
               </Heading>
               <Text maxWidth="400px" textAlign="left">
                 Play Finder te permite administrar las reservas de tus canchas,

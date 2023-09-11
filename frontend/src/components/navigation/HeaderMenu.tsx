@@ -1,30 +1,14 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  Button,
-  HStack,
-  Icon,
-  Image,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import { Button, HStack, Icon, MenuItem, MenuList } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
-import {
-  ArrowForwardIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  InfoIcon,
-} from "@chakra-ui/icons";
+import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
-import Breadcrumb from "../Breadcrumb/Breadcrumb";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
+import { LogoImage } from "@/utils/consts";
 
-export default function TopMenu() {
-  const navigate = useNavigate();
-  const next = (dir: boolean) => {
-    dir ? navigate(+1) : navigate(-1);
-  };
+export default function HeaderMenu() {
   const { admin, isAdmin, logout: adminLogout } = useCurrentAdmin();
   const { jugador, isJugador, logout: jugadorLogout } = useCurrentJugador();
 
@@ -47,26 +31,6 @@ export default function TopMenu() {
       >
         {nav}
       </HStack>
-
-      {admin && (
-        <>
-          <HStack
-            paddingTop={7}
-            marginLeft="17.3%"
-            marginRight="17.%"
-            spacing={1}
-          >
-            <Button
-              size="xs"
-              backgroundColor="white"
-              onClick={() => next(false)}
-            >
-              <ChevronLeftIcon boxSize={6} />
-            </Button>
-            <Breadcrumb />
-          </HStack>
-        </>
-      )}
     </>
   );
 }
@@ -84,11 +48,7 @@ function AdminNav({
   return (
     <>
       <Link to={`/admin/${admin.id}`}>
-        <Image
-          src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-          alt="logo"
-          width={177}
-        />
+        <LogoImage />
       </Link>
       <nav style={{ paddingRight: "15px" }}>
         <HStack>
@@ -132,11 +92,7 @@ function JugadorNav({
   return (
     <>
       <Link to={`/jugador/${jugador.id}`}>
-        <Image
-          src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-          alt="logo"
-          width={177}
-        />
+        <LogoImage />
       </Link>
       <nav style={{ paddingRight: "15px" }}>
         <HStack>
@@ -174,11 +130,7 @@ function UnregisteredNav() {
   return (
     <>
       <Link to="/">
-        <Image
-          src="https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png"
-          alt="logo"
-          width={177}
-        />
+        <LogoImage />
       </Link>
       <nav>
         <HStack>

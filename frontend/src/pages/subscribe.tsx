@@ -80,7 +80,6 @@ export default function SubscribePage() {
         title: "Cuenta registrada correctamente.",
         description: "Inicie sesión para continuar.",
         status: "success",
-        isClosable: true,
       });
       navigate("/login");
     },
@@ -89,7 +88,6 @@ export default function SubscribePage() {
         title: "Error al registrar su cuenta.",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
       });
     },
   });

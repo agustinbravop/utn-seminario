@@ -1,5 +1,7 @@
-import { Cancha, Dia } from "../models/cancha.js";
-import { BadRequestError, InternalServerError, NotFoundError } from "../utils/apierrors.js";
+
+import { Cancha } from "../models/cancha.js";
+import { Dia } from "../models/disponibilidad.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import {
   PrismaClient,
   cancha,
@@ -7,6 +9,7 @@ import {
   disciplina,
   disponibilidad,
 } from "@prisma/client";
+import { DisponibilidadRepository } from "./disponibilidades.js";
 
 export interface CanchaRepository {
   getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
@@ -26,9 +29,14 @@ export class PrismaCanchaRepository implements CanchaRepository {
       },
     },
   };
+  private dispRepository: DisponibilidadRepository;
 
-  constructor(prismaClient: PrismaClient) {
+  constructor(
+    prismaClient: PrismaClient,
+    dispRepository: DisponibilidadRepository
+  ) {
     this.prisma = prismaClient;
+    this.dispRepository = dispRepository;
   }
 
   async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {
@@ -38,16 +46,11 @@ export class PrismaCanchaRepository implements CanchaRepository {
           idEstablecimiento: idEst,
           eliminada: false,
         },
-        orderBy: [
-          {
-            nombre: "asc",
-          },
-        ],
+        orderBy: [{ nombre: "asc" }],
         include: this.include,
       });
       return canchas.map((c) => toModel(c));
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError("Error al intentar listar las canchas");
     }
   }
@@ -64,17 +67,8 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 
   async crearCancha(cancha: Cancha): Promise<Cancha> {
-    //Valida que la cancha ingresada sea unica 
-    const canchas= await this.getCanchasByEstablecimientoID(cancha.idEstablecimiento)
-    const array_cancha=canchas.filter((elemento)=>(elemento.nombre.toUpperCase()==cancha.nombre.toUpperCase() && elemento.habilitada==true))
-    if (array_cancha.length==1){ 
-      throw new BadRequestError("La cancha ingresada ya existe. Ingrese el nombre de otra cancha")
-    }
-
     
     try {
-
-      validarDisponibilidades(cancha)
       const { id } = await this.prisma.cancha.create({
         data: {
           nombre: cancha.nombre,
@@ -87,33 +81,17 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
-
       // Creo las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.prisma.disponibilidad.create({
-            data: {
-              horaFin: disp.horaFin,
-              horaInicio: disp.horaInicio,
-              precioReserva: disp.precioReserva,
-              precioSenia: disp.precioSenia,
-              dias: { connect: disp.dias.map((dia) => ( {dia} ))},
-              cancha: { connect: { id } },
-              disciplina: {
-                connectOrCreate: {
-                  where: { disciplina: disp.disciplina },
-                  create: { disciplina: disp.disciplina },
-                },
-              },
-            },
-          });
+          await this.dispRepository.crearDisponibilidad(disp);
+
         })
       );
 
       
       return await this.getCanchaByID(id);
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError(
         "Error interno al intentar cargar la cancha"
       );
@@ -139,46 +117,16 @@ export class PrismaCanchaRepository implements CanchaRepository {
       });
      
       // Modifico las disponibilidades por separado, por limitaciones de Prisma.
-      // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se crea.
+      // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se lanza un error.
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.prisma.disponibilidad.upsert({
-            where: { id: disp.id}, 
-            create: {
-              horaFin: disp.horaFin,
-              horaInicio: disp.horaInicio,
-              precioReserva: disp.precioReserva,
-              precioSenia: disp.precioSenia,
-              dias: { connect: disp.dias.map((dia) => ({ dia })) },
-              cancha: { connect: { id: id } },
-              disciplina: {
-                connectOrCreate: {
-                  where: { disciplina: disp.disciplina },
-                  create: { disciplina: disp.disciplina },
-                },
-              },
-            },
-            update: {
-              horaFin: disp.horaFin,
-              horaInicio: disp.horaInicio,
-              precioReserva: disp.precioReserva,
-              precioSenia: disp.precioSenia,
-              dias: { connect: disp.dias.map((dia) => ({ dia })) },
-              cancha: { connect: { id: id } },
-              disciplina: {
-                connectOrCreate: {
-                  where: { disciplina: disp.disciplina },
-                  create: { disciplina: disp.disciplina },
-                },
-              },
-            },
-          });
+          await this.dispRepository.modificarDisponibilidad(disp);
+
         })
       );
      
       return await this.getCanchaByID(id);
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new InternalServerError(
         "Error interno al intentar modificar la cancha"
       );
@@ -198,7 +146,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 }
 
-type disponibilidadDB = Omit<disponibilidad, "idDisciplina" | "idCancha"> & {
+type disponibilidadDB = Omit<disponibilidad, "idDisciplina"> & {
   disciplina: disciplina;
   dias: dia[]
 } ;
@@ -220,19 +168,20 @@ function toModel(cancha: canchaDB): Cancha {
   };
 }
 
+/*
 function validarDisponibilidades(cancha:Cancha): void { 
   
 
   const disp=cancha.disponibilidades.filter((disp)=>(Number(disp.horaFin)<=Number(disp.horaInicio)))
   //Valida que la hora de finalizacion no sea menor que la hora de inicio
   if (disp.length>=1) { 
-    throw new BadRequestError("La hora de finalizacion no puede ser menor que la hora de inicio. Intente de nuevo")
+    throw new InternalServerError("La hora de finalizacion no puede ser menor que la hora de inicio. Intente de nuevo")
   }
 
   //Valida que el precio de la seña no supere el precio de la reserva 
   cancha.disponibilidades.filter((elemento)=>{ 
     if (elemento.precioSenia?.valueOf()!=='undefined' && Number(elemento.precioSenia)>Number(elemento.precioReserva)) { 
-      throw new BadRequestError("Error el precio de la seña no puede ser mayor que el precio de la reserva. Intenta de nuevo")
+      throw new InternalServerError("Error el precio de la seña no puede ser mayor que el precio de la reserva. Intenta de nuevo")
     }
   })
 
@@ -247,7 +196,7 @@ function validarDisponibilidades(cancha:Cancha): void {
   for (var j=i+1; j<Lista.length;j++) { 
     if (Lista[i].dia==Lista[j].dia) { 
       if (Lista[j].horaI>=Lista[i].horaI && Lista[j].horaI<Lista[i].horaF) { 
-        throw new BadRequestError("Error en el registro de disponibilidades. Intente de nuevo")
+        throw new InternalServerError("Error en el registro de disponibilidades. Intente de nuevo")
       }
     }
   }
@@ -255,7 +204,7 @@ function validarDisponibilidades(cancha:Cancha): void {
   
 
 }
-
+*/
  
 
 async function awaitQuery(
@@ -269,8 +218,7 @@ async function awaitQuery(
     if (cancha) {
       return toModel(cancha);
     }
-  } catch (e) {
-    console.error(e);
+  } catch {
     throw new InternalServerError(errorMsg);
   }
   throw new NotFoundError(notFoundMsg);

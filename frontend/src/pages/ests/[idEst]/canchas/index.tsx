@@ -16,9 +16,9 @@ import Alerta from "@/components/Alerta/Alerta";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import SubMenu from "@/components/SubMenu/SubMenu";
+import { EstablecimientoMenu } from "@/components/navigation";
 
-export default function CanchasPage() {
+export default function EstablecimientoCanchasPage() {
   const { idEst } = useParams();
   const { data, isLoading, isError } = useCanchasByEstablecimientoID(
     Number(idEst)
@@ -35,7 +35,7 @@ export default function CanchasPage() {
 
   return (
     <>
-      <SubMenu />
+      <EstablecimientoMenu />
       <HStack
         marginRight="16%"
         marginLeft="16%"
@@ -57,7 +57,6 @@ export default function CanchasPage() {
         </InputGroup>
         <HStack
           marginLeft="auto"
-          // marginRight="15%"
           display="flex"
           alignContent="column"
           spacing={5}

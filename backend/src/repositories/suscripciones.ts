@@ -25,7 +25,6 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
         return suscripcion;
       }
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("Error al buscar la suscripcion");
     }
     throw new NotFoundError("No existe suscripcion con ese id");
@@ -36,7 +35,6 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
       const suscripciones = await this.prisma.suscripcion.findMany();
       return suscripciones;
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo obtener las suscripciones");
     }
   }

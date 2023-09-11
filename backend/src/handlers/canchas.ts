@@ -1,11 +1,8 @@
 import { RequestHandler } from "express";
 import { CanchaService } from "../services/canchas.js";
-import {
-  Cancha,
-  canchaSchema,
-  disponibilidadSchema,
-} from "../models/cancha.js";
+import { Cancha, canchaSchema } from "../models/cancha.js";
 import { z } from "zod";
+import { disponibilidadSchema } from "../models/disponibilidad.js";
 
 export const crearCanchaReqSchema = canchaSchema
   .omit({
@@ -57,11 +54,11 @@ export class CanchaHandler {
 
   putCancha(): RequestHandler {
     return async (req, res) => {
-      //console.log(res.locals.body);
-
-      const cancha: Cancha = res.locals.body
+      //console.log(res.locals.body);      
       
-      
+      const cancha: Cancha = {
+        ...res.locals.body,
+      };
       cancha.id = Number(req.params["idCancha"]);
       
       
@@ -93,8 +90,6 @@ export class CanchaHandler {
   postCancha(): RequestHandler {
     return async (_req, res) => {
       const cancha: Cancha = res.locals.body;
-
-      console.log("postHandler", cancha);
 
       const canchaCreada = await this.service.crear(cancha);
       res.status(201).json(canchaCreada);

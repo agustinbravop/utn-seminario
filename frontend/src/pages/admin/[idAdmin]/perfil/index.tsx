@@ -41,43 +41,31 @@ export default function PerfilPage() {
           <CardBody marginTop="28px">
             <Stack divider={<StackDivider />} spacing="2.5" marginTop="-2rem">
               <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Nombre
-                </Heading>
+                <Heading size="xs">Nombre</Heading>
                 <Text fontSize="sm">
                   {admin?.nombre} {admin?.apellido}
                 </Text>
               </Box>
               <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Usuario
-                </Heading>
+                <Heading size="xs">Usuario</Heading>
                 <Text fontSize="sm">{admin?.usuario}</Text>
               </Box>
               <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Correo
-                </Heading>
+                <Heading size="xs">Correo</Heading>
                 <Text fontSize="sm">{admin?.correo}</Text>
               </Box>
               <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Teléfono
-                </Heading>
+                <Heading size="xs">Teléfono</Heading>
                 <Text fontSize="sm">{admin?.telefono}</Text>
               </Box>
               <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Tarjeta
-                </Heading>
+                <Heading size="xs">Tarjeta</Heading>
                 <Text fontSize="sm">
                   {admin?.tarjeta.numero.replace(/.(?=.{4})/g, "*")}
                 </Text>
               </Box>
               <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Suscripción
-                </Heading>
+                <Heading size="xs">Suscripción</Heading>
                 <Text fontSize="sm">{admin?.suscripcion.nombre}</Text>
               </Box>
               <Link to="editSuscripcion">

@@ -73,6 +73,7 @@ model establecimiento {
   direccion          String  @db.VarChar
   urlImagen          String? @db.VarChar
   correo             String  @db.VarChar
+  habilitado         Boolean @default(true)
   eliminado          Boolean @default(false)
   horariosDeAtencion String?
 

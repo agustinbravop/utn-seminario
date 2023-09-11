@@ -6,42 +6,30 @@ import {
   HStack,
   Heading,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   StackDivider,
+  Switch,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCanchaByID, useEliminarCancha } from "@/utils/api/canchas";
+import {
+  useCanchaByID,
+  useEliminarCancha,
+  useModificarCancha,
+} from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import SubMenu from "@/components/SubMenu/SubMenu";
-import { defImage } from "@/utils/const/const";
-import React from "react";
+import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { GrSchedules } from "react-icons/gr";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { ConfirmSubmitButton } from "@/components/forms";
+import { CanchaMenu } from "@/components/navigation";
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -51,7 +39,6 @@ export default function CanchaInfoPage() {
         title: "Cancha Eliminada.",
         description: `Cancha Eliminada exitosamente.`,
         status: "success",
-        isClosable: true,
       });
       navigate(-1);
     },
@@ -60,29 +47,40 @@ export default function CanchaInfoPage() {
         title: "Error al eliminar la cancha",
         description: `Intente de nuevo.`,
         status: "error",
-        isClosable: true,
+      });
+    },
+  });
+
+  const { mutate } = useModificarCancha({
+    onSuccess: () => {
+      toast({
+        title: `Cancha ${!data?.habilitada ? "habilitada" : "deshabilitada"}.`,
+        status: `${!data?.habilitada ? "info" : "warning"}`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: `Error al ${
+          !data?.habilitada ? "habilitar" : "deshabilitar"
+        } la cancha`,
+        description: `Intente de nuevo.`,
+        status: "error",
       });
     },
   });
 
   if (!data) {
-    return <p>Cargando...</p>;
+    return <LoadingSpinner />;
   }
 
-  const handleEliminar = () => {
-    mutateDelete({ idEst: data.idEstablecimiento, idCancha: data.id });
-    onClose();
+  const handleSwitchChange = () => {
+    mutate({ ...data, habilitada: !data.habilitada });
   };
 
   return (
-    <div>
-      <SubMenu canchas={true} nombreCancha={data.nombre} />
-      <HStack
-        marginRight="16%"
-        marginLeft="16%"
-        marginBottom="30px"
-        marginTop="0px"
-      >
+    <>
+      <CanchaMenu />
+      <HStack mr="16%" ml="16%" mb="30px" mt="0px">
         <Text>
           Esta es la información que se muestra al usuario de su cancha.
         </Text>
@@ -94,7 +92,7 @@ export default function CanchaInfoPage() {
           display="flex"
           style={{ marginTop: "10px", marginBottom: "1rem" }}
           height="75%"
-          width="56%"
+          width="76%"
         >
           <CardBody height="100%" marginTop="0px">
             <Box
@@ -103,106 +101,70 @@ export default function CanchaInfoPage() {
               height="100%"
               width="100%"
             >
-              <Box>
-                <Image
-                  src={!(data?.urlImagen === null) ? data?.urlImagen : defImage}
-                  width="1000px"
-                  height="400px"
-                  objectFit="cover"
-                  borderRadius="10px"
-                />
-              </Box>
+              <Image
+                src={data?.urlImagen}
+                fallbackSrc={FALLBACK_IMAGE_SRC}
+                maxWidth="20vw"
+                height="400px"
+                objectFit="cover"
+                borderRadius="10px"
+              />
 
               <Box marginTop="55px" marginLeft=" 50px" height="100%">
                 <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Descripción
-                    </Heading>
-                    <Text fontSize="sm">{data.descripcion}</Text>
-                  </Box>
-                  <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Disciplinas
-                    </Heading>
-                    <Text fontSize="sm">
-                      {data.disciplinas.map((disciplina, index) => (
-                        <React.Fragment key={index}>
-                          {disciplina}
-                          {index !== data.disciplinas.length - 1 && " - "}
-                        </React.Fragment>
-                      ))}
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Habilitación
-                    </Heading>
+                    <HStack
+                      width="100%"
+                      display="flex"
+                      justifyContent="space-between"
+                    >
+                      <Heading size="xs">Habilitación</Heading>
+                      <Switch
+                        isChecked={data.habilitada}
+                        onChange={handleSwitchChange}
+                      />
+                    </HStack>
                     <Text fontSize="sm">
                       Esta cancha {data.habilitada ? "" : "no"} se encuentra
                       habilitada
                     </Text>
                   </Box>
+                  <Box>
+                    <Heading size="xs">Descripción</Heading>
+                    <Text fontSize="sm">{data.descripcion}</Text>
+                  </Box>
+                  <Box>
+                    <Heading size="xs">Disciplinas</Heading>
+                    <Text fontSize="sm">
+                      {[...new Set(data.disciplinas)].join(" - ")}
+                    </Text>
+                  </Box>
 
                   <Box>
-                    <Heading size="xs" textTransform="uppercase">
-                      Disponibilidades
-                    </Heading>
-                    <Text fontSize="sm">
-                      Estas son las disponibilidades de la cancha.
-                    </Text>
-
-                    <TableContainer paddingTop="15px" paddingBottom="20px">
-                      <Table variant="simple" size="sm">
-                        <Thead>
-                          <Tr>
-                            <Th>disciplina</Th>
-                            <Th>horario</Th>
-                            <Th>precio</Th>
-                            <Th> dias </Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {data.disponibilidades.map((d) => (
-                            <Tr key={d.id}>
-                              <Td> {d.disciplina} </Td>
-                              <Td>
-                                {d.horaInicio}- {d.horaFin}
-                              </Td>
-                              <Td> ${d.precioReserva} </Td>
-                              <Td>
-                                {d.dias.map((dia, index) => (
-                                  <React.Fragment key={index}>
-                                    {dia}
-                                    {index !== d.dias.length - 1 && " - "}
-                                  </React.Fragment>
-                                ))}
-                              </Td>
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
-                    <Box
-                      width="100%"
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="flex-end"
-                    >
-                      <Link to="editar">
-                        <Button mt="38px" mr="40px" leftIcon={<EditIcon />}>
-                          Editar
+                    <HStack justifyContent="center" mt="1em" spacing="1.5em">
+                      <Link to="disps">
+                        <Button leftIcon={<GrSchedules />}>
+                          Disponibilidades
                         </Button>
                       </Link>
-                      <Button
-                        mt="38px"
-                        onClick={onOpen}
+                      <Link to="editar">
+                        <Button leftIcon={<EditIcon />}>Editar</Button>
+                      </Link>
+                      <ConfirmSubmitButton
                         colorScheme="red"
+                        onSubmit={() =>
+                          mutateDelete({
+                            idEst: data.idEstablecimiento,
+                            idCancha: data.id,
+                          })
+                        }
+                        header="Eliminar cancha"
+                        body="¿Está seguro de eliminar la cancha?"
                         leftIcon={<DeleteIcon />}
                       >
                         Eliminar
-                      </Button>
-                    </Box>
+                      </ConfirmSubmitButton>
+                    </HStack>
                   </Box>
                 </Stack>
               </Box>
@@ -210,26 +172,6 @@ export default function CanchaInfoPage() {
           </CardBody>
         </Card>
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Eliminar cancha</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>¿Está seguro de eliminar la cancha?</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button
-              colorScheme="blackAlpha"
-              backgroundColor="black"
-              onClick={handleEliminar}
-            >
-              Aceptar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </div>
+    </>
   );
 }

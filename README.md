@@ -1,7 +1,7 @@
 # utn-seminario
 
-Aplicación web para la reserva de chanchas. Proyecto realizado como parte del cursado 2023 de Seminario Integrador / Habilitación Profesional,
-materia de la carrera Ingeniería en Sistemas de Información dentro de la Universidad Tecnológica Nacional, Facultad Regional Resistencia.
+Aplicación web responsive que permite la gestión y reserva de canchas deportivas. Proyecto realizado en el cursado 2023 de Seminario Integrador / Habilitación Profesional,
+materia de la carrera Ingeniería en Sistemas de Información de la Universidad Tecnológica Nacional, Facultad Regional Resistencia.
 
 ## Levantar la app en entorno local
 
@@ -24,7 +24,7 @@ DATABASE_URL=postgresql://postgres:root@localhost:5432/canchasdb
 SHADOW_DATABASE_URL=postgresql://postgres:root@localhost:5432/canchasdb-shadow
 JWT_SECRET=l7K15qPS401QMpTNXHfg5YTvkIvmUPQY
 JWT_ISSUER=canchas-api
-JWT_EXPIRATION_TIME=1h
+JWT_EXPIRATION_TIME=24h
 PORT=3001
 ```
 

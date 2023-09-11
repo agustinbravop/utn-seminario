@@ -5,6 +5,7 @@ import { Establecimiento } from "../models/establecimiento.js";
 export interface EstablecimientoRepository {
   crear(est: Establecimiento): Promise<Establecimiento>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
+  getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   getEstablecimientoByNombre(NombreEstablecimiento: string):Promise<Establecimiento>; 
   getEstablecimientoByLocalidad(NombreLocalidad:string):Promise<Establecimiento[]>
@@ -63,7 +64,6 @@ export class PrismaEstablecimientoRepository
       });
       return toModel(dbEst);
     } catch (e) {
-      console.error(e);
       throw new InternalServerError("No se pudo crear el establecimiento");
     }
   }
@@ -90,7 +90,21 @@ export class PrismaEstablecimientoRepository
 
       return estsDB.map((estDB) => toModel(estDB));
     } catch (e) {
-      console.error(e);
+      throw new InternalServerError("No se pudo obtener los establecimientos");
+    }
+  }
+
+  async getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]> {
+    try {
+      const estsDB = await this.prisma.establecimiento.findMany({
+        where: {
+          AND: [{ idAdministrador: idAdmin }, { eliminado: true }],
+        },
+        include: this.include,
+      });
+
+      return estsDB.map((estDB) => toModel(estDB));
+    } catch {
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
   }
@@ -102,7 +116,9 @@ export class PrismaEstablecimientoRepository
         data: {
           nombre: est.nombre,
           correo: est.correo,
+          habilitado: est.habilitado,
           direccion: est.direccion,
+          eliminado: est.eliminado,
           telefono: est.telefono,
           urlImagen: est.urlImagen,
           horariosDeAtencion: est.horariosDeAtencion,
@@ -303,7 +319,6 @@ async function awaitQuery(
       return toModel(estDB);
     }
   } catch (e) {
-    console.error(e);
     throw new InternalServerError(errorMsg);
   }
 
