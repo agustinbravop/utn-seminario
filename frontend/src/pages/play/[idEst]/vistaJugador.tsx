@@ -5,7 +5,6 @@ import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import DetailEstablecimiento from "@/components/DetailEstablecimiento/DetailEstablecimiento";
 import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
-import CanchaJugador from "@/components/CanchaJugador/CanchaJugador";
 import ReservaForm from "@/components/ReservaForm/ReservaForm";
 
 export default function VistaJugador() {
@@ -45,10 +44,7 @@ export default function VistaJugador() {
           <>
             <Heading>Canchas</Heading>
             <HStack display="flex" flexWrap="wrap" justifyContent="left">
-              {canchas.data.map(
-                (c, index) =>
-                  c.habilitada && <CanchaJugador key={index} cancha={c} />
-              )}
+            
             </HStack>
           </>
         </SwipeableViews>

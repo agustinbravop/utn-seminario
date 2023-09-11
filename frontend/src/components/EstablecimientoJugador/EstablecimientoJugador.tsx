@@ -8,7 +8,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
-import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
@@ -16,32 +15,34 @@ import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
+  date: string
 };
 
 export default function EstablecimientoJugador({
   establecimiento,
+  date
 }: EstablecimientoCardProps) {
   return (
-    <Link to={`/play/${establecimiento.id}/vistaJugador`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
+    <Link to={`est/${establecimiento.id}?date=${date}`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
       <Card
-        width="200px"
-        height="280px"
+        width="360px"
+        height="240px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        <Box width="220px" height="200px">
+        <Box width="360px" height="125px">
           <Image
             src={
               !(establecimiento?.urlImagen === null)
                 ? establecimiento?.urlImagen
                 : FALLBACK_IMAGE_SRC
             }
-            borderTopRadius="lg"
+            borderRadius="lg"
             alt={`Imagen del establecimiento ${establecimiento.nombre}`}
             objectFit="cover"
-            height="60%"
-            width="80%"
+            height="100%"
+            width="93%"
             mt='5px'
             ml='0.8rem'
           />
@@ -51,14 +52,13 @@ export default function EstablecimientoJugador({
             <Heading fontSize='15px' marginBottom="10px">
               {establecimiento.nombre}
             </Heading>
-            <Text marginBottom="0" fontSize='sm'>
-              <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
+            <Text marginBottom="2" fontSize='sm'>
+              <Icon as={MdPlace} boxSize={4} mr="2"  />{" "}
               {establecimiento.direccion}
             </Text>
-            <Text fontSize='sm' mr='3rem'>
-              <PhoneIcon boxSize={4} mr="2" /> {establecimiento.telefono}
+            <Text marginBottom="0" fontSize='sm'>
+              Desde <strong> $1800 </strong>
             </Text>
-            <Text fontSize='sm'>{establecimiento.horariosDeAtencion}</Text>
           </VStack>
         </CardBody>
       </Card>

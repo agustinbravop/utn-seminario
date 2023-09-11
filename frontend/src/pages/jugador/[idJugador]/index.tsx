@@ -17,9 +17,6 @@ export default function JugadorPage() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="12" mt="40px">
-        ¡Bienvenido {currentJugador?.jugador.usuario}!
-      </Heading>
       <Box>
         <HStack justifyContent="center">
           <Tabs
@@ -28,13 +25,11 @@ export default function JugadorPage() {
             variant="unstyled"
             index={activeIndex}
             onChange={handleChangeIndex}
-          >
-          </Tabs>
+          ></Tabs>
         </HStack>
-        <SwipeableViews index={activeIndex} onChangeIndex={handleChangeIndex}>
           <SearchEstab />
-        </SwipeableViews>
       </Box>
     </>
   );
 }
+
