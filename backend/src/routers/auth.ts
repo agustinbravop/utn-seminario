@@ -1,20 +1,16 @@
 import express, { Router } from "express";
 import {
   AuthHandler,
-  loginReqSchema,
+  loginSchema,
   registrarAdminSchema,
   registrarJugadorSchema,
 } from "../handlers/auth.js";
 import { validateBody } from "../middlewares/validation.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
 
-export function authRouter(
-  handler: AuthHandler,
-  authMiddle: AuthMiddleware
-): Router {
+export function authRouter(handler: AuthHandler): Router {
   const router = express.Router();
 
-  router.post("/login", validateBody(loginReqSchema), handler.login());
+  router.post("/login", validateBody(loginSchema), handler.login());
   router.post(
     "/register/administrador",
     validateBody(registrarAdminSchema),
@@ -25,7 +21,7 @@ export function authRouter(
     validateBody(registrarJugadorSchema),
     handler.registerJugador()
   );
-  router.get("/token", authMiddle.isAdmin(), handler.refreshToken());
+  router.get("/token", handler.refreshToken());
 
   return router;
 }

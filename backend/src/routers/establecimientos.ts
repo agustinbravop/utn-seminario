@@ -3,8 +3,8 @@ import { Router } from "express";
 import multer from "multer";
 import {
   EstablecimientoHandler,
-  crearEstablecimientoReqSchema,
-  modificarEstablecimientoReqSchema,
+  crearEstablecimientoSchema,
+  modificarEstablecimientoSchema,
 } from "../handlers/establecimientos.js";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
 import { AuthMiddleware } from "../middlewares/auth.js";
@@ -31,7 +31,7 @@ export function establecimientosRouter(
   router.post(
     "/",
     authMiddle.isAdmin(),
-    validateBody(crearEstablecimientoReqSchema),
+    validateBody(crearEstablecimientoSchema),
     handler.postEstablecimiento()
   );
 
@@ -41,7 +41,7 @@ export function establecimientosRouter(
     "/:idEst",
     authMiddle.isAdmin(),
     handler.validateAdminOwnsEstablecimiento(),
-    validateBody(modificarEstablecimientoReqSchema),
+    validateBody(modificarEstablecimientoSchema),
     handler.putEstablecimiento()
   );
   router.patch(

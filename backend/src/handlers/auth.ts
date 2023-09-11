@@ -15,7 +15,7 @@ export const registrarAdminSchema = administradorSchema
   });
 
 // Se puede iniciar sesión o con usuario o con correo.
-export const loginReqSchema = z.object({
+export const loginSchema = z.object({
   correoOUsuario: z.string().nonempty(),
   clave: z.string().nonempty(),
 });
@@ -26,11 +26,11 @@ export const registrarJugadorSchema = jugadorSchema
   })
   .omit({ id: true });
 
-type LoginReq = z.infer<typeof loginReqSchema>;
+type Login = z.infer<typeof loginSchema>;
 
-type RegistrarAdminReq = z.infer<typeof registrarAdminSchema>;
+type RegistrarAdmin = z.infer<typeof registrarAdminSchema>;
 
-type RegistrarJugadorReq = z.infer<typeof registrarJugadorSchema>;
+type RegistrarJugador = z.infer<typeof registrarJugadorSchema>;
 
 export class AuthHandler {
   private service: AuthService;
@@ -43,7 +43,7 @@ export class AuthHandler {
 
   login(): RequestHandler {
     return async (_req, res) => {
-      const loginReq: LoginReq = res.locals.body;
+      const loginReq: Login = res.locals.body;
 
       const token = await this.service.loginUsuario(
         loginReq.correoOUsuario,
@@ -55,7 +55,6 @@ export class AuthHandler {
 
   refreshToken(): RequestHandler {
     return async (req, res) => {
-      // El Authorization header es válido, sino no hubiera pasado el auth middleware.
       const currentToken = req.header("Authorization")?.replace("Bearer ", "")!;
 
       const token = await this.service.refreshJWT(currentToken);
@@ -65,7 +64,7 @@ export class AuthHandler {
 
   registerAdmin(): RequestHandler {
     return async (_req: Request, res: Response) => {
-      const body: RegistrarAdminReq = res.locals.body;
+      const body: RegistrarAdmin = res.locals.body;
 
       // Se obtiene la suscripcion mediante el idSuscripcion.
       const sus = await this.susService.getSuscripcionByID(body.idSuscripcion);
@@ -73,12 +72,9 @@ export class AuthHandler {
       // Se construye el Administrador del modelo.
       const admin: Administrador = {
         ...body,
-        tarjeta: {
-          id: 0,
-          ...body.tarjeta,
-        },
-        id: 0,
         suscripcion: sus,
+        tarjeta: { ...body.tarjeta, id: 0 },
+        id: 0,
       };
 
       const adminCreado = await this.service.registrarAdministrador(
@@ -91,13 +87,10 @@ export class AuthHandler {
 
   registerJugador(): RequestHandler {
     return async (_req: Request, res: Response) => {
-      const body: RegistrarJugadorReq = res.locals.body;
+      const body: RegistrarJugador = res.locals.body;
 
       // Se construye el Jugador del modelo.
-      const jugador: Jugador = {
-        ...body,
-        id: 0,
-      };
+      const jugador: Jugador = { ...body, id: 0 };
 
       const jugadorCreado = await this.service.registrarJugador(
         jugador,

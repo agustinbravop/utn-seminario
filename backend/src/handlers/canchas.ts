@@ -4,7 +4,7 @@ import { Cancha, canchaSchema } from "../models/cancha.js";
 import { z } from "zod";
 import { disponibilidadSchema } from "../models/disponibilidad.js";
 
-export const crearCanchaReqSchema = canchaSchema
+export const crearCanchaSchema = canchaSchema
   .omit({
     id: true,
     urlImagen: true,
@@ -14,7 +14,7 @@ export const crearCanchaReqSchema = canchaSchema
     disponibilidades: z.array(disponibilidadSchema.omit({ id: true })),
   });
 
-export const modificarCanchaReqSchema = canchaSchema
+export const modificarCanchaSchema = canchaSchema
   .omit({
     id: true,
     urlImagen: true,

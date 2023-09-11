@@ -5,8 +5,8 @@ import { EstablecimientoHandler } from "../handlers/establecimientos.js";
 import { AuthMiddleware } from "../middlewares/auth.js";
 import {
   DisponibilidadHandler,
-  crearDisponibilidadReqSchema,
-  modificarDisponibilidadReqSchema,
+  crearDisponibilidadSchema,
+  modificarDisponibilidadSchema,
 } from "../handlers/disponibilidades.js";
 
 export function disponibilidadesRouter(
@@ -22,7 +22,7 @@ export function disponibilidadesRouter(
   );
   router.post(
     "/:idEst/canchas/:idCancha/disponibilidades",
-    validateBody(crearDisponibilidadReqSchema),
+    validateBody(crearDisponibilidadSchema),
     handler.postDisponibilidad()
   );
 
@@ -39,7 +39,7 @@ export function disponibilidadesRouter(
     "/:idEst/canchas/:idCancha/disponibilidades/:idDisp",
     authMiddle.isAdmin(),
     estHandler.validateAdminOwnsEstablecimiento(),
-    validateBody(modificarDisponibilidadReqSchema),
+    validateBody(modificarDisponibilidadSchema),
     handler.putDisponibilidad()
   );
   router.delete(

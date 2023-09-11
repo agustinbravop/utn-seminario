@@ -52,8 +52,6 @@ export default function FormDisponibilidad({
     resetValues,
   });
 
-  console.log(methods.getValues());
-
   const button =
     variant === "crear" ? (
       <Button my="0.5em" leftIcon={<Icon as={GrAddCircle} />} onClick={onOpen}>
