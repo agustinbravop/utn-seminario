@@ -31,7 +31,9 @@ export function establecimientosRouter(
 
   //router.use("/:idEst", validateIDParams("idEst"));
   router.get("/:idEst", handler.getEstablecimientoByID(), validateIDParams("idEst"));
-  router.get("/ests/search", handler.getEstablecimientoSearch())
+  router.get("/ests/search", 
+  authMiddle.isAdmin(), handler.validateAdminOwnsEstablecimiento(),
+  handler.getEstablecimientoSearch()); 
   router.put(
     "/:idEst",
     authMiddle.isAdmin(),
