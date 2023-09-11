@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import { RegistrarJugadorReq, useRegistrarJugador } from "@/utils/api/auth";
+import { RegistrarJugador, useRegistrarJugador } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 
@@ -31,7 +31,7 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const methods = useYupForm<RegistrarJugadorReq>({
+  const methods = useYupForm<RegistrarJugador>({
     validationSchema,
   });
 

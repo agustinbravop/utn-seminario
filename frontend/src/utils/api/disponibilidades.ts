@@ -7,11 +7,11 @@ import {
   useApiMutation,
 } from "@/hooks";
 
-export type CrearDisponibilidadReq = Omit<Disponibilidad, "id"> & {
+export type CrearDisponibilidad = Omit<Disponibilidad, "id"> & {
   idEst: number;
 };
 
-export type ModificarDisponibilidadReq = Disponibilidad & {
+export type ModificarDisponibilidad = Disponibilidad & {
   idEst: number;
 };
 
@@ -41,7 +41,7 @@ export function useDisponibilidadByID(
 }
 
 export function useCrearDisponibilidad(
-  options?: UseApiMutationOptions<CrearDisponibilidadReq, Disponibilidad>
+  options?: UseApiMutationOptions<CrearDisponibilidad, Disponibilidad>
 ) {
   return useApiMutation({
     ...options,
@@ -55,7 +55,7 @@ export function useCrearDisponibilidad(
 }
 
 export function useModificarDisponibilidad(
-  options?: UseApiMutationOptions<ModificarDisponibilidadReq, Disponibilidad>
+  options?: UseApiMutationOptions<ModificarDisponibilidad, Disponibilidad>
 ) {
   return useApiMutation({
     ...options,

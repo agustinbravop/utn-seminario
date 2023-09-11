@@ -12,11 +12,11 @@ import {
   Button,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useModificarAdministrador } from "@/utils/api/auth";
+import { useModificarJugador } from "@/utils/api/auth";
 import { FormProvider } from "react-hook-form";
 import { InputControl, ConfirmSubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
-import { useCurrentAdmin, useYupForm } from "@/hooks";
+import { useCurrentJugador, useYupForm } from "@/hooks";
 
 const validationSchema = Yup.object({
   id: Yup.number(),
@@ -27,33 +27,20 @@ const validationSchema = Yup.object({
     .email("Formato erroneo")
     .required("Debe tener un correo"),
   usuario: Yup.string().required("Debe ingresar un nombre de usuario"),
-  tarjeta: Yup.object({
-    id: Yup.number(),
-    nombre: Yup.string(),
-    numero: Yup.string(),
-    cvv: Yup.number(),
-    vencimiento: Yup.string(),
-  }),
-  suscripcion: Yup.object({
-    id: Yup.number(),
-    nombre: Yup.string(),
-    limiteEstablecimientos: Yup.number(),
-    costoMensual: Yup.number(),
-  }),
 });
 
 export default function PerfilPage() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const { admin } = useCurrentAdmin();
+  const { jugador } = useCurrentJugador();
 
-  const methods = useYupForm({ validationSchema, resetValues: admin });
-  const { mutate, isLoading } = useModificarAdministrador({
+  const methods = useYupForm({ validationSchema, resetValues: jugador });
+  const { mutate, isLoading } = useModificarJugador({
     onSuccess: () => {
       toast({
         title: "Perfil actualizado",
-        description: `Perfil actualizado exitosamente.`,
+        description: "Perfil actualizado exitosamente.",
         status: "success",
       });
       navigate(-1);
@@ -61,7 +48,7 @@ export default function PerfilPage() {
     onError: () => {
       toast({
         title: "Error al intentar editar el perfil",
-        description: `Intente de nuevo.`,
+        description: "Intente de nuevo.",
         status: "error",
       });
     },

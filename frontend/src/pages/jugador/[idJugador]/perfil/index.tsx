@@ -1,4 +1,4 @@
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { useCurrentJugador } from "@/hooks";
 import { EditIcon } from "@chakra-ui/icons";
 import {
   Card,
@@ -14,8 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-export default function AdminPerfilPage() {
-  const { admin } = useCurrentAdmin();
+export default function JugadorPerfilPage() {
+  const { jugador } = useCurrentJugador();
 
   return (
     <>
@@ -33,7 +33,7 @@ export default function AdminPerfilPage() {
             >
               <Link to="editar">
                 <Button mt="20%" leftIcon={<EditIcon />}>
-                  Editar{" "}
+                  Editar
                 </Button>
               </Link>
             </Box>
@@ -43,43 +43,21 @@ export default function AdminPerfilPage() {
               <Box>
                 <Heading size="xs">Nombre</Heading>
                 <Text fontSize="sm">
-                  {admin?.nombre} {admin?.apellido}
+                  {jugador.nombre} {jugador.apellido}
                 </Text>
               </Box>
               <Box>
                 <Heading size="xs">Usuario</Heading>
-                <Text fontSize="sm">{admin?.usuario}</Text>
+                <Text fontSize="sm">{jugador.usuario}</Text>
               </Box>
               <Box>
                 <Heading size="xs">Correo</Heading>
-                <Text fontSize="sm">{admin?.correo}</Text>
+                <Text fontSize="sm">{jugador.correo}</Text>
               </Box>
               <Box>
                 <Heading size="xs">Teléfono</Heading>
-                <Text fontSize="sm">{admin?.telefono}</Text>
+                <Text fontSize="sm">{jugador.telefono}</Text>
               </Box>
-              <Box>
-                <Heading size="xs">Tarjeta</Heading>
-                <Text fontSize="sm">
-                  {admin?.tarjeta.numero.replace(/.(?=.{4})/g, "*")}
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs">Suscripción</Heading>
-                <Text fontSize="sm">{admin?.suscripcion.nombre}</Text>
-              </Box>
-              <Link to="editSuscripcion">
-                <Box
-                  width="100%"
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                >
-                  <Link to="editarSuscripcion">
-                    <Button>Actualizar Suscripción</Button>
-                  </Link>
-                </Box>
-              </Link>
             </Stack>
           </CardBody>
         </Card>

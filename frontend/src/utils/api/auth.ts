@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import { post, JWT, API_URL, get } from ".";
+import { post, JWT, API_URL, get, patch } from ".";
 import { Administrador, Jugador, Suscripcion, Tarjeta } from "@/models";
 import { writeLocalStorage } from "../storage/localStorage";
 import {
@@ -9,16 +9,20 @@ import {
   useApiQuery,
 } from "@/hooks";
 
-export interface RegistrarAdminReq
+export interface RegistrarAdmin
   extends Omit<Administrador, "id" | "tarjeta" | "suscripcion"> {
   idSuscripcion: number;
   tarjeta: Omit<Tarjeta, "id">;
   clave: string;
 }
 
-export interface RegistrarJugadorReq extends Omit<Jugador, "id"> {
+export interface RegistrarJugador extends Omit<Jugador, "id"> {
   clave: string;
 }
+
+export type ModificarAdmin = Omit<Administrador, "suscripcion" | "tarjeta">;
+
+export type ModificarJugador = Jugador;
 
 type Usuario =
   | {
@@ -32,12 +36,12 @@ type Usuario =
 
 /**
  * Helper function que toma un token, lo escribe a localStorage,
- * y devuelve su payload decodificado.
+ * y devuelve una promise con su payload decodificado.
  */
 function captureToken(jwt: JWT) {
   writeLocalStorage("token", jwt);
   const payload: Usuario = jwtDecode(jwt.token);
-  return payload;
+  return Promise.resolve(payload);
 }
 
 export async function refreshToken() {
@@ -58,7 +62,7 @@ export function useLogin(
 }
 
 export function useRegistrarAdmin(
-  options?: UseApiMutationOptions<RegistrarAdminReq, Administrador>
+  options?: UseApiMutationOptions<RegistrarAdmin, Administrador>
 ) {
   return useApiMutation({
     ...options,
@@ -70,8 +74,47 @@ export function useRegistrarAdmin(
   });
 }
 
+export function useModificarAdministrador(
+  options?: UseApiMutationOptions<ModificarAdmin, Administrador>
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: (admin) =>
+      patch<Administrador>(`${API_URL}/administradores/${admin.id}`, admin)
+        .then(() => get<JWT>(`${API_URL}/auth/token`))
+        .then(captureToken)
+        .then((payload) => payload.admin!),
+  });
+}
+
+export function useSuscripciones(options?: UseApiQueryOptions<Suscripcion[]>) {
+  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, {
+    ...options,
+    initialData: [],
+  });
+}
+
+export function useCambiarSuscripcion(
+  options?: UseApiMutationOptions<
+    { id: number; idSuscripcion: number },
+    Administrador
+  >
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: ({ id, idSuscripcion }) =>
+      patch<Administrador>(`${API_URL}/administradores/${id}`, {
+        id,
+        suscripcion: { id: idSuscripcion },
+      })
+        .then(() => get<JWT>(`${API_URL}/auth/token`))
+        .then(captureToken)
+        .then((payload) => payload.admin!),
+  });
+}
+
 export function useRegistrarJugador(
-  options?: UseApiMutationOptions<RegistrarJugadorReq, Jugador>
+  options?: UseApiMutationOptions<RegistrarJugador, Jugador>
 ) {
   return useApiMutation({
     ...options,
@@ -80,9 +123,15 @@ export function useRegistrarJugador(
   });
 }
 
-export function useSuscripciones(options?: UseApiQueryOptions<Suscripcion[]>) {
-  return useApiQuery(["suscripciones"], `${API_URL}/suscripciones`, {
+export function useModificarJugador(
+  options?: UseApiMutationOptions<ModificarJugador, Jugador>
+) {
+  return useApiMutation({
     ...options,
-    initialData: [],
+    mutationFn: (jugador) =>
+      patch<Jugador>(`${API_URL}/jugadores/${jugador.id}`, jugador)
+        .then(() => get<JWT>(`${API_URL}/auth/token`))
+        .then(captureToken)
+        .then((payload) => payload.jugador!),
   });
 }

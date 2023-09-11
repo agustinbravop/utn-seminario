@@ -105,7 +105,7 @@ function JugadorNav({
               {jugador.usuario}
             </MenuButton>
             <MenuList>
-              <Link to={`/jugador/${jugador.id}`}>
+              <Link to={`/jugador/${jugador.id}/perfil`}>
                 <MenuItem>
                   <InfoIcon mr="20px" /> Mi perfil
                 </MenuItem>
