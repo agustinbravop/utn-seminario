@@ -36,13 +36,11 @@ model cancha {
   idEstablecimiento Int
   establecimiento   establecimiento  @relation(fields: [idEstablecimiento], references: [id], onDelete: NoAction, onUpdate: NoAction)
   disponibilidades  disponibilidad[]
-  reservas          reserva[]
 }
 
 model disciplina {
   disciplina String @id @db.VarChar
 
-  reservas         reserva[]
   disponibilidades disponibilidad[]
 }
 
@@ -58,6 +56,7 @@ model disponibilidad {
   idDisciplina String     @map("disciplina") @db.VarChar
   disciplina   disciplina @relation(fields: [idDisciplina], references: [disciplina])
   dias         dia[]
+  reservas     reserva[]
 }
 
 model dia {
@@ -154,22 +153,21 @@ model suscripcion {
 }
 
 model reserva {
-  id           Int      @id @default(autoincrement()) @map("idReserva")
-  fechaReserva DateTime @db.Date
-  horaInicio   DateTime @db.Time(6)
-  horaFin      DateTime @db.Time(6)
-  precio       Float
+  id             Int      @id @default(autoincrement()) @map("idReserva")
+  fechaCreada    DateTime @default(now()) // Fecha en la que se creó la reserva.
+  fechaReservada DateTime @db.Date // Fecha en la que el jugador va a ocupar la disponibilidad reservada.
+  precio         Decimal  @db.Decimal
 
-  idCancha      Int
-  cancha        cancha     @relation(fields: [idCancha], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idJugador     Int
-  jugador       jugador    @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idDisciplina  String     @db.VarChar
-  disciplina    disciplina @relation(fields: [idDisciplina], references: [disciplina], onDelete: NoAction, onUpdate: NoAction)
-  idPagoReserva Int
-  pagoReserva   pago?      @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idPagoSenia   Int?
-  pagoSenia     pago?      @relation("pagoSenia", fields: [idPagoSenia], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idDisponibilidad Int
+  disponibilidad   disponibilidad @relation(fields: [idDisponibilidad], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idJugador        Int
+  jugador          jugador        @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idPagoReserva    Int?
+  pagoReserva      pago?          @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idPagoSenia      Int?
+  pagoSenia        pago?          @relation("pagoSenia", fields: [idPagoSenia], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([idDisponibilidad, fechaReservada])
 }
 
 model tarjeta {
