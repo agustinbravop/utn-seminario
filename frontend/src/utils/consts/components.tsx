@@ -17,6 +17,12 @@ export function FallbackImage(props: ImageProps) {
 /** El logo de la app. */
 export function LogoImage(props: ImageProps) {
   return (
-    <Image src={LOGO_IMAGE_SRC} alt="Play Finder" width={177} {...props} />
+    <Image
+      src={LOGO_IMAGE_SRC}
+      alt="Play Finder"
+      title="Play Finder"
+      width={177}
+      {...props}
+    />
   );
 }

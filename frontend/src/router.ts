@@ -22,6 +22,8 @@ export type Path =
   | `/ests/:idEst/editar`
   | `/ests/:idEst/reservas`
   | `/jugador/:idJugador`
+  | `/jugador/:idJugador/perfil`
+  | `/jugador/:idJugador/perfil/editar`
   | `/login`
   | `/register`
   | `/subscribe`
@@ -45,6 +47,8 @@ export type Params = {
   '/ests/:idEst/editar': { idEst: string }
   '/ests/:idEst/reservas': { idEst: string }
   '/jugador/:idJugador': { idJugador: string }
+  '/jugador/:idJugador/perfil': { idJugador: string }
+  '/jugador/:idJugador/perfil/editar': { idJugador: string }
 }
 
 export type ModalPath = never

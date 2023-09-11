@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import {
-  CrearEstablecimientoReq,
+  CrearEstablecimiento,
   useCrearEstablecimiento,
 } from "@/utils/api/establecimientos";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
@@ -25,7 +25,7 @@ import { FormProvider, useWatch } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { useYupForm } from "@/hooks/useYupForm";
 
-type FormState = CrearEstablecimientoReq & {
+type FormState = CrearEstablecimiento & {
   imagen: File | undefined;
 };
 

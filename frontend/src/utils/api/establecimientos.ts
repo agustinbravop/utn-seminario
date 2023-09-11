@@ -7,9 +7,9 @@ import {
   useApiMutation,
 } from "@/hooks";
 
-export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
+export type CrearEstablecimiento = Omit<Establecimiento, "id" | "urlImagen">;
 
-export type ModificarEstablecimientoReq = Omit<Establecimiento, "urlImagen">;
+export type ModificarEstablecimiento = Omit<Establecimiento, "urlImagen">;
 
 function modificarImagen(est: Establecimiento, imagen?: File) {
   if (!imagen) {
@@ -59,7 +59,7 @@ export function useEstablecimientosEliminadosByAdminID(
 
 export function useCrearEstablecimiento(
   options?: UseApiMutationOptions<
-    CrearEstablecimientoReq & { imagen?: File },
+    CrearEstablecimiento & { imagen?: File },
     Establecimiento
   >
 ) {
@@ -75,7 +75,7 @@ export function useCrearEstablecimiento(
 
 export function useModificarEstablecimiento(
   options?: UseApiMutationOptions<
-    ModificarEstablecimientoReq & { imagen?: File },
+    ModificarEstablecimiento & { imagen?: File },
     Establecimiento
   >
 ) {
