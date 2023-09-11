@@ -85,3 +85,12 @@ export type Tarjeta = {
   cvv: number;
   vencimiento: string;
 };
+
+export type Reserva = {
+  id: number;
+  fechaReservada: Date;
+  fechaCreada: Date;
+  precio: number;
+  jugador: Jugador;
+  disponibilidad: Disponibilidad;
+};
