@@ -1,4 +1,5 @@
 import EstablecimientoJugador from "@/components/EstablecimientoJugador/EstablecimientoJugador";
+import { Busqueda } from "@/models";
 import { useEstablecimientosPlayer } from "@/utils/api/establecimientos";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
@@ -31,13 +32,21 @@ type Provincia = {
 };
 
 export default function SearchEstab() {
-  const {data} = useEstablecimientosPlayer();
 
   const [filtro, setFiltro] = useState("");
   const [localidades, setLocalidades] = useState<string[]>([]);
   const [localidad, setLocalidad] = useState("");
   const [prov, setProv] = useState("");
   const [deporte, setDeporte] = useState("");
+
+  const busqueda: Busqueda = {
+    localidad: localidad,
+    provincia: prov,
+    nombre: "",
+    disciplina: deporte,
+      };
+
+const {data} = useEstablecimientosPlayer(busqueda);
 
   const obtenerFechaActual = () => {
     const today = new Date();
