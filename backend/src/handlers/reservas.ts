@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
-import { CrearReserva, ReservaService } from "../services/reservas";
-import { BadRequestError } from "../utils/apierrors";
+import { CrearReserva, ReservaService } from "../services/reservas.js";
+import { BadRequestError } from "../utils/apierrors.js";
 
 export const crearReservaSchema = z.object({
   idDisponibilidad: z.number().positive().int(),

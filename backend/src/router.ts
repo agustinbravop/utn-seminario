@@ -33,6 +33,10 @@ import { PrismaReservaRepository } from "./repositories/reservas.js";
 import { ReservaServiceImpl } from "./services/reservas.js";
 import { ReservaHandler } from "./handlers/reservas.js";
 import { reservasRouter } from "./routers/reservas.js";
+import { JugadorHandler } from "./handlers/jugador.js";
+import { PrismaJugadorRepository } from "./repositories/jugador.js";
+import { JugadorServiceImpl } from "./services/jugador.js";
+import { jugadoresRouter } from "./routers/jugador.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -49,6 +53,10 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const adminRepo = new PrismaAdministradorRepository(prismaClient);
   const adminService = new AdministradorServiceImpl(adminRepo);
   const adminHandler = new AdministradorHandler(adminService);
+
+  const jugadorRepo = new PrismaJugadorRepository(prismaClient);
+  const jugadorService = new JugadorServiceImpl(jugadorRepo);
+  const jugadorHandler = new JugadorHandler(jugadorService);
 
   const dispRepo = new PrismaDisponibilidadRepository(prismaClient);
   const dispService = new DisponibilidadServiceimpl(dispRepo);
@@ -81,6 +89,7 @@ export function createRouter(prismaClient: PrismaClient): Router {
     "/administradores",
     administradoresRouter(adminHandler, authMiddle)
   );
+  router.use("/jugadores", jugadoresRouter(jugadorHandler, authMiddle));
   router.use(
     "/establecimientos",
     establecimientosRouter(estHandler, authMiddle, upload),

@@ -1,7 +1,8 @@
 import { RequestHandler } from "express";
-import { AdministradorServiceImpl } from "../services/administrador";
-import { Administrador } from "../models/administrador";
+import { AdministradorServiceImpl } from "../services/administrador.js";
+import { Administrador, administradorSchema } from "../models/administrador.js";
 
+export const modificarAdministradorSchema = administradorSchema.deepPartial();
 export class AdministradorHandler {
   private service: AdministradorServiceImpl;
 

@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { AdministradorHandler } from "../handlers/administrador.js";
+import {
+  AdministradorHandler,
+  modificarAdministradorSchema,
+} from "../handlers/administrador.js";
 import { AuthMiddleware } from "../middlewares/auth.js";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
-import { administradorSchema } from "../models/administrador.js";
 
 export function administradoresRouter(
   handler: AdministradorHandler,
@@ -16,7 +18,7 @@ export function administradoresRouter(
   router.patch(
     "/:idAdmin",
     authMiddle.isAdmin(),
-    validateBody(administradorSchema.deepPartial()),
+    validateBody(modificarAdministradorSchema),
     handler.patchAdmin()
   );
 
