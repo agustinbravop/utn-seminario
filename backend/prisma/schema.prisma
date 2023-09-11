@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  
 }
 
 datasource db {
@@ -26,6 +27,7 @@ model administrador {
 }
 
 model cancha {
+
   id          Int     @id @default(autoincrement()) @map("idCancha")
   nombre      String  @db.VarChar
   descripcion String  @db.VarChar
@@ -52,23 +54,21 @@ model disponibilidad {
   horaFin       String   @db.Char(5)
   precioReserva Decimal  @db.Decimal
   precioSenia   Decimal? @db.Decimal
-
   idCancha     Int        @map("cancha")
   cancha       cancha     @relation(fields: [idCancha], references: [id])
   idDisciplina String     @map("disciplina") @db.VarChar
   disciplina   disciplina @relation(fields: [idDisciplina], references: [disciplina])
-  dias         dia[]
+  dias dia[]
 }
 
 model dia {
   dia String @id
-
-  disponibilidad disponibilidad[]
+  disponibilidad disponibilidad[] 
 }
 
 model establecimiento {
   id                 Int     @id @default(autoincrement()) @map("idEstablecimiento")
-  nombre             String  @db.VarChar
+  nombre             String  @unique @db.VarChar
   telefono           String
   direccion          String  @db.VarChar
   urlImagen          String? @db.VarChar

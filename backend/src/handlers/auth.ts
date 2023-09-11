@@ -6,6 +6,19 @@ import { SuscripcionService } from "../services/suscripciones.js";
 import { z } from "zod";
 import { Jugador, jugadorSchema } from "../models/jugador.js";
 
+/*
+export const registrarAdminSchema = z.object({
+  nombre: z.string().nonempty(),
+  apellido: z.string().nonempty(),
+  telefono: z.string().nonempty(),
+  correo: z.string().nonempty(),
+  usuario: z.string().nonempty(),
+  clave: z.string().nonempty(),
+  idSuscripcion: z.number().positive().int(),
+  tarjeta: tarjetaSchema.omit({ id: true }),
+});
+*/
+
 export const registrarAdminSchema = administradorSchema
   .omit({ id: true, tarjeta: true, suscripcion: true })
   .extend({
@@ -13,6 +26,7 @@ export const registrarAdminSchema = administradorSchema
     idSuscripcion: z.number().positive().int(),
     tarjeta: tarjetaSchema.omit({ id: true }),
   });
+
 
 // Se puede iniciar sesión o con usuario o con correo.
 export const loginReqSchema = z.object({
@@ -44,7 +58,7 @@ export class AuthHandler {
   login(): RequestHandler {
     return async (_req, res) => {
       const loginReq: LoginReq = res.locals.body;
-
+     
       const token = await this.service.loginUsuario(
         loginReq.correoOUsuario,
         loginReq.clave
@@ -89,6 +103,16 @@ export class AuthHandler {
     };
   }
 
+
+  cambiarContrasenia():RequestHandler { 
+    return async (req: Request, res:Response)=> { 
+       const admin=req.body
+       const clave=req.body['claveNueva']
+      const administrador=await this.service.cambiarContrasenia(admin, clave) 
+      return res.status(200).json(administrador)
+    }
+  }
+
   registerJugador(): RequestHandler {
     return async (_req: Request, res: Response) => {
       const body: RegistrarJugadorReq = res.locals.body;
@@ -106,4 +130,5 @@ export class AuthHandler {
       res.status(201).json(jugadorCreado);
     };
   }
+
 }

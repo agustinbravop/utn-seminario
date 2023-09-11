@@ -11,13 +11,18 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../utils/apierrors.js";
+
+import { AdministradorClave } from "../utils/AdministradorClave.js";
+
 import { Rol, Usuario } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
+
 
 export type AdministradorConClave = {
   admin: Administrador;
   clave: string;
 };
+
 
 export type UsuarioConClave = Usuario & { clave: string };
 
@@ -34,6 +39,10 @@ export interface AuthRepository {
     clave: string
   ): Promise<Administrador>;
   crearJugador(jugador: Jugador, clave: string): Promise<Jugador>;
+  getJugadorYClave(correoOUsuario: string): Promise<JugadorConClave>;
+  getRoles(correoOUsuario: string): Promise<Rol[]>;
+  cambiarContrasenia(claveNueva:string, correo:string):Promise<AdministradorClave>
+
 }
 
 export class PrismaAuthRepository implements AuthRepository {
@@ -185,6 +194,28 @@ export class PrismaAuthRepository implements AuthRepository {
     }
   }
 
+
+
+  async cambiarContrasenia(claveNueva:string, correo:string):Promise<AdministradorClave> { 
+
+    const administrador=await this.prisma.administrador.update({ 
+      where: { 
+        correo:correo,
+      },
+      data: { 
+        clave:claveNueva
+      }
+    })
+
+    const admin = { 
+      usuarioOCorreo:administrador.correo, 
+      claveActual:administrador.clave
+    }
+    return (admin)
+  }
+
+
+
   async crearJugador(jugador: Jugador, clave: string): Promise<Jugador> {
     try {
       const dbJugador = await this.prisma.jugador.create({
@@ -202,4 +233,5 @@ export class PrismaAuthRepository implements AuthRepository {
       throw new InternalServerError("No se pudo registrar al jugador");
     }
   }
+
 }

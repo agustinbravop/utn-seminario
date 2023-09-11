@@ -9,7 +9,11 @@ import {
 } from "../utils/apierrors.js";
 import { SignJWT, jwtVerify, decodeJwt, JWTPayload } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
+import { AdministradorClave } from "../utils/AdministradorClave.js";
+import { enviarCorreo } from "../utils/mails.js";
+
 import { Jugador } from "../models/jugador.js";
+
 
 /**
  * Representa el tipo de un usuario.
@@ -29,7 +33,9 @@ export interface AuthService {
   registrarJugador(jugador: Jugador, clave: string): Promise<Jugador>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(token: string): Rol[];
+  cambiarContrasenia(admin:AdministradorClave, claveNueva:string):Promise<AdministradorClave | null>
   refreshJWT(token: string): Promise<string>;
+
 }
 
 export type Usuario =
@@ -205,6 +211,32 @@ export class AuthServiceImpl implements AuthService {
     return await this.repo.crearAdministrador(admin, hash);
   }
 
+
+  async cambiarContrasenia(admin:AdministradorClave, claveNueva:string):Promise<AdministradorClave | null> 
+  { 
+    const administrador= await this.repo.getUsuarioYClave(String(admin.usuarioOCorreo))
+    console.log(administrador.clave)
+    if (administrador && (bcrypt.compareSync(String(admin.claveActual), String(administrador.clave)))) 
+    { 
+      if (claveNueva==admin.claveActual) { 
+        throw new BadRequestError("Error. Intente ingresar una contraseña distinta")
+      }
+      
+      const hash=await bcrypt.hash(String(claveNueva), this.SALT_ROUNDS)
+      const cambioContrasenia=await this.repo.cambiarContrasenia(hash, String(administrador.admin?.correo))
+      enviarCorreo(administrador)
+      return cambioContrasenia
+     
+    }else 
+    {
+      throw new BadRequestError("El administrador ingresado no existe o la contrasenia no coincide")
+      
+    }
+    
+
+   
+  }
+
   /**
    * Se hashea la clave del usuario y luego se lo persiste en la base de datos.
    * @param jugador el nuevo Jugador a registrar.
@@ -218,4 +250,5 @@ export class AuthServiceImpl implements AuthService {
 
     return await this.repo.crearJugador(jugador, hash);
   }
+
 }

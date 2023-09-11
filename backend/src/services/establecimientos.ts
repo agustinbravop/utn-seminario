@@ -13,6 +13,7 @@ export interface EstablecimientoService {
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEst: number): Promise<Establecimiento>;
+  getConsulta(consulta: object): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   modificarImagen(
     idEst: number,
@@ -22,16 +23,26 @@ export interface EstablecimientoService {
   getAll(): Promise<Establecimiento[]>
 }
 
+type Busqueda = {
+  nombre?: string;
+  provincia?: string;
+  localidad?: string;
+  disciplina?: string;
+};
+
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
   private adminService: AdministradorService;
+  
 
   constructor(
     repo: EstablecimientoRepository,
-    adminService: AdministradorService
+    adminService: AdministradorService,
+    
   ) {
     this.repo = repo;
     this.adminService = adminService;
+  
   }
   async getAll(): Promise<Establecimiento[]> {
     return await this.repo.getAll();
@@ -94,5 +105,22 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
   async eliminar(idEst: number) {
     return await this.repo.eliminar(idEst);
+  }
+
+  async getEstablecimientoAll(): Promise<Establecimiento[]> {
+    return await this.repo.getEstablecimientoAll();
+  }
+
+  async getConsulta(
+    consulta: Busqueda,
+  ): Promise<Establecimiento[]> {
+    
+    const estabFilter = await this.repo.getEstabsByFiltro(consulta);
+    
+    if(consulta.disciplina){
+      const estabDisciplina = await this.repo.getEstablecimientoDisciplina(consulta.disciplina);
+      return estabFilter.filter(e => estabDisciplina.find(({id}) => id === e.id));
+    }
+    return estabFilter;
   }
 }

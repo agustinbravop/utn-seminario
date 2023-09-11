@@ -18,6 +18,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const methods = useYupForm({
+
     validationSchema,
     defaultValues: { correoOUsuario: "", clave: "" },
   });
@@ -31,9 +32,11 @@ export default function LoginPage() {
       }
     },
   });
-
+  
+ 
   return (
     <>
+      
       <Heading
         textAlign="center"
         size="2xl"
@@ -85,3 +88,4 @@ export default function LoginPage() {
     </>
   );
 }
+  

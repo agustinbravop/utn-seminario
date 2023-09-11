@@ -63,8 +63,7 @@ export function useEstablecimientosEliminadosByAdminID(
   return useApiQuery(
     ["establecimientos", "deleted", "byAdmin", idAdmin],
     `${API_URL}/establecimientos/byAdmin/deleted/${idAdmin}`,
-    { ...options, initialData: [] }
-  );
+    { ...options, initialData: [] })
 }
 
 export function useCrearEstablecimiento(
