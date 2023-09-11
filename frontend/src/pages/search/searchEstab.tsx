@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ApiGobProv = {
   provincias: Provincia[];
@@ -32,6 +33,7 @@ type Provincia = {
 };
 
 export default function SearchEstab() {
+  const queryClient = useQueryClient();
 
   const [filtro, setFiltro] = useState("");
   const [localidades, setLocalidades] = useState<string[]>([]);
@@ -39,19 +41,24 @@ export default function SearchEstab() {
   const [prov, setProv] = useState("");
   const [deporte, setDeporte] = useState("");
 
-  const busqueda: Busqueda = {
+  const [nombre, setNombre] = useState("");
+
+  const { data } = useEstablecimientosPlayer({
     localidad: localidad,
     provincia: prov,
-    nombre: "",
+    nombre: nombre,
     disciplina: deporte,
-      };
+  });
 
-const {data} = useEstablecimientosPlayer(busqueda);
+  useEffect(() => {
+    queryClient.refetchQueries(["establecimientos", "jugador"]); //No esta haciendo el refetch :(
+    console.log(nombre, prov, localidad, deporte)
+  }, [nombre, prov, localidad, deporte])
 
   const obtenerFechaActual = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); 
+    const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
@@ -96,8 +103,9 @@ const {data} = useEstablecimientosPlayer(busqueda);
               placeholder="Nombre del establecimiento"
               size="md"
               width="100%"
-              onChange={handleChange}
-              value={filtro}
+              // onChange={handleChange
+              onChange={(e) => { setNombre(e.target.value) }}
+            // value={filtro}
             />
           </InputGroup>
 
@@ -147,7 +155,7 @@ const {data} = useEstablecimientosPlayer(busqueda);
         </VStack>
       </Box>
       <HStack display="flex" flexWrap="wrap" justifyContent="center" pt="20px" w="330">
-        {( data).map(
+        {(data).map(
           (est) => (
             <EstablecimientoJugador key={est.id} establecimiento={est} date={dateSelect} />
           )
