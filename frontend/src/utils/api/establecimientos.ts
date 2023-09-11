@@ -61,6 +61,7 @@ export function useEstablecimientosPlayer(
 }
 async function getEstablecimientoSearch(queryParams: Busqueda) {
   const url = `${API_URL}/establecimientos/ests/search?` + new URLSearchParams(queryParams).toString();
+  console.log(url)
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error('No se pudo obtener la lista de establecimientos');

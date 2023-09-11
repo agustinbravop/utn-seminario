@@ -80,36 +80,14 @@ const {data} = useEstablecimientosPlayer(busqueda);
       });
   }, [prov]);
 
-  const establecimientosFiltrados = data.filter((establecimiento) => {
-    const nombre = establecimiento.nombre.toLowerCase();
-    const provinciaSelect = prov.toLowerCase();
-    const localidadSelect = localidad.toLowerCase();
-    const deporteSelect = deporte.toLowerCase(); //Este filtro necesita realizar la validacion con el back directamente
-    //xq a nivel front no tengo las disponibilidades
-
-    //Aca me fijo si cuales son los fltros que cumplen y los devuelvo
-    //Van en variables para que no se haga tan largo abajo
-    const filtroNombre = nombre.includes(filtro.toLowerCase());
-    //const filtroDeporte = establecimiento.includes(deporte.toLowerCase());
-    const filtroProvincia =
-      !provinciaSelect ||
-      establecimiento.provincia.toLowerCase() === provinciaSelect;
-    const filtroLocalidad =
-      !localidadSelect ||
-      establecimiento.localidad.toLowerCase() === localidadSelect;
-
-    return (
-      filtroNombre && filtroProvincia && filtroLocalidad /* && filtroDeporte*/
-    );
-  });
 
   return (
     <>
       <Heading textAlign="center">Establecimientos</Heading>
 
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" paddingTop="15px">
         <VStack>
-          <InputGroup width="300px">
+          <InputGroup width="330px">
             <InputRightElement pointerEvents="none">
               <SearchIcon color="gray.300" />
             </InputRightElement>
@@ -168,8 +146,8 @@ const {data} = useEstablecimientosPlayer(busqueda);
           />
         </VStack>
       </Box>
-      <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
-        {(establecimientosFiltrados ? establecimientosFiltrados : data).map(
+      <HStack display="flex" flexWrap="wrap" justifyContent="center" pt="20px" w="330">
+        {( data).map(
           (est) => (
             <EstablecimientoJugador key={est.id} establecimiento={est} date={dateSelect} />
           )

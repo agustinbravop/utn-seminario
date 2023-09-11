@@ -25,7 +25,7 @@ export default function VistaJugador() {
       <Box>
         <HStack justifyContent="center">
         </HStack>
-        <Heading>Cagnchas</Heading>
+        <Heading>Canchas</Heading>
         <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
           {canchas.data.map(
             (c, index) =>

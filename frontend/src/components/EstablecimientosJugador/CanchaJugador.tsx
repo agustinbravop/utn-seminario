@@ -26,7 +26,7 @@ import {
       <Link to={`${cancha.id}?date=${date}`} >
         <Card
           width="360px"
-          height="240px"
+          height="220px"
           _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
