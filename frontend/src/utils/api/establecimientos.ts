@@ -53,7 +53,7 @@ export function useEstablecimientosPlayer(
   options?: UseApiQueryOptions<Establecimiento[]>
 ) {
   return useApiQuery(
-    ["establecimientos", "jugador"],
+    ["establecimientos", "jugador", queryParams],
     `${API_URL}/establecimientos/ests/search`,
     { ...options, initialData: [],
       queryFn: () => getEstablecimientoSearch(queryParams) }
