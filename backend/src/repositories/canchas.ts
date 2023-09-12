@@ -12,6 +12,7 @@ import { DisponibilidadRepository } from "./disponibilidades.js";
 
 export interface CanchaRepository {
   getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
+  getCanchaByDisponibilidadID(idDisp: number): Promise<Cancha>;
   getCanchaByID(idCancha: number): Promise<Cancha>;
   crearCancha(cancha: Cancha): Promise<Cancha>;
   modificarCancha(canchaUpdate: Cancha): Promise<Cancha>;
@@ -86,6 +87,12 @@ export class PrismaCanchaRepository implements CanchaRepository {
       `No existe cancha con id ${idCancha}`,
       "Error al intentar obtener la cancha"
     );
+  }
+
+  async getCanchaByDisponibilidadID(idDisp: number): Promise<Cancha> {
+    const disp = await this.dispRepository.getDisponibilidadByID(idDisp);
+
+    return await this.getCanchaByID(disp.idCancha);
   }
 
   async crearCancha(cancha: Cancha): Promise<Cancha> {

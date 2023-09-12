@@ -2,9 +2,9 @@ import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import { ApiError, InternalServerError } from "../utils/apierrors.js";
 
 function logError(error: ApiError, req: Request, res: Response) {
-  console.error("⛔ ApiError: ", error);
-  console.error("⛔ Body: ", res.locals.body);
-  console.error("⛔ URL: ", req.url);
+  console.error("⛔ ApiError:", error);
+  console.error("⛔ Body validado:", res.locals.body);
+  console.error("⛔ URI:", req.url);
 }
 /**
  * Este middleware ataja los errores que sucedan en la aplicación,

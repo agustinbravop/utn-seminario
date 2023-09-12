@@ -19,12 +19,12 @@ import {
   useModificarCancha,
 } from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import SubMenu from "@/components/SubMenu/SubMenu";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { GrSchedules } from "react-icons/gr";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { ConfirmSubmitButton } from "@/components/forms";
+import { CanchaMenu } from "@/components/navigation";
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
@@ -79,7 +79,7 @@ export default function CanchaInfoPage() {
 
   return (
     <>
-      <SubMenu canchas={true} nombreCancha={data.nombre} />
+      <CanchaMenu />
       <HStack mr="16%" ml="16%" mb="30px" mt="0px">
         <Text>
           Esta es la información que se muestra al usuario de su cancha.

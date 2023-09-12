@@ -5,11 +5,11 @@ import {
   disponibilidadSchema,
 } from "../models/disponibilidad.js";
 
-export const crearDisponibilidadReqSchema = disponibilidadSchema.omit({
+export const crearDisponibilidadSchema = disponibilidadSchema.omit({
   id: true,
 });
 
-export const modificarDisponibilidadReqSchema = disponibilidadSchema;
+export const modificarDisponibilidadSchema = disponibilidadSchema;
 
 export class DisponibilidadHandler {
   private service: DisponibilidadService;

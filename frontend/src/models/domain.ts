@@ -86,6 +86,15 @@ export type Tarjeta = {
   vencimiento: string;
 };
 
+export type Reserva = {
+  id: number;
+  fechaReservada: Date;
+  fechaCreada: Date;
+  precio: number;
+  jugador: Jugador;
+  disponibilidad: Disponibilidad;
+};
+
 export type Busqueda = {
   nombre?: string | undefined;
   provincia?: string | undefined;
