@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { Alert, Container, HStack, Heading } from "@chakra-ui/react";
 import { VStack, Button, useToast } from "@chakra-ui/react";
 import {
-  ModificarCanchaReq,
+  ModificarCancha,
   useCanchaByID,
   useModificarCancha,
 } from "@/utils/api/canchas";
@@ -13,7 +13,7 @@ import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
 import ImageControl from "@/components/forms/ImageControl";
 
-type FormState = ModificarCanchaReq & {
+type FormState = ModificarCancha & {
   imagen: File | undefined;
 };
 

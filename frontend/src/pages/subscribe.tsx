@@ -1,6 +1,6 @@
 import PaymentForm from "@/components/PaymentForm/PaymentForm";
 import { useLocation, useNavigate } from "react-router";
-import { RegistrarAdminReq, useRegistrarAdmin } from "@/utils/api/auth";
+import { RegistrarAdmin, useRegistrarAdmin } from "@/utils/api/auth";
 import * as Yup from "yup";
 import {
   HStack,
@@ -12,7 +12,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
-import { InputControl, SubmitButton } from "@/components/forms";
+import {
+  InputControl,
+  PasswordControl,
+  SubmitButton,
+} from "@/components/forms";
 import { useYupForm } from "@/hooks/useYupForm";
 
 const today = new Date();
@@ -62,7 +66,7 @@ export default function SubscribePage() {
   const { search } = useLocation();
   const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
-  const methods = useYupForm<RegistrarAdminReq>({
+  const methods = useYupForm<RegistrarAdmin>({
     validationSchema,
     defaultValues: {
       tarjeta: {
@@ -151,11 +155,10 @@ export default function SubscribePage() {
               type="email"
               isRequired
             />
-            <InputControl
+            <PasswordControl
               label="Contraseña"
               placeholder=" "
               name="clave"
-              type="password"
               isRequired
             />
 

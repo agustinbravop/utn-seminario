@@ -8,12 +8,12 @@ import {
 import multer from "multer";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
 import { EstablecimientoHandler } from "../handlers/establecimientos.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function canchasRouter(
   handler: CanchaHandler,
   estHandler: EstablecimientoHandler,
-  authMiddle: AuthMiddleware,
+  authMiddle: AuthHandler,
   upload: multer.Multer
 ): Router {
   const router = express.Router();

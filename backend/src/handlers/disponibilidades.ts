@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { DisponibilidadService } from "../services/disponibilidades.js";
+import { DisponibilidadService } from "../services/disponibilidades";
 import {
   Disponibilidad,
   disponibilidadSchema,

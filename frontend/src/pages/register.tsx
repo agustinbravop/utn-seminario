@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
 import { InputControl, SubmitButton } from "@/components/forms";
-import { RegistrarJugadorReq, useRegistrarJugador } from "@/utils/api/auth";
+import { RegistrarJugador, useRegistrarJugador } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 
@@ -31,14 +31,14 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const methods = useYupForm<RegistrarJugadorReq>({
+  const methods = useYupForm<RegistrarJugador>({
     validationSchema,
   });
 
   const { mutate, isLoading, isError } = useRegistrarJugador({
     onSuccess: () => {
       toast({
-        title: "Cuenta registrada correctamente.",
+        title: "Cuenta registrada correctamente.", 
         description: "Inicie sesión para continuar.",
         status: "success",
       });
@@ -62,14 +62,14 @@ export default function RegisterPage() {
         marginTop="100px"
         marginBottom="60px"
       >
-        Registrarse en Play Finder
+        Registrarse en <br/> Play Finder
       </Heading>
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          onSubmit={methods.handleSubmit((values) => mutate(values))} 
           spacing="4"
-          width="400px"
+          width="-webkit-fit-content"
           justifyContent="center"
           margin="auto"
           my="20px"
@@ -92,6 +92,7 @@ export default function RegisterPage() {
             <InputControl
               label="Nombre de usuario"
               placeholder="usuario"
+              minWidth="180px"
               name="usuario"
               isRequired
             />

@@ -18,7 +18,6 @@ import { EstablecimientoHandler } from "./handlers/establecimientos.js";
 import { PrismaEstablecimientoRepository } from "./repositories/establecimientos.js";
 import { EstablecimientoServiceImpl } from "./services/establecimientos.js";
 import { establecimientosRouter } from "./routers/establecimientos.js";
-import { AuthMiddleware } from "./middlewares/auth.js";
 import { canchasRouter } from "./routers/canchas.js";
 import { PrismaCanchaRepository } from "./repositories/canchas.js";
 import { CanchaServiceimpl } from "./services/canchas.js";
@@ -33,22 +32,29 @@ import { PrismaReservaRepository } from "./repositories/reservas.js";
 import { ReservaServiceImpl } from "./services/reservas.js";
 import { ReservaHandler } from "./handlers/reservas.js";
 import { reservasRouter } from "./routers/reservas.js";
+import { JugadorHandler } from "./handlers/jugador.js";
+import { PrismaJugadorRepository } from "./repositories/jugador.js";
+import { JugadorServiceImpl } from "./services/jugador.js";
+import { jugadoresRouter } from "./routers/jugador.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
 
   const suscripcionRepo = new PrismaSuscripcionRepository(prismaClient);
   const suscripcionService = new SuscripcionServiceImpl(suscripcionRepo);
-  const suscripcionHandler = new SuscripcionHandler(suscripcionRepo);
+  const suscripcionHandler = new SuscripcionHandler(suscripcionService);
 
   const authRepo = new PrismaAuthRepository(prismaClient);
   const authService = new AuthServiceImpl(authRepo);
   const authHandler = new AuthHandler(authService, suscripcionService);
-  const authMiddle = new AuthMiddleware(authService);
 
   const adminRepo = new PrismaAdministradorRepository(prismaClient);
   const adminService = new AdministradorServiceImpl(adminRepo);
   const adminHandler = new AdministradorHandler(adminService);
+
+  const jugadorRepo = new PrismaJugadorRepository(prismaClient);
+  const jugadorService = new JugadorServiceImpl(jugadorRepo);
+  const jugadorHandler = new JugadorHandler(jugadorService);
 
   const dispRepo = new PrismaDisponibilidadRepository(prismaClient);
   const dispService = new DisponibilidadServiceimpl(dispRepo);
@@ -79,15 +85,16 @@ export function createRouter(prismaClient: PrismaClient): Router {
   router.use("/suscripciones", suscripcionesRouter(suscripcionHandler));
   router.use(
     "/administradores",
-    administradoresRouter(adminHandler, authMiddle)
+    administradoresRouter(adminHandler, authHandler)
   );
+  router.use("/jugadores", jugadoresRouter(jugadorHandler, authHandler));
   router.use(
     "/establecimientos",
-    establecimientosRouter(estHandler, authMiddle, upload),
-    canchasRouter(canchaHandler, estHandler, authMiddle, upload),
-    disponibilidadesRouter(dispHandler, estHandler, authMiddle)
+    establecimientosRouter(estHandler, authHandler, upload),
+    canchasRouter(canchaHandler, estHandler, authHandler, upload),
+    disponibilidadesRouter(dispHandler, estHandler, authHandler)
   );
-  router.use("/reservas", reservasRouter(resHandler, authMiddle));
+  router.use("/reservas", reservasRouter(resHandler, authHandler));
 
   // Error handler global. Ataja los errores tirados por los otros handlers.
   router.use(handleApiErrors());

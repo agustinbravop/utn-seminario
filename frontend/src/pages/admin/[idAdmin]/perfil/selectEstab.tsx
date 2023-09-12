@@ -21,7 +21,7 @@ import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router";
 import { Box } from "@chakra-ui/react";
-import { useCambiarSuscripcion } from "@/utils/api/administrador";
+import { useCambiarSuscripcion } from "@/utils/api/auth";
 import { useSuscripciones } from "@/utils/api/auth";
 
 export default function SelectEstablecimiento() {

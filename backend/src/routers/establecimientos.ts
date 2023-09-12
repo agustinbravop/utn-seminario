@@ -7,15 +7,16 @@ import {
   modificarEstablecimientoSchema,
 } from "../handlers/establecimientos.js";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function establecimientosRouter(
   handler: EstablecimientoHandler,
-  authMiddle: AuthMiddleware,
+  authMiddle: AuthHandler,
   upload: multer.Multer
 ): Router {
   const router = express.Router();
-
+  //PROVISIONAL
+  router.get("/jugador", handler.getAllEstablecimientos());
   router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
   router.get(
     "/byAdmin/deleted/:idAdmin",
@@ -35,8 +36,9 @@ export function establecimientosRouter(
     handler.postEstablecimiento()
   );
 
-  router.use("/:idEst", validateIDParams("idEst"));
-  router.get("/:idEst", handler.getEstablecimientoByID());
+  //router.use("/:idEst", validateIDParams("idEst"));
+  router.get("/:idEst", handler.getEstablecimientoByID(), validateIDParams("idEst"));
+  router.get("/ests/search", handler.getEstablecimientoSearch())
   router.put(
     "/:idEst",
     authMiddle.isAdmin(),

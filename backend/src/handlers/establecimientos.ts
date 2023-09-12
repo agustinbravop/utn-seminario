@@ -23,6 +23,13 @@ export class EstablecimientoHandler {
     this.service = service;
   }
 
+  getAllEstablecimientos(): RequestHandler{
+    return async (_req, res)=>{
+      const ests = await this.service.getAll();
+      res.status(200).json(ests);
+    }
+  }
+
   postEstablecimiento(): RequestHandler {
     return async (_req, res) => {
       const est: Establecimiento = {
@@ -94,6 +101,17 @@ export class EstablecimientoHandler {
       res.status(200).json(estEliminado);
     };
   }
+
+  getEstablecimientoSearch():RequestHandler { 
+    return async (req, res)=>{ 
+      const query=req.query; 
+      const result=await this.service.getConsulta(query)
+      res.status(200).json(result)
+
+    }
+  }
+
+  
 
   /**
    * Valida que el param `idEst` corresponda a un establecimiento del `idAdmin` del JWT.

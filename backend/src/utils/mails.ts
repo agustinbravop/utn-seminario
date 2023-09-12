@@ -1,7 +1,8 @@
 import nodemailer from "nodemailer";
-import { Establecimiento } from "../models/establecimiento.js";
+import { UsuarioConClave } from "../repositories/auth";
+import { BadRequestError } from "./apierrors";
 
-export async function enviarCorreo(ests: Establecimiento) {
+export async function enviarCorreo(admin:UsuarioConClave) {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -11,11 +12,15 @@ export async function enviarCorreo(ests: Establecimiento) {
       pass: process.env.PASSGMAIL,
     },
   });
-
+  try { 
   await transporter.sendMail({
-    from: "Actualizacion de Datos <seminariointegrador21@gmail.com>",
-    to: ests.correo,
-    subject: "Actualizacion de datos",
-    text: "Los datos ingresados fueron actualizados correctamente",
+    from: "Cambio de Contraseña <seminariointegrador21@gmail.com>",
+    to: admin.admin?.correo,
+    subject: "Cambio de contraseña",
+    html: `<p>Estimado/a ${admin.admin?.correo} su contraseña se ha cambiado con exito </p>`
   });
+}catch(error) { 
+  console.log(error) 
+  throw new BadRequestError("Ha ocurrido un error no se pudo enviar el correo. Intente más tarde")
+}
 }

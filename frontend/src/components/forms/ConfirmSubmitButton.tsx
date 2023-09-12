@@ -81,7 +81,7 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
               {cancel ?? "Cancelar"}
             </Button>
             <SubmitButton isLoading={isLoading} {...rest} onClick={onSubmit}>
-              {confirm ?? children ?? "Aceptar"}
+              {confirm  ?? "Aceptar"}
             </SubmitButton>
           </ModalFooter>
         </ModalContent>

@@ -2,17 +2,17 @@ import express from "express";
 import { Router } from "express";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
 import { EstablecimientoHandler } from "../handlers/establecimientos.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
 import {
   DisponibilidadHandler,
   crearDisponibilidadSchema,
   modificarDisponibilidadSchema,
 } from "../handlers/disponibilidades.js";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function disponibilidadesRouter(
   handler: DisponibilidadHandler,
   estHandler: EstablecimientoHandler,
-  authMiddle: AuthMiddleware
+  authMiddle: AuthHandler
 ): Router {
   const router = express.Router();
 
