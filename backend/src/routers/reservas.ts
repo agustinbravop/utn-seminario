@@ -4,16 +4,16 @@ import {
   crearReservaSchema,
   getReservaQuerySchema,
 } from "../handlers/reservas.js";
-import { AuthMiddleware } from "../middlewares/auth";
 import {
   validateBody,
   validateIDParams,
   validateQueryParams,
 } from "../middlewares/validation";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function reservasRouter(
   handler: ReservaHandler,
-  authMiddle: AuthMiddleware
+  authMiddle: AuthHandler
 ): Router {
   const router = express.Router();
 

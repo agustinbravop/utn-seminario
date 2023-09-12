@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import {
   AuthHandler,
+  cambiarClaveSchema,
   loginSchema,
   registrarAdminSchema,
   registrarJugadorSchema,
@@ -10,6 +11,7 @@ import { validateBody } from "../middlewares/validation.js";
 export function authRouter(handler: AuthHandler): Router {
   const router = express.Router();
 
+  router.get("/token", handler.refreshToken());
   router.post("/login", validateBody(loginSchema), handler.login());
   router.post(
     "/register/administrador",
@@ -17,14 +19,16 @@ export function authRouter(handler: AuthHandler): Router {
     handler.registerAdmin()
   );
 
-  router.put("/cambiarContrasenia", handler.cambiarContrasenia())
-
   router.post(
     "/register/jugador",
     validateBody(registrarJugadorSchema),
     handler.registerJugador()
   );
-  router.get("/token", handler.refreshToken());
+  router.patch(
+    "/clave",
+    validateBody(cambiarClaveSchema),
+    handler.patchClave()
+  );
 
   return router;
 }

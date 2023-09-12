@@ -23,9 +23,7 @@ export class PrismaDisponibilidadRepository
     this.prisma = prismaClient;
   }
 
-  async getDisponibilidadesByCanchaID(
-    idCancha: number
-  ): Promise<Disponibilidad[]> {
+  async getDisponibilidadesByCanchaID(idCancha: number) {
     try {
       const canchas = await this.prisma.disponibilidad.findMany({
         where: { idCancha: idCancha },
@@ -38,7 +36,7 @@ export class PrismaDisponibilidadRepository
     }
   }
 
-  async getDisponibilidadByID(idDisp: number): Promise<Disponibilidad> {
+  async getDisponibilidadByID(idDisp: number) {
     return awaitQuery(
       this.prisma.disponibilidad.findUnique({
         where: { id: idDisp },
@@ -49,7 +47,7 @@ export class PrismaDisponibilidadRepository
     );
   }
 
-  async crearDisponibilidad(disp: Disponibilidad): Promise<Disponibilidad> {
+  async crearDisponibilidad(disp: Disponibilidad) {
     try {
       const dbDisp = await this.prisma.disponibilidad.create({
         data: {
@@ -75,7 +73,7 @@ export class PrismaDisponibilidadRepository
     }
   }
 
-  async modificarDisponibilidad(disp: Disponibilidad): Promise<Disponibilidad> {
+  async modificarDisponibilidad(disp: Disponibilidad) {
     return awaitQuery(
       this.prisma.disponibilidad.update({
         where: { id: disp.id },
@@ -100,7 +98,7 @@ export class PrismaDisponibilidadRepository
     );
   }
 
-  async eliminarDisponibilidad(idDisp: number): Promise<Disponibilidad> {
+  async eliminarDisponibilidad(idDisp: number) {
     return awaitQuery(
       this.prisma.disponibilidad.delete({
         where: { id: idDisp },

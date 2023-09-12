@@ -30,7 +30,7 @@ export class PrismaReservaRepository implements ReservaRepository {
     this.prisma = prismaClient;
   }
 
-  async getReservasByDisponibilidadID(idDisp: number): Promise<Reserva[]> {
+  async getReservasByDisponibilidadID(idDisp: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
         where: { idDisponibilidad: idDisp },
@@ -45,7 +45,7 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
-  async getReservasByJugadorID(idJugador: number): Promise<Reserva[]> {
+  async getReservasByJugadorID(idJugador: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
         where: { idJugador: idJugador },
@@ -60,7 +60,7 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
-  async getReservasByEstablecimientoID(idEst: number): Promise<Reserva[]> {
+  async getReservasByEstablecimientoID(idEst: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
         where: {
@@ -77,7 +77,7 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
-  async getReservaByID(id: number): Promise<Reserva> {
+  async getReservaByID(id: number) {
     return awaitQuery(
       this.prisma.reserva.findUnique({
         where: { id },
@@ -88,9 +88,7 @@ export class PrismaReservaRepository implements ReservaRepository {
     );
   }
 
-  async crearReserva(
-    res: CrearReserva & { precio: Decimal }
-  ): Promise<Reserva> {
+  async crearReserva(res: CrearReserva & { precio: Decimal }) {
     try {
       const dbRes = await this.prisma.reserva.create({
         data: {
@@ -113,7 +111,7 @@ export class PrismaReservaRepository implements ReservaRepository {
    * Devuelve si una reserva de cierta disponibilidad en cierta fecha ya existe.
    * Sirve para validar que la misma fecha de una disponibilidad no se reserve dos veces.
    */
-  async existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean> {
+  async existsReservaByDate(idDisp: number, fecha: Date) {
     try {
       const reserva = await this.prisma.reserva.findUnique({
         where: {

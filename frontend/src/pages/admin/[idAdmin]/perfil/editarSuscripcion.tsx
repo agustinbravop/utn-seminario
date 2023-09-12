@@ -13,7 +13,7 @@ import {
 import { useSuscripciones } from "@/utils/api/auth";
 import { Suscripcion } from "@/models";
 import { useNavigate } from "react-router";
-import { useCambiarSuscripcion } from "@/utils/api/administrador";
+import { useCambiarSuscripcion } from "@/utils/api/auth";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
@@ -109,13 +109,14 @@ export default function SuscripcionesPage() {
 
   return (
     <>
-      <Box marginBottom="5px" marginLeft="12%" marginRight="12%">
-        <Heading size="lg">Seleccione el plan al que mejor se adapte </Heading>
+      <Box mb="5px" ml="12%" mr="12%">
+        <Heading size="lg">Seleccione el plan que mejor se adapte</Heading>
         <br />
         <Text>
-          Puedes adaptar tu suscripción en función de tus necesidades. Cambia de
-          plan, ajusta características y elige lo que mejor funcione para ti.
-          Consulta los detalles y términos para obtener más información.
+          Puedes elegir tu suscripción en función de tus necesidades. Cambia de
+          plan, ajusta características y elige lo que mejor funcione para ti en
+          cualquier momento. Consulta los detalles y términos para obtener más
+          información.
         </Text>
       </Box>
       <HStack justifyContent="center" gap="95px" my="50px" as="form">

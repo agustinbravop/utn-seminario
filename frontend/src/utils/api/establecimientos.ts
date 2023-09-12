@@ -7,10 +7,9 @@ import {
   useApiMutation,
 } from "@/hooks";
 
-export type CrearEstablecimientoReq = Omit<Establecimiento, "id" | "urlImagen">;
+export type CrearEstablecimiento = Omit<Establecimiento, "id" | "urlImagen">;
 
-export type ModificarEstablecimientoReq = Omit<Establecimiento, "urlImagen">;
-
+export type ModificarEstablecimiento = Omit<Establecimiento, "urlImagen">;
 
 function modificarImagen(est: Establecimiento, imagen?: File) {
   if (!imagen) {
@@ -48,25 +47,19 @@ export function useEstablecimientosByAdminID(
 }
 
 //PROVISIONAL
-export function useEstablecimientosPlayer(
+export function useBuscarEstablecimientos(
   queryParams: Busqueda,
   options?: UseApiQueryOptions<Establecimiento[]>
 ) {
   return useApiQuery(
-    ["establecimientos", "jugador"],
-    `${API_URL}/establecimientos/ests/search`,
-    { ...options, initialData: [],
-      queryFn: () => getEstablecimientoSearch(queryParams) }
+    ["establecimientos", "search", queryParams],
+    `${API_URL}/establecimientos/ests/search?` +
+      new URLSearchParams(queryParams).toString(),
+    {
+      ...options,
+      initialData: [],
+    }
   );
-}
-async function getEstablecimientoSearch(queryParams: Busqueda) {
-  const url = `${API_URL}/establecimientos/ests/search?` + new URLSearchParams(queryParams).toString();
-  console.log(url)
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('No se pudo obtener la lista de establecimientos');
-  }
-  return response.json();
 }
 
 export function useEstablecimientosEliminadosByAdminID(
@@ -76,12 +69,13 @@ export function useEstablecimientosEliminadosByAdminID(
   return useApiQuery(
     ["establecimientos", "deleted", "byAdmin", idAdmin],
     `${API_URL}/establecimientos/byAdmin/deleted/${idAdmin}`,
-    { ...options, initialData: [] })
+    { ...options, initialData: [] }
+  );
 }
 
 export function useCrearEstablecimiento(
   options?: UseApiMutationOptions<
-    CrearEstablecimientoReq & { imagen?: File },
+    CrearEstablecimiento & { imagen?: File },
     Establecimiento
   >
 ) {
@@ -97,7 +91,7 @@ export function useCrearEstablecimiento(
 
 export function useModificarEstablecimiento(
   options?: UseApiMutationOptions<
-    ModificarEstablecimientoReq & { imagen?: File },
+    ModificarEstablecimiento & { imagen?: File },
     Establecimiento
   >
 ) {

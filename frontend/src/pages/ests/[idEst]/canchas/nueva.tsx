@@ -1,13 +1,13 @@
 import { Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { Button, Heading, HStack, useToast, VStack } from "@chakra-ui/react";
-import { CrearCanchaReq, useCrearCancha } from "@/utils/api/canchas";
+import { CrearCancha, useCrearCancha } from "@/utils/api/canchas";
 import { ImageControl, InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import * as Yup from "yup";
 import { useYupForm } from "@/hooks";
 
-type FormState = CrearCanchaReq & {
+type FormState = CrearCancha & {
   imagen: File | undefined;
 };
 const validationSchema = Yup.object({

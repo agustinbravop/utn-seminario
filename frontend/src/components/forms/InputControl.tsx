@@ -18,7 +18,7 @@ import BaseFormControl, {
  * A la interfaz BaseFormControlProps se le agregan las propiedades específicas del Chakra `Input`, además de los addons y elements (partes del `InputGroup`).
  * https://chakra-ui.com/docs/components/input
  */
-interface InputControlProps
+export interface InputControlProps
   extends NoVariantBaseFormControlProps,
     Omit<InputProps, keyof NoVariantBaseFormControlProps> {
   /**
