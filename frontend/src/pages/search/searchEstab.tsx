@@ -51,10 +51,11 @@ export default function SearchEstab() {
     disciplina: deporte,
   });
 
+
   useEffect(() => {
     queryClient.refetchQueries(["establecimientos", "jugador"]); //No esta haciendo el refetch :(
     console.log(nombre, prov, localidad, deporte)
-  }, [nombre, prov, localidad, deporte])
+  }, [nombre || prov || localidad || deporte])
 
   const obtenerFechaActual = () => {
     const today = new Date();
@@ -139,6 +140,7 @@ export default function SearchEstab() {
                 bg='white'
                 type='date'
                 focusBorderColor="lightblue"
+                _placeholder={{ color: '#53575e' }}
                 placeholder="Nombre del establecimiento"
                 size="md"
                 width="100%"
