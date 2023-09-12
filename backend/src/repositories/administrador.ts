@@ -5,7 +5,7 @@ import { toAdmin } from "./auth.js";
 
 export interface AdministradorRepository {
   getAdministradorByID(id: number): Promise<Administrador>;
-  modificarAdmin(admin: Administrador): Promise<Administrador>;
+  modificarAdministrador(admin: Administrador): Promise<Administrador>;
 }
 
 export class PrismaAdministradorRepository implements AdministradorRepository {
@@ -15,7 +15,7 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
     this.prisma = client;
   }
 
-  async modificarAdmin(admin: Administrador): Promise<Administrador> {
+  async modificarAdministrador(admin: Administrador): Promise<Administrador> {
     try {
       const dbAdmin = await this.prisma.administrador.update({
         where: { id: admin.id },
@@ -32,7 +32,7 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
           suscripcion: true,
         },
       });
-      return toAdmin(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta);
+      return toAdmin(dbAdmin);
     } catch {
       throw new InternalServerError(
         "Error interno al intentar modificar los datos del administrador"
@@ -52,7 +52,7 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
         },
       });
       if (dbAdmin) {
-        return toAdmin(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta);
+        return toAdmin(dbAdmin);
       }
     } catch {
       throw new InternalServerError("Error al buscar el administrador");

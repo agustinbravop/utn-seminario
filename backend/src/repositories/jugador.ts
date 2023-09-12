@@ -15,7 +15,7 @@ export class PrismaJugadorRepository implements JugadorRepository {
     this.prisma = client;
   }
 
-  async modificarJugador(jugador: Jugador): Promise<Jugador> {
+  async modificarJugador(jugador: Jugador) {
     try {
       const dbJugador = await this.prisma.jugador.update({
         where: { id: jugador.id },
@@ -36,7 +36,7 @@ export class PrismaJugadorRepository implements JugadorRepository {
     }
   }
 
-  async getJugadorByID(id: number): Promise<Jugador> {
+  async getJugadorByID(id: number) {
     try {
       const dbJugador = await this.prisma.jugador.findUnique({
         where: { id },

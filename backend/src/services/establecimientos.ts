@@ -79,7 +79,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   }
 
   private async validarLimiteEstablecimientos(idAdmin: number): Promise<void> {
-    const admin = await this.adminService.getAdministradorByID(idAdmin);
+    const admin = await this.adminService.getByID(idAdmin);
 
     const ests = await this.repo.getByAdminID(admin.id);
 

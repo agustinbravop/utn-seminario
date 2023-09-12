@@ -2,7 +2,7 @@ import { AdministradorRepository } from "../repositories/administrador.js";
 import { Administrador } from "../models/administrador.js";
 
 export interface AdministradorService {
-  getAdministradorByID(id: Number): Promise<Administrador>;
+  getByID(id: Number): Promise<Administrador>;
   modificar(admin: Administrador): Promise<Administrador>;
 }
 
@@ -14,10 +14,10 @@ export class AdministradorServiceImpl implements AdministradorService {
   }
 
   async modificar(admin: Administrador): Promise<Administrador> {
-    return await this.repo.modificarAdmin(admin);
+    return await this.repo.modificarAdministrador(admin);
   }
 
-  async getAdministradorByID(id: number): Promise<Administrador> {
+  async getByID(id: number): Promise<Administrador> {
     return await this.repo.getAdministradorByID(id);
   }
 }

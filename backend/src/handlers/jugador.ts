@@ -14,7 +14,7 @@ export class JugadorHandler {
   getJugadorByID(): RequestHandler {
     return async (_req, res) => {
       const idJugador = Number(res.locals.idJugador);
-      const result = await this.service.getJugadorByID(idJugador);
+      const result = await this.service.getByID(idJugador);
       res.status(200).json(result);
     };
   }

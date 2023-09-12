@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { JugadorHandler, modificarJugadorSchema } from "../handlers/jugador.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function jugadoresRouter(
   handler: JugadorHandler,
-  authMiddle: AuthMiddleware
+  authMiddle: AuthHandler
 ): Router {
   const router = Router();
 

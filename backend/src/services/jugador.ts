@@ -2,7 +2,7 @@ import { JugadorRepository } from "../repositories/jugador.js";
 import { Jugador } from "../models/jugador.js";
 
 export interface JugadorService {
-  getJugadorByID(id: Number): Promise<Jugador>;
+  getByID(id: Number): Promise<Jugador>;
   modificar(jugador: Jugador): Promise<Jugador>;
 }
 
@@ -17,7 +17,7 @@ export class JugadorServiceImpl implements JugadorService {
     return await this.repo.modificarJugador(jugador);
   }
 
-  async getJugadorByID(id: number): Promise<Jugador> {
+  async getByID(id: number): Promise<Jugador> {
     return await this.repo.getJugadorByID(id);
   }
 }
