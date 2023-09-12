@@ -7,7 +7,7 @@ export default function JugadorPage() {
 
   return (
     <>
-      <Box>
+      <Box width='100%'>
           <SearchEstab />
       </Box>
     </>
