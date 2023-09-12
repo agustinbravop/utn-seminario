@@ -39,32 +39,6 @@ export interface AuthRepository {
 export class PrismaAuthRepository implements AuthRepository {
   private prisma: PrismaClient;
 
-  /**
-   * Transforma objetos de Prisma (de la BBDD) a objetos del modelo del dominio.
-   * Sirve para sacar la clave, que pasa desapercibida en el tipo `Administrador`.
-   * @param admin una entidad administrador de Prisma.
-   * @param suscripcion una entidad suscripcion de Prisma.
-   * @param tarjeta una entidad tarjeta de Prisma.
-   * @returns un objeto Administrador del dominio.
-   */
-  private toAdmin(
-    { clave, idSuscripcion, idTarjeta, ...admin }: administrador,
-    suscripcion: suscripcion,
-    tarjeta: tarjeta
-  ): Administrador {
-    return { ...admin, suscripcion, tarjeta };
-  }
-
-  /**
-   * Transforma objetos de Prisma (de la BBDD) a objetos del modelo del dominio.
-   * Sirve para sacar la clave, que pasa desapercibida en el tipo `Jugador`.
-   * @param jugador una entidad jugador de Prisma.
-   * @returns un objeto Jugador del dominio.
-   */
-  private toJugador({ clave, ...jugador }: jugador): Jugador {
-    return jugador;
-  }
-
   constructor(client: PrismaClient) {
     this.prisma = client;
   }
@@ -83,7 +57,7 @@ export class PrismaAuthRepository implements AuthRepository {
         },
       });
       return {
-        admin: this.toAdmin(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta),
+        admin: toAdmin(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta),
         clave: dbAdmin.clave,
       };
     } catch (e) {
@@ -99,7 +73,7 @@ export class PrismaAuthRepository implements AuthRepository {
         },
       });
       return {
-        jugador: this.toJugador(dbJugador),
+        jugador: toJugador(dbJugador),
         clave: dbJugador.clave,
       };
     } catch (e) {
@@ -179,7 +153,7 @@ export class PrismaAuthRepository implements AuthRepository {
           suscripcion: true,
         },
       });
-      return this.toAdmin(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta);
+      return toAdmin(dbAdmin, dbAdmin.suscripcion, dbAdmin.tarjeta);
     } catch (e) {
       throw new InternalServerError("No se pudo registrar al administrador");
     }
@@ -197,9 +171,33 @@ export class PrismaAuthRepository implements AuthRepository {
           clave: clave,
         },
       });
-      return this.toJugador(dbJugador);
+      return toJugador(dbJugador);
     } catch (e) {
       throw new InternalServerError("No se pudo registrar al jugador");
     }
   }
+}
+
+/**
+ * Sirve para sacar la clave, que pasa desapercibida en el tipo `Administrador`.
+ * @param admin una entidad administrador de Prisma.
+ * @param suscripcion una entidad suscripcion de Prisma.
+ * @param tarjeta una entidad tarjeta de Prisma.
+ * @returns un objeto Administrador del dominio.
+ */
+export function toAdmin(
+  { clave, idSuscripcion, idTarjeta, ...admin }: administrador,
+  suscripcion: suscripcion,
+  tarjeta: tarjeta
+): Administrador {
+  return { ...admin, suscripcion, tarjeta };
+}
+
+/**
+ * Sirve para sacar la clave, que pasa desapercibida en el tipo `Jugador`.
+ * @param jugador una entidad jugador de Prisma.
+ * @returns un objeto Jugador del dominio.
+ */
+export function toJugador({ clave, ...jugador }: jugador): Jugador {
+  return jugador;
 }

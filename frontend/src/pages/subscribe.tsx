@@ -1,6 +1,6 @@
 import PaymentForm from "@/components/PaymentForm/PaymentForm";
 import { useLocation, useNavigate } from "react-router";
-import { RegistrarAdminReq, useRegistrarAdmin } from "@/utils/api/auth";
+import { RegistrarAdmin, useRegistrarAdmin } from "@/utils/api/auth";
 import * as Yup from "yup";
 import {
   HStack,
@@ -62,7 +62,7 @@ export default function SubscribePage() {
   const { search } = useLocation();
   const idSuscripcion = new URLSearchParams(search).get("idSuscripcion");
 
-  const methods = useYupForm<RegistrarAdminReq>({
+  const methods = useYupForm<RegistrarAdmin>({
     validationSchema,
     defaultValues: {
       tarjeta: {
