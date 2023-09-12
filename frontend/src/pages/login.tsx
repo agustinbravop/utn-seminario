@@ -2,7 +2,11 @@ import { useNavigate } from "react-router";
 import * as Yup from "yup";
 import { Heading, VStack, Alert, Text } from "@chakra-ui/react";
 import { FormProvider } from "react-hook-form";
-import { InputControl, SubmitButton } from "@/components/forms";
+import {
+  InputControl,
+  PasswordControl,
+  SubmitButton,
+} from "@/components/forms";
 import { useLogin } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
@@ -64,9 +68,8 @@ export default function LoginPage() {
             placeholder="Correo o usuario"
             isRequired
           />
-          <InputControl
+          <PasswordControl
             name="clave"
-            type="password"
             label="Contraseña"
             placeholder="Contraseña"
             isRequired

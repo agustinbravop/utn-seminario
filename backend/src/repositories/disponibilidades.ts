@@ -23,33 +23,31 @@ export class PrismaDisponibilidadRepository
     this.prisma = prismaClient;
   }
 
-  async getDisponibilidadesByCanchaID(
-    idCancha: number
-  ): Promise<Disponibilidad[]> {
+  async getDisponibilidadesByCanchaID(idCancha: number) {
     try {
       const canchas = await this.prisma.disponibilidad.findMany({
         where: { idCancha: idCancha },
         orderBy: [{ horaInicio: "asc" }],
         include: this.include,
       });
-      return canchas.map((c) => toModel(c));
+      return canchas.map((c) => toDisp(c));
     } catch {
-      throw new InternalServerError("Error listar las disponibilidades");
+      throw new InternalServerError("Error al listar las disponibilidades");
     }
   }
 
-  async getDisponibilidadByID(idDisp: number): Promise<Disponibilidad> {
+  async getDisponibilidadByID(idDisp: number) {
     return awaitQuery(
       this.prisma.disponibilidad.findUnique({
         where: { id: idDisp },
         include: this.include,
       }),
-      `No existe cancha con id ${idDisp}`,
+      `No existe disponibilidad con id ${idDisp}`,
       "Error al intentar obtener la disponibilidad"
     );
   }
 
-  async crearDisponibilidad(disp: Disponibilidad): Promise<Disponibilidad> {
+  async crearDisponibilidad(disp: Disponibilidad) {
     try {
       const dbDisp = await this.prisma.disponibilidad.create({
         data: {
@@ -69,13 +67,13 @@ export class PrismaDisponibilidadRepository
         include: this.include,
       });
 
-      return toModel(dbDisp);
+      return toDisp(dbDisp);
     } catch {
-      throw new InternalServerError("No se pudo crear el establecimiento");
+      throw new InternalServerError("No se pudo crear la disponibilidad");
     }
   }
 
-  async modificarDisponibilidad(disp: Disponibilidad): Promise<Disponibilidad> {
+  async modificarDisponibilidad(disp: Disponibilidad) {
     return awaitQuery(
       this.prisma.disponibilidad.update({
         where: { id: disp.id },
@@ -100,24 +98,24 @@ export class PrismaDisponibilidadRepository
     );
   }
 
-  async eliminarDisponibilidad(idDisp: number): Promise<Disponibilidad> {
+  async eliminarDisponibilidad(idDisp: number) {
     return awaitQuery(
       this.prisma.disponibilidad.delete({
         where: { id: idDisp },
         include: this.include,
       }),
       `No existe disponibilidad con id ${idDisp}`,
-      "Error interno al intentar eliminar la cancha"
+      "Error interno al intentar eliminar la disponibilidad"
     );
   }
 }
 
-type disponibilidadDB = Omit<disponibilidad, "idDisciplina"> & {
+export type disponibilidadDB = Omit<disponibilidad, "idDisciplina"> & {
   disciplina: disciplina;
   dias: dia[];
 };
 
-function toModel(disp: disponibilidadDB): Disponibilidad {
+export function toDisp(disp: disponibilidadDB): Disponibilidad {
   return {
     ...disp,
     disciplina: disp.disciplina.disciplina,
@@ -132,10 +130,10 @@ async function awaitQuery(
   errorMsg: string
 ): Promise<Disponibilidad> {
   try {
-    const cancha = await promise;
+    const disp = await promise;
 
-    if (cancha) {
-      return toModel(cancha);
+    if (disp) {
+      return toDisp(disp);
     }
   } catch {
     throw new InternalServerError(errorMsg);

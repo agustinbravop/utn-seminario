@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { useCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import SubMenu from "@/components/SubMenu/SubMenu";
 import FormDisponibilidad from "./_formDisp";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import {
@@ -21,6 +20,7 @@ import {
 import FormDeleteDisponibilidad from "./_formEliminar";
 import { Disponibilidad, DisponibilidadForm } from "@/models";
 import { decimalAHora, horaADecimal } from "@/utils/dates";
+import { CanchaMenu } from "@/components/navigation";
 
 /**
  * Deriva el valor del campo 'minutosReserva' del DisponibilidadForm
@@ -94,7 +94,7 @@ export default function CanchaInfoPage() {
 
   return (
     <>
-      <SubMenu canchas={true} nombreCancha={data.nombre} />
+      <CanchaMenu />
       <Heading size="md">Disponibilidades de la cancha</Heading>
       <Text>
         Las disponibilidades determinan en qué horario se pueden hacer reservas.
@@ -112,8 +112,8 @@ export default function CanchaInfoPage() {
           de nuevo.
         </Alert>
       )}
-      <TableContainer pt="15px" pb="20px" mr="700px">
-        <Table variant="simple" m="auto" size="sm">
+      <TableContainer pt="15px" pb="20px" mr="100px">
+        <Table size="sm">
           <Thead>
             <Tr>
               <Th>Disciplina</Th>

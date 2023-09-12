@@ -12,11 +12,11 @@ import { DisponibilidadRepository } from "./disponibilidades.js";
 
 export interface CanchaRepository {
   getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
+  getCanchaByDisponibilidadID(idDisp: number): Promise<Cancha>;
   getCanchaByID(idCancha: number): Promise<Cancha>;
   crearCancha(cancha: Cancha): Promise<Cancha>;
   modificarCancha(canchaUpdate: Cancha): Promise<Cancha>;
   eliminarCancha(idCancha: number): Promise<Cancha>;
-  getCanchasByEstabIdHabilitadas(idEst:number): Promise<Cancha[]>;
 }
 
 export class PrismaCanchaRepository implements CanchaRepository {
@@ -39,29 +39,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     this.dispRepository = dispRepository;
   }
 
-  async getCanchasByEstabIdHabilitadas(idEst:number) : Promise<Cancha[]>{
-    try {
-      const canchas = await this.prisma.cancha.findMany({
-        where: {
-          idEstablecimiento: idEst,
-          eliminada: false,
-          habilitada: true
-        },
-        orderBy: [
-          {
-            nombre: "asc",
-          },
-        ],
-        include: this.include,
-      });
-      return canchas.map((c) => toModel(c));
-    } catch (e) {
-      console.error(e);
-      throw new InternalServerError("Error al obtener las canchas");
-    }
-  }
-
-  async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {
+  async getCanchasByEstablecimientoID(idEst: number) {
     try {
       const canchas = await this.prisma.cancha.findMany({
         where: {
@@ -77,7 +55,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async getCanchaByID(idCancha: number): Promise<Cancha>  {
+  async getCanchaByID(idCancha: number) {
     return awaitQuery(
       this.prisma.cancha.findUnique({
         where: { id: idCancha },
@@ -88,15 +66,13 @@ export class PrismaCanchaRepository implements CanchaRepository {
     );
   }
 
-  async crearCancha(cancha: Cancha): Promise<Cancha> {
-    //Valida que la cancha ingresada sea unica 
-    const canchas= await this.getCanchasByEstablecimientoID(cancha.idEstablecimiento)
-    const array_cancha=canchas.filter((elemento)=>(elemento.nombre.toUpperCase()==cancha.nombre.toUpperCase() && elemento.habilitada==true))
-    if (array_cancha.length==1){ 
-      throw new BadRequestError("La cancha ingresada ya existe. Ingrese el nombre de otra cancha")
-    }
+  async getCanchaByDisponibilidadID(idDisp: number) {
+    const disp = await this.dispRepository.getDisponibilidadByID(idDisp);
 
-    
+    return await this.getCanchaByID(disp.idCancha);
+  }
+
+  async crearCancha(cancha: Cancha) {
     try {
 
       validarDisponibilidades(cancha)
@@ -129,8 +105,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async modificarCancha(cancha: Cancha): Promise<Cancha> {
-    
+  async modificarCancha(cancha: Cancha) {
     try {
             
      
@@ -163,7 +138,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async eliminarCancha(idCancha: number): Promise<Cancha> {
+  async eliminarCancha(idCancha: number) {
     return awaitQuery(
       this.prisma.cancha.update({
         where: { id: idCancha },

@@ -6,13 +6,12 @@ import {
   Stack,
   StackDivider,
   Box,
-  VStack,
   useToast,
   Center,
   Button,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useModificarAdministrador } from "@/utils/api/administrador";
+import { useModificarAdministrador } from "@/utils/api/auth";
 import { FormProvider } from "react-hook-form";
 import { InputControl, ConfirmSubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
@@ -68,60 +67,56 @@ export default function PerfilPage() {
   });
 
   return (
-    <>
-      <VStack>
-        <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
-          <CardHeader>
-            <Heading size="lg" textAlign="center">
-              Editar Perfil
-            </Heading>
-          </CardHeader>
-          <CardBody marginTop="28px">
-            <FormProvider {...methods}>
-              <Stack
-                divider={<StackDivider />}
-                spacing="2.5"
-                marginTop="-2rem"
-                as="form"
+    <Card m="auto" boxSize="40rem" width="40%" height="70%" mt="5%">
+      <CardHeader>
+        <Heading size="lg" textAlign="center">
+          Editar Perfil
+        </Heading>
+      </CardHeader>
+      <CardBody marginTop="28px">
+        <FormProvider {...methods}>
+          <Stack
+            divider={<StackDivider />}
+            spacing="2.5"
+            marginTop="-2rem"
+            as="form"
+          >
+            <Box>
+              <Heading size="xs">Nombre</Heading>
+              <InputControl isRequired name="nombre" />
+            </Box>
+            <Box>
+              <Heading size="xs">Apellido</Heading>
+              <InputControl isRequired name="apellido" />
+            </Box>
+            <Box>
+              <Heading size="xs">Usuario</Heading>
+              <InputControl isRequired name="usuario" />
+            </Box>
+            <Box>
+              <Heading size="xs">Correo</Heading>
+              <InputControl isRequired name="correo" />
+            </Box>
+            <Box>
+              <Heading size="xs">Teléfono</Heading>
+              <InputControl isRequired name="telefono" />
+            </Box>
+            <Center>
+              <Button onClick={() => navigate(-1)} mr={15}>
+                Cancelar
+              </Button>
+              <ConfirmSubmitButton
+                header="Modificar"
+                body="¿Está seguro de modificar la información de su perfil?"
+                onSubmit={methods.handleSubmit((values) => mutate(values))}
+                isLoading={isLoading}
               >
-                <Box>
-                  <Heading size="xs">Nombre</Heading>
-                  <InputControl isRequired name="nombre" />
-                </Box>
-                <Box>
-                  <Heading size="xs">Apellido</Heading>
-                  <InputControl isRequired name="apellido" />
-                </Box>
-                <Box>
-                  <Heading size="xs">Usuario</Heading>
-                  <InputControl isRequired name="usuario" />
-                </Box>
-                <Box>
-                  <Heading size="xs">Correo</Heading>
-                  <InputControl isRequired name="correo" />
-                </Box>
-                <Box>
-                  <Heading size="xs">Teléfono</Heading>
-                  <InputControl isRequired name="telefono" />
-                </Box>
-                <Center>
-                  <Button onClick={() => navigate(-1)} mr={15}>
-                    Cancelar
-                  </Button>
-                  <ConfirmSubmitButton
-                    header="Modificar"
-                    body="¿Está seguro de modificar la información de su perfil?"
-                    onSubmit={methods.handleSubmit((values) => mutate(values))}
-                    isLoading={isLoading}
-                  >
-                    Guardar
-                  </ConfirmSubmitButton>
-                </Center>
-              </Stack>
-            </FormProvider>
-          </CardBody>
-        </Card>
-      </VStack>
-    </>
+                Guardar
+              </ConfirmSubmitButton>
+            </Center>
+          </Stack>
+        </FormProvider>
+      </CardBody>
+    </Card>
   );
 }

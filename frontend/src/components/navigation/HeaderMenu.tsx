@@ -1,25 +1,14 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
-import {
-  Button,
-  HStack,
-  Icon,
-  Image,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+import { Button, HStack, Icon, MenuItem, MenuList } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import { ArrowForwardIcon, CalendarIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
-import { LOGO_IMAGE_SRC } from "@/utils/consts";
+import { LogoImage } from "@/utils/consts";
 
-function LogoImage() {
-  return <Image src={LOGO_IMAGE_SRC} alt="logo" width={177} />;
-}
-
-export default function TopMenu() {
+export default function HeaderMenu() {
   const { admin, isAdmin, logout: adminLogout } = useCurrentAdmin();
   const { jugador, isJugador, logout: jugadorLogout } = useCurrentJugador();
 
@@ -79,7 +68,7 @@ function AdminNav({
               </Link>
               <Link to={`/`}>
                 <MenuItem onClick={logout}>
-                  <ArrowForwardIcon mr="20px" /> Logout
+                  <ArrowForwardIcon mr="20px" /> Cerrar sesión
                 </MenuItem>
               </Link>
             </MenuList>
@@ -128,7 +117,7 @@ function JugadorNav({
               </Link>
               <Link to={`/`}>
                 <MenuItem onClick={logout}>
-                  <ArrowForwardIcon mr="20px" /> Logout
+                  <ArrowForwardIcon mr="20px" /> Cerrar sesión
                 </MenuItem>
               </Link>
             </MenuList>

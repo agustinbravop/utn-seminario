@@ -1,10 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Administrador } from "../models/administrador.js";
+import { toAdmin } from "./auth.js";
 
 export interface AdministradorRepository {
   getAdministradorByID(id: number): Promise<Administrador>;
-  modificarAdmin(admin: Administrador): Promise<Administrador>;
+  modificarAdministrador(admin: Administrador): Promise<Administrador>;
 }
 
 export class PrismaAdministradorRepository implements AdministradorRepository {
@@ -14,9 +15,9 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
     this.prisma = client;
   }
 
-  async modificarAdmin(admin: Administrador): Promise<Administrador> {
+  async modificarAdministrador(admin: Administrador): Promise<Administrador> {
     try {
-      const { id } = await this.prisma.administrador.update({
+      const dbAdmin = await this.prisma.administrador.update({
         where: { id: admin.id },
         data: {
           nombre: admin.nombre,
@@ -31,7 +32,7 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
           suscripcion: true,
         },
       });
-      return await this.getAdministradorByID(id);
+      return toAdmin(dbAdmin);
     } catch {
       throw new InternalServerError(
         "Error interno al intentar modificar los datos del administrador"
@@ -51,10 +52,10 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
         },
       });
       if (dbAdmin) {
-        return dbAdmin;
+        return toAdmin(dbAdmin);
       }
     } catch {
-      throw new InternalServerError("No se pudo buscar el administrador");
+      throw new InternalServerError("Error al buscar el administrador");
     }
     throw new NotFoundError("No existe administrador con id " + id);
   }

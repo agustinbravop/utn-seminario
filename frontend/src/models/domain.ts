@@ -91,4 +91,13 @@ export type Busqueda = {
   provincia?: string | undefined;
   localidad?: string | undefined;
   disciplina?: string | undefined;
+}
+
+export type Reserva = {
+  id: number;
+  fechaReservada: Date;
+  fechaCreada: Date;
+  precio: number;
+  jugador: Jugador;
+  disponibilidad: Disponibilidad;
 };

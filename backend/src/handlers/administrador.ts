@@ -1,7 +1,8 @@
 import { RequestHandler } from "express";
-import { AdministradorServiceImpl } from "../services/administrador";
-import { Administrador } from "../models/administrador.js";
+import { AdministradorServiceImpl } from "../services/administrador.js";
+import { Administrador, administradorSchema } from "../models/administrador.js";
 
+export const modificarAdministradorSchema = administradorSchema.deepPartial();
 export class AdministradorHandler {
   private service: AdministradorServiceImpl;
 
@@ -12,7 +13,7 @@ export class AdministradorHandler {
   getAdministradorByID(): RequestHandler {
     return async (_req, res) => {
       const idAdmin = Number(res.locals.idAdmin);
-      const result = await this.service.getAdministradorByID(idAdmin);
+      const result = await this.service.getByID(idAdmin);
       res.status(200).json(result);
     };
   }

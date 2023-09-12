@@ -38,7 +38,7 @@ export class PrismaEstablecimientoRepository
     }
   }
 
-  async crear(est: Establecimiento): Promise<Establecimiento> {
+  async crear(est: Establecimiento) {
     try {
       const dbEst = await this.prisma.establecimiento.create({
         data: {
@@ -78,7 +78,7 @@ export class PrismaEstablecimientoRepository
     }
   }
 
-  async getByID(idEst: number): Promise<Establecimiento> {
+  async getByID(idEst: number) {
     return awaitQuery(
       this.prisma.establecimiento.findUnique({
         where: { id: idEst },
@@ -89,7 +89,7 @@ export class PrismaEstablecimientoRepository
     );
   }
 
-  async getByAdminID(idAdmin: number): Promise<Establecimiento[]> {
+  async getByAdminID(idAdmin: number) {
     try {
       const estsDB = await this.prisma.establecimiento.findMany({
         where: {
@@ -104,7 +104,7 @@ export class PrismaEstablecimientoRepository
     }
   }
 
-  async getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]> {
+  async getDeletedByAdminID(idAdmin: number) {
     try {
       const estsDB = await this.prisma.establecimiento.findMany({
         where: {
@@ -119,7 +119,7 @@ export class PrismaEstablecimientoRepository
     }
   }
 
-  async modificar(est: Establecimiento): Promise<Establecimiento> {
+  async modificar(est: Establecimiento) {
     return awaitQuery(
       this.prisma.establecimiento.update({
         where: { id: est.id },
@@ -160,7 +160,7 @@ export class PrismaEstablecimientoRepository
     );
   }
 
-  async eliminar(idEst: number): Promise<Establecimiento> {
+  async eliminar(idEst: number) {
     return awaitQuery(
       this.prisma.establecimiento.update({
         where: { id: Number(idEst) },

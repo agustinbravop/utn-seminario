@@ -1,6 +1,6 @@
 import { Box, Heading, Image, Text } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import TopMenu from "@/components/TopMenu/TopMenu";
+import HeaderMenu from "@/components/navigation/HeaderMenu";
 import { Modals } from "@generouted/react-router";
 import ErrorPageIllustrationSvg from "@/assets/error_page_illustration.svg";
 
@@ -29,7 +29,7 @@ export const Catch = () => {
 export default function RootLayout() {
   return (
     <>
-      <TopMenu />
+      <HeaderMenu />
 
       <Box as="main"  m={{ base: "20px", md: "40px" }}>
         <Outlet />

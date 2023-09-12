@@ -8,7 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import {
-  ModificarEstablecimientoReq,
+  ModificarEstablecimiento,
   useEstablecimientoByID,
   useModificarEstablecimiento,
 } from "@/utils/api/establecimientos";
@@ -21,7 +21,7 @@ import {
 } from "@/components/forms";
 import { useYupForm } from "@/hooks/useYupForm";
 
-type FormState = ModificarEstablecimientoReq & {
+type FormState = ModificarEstablecimiento & {
   imagen: File | undefined;
 };
 
@@ -40,7 +40,7 @@ const validationSchema = Yup.object({
   imagen: Yup.mixed<File>().optional(),
 });
 
-export default function EditEstabPage() {
+export default function EstablecimientoEditarPage() {
   const navigate = useNavigate();
   const { idEst } = useParams("/ests/:idEst");
   const toast = useToast();

@@ -1,10 +1,11 @@
-import { Request, RequestHandler, Response } from "express";
+import { Handler, Request, RequestHandler, Response } from "express";
 import { tarjetaSchema } from "../models/tarjeta.js";
 import { Administrador, administradorSchema } from "../models/administrador.js";
-import { AuthService } from "../services/auth.js";
+import { AuthService, Rol } from "../services/auth.js";
 import { SuscripcionService } from "../services/suscripciones.js";
 import { z } from "zod";
 import { Jugador, jugadorSchema } from "../models/jugador.js";
+import { UnauthorizedError, ForbiddenError } from "../utils/apierrors.js";
 
 /*
 export const registrarAdminSchema = z.object({
@@ -27,12 +28,15 @@ export const registrarAdminSchema = administradorSchema
     tarjeta: tarjetaSchema.omit({ id: true }),
   });
 
+type RegistrarAdmin = z.infer<typeof registrarAdminSchema>;
 
 // Se puede iniciar sesión o con usuario o con correo.
-export const loginReqSchema = z.object({
+export const loginSchema = z.object({
   correoOUsuario: z.string().nonempty(),
   clave: z.string().nonempty(),
 });
+
+type Login = z.infer<typeof loginSchema>;
 
 export const registrarJugadorSchema = jugadorSchema
   .extend({
@@ -40,11 +44,14 @@ export const registrarJugadorSchema = jugadorSchema
   })
   .omit({ id: true });
 
-type LoginReq = z.infer<typeof loginReqSchema>;
+type RegistrarJugador = z.infer<typeof registrarJugadorSchema>;
 
-type RegistrarAdminReq = z.infer<typeof registrarAdminSchema>;
+export const cambiarClaveSchema = z.object({
+  nueva: z.string().nonempty(),
+  actual: z.string().nonempty(),
+});
 
-type RegistrarJugadorReq = z.infer<typeof registrarJugadorSchema>;
+type CambiarClave = z.infer<typeof cambiarClaveSchema>;
 
 export class AuthHandler {
   private service: AuthService;
@@ -57,8 +64,8 @@ export class AuthHandler {
 
   login(): RequestHandler {
     return async (_req, res) => {
-      const loginReq: LoginReq = res.locals.body;
-     
+      const loginReq: Login = res.locals.body;
+
       const token = await this.service.loginUsuario(
         loginReq.correoOUsuario,
         loginReq.clave
@@ -69,7 +76,6 @@ export class AuthHandler {
 
   refreshToken(): RequestHandler {
     return async (req, res) => {
-      // El Authorization header es válido, sino no hubiera pasado el auth middleware.
       const currentToken = req.header("Authorization")?.replace("Bearer ", "")!;
 
       const token = await this.service.refreshJWT(currentToken);
@@ -79,20 +85,17 @@ export class AuthHandler {
 
   registerAdmin(): RequestHandler {
     return async (_req: Request, res: Response) => {
-      const body: RegistrarAdminReq = res.locals.body;
+      const body: RegistrarAdmin = res.locals.body;
 
       // Se obtiene la suscripcion mediante el idSuscripcion.
-      const sus = await this.susService.getSuscripcionByID(body.idSuscripcion);
+      const sus = await this.susService.getByID(body.idSuscripcion);
 
       // Se construye el Administrador del modelo.
       const admin: Administrador = {
         ...body,
-        tarjeta: {
-          id: 0,
-          ...body.tarjeta,
-        },
-        id: 0,
         suscripcion: sus,
+        tarjeta: { ...body.tarjeta, id: 0 },
+        id: 0,
       };
 
       const adminCreado = await this.service.registrarAdministrador(
@@ -115,13 +118,10 @@ export class AuthHandler {
 
   registerJugador(): RequestHandler {
     return async (_req: Request, res: Response) => {
-      const body: RegistrarJugadorReq = res.locals.body;
+      const body: RegistrarJugador = res.locals.body;
 
       // Se construye el Jugador del modelo.
-      const jugador: Jugador = {
-        ...body,
-        id: 0,
-      };
+      const jugador: Jugador = { ...body, id: 0 };
 
       const jugadorCreado = await this.service.registrarJugador(
         jugador,
@@ -131,4 +131,71 @@ export class AuthHandler {
     };
   }
 
+  patchClave(): RequestHandler {
+    return async (req, res) => {
+      const { actual, nueva }: CambiarClave = res.locals.body;
+
+      const header = req.header("Authorization");
+      const jwt = await this.verifyAuthorizationHeader(header);
+      const correo = jwt.admin?.correo || jwt.jugador?.usuario;
+      if (!correo) {
+        throw new UnauthorizedError("JWT inválido");
+      }
+
+      const token = await this.service.cambiarClave(correo, actual, nueva);
+      res.status(200).json({ token });
+    };
+  }
+
+  private async verifyAuthorizationHeader(header: string | undefined) {
+    const token = header?.replace("Bearer ", "");
+    if (!token) {
+      throw new UnauthorizedError("Authorization header inválido");
+    }
+
+    const jwt = await this.service.verifyJWT(token);
+    if (jwt == null) {
+      throw new UnauthorizedError("Token inválido");
+    }
+
+    return jwt;
+  }
+
+  /**
+   * Valida que la request tenga un JWT válido y que sea de un usuario **administrador**.
+   * Setea `res.locals.idAdmin` con el idAdmin que vino en el JWT.
+   */
+  public isAdmin(): Handler {
+    return async (req, res, next) => {
+      const token = req.header("Authorization");
+      const jwt = await this.verifyAuthorizationHeader(token);
+
+      if (!this.service.hasRol(jwt, Rol.Administrador)) {
+        throw new ForbiddenError("No tiene el rol Administrador");
+      }
+
+      // Los handlers subsiguientes tienen acceso al idAdmin que vino en el JWT.
+      res.locals.idAdmin = Number(jwt?.admin?.id);
+      next();
+    };
+  }
+
+  /**
+   * Valida que la request tenga un JWT válido y que sea de un usuario **jugador**.
+   * Setea `res.locals.idJugador` con el idJugador que vino en el JWT.
+   */
+  public isJugador(): Handler {
+    return async (req, res, next) => {
+      const token = req.header("Authorization");
+      const jwt = await this.verifyAuthorizationHeader(token);
+
+      if (!this.service.hasRol(jwt, Rol.Jugador)) {
+        throw new ForbiddenError("No tiene el rol Jugador");
+      }
+
+      // Los handlers subsiguientes tienen acceso al idJugador que vino en el JWT.
+      res.locals.idJugador = Number(jwt?.jugador?.id);
+      next();
+    };
+  }
 }

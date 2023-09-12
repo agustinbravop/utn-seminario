@@ -7,14 +7,14 @@ import {
   useApiMutation,
 } from "@/hooks";
 
-export type CrearCanchaReq = Omit<
+export type CrearCancha = Omit<
   Cancha,
   "id" | "urlImagen" | "disponibilidades"
 > & {
   disponibilidades: Omit<Disponibilidad, "id">[];
 };
 
-export type ModificarCanchaReq = Omit<Cancha, "urlImagen"> & {
+export type ModificarCancha = Omit<Cancha, "urlImagen"> & {
   disponibilidades: (Omit<Disponibilidad, "id"> & {
     id?: number | undefined;
   })[];
@@ -58,7 +58,7 @@ export function useCanchaByID(
 }
 
 export function useCrearCancha(
-  options?: UseApiMutationOptions<CrearCanchaReq & { imagen?: File }, Cancha>
+  options?: UseApiMutationOptions<CrearCancha & { imagen?: File }, Cancha>
 ) {
   return useApiMutation({
     ...options,
@@ -76,10 +76,7 @@ export function useCrearCancha(
 }
 
 export function useModificarCancha(
-  options?: UseApiMutationOptions<
-    ModificarCanchaReq & { imagen?: File },
-    Cancha
-  >
+  options?: UseApiMutationOptions<ModificarCancha & { imagen?: File }, Cancha>
 ) {
   return useApiMutation({
     ...options,
