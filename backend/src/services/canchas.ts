@@ -18,8 +18,8 @@ export interface CanchaService {
 export class CanchaServiceimpl implements CanchaService {
   private repo: CanchaRepository;
 
-  constructor(service: CanchaRepository) {
-    this.repo = service;
+  constructor(repository: CanchaRepository) {
+    this.repo = repository;
   }
 
   async getByEstablecimientoID(idEst: number) {

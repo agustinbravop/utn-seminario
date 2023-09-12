@@ -26,10 +26,10 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   private adminService: AdministradorService;
 
   constructor(
-    repo: EstablecimientoRepository,
+    repository: EstablecimientoRepository,
     adminService: AdministradorService
   ) {
-    this.repo = repo;
+    this.repo = repository;
     this.adminService = adminService;
   }
 

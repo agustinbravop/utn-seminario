@@ -6,16 +6,15 @@ import {
 } from "../models/establecimiento.js";
 import { ForbiddenError } from "../utils/apierrors.js";
 
-export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
+export const crearEstablecimientoSchema = establecimientoSchema.omit({
   id: true,
   urlImagen: true,
   eliminado: true,
 });
 
-export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
+export const modificarEstablecimientoSchema = establecimientoSchema.omit({
   urlImagen: true,
   id: true,
-  //eliminado: true,
 });
 
 export class EstablecimientoHandler {

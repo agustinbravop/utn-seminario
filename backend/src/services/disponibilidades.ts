@@ -12,8 +12,8 @@ export interface DisponibilidadService {
 export class DisponibilidadServiceimpl implements DisponibilidadService {
   private repo: DisponibilidadRepository;
 
-  constructor(service: DisponibilidadRepository) {
-    this.repo = service;
+  constructor(repository: DisponibilidadRepository) {
+    this.repo = repository;
   }
 
   async getByCanchaID(idCancha: number) {

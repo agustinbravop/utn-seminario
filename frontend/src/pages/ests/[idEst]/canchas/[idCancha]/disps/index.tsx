@@ -112,8 +112,8 @@ export default function CanchaInfoPage() {
           de nuevo.
         </Alert>
       )}
-      <TableContainer pt="15px" pb="20px" mr="700px">
-        <Table variant="simple" m="auto" size="sm">
+      <TableContainer pt="15px" pb="20px" mr="100px">
+        <Table size="sm">
           <Thead>
             <Tr>
               <Th>Disciplina</Th>
