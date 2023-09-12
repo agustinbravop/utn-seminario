@@ -106,16 +106,6 @@ export class AuthHandler {
     };
   }
 
-
-  cambiarContrasenia():RequestHandler { 
-    return async (req: Request, res:Response)=> { 
-       const admin=req.body
-       const clave=req.body['claveNueva']
-      const administrador=await this.service.cambiarContrasenia(admin, clave) 
-      return res.status(200).json(administrador)
-    }
-  }
-
   registerJugador(): RequestHandler {
     return async (_req: Request, res: Response) => {
       const body: RegistrarJugador = res.locals.body;

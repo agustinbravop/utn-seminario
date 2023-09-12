@@ -19,8 +19,6 @@ export function authRouter(handler: AuthHandler): Router {
     handler.registerAdmin()
   );
 
-  router.put("/cambiarContrasenia", handler.cambiarContrasenia())
-
   router.post(
     "/register/jugador",
     validateBody(registrarJugadorSchema),
