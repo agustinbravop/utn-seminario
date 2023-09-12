@@ -95,7 +95,7 @@ export default function SearchEstab() {
       <Heading size="md" textAlign='center' >Busca tu establecimieto deportivo</Heading>
       <Box width='100%' display='flex' justifyContent='center'>
         <VStack>
-          <Box bg='#9197a9' mt='15px' p='0.3rem' width="360px" borderRadius='10px' display="flex" justifyContent="center">
+          <Box bg='#e9eef1' mt='15px' p='0.3rem' width="360px" borderRadius='10px' display="flex" justifyContent="center">
             <VStack gap='0.3rem'>
               <HStack spacing='0.3rem'>
                 <Select
@@ -140,8 +140,6 @@ export default function SearchEstab() {
                 bg='white'
                 type='date'
                 focusBorderColor="lightblue"
-                _placeholder={{ color: '#53575e' }}
-                placeholder="Nombre del establecimiento"
                 size="md"
                 width="100%"
                 onChange={(e) => setDateSelect(e.target.value)}
@@ -153,6 +151,7 @@ export default function SearchEstab() {
                 </InputRightElement>
                 <Input
                   focusBorderColor="lightblue"
+                  _placeholder={{ color: '#1a202c' }}
                   placeholder="Nombre del establecimiento"
                   size="md"
                   width="100%"
