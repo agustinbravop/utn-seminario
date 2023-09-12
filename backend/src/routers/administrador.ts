@@ -3,12 +3,12 @@ import {
   AdministradorHandler,
   modificarAdministradorSchema,
 } from "../handlers/administrador.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function administradoresRouter(
   handler: AdministradorHandler,
-  authMiddle: AuthMiddleware
+  authMiddle: AuthHandler
 ): Router {
   const router = Router();
 

@@ -7,11 +7,11 @@ import {
   modificarEstablecimientoSchema,
 } from "../handlers/establecimientos.js";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function establecimientosRouter(
   handler: EstablecimientoHandler,
-  authMiddle: AuthMiddleware,
+  authMiddle: AuthHandler,
   upload: multer.Multer
 ): Router {
   const router = express.Router();

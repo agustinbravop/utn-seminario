@@ -2,6 +2,7 @@ import CheckboxGroupControl from "./CheckboxGroupControl";
 import CheckboxSingleControl from "./CheckboxSingleControl";
 import InputControl from "./InputControl";
 import NumberInputControl from "./NumberInputControl";
+import PasswordControl from "./PasswordControl";
 import PinInputControl from "./PinInputControl";
 import RadioGroupControl from "./RadioGroupControl";
 import SelectControl from "./SelectControl";
@@ -18,6 +19,7 @@ export {
   CheckboxSingleControl,
   InputControl,
   NumberInputControl,
+  PasswordControl,
   PinInputControl,
   RadioGroupControl,
   SelectControl,

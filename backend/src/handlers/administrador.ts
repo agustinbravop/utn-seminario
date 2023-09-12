@@ -13,7 +13,7 @@ export class AdministradorHandler {
   getAdministradorByID(): RequestHandler {
     return async (_req, res) => {
       const idAdmin = Number(res.locals.idAdmin);
-      const result = await this.service.getAdministradorByID(idAdmin);
+      const result = await this.service.getByID(idAdmin);
       res.status(200).json(result);
     };
   }

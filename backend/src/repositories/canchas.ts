@@ -39,7 +39,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     this.dispRepository = dispRepository;
   }
 
-  async getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]> {
+  async getCanchasByEstablecimientoID(idEst: number) {
     try {
       const canchas = await this.prisma.cancha.findMany({
         where: {
@@ -55,7 +55,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async getCanchaByID(idCancha: number): Promise<Cancha> {
+  async getCanchaByID(idCancha: number) {
     return awaitQuery(
       this.prisma.cancha.findUnique({
         where: { id: idCancha },
@@ -66,13 +66,13 @@ export class PrismaCanchaRepository implements CanchaRepository {
     );
   }
 
-  async getCanchaByDisponibilidadID(idDisp: number): Promise<Cancha> {
+  async getCanchaByDisponibilidadID(idDisp: number) {
     const disp = await this.dispRepository.getDisponibilidadByID(idDisp);
 
     return await this.getCanchaByID(disp.idCancha);
   }
 
-  async crearCancha(cancha: Cancha): Promise<Cancha> {
+  async crearCancha(cancha: Cancha) {
     try {
       const { id } = await this.prisma.cancha.create({
         data: {
@@ -101,7 +101,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async modificarCancha(cancha: Cancha): Promise<Cancha> {
+  async modificarCancha(cancha: Cancha) {
     try {
       const { id } = await this.prisma.cancha.update({
         where: { id: cancha.id },
@@ -132,7 +132,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async eliminarCancha(idCancha: number): Promise<Cancha> {
+  async eliminarCancha(idCancha: number) {
     return awaitQuery(
       this.prisma.cancha.update({
         where: { id: idCancha },

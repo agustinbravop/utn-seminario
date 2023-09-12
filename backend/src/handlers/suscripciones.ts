@@ -10,7 +10,7 @@ export class SuscripcionHandler {
 
   getAllSuscripciones(): RequestHandler {
     return async (_req, res) => {
-      const suscripciones = await this.service.getAllSuscripciones();
+      const suscripciones = await this.service.getAll();
       res.status(200).json(suscripciones);
     };
   }

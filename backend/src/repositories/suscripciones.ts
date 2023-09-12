@@ -14,7 +14,7 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
     this.prisma = client;
   }
 
-  async getSuscripcionByID(id: number): Promise<Suscripcion> {
+  async getSuscripcionByID(id: number) {
     try {
       const suscripcion = await this.prisma.suscripcion.findUnique({
         where: {
@@ -30,7 +30,7 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
     throw new NotFoundError("No existe suscripcion con ese id");
   }
 
-  async getAllSuscripciones(): Promise<Suscripcion[]> {
+  async getAllSuscripciones() {
     try {
       const suscripciones = await this.prisma.suscripcion.findMany();
       return suscripciones;
