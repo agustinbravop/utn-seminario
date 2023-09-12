@@ -9,6 +9,7 @@ export type Path =
   | `/admin/:idAdmin/mejorarSuscripcion`
   | `/admin/:idAdmin/nuevoEstablecimiento`
   | `/admin/:idAdmin/perfil`
+  | `/admin/:idAdmin/perfil/cambiarClave`
   | `/admin/:idAdmin/perfil/editar`
   | `/admin/:idAdmin/perfil/editarSuscripcion`
   | `/admin/:idAdmin/perfil/selectEstab`
@@ -23,6 +24,7 @@ export type Path =
   | `/ests/:idEst/reservas`
   | `/jugador/:idJugador`
   | `/jugador/:idJugador/perfil`
+  | `/jugador/:idJugador/perfil/cambiarClave`
   | `/jugador/:idJugador/perfil/editar`
   | `/login`
   | `/register`
@@ -34,6 +36,7 @@ export type Params = {
   '/admin/:idAdmin/mejorarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/nuevoEstablecimiento': { idAdmin: string }
   '/admin/:idAdmin/perfil': { idAdmin: string }
+  '/admin/:idAdmin/perfil/cambiarClave': { idAdmin: string }
   '/admin/:idAdmin/perfil/editar': { idAdmin: string }
   '/admin/:idAdmin/perfil/editarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/perfil/selectEstab': { idAdmin: string }
@@ -48,6 +51,7 @@ export type Params = {
   '/ests/:idEst/reservas': { idEst: string }
   '/jugador/:idJugador': { idJugador: string }
   '/jugador/:idJugador/perfil': { idJugador: string }
+  '/jugador/:idJugador/perfil/cambiarClave': { idJugador: string }
   '/jugador/:idJugador/perfil/editar': { idJugador: string }
 }
 

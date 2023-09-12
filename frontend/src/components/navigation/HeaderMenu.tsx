@@ -68,7 +68,7 @@ function AdminNav({
               </Link>
               <Link to={`/`}>
                 <MenuItem onClick={logout}>
-                  <ArrowForwardIcon mr="20px" /> Logout
+                  <ArrowForwardIcon mr="20px" /> Cerrar sesión
                 </MenuItem>
               </Link>
             </MenuList>
@@ -112,7 +112,7 @@ function JugadorNav({
               </Link>
               <Link to={`/`}>
                 <MenuItem onClick={logout}>
-                  <ArrowForwardIcon mr="20px" /> Logout
+                  <ArrowForwardIcon mr="20px" /> Cerrar sesión
                 </MenuItem>
               </Link>
             </MenuList>
