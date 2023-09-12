@@ -34,6 +34,11 @@ type Usuario =
       jugador: Jugador;
     };
 
+export type CambiarClave = {
+  actual: string;
+  nueva: string;
+};
+
 /**
  * Helper function que toma un token, lo escribe a localStorage,
  * y devuelve una promise con su payload decodificado.
@@ -133,5 +138,15 @@ export function useModificarJugador(
         .then(() => get<JWT>(`${API_URL}/auth/token`))
         .then(captureToken)
         .then((payload) => payload.jugador!),
+  });
+}
+
+export function useCambiarClave(
+  options?: UseApiMutationOptions<CambiarClave, Usuario>
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: (claves) =>
+      patch<JWT>(`${API_URL}/auth/clave`, claves).then(captureToken),
   });
 }
