@@ -14,12 +14,10 @@ import {
 import { Rol, Usuario } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
 
-
 export type AdministradorConClave = {
   admin: Administrador;
   clave: string;
 };
-
 
 export type UsuarioConClave = Usuario & { clave: string };
 
@@ -85,10 +83,9 @@ export class PrismaAuthRepository implements AuthRepository {
    * @param correoOUsuario del usuario a buscar
    */
   async getUsuarioYClave(correoOUsuario: string): Promise<UsuarioConClave> {
-    const roles = await this.getRoles(correoOUsuario);
-    if (roles.includes(Rol.Administrador)) {
+    try {
       return await this.getAdministradorYClave(correoOUsuario);
-    } else {
+    } catch {
       return await this.getJugadorYClave(correoOUsuario);
     }
   }
