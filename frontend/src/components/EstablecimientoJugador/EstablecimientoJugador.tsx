@@ -15,15 +15,17 @@ import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
-  date: string
+  date: string;
 };
 
 export default function EstablecimientoJugador({
   establecimiento,
-  date
+  date,
 }: EstablecimientoCardProps) {
   return (
-    <Link to={`est/${establecimiento.id}?date=${date}`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */>
+    <Link
+      to={`est/${establecimiento.id}?date=${date}`} /* ESTO SE PUEDE INTEGRAR A EstablecimientoCard CONDICIONANDO EL to={} DEL LINK? */
+    >
       <Card
         width="360px"
         height="240px"
@@ -43,20 +45,20 @@ export default function EstablecimientoJugador({
             objectFit="cover"
             height="100%"
             width="93%"
-            mt='5px'
-            ml='0.8rem'
+            mt="5px"
+            ml="0.8rem"
           />
         </Box>
         <CardBody height="100%">
-          <VStack spacing="0" textAlign='start'>
-            <Heading fontSize='15px' marginBottom="10px">
+          <VStack spacing="0" textAlign="start">
+            <Heading fontSize="15px" marginBottom="10px">
               {establecimiento.nombre}
             </Heading>
-            <Text marginBottom="2" fontSize='sm'>
-              <Icon as={MdPlace} boxSize={4} mr="2"  />{" "}
+            <Text marginBottom="2" fontSize="sm">
+              <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
               {establecimiento.direccion}
             </Text>
-            <Text marginBottom="0" fontSize='sm'>
+            <Text marginBottom="0" fontSize="sm">
               Desde <strong> $1800 </strong>
             </Text>
           </VStack>

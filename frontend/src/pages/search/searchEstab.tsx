@@ -43,7 +43,6 @@ export default function SearchEstab() {
   const [deporte, setDeporte] = useState("");
 
   const [nombre, setNombre] = useState("");
-<<<<<<< HEAD
   
   const obtenerFechaActual = () => {
     const today = new Date();
@@ -53,30 +52,6 @@ export default function SearchEstab() {
     return `${year}-${month}-${day}`;
   };
   const [dateSelect, setDateSelect] = useState(obtenerFechaActual)
-=======
-
-  const obtenerFechaActual = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-  const [dateSelect, setDateSelect] = useState(obtenerFechaActual);
-
-  const { data } = useEstablecimientosPlayer({
-    localidad: localidad,
-    provincia: prov,
-    nombre: nombre,
-    disciplina: deporte,
-    fecha: dateSelect,
-  });
-
-  useEffect(() => {
-    queryClient.refetchQueries(["establecimientos", "jugador"]); //No esta haciendo el refetch :(
-    console.log(nombre, prov, localidad, deporte);
-  }, [nombre || prov || localidad || deporte || dateSelect]);
->>>>>>> f6c9295f56b4c6ddb6e642cb3c5bf51556222896
 
   const { data } = useEstablecimientosPlayer({
     localidad: localidad,

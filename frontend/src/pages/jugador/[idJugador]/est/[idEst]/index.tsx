@@ -10,11 +10,11 @@ export default function VistaJugador() {
   return (
     <>
       <Heading textAlign="center" paddingBottom="5" mt="35px">
-      {data?.nombre}
+        {data?.nombre}
       </Heading>
 
       <Box>
-          <DetailEstablecimiento />
+        <DetailEstablecimiento />
       </Box>
     </>
   );
