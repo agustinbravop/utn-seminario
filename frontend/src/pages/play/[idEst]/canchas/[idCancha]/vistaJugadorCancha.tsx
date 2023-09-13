@@ -22,7 +22,6 @@ import {
 import { useCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 
-
 import React, { useState } from "react";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 

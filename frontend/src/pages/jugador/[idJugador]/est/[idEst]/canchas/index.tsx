@@ -7,7 +7,6 @@ import CanchaJugador from "@/components/EstablecimientosJugador/CanchaJugador";
 import { useLocation } from "react-router";
 import { formatearFecha } from "@/utils/dates";
 
-
 export default function VistaJugador() {
   const { idEst } = useParams();
   const { data } = useEstablecimientoByID(Number(idEst));
@@ -23,14 +22,12 @@ export default function VistaJugador() {
         Establecimiento {data?.nombre}
       </Heading>
       <Box>
-        <HStack justifyContent="center">
-        </HStack>
+        <HStack justifyContent="center"></HStack>
         <Heading>Canchas</Heading>
         <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
-          {canchas.data.map(
-            (c, index) =>
-               <CanchaJugador key={index} cancha={c} date={date} />
-          )}
+          {canchas.data.map((c, index) => (
+            <CanchaJugador key={index} cancha={c} date={date} />
+          ))}
         </HStack>
       </Box>
     </>
