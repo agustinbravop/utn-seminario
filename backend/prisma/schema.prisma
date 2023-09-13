@@ -67,7 +67,7 @@ model dia {
 
 model establecimiento {
   id                 Int     @id @default(autoincrement()) @map("idEstablecimiento")
-  nombre             String  @unique @db.VarChar
+  nombre             String  @db.VarChar
   telefono           String
   direccion          String  @db.VarChar
   urlImagen          String? @db.VarChar

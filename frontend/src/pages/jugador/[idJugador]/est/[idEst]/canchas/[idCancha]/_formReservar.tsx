@@ -67,7 +67,7 @@ export default function FormReservarDisponibilidad({
     validationSchema,
     defaultValues: {
       idDisponibilidad: disp.id,
-      fechaReservada: date || formatearFecha(new Date().toISOString()),
+      fechaReservada: date || formatearFecha(new Date()),
     },
   });
 

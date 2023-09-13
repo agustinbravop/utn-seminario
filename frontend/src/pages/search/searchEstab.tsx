@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { formatearFecha } from "@/utils/dates";
 
 type ApiGobProv = {
@@ -33,36 +32,20 @@ type Provincia = {
 };
 
 export default function SearchEstab() {
-  const queryClient = useQueryClient();
-
   const [localidades, setLocalidades] = useState<string[]>([]);
   const [localidad, setLocalidad] = useState("");
   const [prov, setProv] = useState("");
   const [deporte, setDeporte] = useState("");
   const [nombre, setNombre] = useState("");
-  
-  const obtenerFechaActual = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-  const [dateSelect, setDateSelect] = useState(obtenerFechaActual)
+  const [dateSelect, setDateSelect] = useState(formatearFecha(new Date()));
 
   const { data } = useBuscarEstablecimientos({
     localidad: localidad,
     provincia: prov,
     nombre: nombre,
     disciplina: deporte,
-    fecha: dateSelect
+    fecha: dateSelect,
   });
-
-
-  useEffect(() => {
-    queryClient.refetchQueries(["establecimientos", "jugador"]); // No esta haciendo el refetch :(
-    console.log(nombre, prov, localidad, deporte);
-  }, [nombre || prov || localidad || deporte || dateSelect]);
 
   const provincias = useQuery<string[]>(["provincias"], {
     queryFn: () =>
@@ -176,7 +159,7 @@ export default function SearchEstab() {
           <EstablecimientoJugador
             key={est.id}
             establecimiento={est}
-            date={formatearFecha(dateSelect)}
+            date={dateSelect}
           />
         ))}
       </HStack>

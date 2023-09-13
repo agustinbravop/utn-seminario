@@ -1,7 +1,6 @@
 import { useParams } from "react-router";
-import { Box, HStack, Heading, Tabs } from "@chakra-ui/react";
+import { Box, HStack, Heading } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { useState } from "react";
 import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
 import CanchaJugador from "@/components/EstablecimientosJugador/CanchaJugador";
 import { useLocation } from "react-router";
@@ -13,8 +12,8 @@ export default function VistaJugador() {
   const canchas = useCanchasByEstablecimientoID(Number(idEst));
 
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const date = formatearFecha(searchParams.get("date"));
+  const dateParam = new URLSearchParams(location.search).get("date");
+  const date = formatearFecha(dateParam ? new Date(dateParam) : new Date());
 
   return (
     <>

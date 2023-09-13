@@ -39,6 +39,7 @@ export default function VistaJugadorCancha() {
   const [disciplina, setDisciplina] = useState(cancha?.disciplinas[0] ?? "");
 
   useEffect(() => {
+    // Se setea una disciplina por defecto.
     setDisciplina(cancha?.disciplinas[0] ?? "");
   }, [cancha, setDisciplina]);
 

@@ -1,7 +1,6 @@
-import React from "react";
 import { MdPlace } from "react-icons/md";
 import { LuClock5 } from "react-icons/lu";
-import { BiTennisBall, BiDollar } from "react-icons/bi";
+import { BiTennisBall } from "react-icons/bi";
 import { PhoneIcon } from "@chakra-ui/icons";
 import {
   Card,
@@ -9,16 +8,13 @@ import {
   CardBody,
   Heading,
   Text,
-  CardFooter,
-  Button,
   Icon,
   Tag,
   TagLeftIcon,
   TagLabel,
-  Image,
   HStack,
-  Divider,
   VStack,
+  Button,
 } from "@chakra-ui/react";
 
 export default function ReservaCard() {
