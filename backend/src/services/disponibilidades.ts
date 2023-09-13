@@ -1,5 +1,5 @@
 import { Disponibilidad } from "../models/disponibilidad.js";
-import { DisponibilidadRepository } from "../repositories/disponibilidades.js";
+import { DisponibilidadRepository } from "../repositories/disponibilidades";
 
 export interface DisponibilidadService {
   getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;

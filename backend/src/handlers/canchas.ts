@@ -24,6 +24,7 @@ export const modificarCanchaSchema = canchaSchema
     disponibilidades: z.array(disponibilidadSchema.partial({ id: true })),
   });
 
+
 export class CanchaHandler {
   private service: CanchaService;
 
@@ -56,11 +57,15 @@ export class CanchaHandler {
         ...res.locals.body,
       };
       cancha.id = Number(req.params["idCancha"]);
-      // Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
+      
+      
+      
+       //Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
       cancha.disponibilidades = cancha.disponibilidades
         .filter((d) => !d.id)
         .map((d) => ({ ...d, id: 0 }));
-
+      
+      
       const canchaActualizada = await this.service.modificar(cancha);
       res.status(200).json(canchaActualizada);
     };

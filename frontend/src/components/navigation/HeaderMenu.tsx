@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, HStack, Icon, MenuItem, MenuList } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
-import { ArrowForwardIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, CalendarIcon, ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
 import { LogoImage } from "@/utils/consts";
@@ -50,7 +50,7 @@ function AdminNav({
       <Link to={`/admin/${admin.id}`}>
         <LogoImage />
       </Link>
-      <nav style={{ paddingRight: "15px" }}>
+      <nav style={{ paddingRight: "0px" }}>
         <HStack>
           <Menu>
             <MenuButton
@@ -94,7 +94,7 @@ function JugadorNav({
       <Link to={`/jugador/${jugador.id}`}>
         <LogoImage />
       </Link>
-      <nav style={{ paddingRight: "15px" }}>
+      <nav style={{ paddingRight: "0px" }}>
         <HStack>
           <Menu>
             <MenuButton
@@ -105,6 +105,11 @@ function JugadorNav({
               {jugador.usuario}
             </MenuButton>
             <MenuList>
+              <Link to={`/jugador/${jugador.id}/reservas`}>
+                <MenuItem>
+                  <CalendarIcon mr="20px" /> Mis reservas
+                </MenuItem>
+              </Link>
               <Link to={`/jugador/${jugador.id}/perfil`}>
                 <MenuItem>
                   <InfoIcon mr="20px" /> Mi perfil

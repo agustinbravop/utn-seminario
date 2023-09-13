@@ -18,6 +18,7 @@ export function authRouter(handler: AuthHandler): Router {
     validateBody(registrarAdminSchema),
     handler.registerAdmin()
   );
+
   router.post(
     "/register/jugador",
     validateBody(registrarJugadorSchema),

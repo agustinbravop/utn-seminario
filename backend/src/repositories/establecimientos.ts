@@ -7,8 +7,13 @@ export interface EstablecimientoRepository {
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
+  getEstablecimientoAll(): Promise<Establecimiento[]>;
+  getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
+  getEstablecimientoDisciplina(disciplina: string): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
+  getAll(): Promise<Establecimiento[]>;
+  getEstabDispByDate(fecha: string): Promise<Establecimiento[]>;
 }
 
 export class PrismaEstablecimientoRepository
@@ -19,6 +24,17 @@ export class PrismaEstablecimientoRepository
 
   constructor(client: PrismaClient) {
     this.prisma = client;
+  }
+  async getAll(): Promise<Establecimiento[]> {
+    try {
+      const allEstab = await this.prisma.establecimiento.findMany({
+        include: this.include,
+      });
+      return allEstab.map((e) => toModel(e));
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerError("No se pudo obtener los establecimientos");
+    }
   }
 
   async crear(est: Establecimiento) {
@@ -154,7 +170,154 @@ export class PrismaEstablecimientoRepository
       "Error al intentar modificar el establecimiento"
     );
   }
+
+  //Busca los establecimientos por disciplina
+  async getEstablecimientoDisciplina(
+    disciplina: string
+  ): Promise<Establecimiento[]> {
+    const disDB = await this.prisma.disponibilidad.findMany({
+      where: {
+        idDisciplina: disciplina,
+      },
+      include: {
+        cancha: {
+          include: {
+            establecimiento: {
+              include: {
+                localidad: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const arreglo = new Array();
+    disDB.map((dis) => {
+      arreglo.push(dis.cancha.establecimiento);
+    });
+    return arreglo;
+  }
+
+  //Busca los establecimientos por nombre
+
+  //Lista todos los establecimientos, esto sirve para aplicar alguna logica de negocio capaz,
+  //REVISAR
+
+  async getEstablecimientoAll(): Promise<Establecimiento[]> {
+    const estDB = await this.prisma.establecimiento.findMany({
+      include: this.include,
+    });
+
+    return estDB.map((est) => toModel(est));
+  }
+
+  async getEstabsByFiltro(params: Busqueda): Promise<Establecimiento[]> {
+    const estsDB = await this.prisma.establecimiento.findMany({
+      where: {
+        AND: [
+          {
+            ...(params.nombre
+              ? {
+                  nombre: {
+                    contains: params.nombre,
+                    mode: "insensitive", // Hace que la búsqueda sea insensible a mayúsculas y minúsculas.
+                  },
+                }
+              : {}),
+          },
+          {
+            ...(params.localidad
+              ? {
+                  localidad: {
+                    nombre: {
+                      equals: params.localidad,
+                      mode: "insensitive",
+                    },
+                    idProvincia: {
+                      equals: params.provincia,
+                      mode: "insensitive",
+                    },
+                  },
+                }
+              : {}),
+          },
+          {
+            ...(params.provincia
+              ? {
+                  localidad: {
+                    idProvincia: {
+                      equals: params.provincia,
+                      mode: "insensitive",
+                    },
+                  },
+                }
+              : {}),
+          },
+        ],
+        eliminado: false,
+      },
+      include: {
+        localidad: true,
+      },
+    });
+
+    return estsDB.map((ests) => toModel(ests));
+  }
+
+  //REVISAR
+  //Me devuelve los estabs que tienen al menos 1 disponibilidad libre en una cierta fecha
+  async getEstabDispByDate(fecha: string): Promise<Establecimiento[]> {
+    const estabs = await this.prisma.establecimiento.findMany({
+      where: {
+        canchas: {
+          //Busco en todas las canchas
+          some: {
+            //Busco en todas las disponibilidades
+            //OR: [
+
+            disponibilidades: {
+              some: {
+                reservas: {
+                  some: {
+                    //Que al menos 1 no tenga la fecha de reserva elegida
+                    fechaReservada: {
+                      equals: new Date(fecha).toISOString(),
+                    },
+                  },
+                },
+              },
+            },
+
+            /*
+              {
+                disponibilidades: {
+                  some:{
+                    reservas: {
+                      isEmpty: true, //OR comentado xq esta parte no funcona
+                      //Lo ignoro por ahora, me lo apunto para corregir dsps (Aldo)
+                    },
+                  }
+                },
+              },*/
+            //    ],
+          },
+        },
+      },
+      include: this.include,
+    });
+
+    return estabs.map((ests) => toModel(ests));
+  }
 }
+
+type Busqueda = {
+  nombre?: string;
+  provincia?: string;
+  localidad?: string;
+  disciplina?: string;
+  fecha?: string;
+};
 
 type establecimientoDB = establecimiento & {
   localidad: localidad;

@@ -7,6 +7,19 @@ import { z } from "zod";
 import { Jugador, jugadorSchema } from "../models/jugador.js";
 import { UnauthorizedError, ForbiddenError } from "../utils/apierrors.js";
 
+/*
+export const registrarAdminSchema = z.object({
+  nombre: z.string().nonempty(),
+  apellido: z.string().nonempty(),
+  telefono: z.string().nonempty(),
+  correo: z.string().nonempty(),
+  usuario: z.string().nonempty(),
+  clave: z.string().nonempty(),
+  idSuscripcion: z.number().positive().int(),
+  tarjeta: tarjetaSchema.omit({ id: true }),
+});
+*/
+
 export const registrarAdminSchema = administradorSchema
   .omit({ id: true, tarjeta: true, suscripcion: true })
   .extend({

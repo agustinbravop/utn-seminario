@@ -22,6 +22,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const methods = useYupForm({
+
     validationSchema,
     defaultValues: { correoOUsuario: "", clave: "" },
   });
@@ -35,9 +36,11 @@ export default function LoginPage() {
       }
     },
   });
-
+  
+ 
   return (
     <>
+      
       <Heading
         textAlign="center"
         size="2xl"
@@ -52,7 +55,11 @@ export default function LoginPage() {
           as="form"
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="24px"
-          width="400px"
+          width={[
+            "-webkit-fit-content", // 0-30em || mobile
+            "400px", // 62em+ || pantalla escritorio
+            //No contemplo medidas intermedias de tablets
+          ]}
           m="auto"
         >
           <InputControl
@@ -84,3 +91,4 @@ export default function LoginPage() {
     </>
   );
 }
+  

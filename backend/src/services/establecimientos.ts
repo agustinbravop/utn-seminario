@@ -13,13 +13,23 @@ export interface EstablecimientoService {
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEst: number): Promise<Establecimiento>;
+  getConsulta(consulta: Busqueda): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   modificarImagen(
     idEst: number,
     imagen?: Express.Multer.File
   ): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
+  getAll(): Promise<Establecimiento[]>;
 }
+
+type Busqueda = {
+  nombre?: string;
+  provincia?: string;
+  localidad?: string;
+  disciplina?: string;
+  fecha?: string;
+};
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
@@ -31,6 +41,10 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   ) {
     this.repo = repository;
     this.adminService = adminService;
+  }
+
+  async getAll(): Promise<Establecimiento[]> {
+    return await this.repo.getAll();
   }
 
   async getByID(idEst: number) {
@@ -90,5 +104,32 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
   async eliminar(idEst: number) {
     return await this.repo.eliminar(idEst);
+  }
+
+  async getEstablecimientoAll(): Promise<Establecimiento[]> {
+    return await this.repo.getEstablecimientoAll();
+  }
+
+  async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {
+    const estabFilter = await this.repo.getEstabsByFiltro(consulta);
+
+    if (consulta.disciplina) {
+      const estabDisciplina = await this.repo.getEstablecimientoDisciplina(
+        consulta.disciplina
+      );
+      return estabFilter.filter((e) =>
+        estabDisciplina.find(({ id }) => id === e.id)
+      );
+    }
+
+    if (consulta.fecha) {
+      const estabDisponibles = await this.repo.getEstabDispByDate(
+        consulta.fecha
+      );
+      return estabFilter.filter((e) =>
+        estabDisponibles.find(({ id }) => id === e.id)
+      );
+    }
+    return estabFilter;
   }
 }

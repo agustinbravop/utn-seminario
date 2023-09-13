@@ -1,5 +1,5 @@
 import { API_URL, del, patchFormData, put, post } from ".";
-import { Establecimiento } from "@/models";
+import { Busqueda, Establecimiento } from "@/models";
 import {
   useApiQuery,
   UseApiMutationOptions,
@@ -10,6 +10,7 @@ import {
 export type CrearEstablecimiento = Omit<Establecimiento, "id" | "urlImagen">;
 
 export type ModificarEstablecimiento = Omit<Establecimiento, "urlImagen">;
+
 
 function modificarImagen(est: Establecimiento, imagen?: File) {
   if (!imagen) {
@@ -46,6 +47,28 @@ export function useEstablecimientosByAdminID(
   );
 }
 
+//PROVISIONAL
+export function useEstablecimientosPlayer(
+  queryParams: Busqueda,
+  options?: UseApiQueryOptions<Establecimiento[]>
+) {
+  return useApiQuery(
+    ["establecimientos", "jugador", queryParams],
+    `${API_URL}/establecimientos/ests/search`,
+    { ...options, initialData: [],
+      queryFn: () => getEstablecimientoSearch(queryParams) }
+  );
+}
+async function getEstablecimientoSearch(queryParams: Busqueda) {
+  const url = `${API_URL}/establecimientos/ests/search?` + new URLSearchParams(queryParams).toString();
+  console.log(url)
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('No se pudo obtener la lista de establecimientos');
+  }
+  return response.json();
+}
+
 export function useEstablecimientosEliminadosByAdminID(
   idAdmin: number,
   options?: UseApiQueryOptions<Establecimiento[]>
@@ -53,8 +76,7 @@ export function useEstablecimientosEliminadosByAdminID(
   return useApiQuery(
     ["establecimientos", "deleted", "byAdmin", idAdmin],
     `${API_URL}/establecimientos/byAdmin/deleted/${idAdmin}`,
-    { ...options, initialData: [] }
-  );
+    { ...options, initialData: [] })
 }
 
 export function useCrearEstablecimiento(

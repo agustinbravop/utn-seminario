@@ -14,10 +14,12 @@ import {
 import { Rol, Usuario } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
 
+
 export type AdministradorConClave = {
   admin: Administrador;
   clave: string;
 };
+
 
 export type UsuarioConClave = Usuario & { clave: string };
 

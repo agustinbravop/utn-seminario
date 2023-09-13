@@ -31,7 +31,7 @@ export type JWT = {
  */
 async function reject(res: Response): Promise<ApiError> {
   const body = await res.json();
-  console.error(body);
+  console.error(body.message);
 
   // Un status code `401 Unauthorized` significa que el JSON Web Token venció.
   if (res.status === 401) {
