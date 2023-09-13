@@ -28,7 +28,7 @@ type Busqueda = {
   provincia?: string;
   localidad?: string;
   disciplina?: string;
-  fecha?: Date
+  fecha?: string
 };
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
