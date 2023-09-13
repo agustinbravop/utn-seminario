@@ -1,8 +1,5 @@
 import { PrismaClient, establecimiento, localidad } from "@prisma/client";
-import {
-  InternalServerError,
-  NotFoundError,
-} from "../utils/apierrors.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Establecimiento } from "../models/establecimiento.js";
 
 export interface EstablecimientoRepository {
@@ -12,14 +9,16 @@ export interface EstablecimientoRepository {
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   getEstablecimientoAll(): Promise<Establecimiento[]>;
   getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
-  getEstablecimientoDisciplina(disciplina: string): Promise<Establecimiento[]>
+  getEstablecimientoDisciplina(disciplina: string): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
+  getEstabDispByDate(fecha: Date): Promise<Establecimiento[]>;
 }
 
 export class PrismaEstablecimientoRepository
-  implements EstablecimientoRepository {
+  implements EstablecimientoRepository
+{
   private prisma: PrismaClient;
   private include = { localidad: true };
 
@@ -29,7 +28,7 @@ export class PrismaEstablecimientoRepository
   async getAll(): Promise<Establecimiento[]> {
     try {
       const allEstab = await this.prisma.establecimiento.findMany({
-        include: this.include
+        include: this.include,
       });
       return allEstab.map((e) => toModel(e));
     } catch (e) {
@@ -178,7 +177,7 @@ export class PrismaEstablecimientoRepository
   ): Promise<Establecimiento[]> {
     const disDB = await this.prisma.disponibilidad.findMany({
       where: {
-       idDisciplina:disciplina
+        idDisciplina: disciplina,
       },
       include: {
         cancha: {
@@ -220,39 +219,39 @@ export class PrismaEstablecimientoRepository
           {
             ...(params.nombre
               ? {
-                nombre: {
-                  contains: params.nombre,
-                  mode: "insensitive", // Hace que la búsqueda sea insensible a mayúsculas y minúsculas.
-                },
-              }
+                  nombre: {
+                    contains: params.nombre,
+                    mode: "insensitive", // Hace que la búsqueda sea insensible a mayúsculas y minúsculas.
+                  },
+                }
               : {}),
           },
           {
             ...(params.localidad
               ? {
-                localidad: {
-                  nombre: {
-                    equals: params.localidad,
-                    mode: "insensitive",
+                  localidad: {
+                    nombre: {
+                      equals: params.localidad,
+                      mode: "insensitive",
+                    },
+                    idProvincia: {
+                      equals: params.provincia,
+                      mode: "insensitive",
+                    },
                   },
-                  idProvincia: {
-                    equals: params.provincia,
-                    mode: "insensitive",
-                  },
-                },
-              }
+                }
               : {}),
           },
           {
             ...(params.provincia
               ? {
-                localidad: {
-                  idProvincia: {
-                    equals: params.provincia,
-                    mode: "insensitive",
+                  localidad: {
+                    idProvincia: {
+                      equals: params.provincia,
+                      mode: "insensitive",
+                    },
                   },
-                },
-              }
+                }
               : {}),
           },
         ],
@@ -265,6 +264,50 @@ export class PrismaEstablecimientoRepository
 
     return estsDB.map((ests) => toModel(ests));
   }
+
+  //REVISAR
+  //Me devuelve los estabs que tienen al menos 1 disponibilidad libre en una cierta fecha
+  async getEstabDispByDate(fecha: Date): Promise<Establecimiento[]> {
+    const estabs = await this.prisma.establecimiento.findMany({
+      where: {
+        canchas: {
+          //Busco en todas las canchas
+          some: {
+            //Busco en todas las disponibilidades
+            OR: [
+              {
+                disponibilidades: {
+                  some: {
+                    reservas: {
+                      some: {
+                        //Que al menos 1 no tenga la fecha de reserva elegida
+                        fechaReservada: {
+                          not: fecha,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              /*
+              {
+                disponibilidades: {
+                  some:{
+                    reservas: {
+                      isEmpty: true,
+                    },
+                  }
+                },
+              },*/
+            ],
+          },
+        },
+      },
+      include: this.include,
+    });
+
+    return estabs.map((ests) => toModel(ests));
+  }
 }
 
 type Busqueda = {
@@ -272,6 +315,7 @@ type Busqueda = {
   provincia?: string;
   localidad?: string;
   disciplina?: string;
+  fecha?: Date;
 };
 
 type establecimientoDB = establecimiento & {
