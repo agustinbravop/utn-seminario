@@ -14,7 +14,7 @@ function logError(error: ApiError, req: Request, res: Response) {
  * Un `Error` que no es `ApiError` provoca una response con status 500.
  */
 export function handleApiErrors(): ErrorRequestHandler {
-  return (err: Error, req: Request, res: Response, next: NextFunction) => {
+  return (err: Error, req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof ApiError) {
       logError(err, req, res);
       res.status(err.status).json(err);
@@ -23,7 +23,5 @@ export function handleApiErrors(): ErrorRequestHandler {
       logError(e, req, res);
       res.status(e.status).json(e);
     }
-
-    next(err);
   };
 }

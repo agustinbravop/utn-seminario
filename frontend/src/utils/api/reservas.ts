@@ -9,8 +9,7 @@ import { API_URL, post } from ".";
 
 export type CrearReserva = {
   idDisponibilidad: number;
-  idJugador: number;
-  fechaReservada: Date;
+  fechaReservada: string;
 };
 
 export function useReservasByEstablecimientoID(

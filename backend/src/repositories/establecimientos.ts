@@ -269,11 +269,19 @@ export class PrismaEstablecimientoRepository
   //REVISAR
   //Me devuelve los estabs que tienen al menos 1 disponibilidad libre en una cierta fecha
   async getEstabDispByDate(fecha: string): Promise<Establecimiento[]> {
-    const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const diasSemana = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+    ];
     // Obtener el día de la semana correspondiente a la fecha
     const fechaObj = new Date(fecha);
     const diaSemana = diasSemana[fechaObj.getDay()]; // Obtener el nombre del día de la semana
-  
+
     // Obtener los establecimientos que cumplen con los criterios
     const estabs = await this.prisma.establecimiento.findMany({
       where: {
@@ -282,10 +290,12 @@ export class PrismaEstablecimientoRepository
             disponibilidades: {
               some: {
                 dias: {
-                  some:{ dia:{
-                    equals: diaSemana,
-                    mode: 'insensitive',
-                  }} // Verificar si el día de la semana está incluido en el array de día.
+                  some: {
+                    dia: {
+                      equals: diaSemana,
+                      mode: "insensitive",
+                    },
+                  }, // Verificar si el día de la semana está incluido en el array de día.
                 },
                 AND: {
                   reservas: {
@@ -301,26 +311,23 @@ export class PrismaEstablecimientoRepository
       },
       include: this.include,
     });
-  
+
     return estabs.map((ests) => toModel(ests));
   }
 
-  async verifEstabSinReserva(idEst: number): Promise<boolean>{
+  async verifEstabSinReserva(idEst: number): Promise<boolean> {
     const cantReservas = await this.prisma.reserva.count({
-      where:{
-        disponibilidad:{
-          cancha:{
-            idEstablecimiento : idEst
-          }
-        }
-      }
-    })
+      where: {
+        disponibilidad: {
+          cancha: {
+            idEstablecimiento: idEst,
+          },
+        },
+      },
+    });
 
     return cantReservas === 0;
-
   }
-
-
 }
 
 type Busqueda = {

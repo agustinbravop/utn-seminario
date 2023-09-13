@@ -25,6 +25,20 @@ export const DIAS: Dia[] = [
   "Domingo",
 ];
 
+/**
+ * Mapea un día de la semana a su abreviación de tres caracteres.
+ * @example DIAS_ABBR["Miércoles"] === "Mié" // true
+ */
+export const DIAS_ABBR: Record<Dia, string> = {
+  Lunes: "Lun",
+  Martes: "Mar",
+  Miércoles: "Mié",
+  Jueves: "Jue",
+  Viernes: "Vie",
+  Sábado: "Sáb",
+  Domingo: "Dom",
+};
+
 export const DURACION_RESERVA = [30, 60, 120];
 
 export const HORAS = [

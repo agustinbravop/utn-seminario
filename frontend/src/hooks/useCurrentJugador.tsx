@@ -4,6 +4,7 @@ import { readLocalStorage } from "@/utils/storage/localStorage";
 import jwtDecode from "jwt-decode";
 import { JWT } from "@/utils/api";
 import { useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router";
 
 interface ICurrentJugadorContext {
   jugador: Jugador;
@@ -44,6 +45,7 @@ export function CurrentJugadorProvider({
     readJugadorFromStorage()
   );
   const toast = useToast(); // Para dar un mensaje de error.
+  const navigate = useNavigate(); // Para redirigir al home en un logout.
 
   const updateCurrentJugador = () => {
     const usuario = readJugadorFromStorage();
@@ -66,6 +68,7 @@ export function CurrentJugadorProvider({
             description: "Por favor inicie sesión de nuevo.",
             status: "error",
           });
+          navigate("/");
         }
       }
     }
@@ -77,8 +80,13 @@ export function CurrentJugadorProvider({
   }, [toast]);
 
   const logout = () => {
+    toast({
+      title: "Se cerró la sesión actual.",
+      status: "info",
+    });
     localStorage.removeItem("token");
     setCurrentJugador(undefined);
+    navigate("/");
   };
 
   const isJugador = Boolean(currentJugador);

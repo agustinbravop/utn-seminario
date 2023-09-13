@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { Box, HStack, Heading, Tabs } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import DetailEstablecimiento from "@/components/DetailEstablecimiento/DetailEstablecimiento";
 
@@ -9,13 +9,11 @@ export default function VistaJugador() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="5" mt="35px">
+      <Heading textAlign="center" mt="35px">
         {data?.nombre}
       </Heading>
 
-      <Box>
-        <DetailEstablecimiento />
-      </Box>
+      <DetailEstablecimiento />
     </>
   );
 }

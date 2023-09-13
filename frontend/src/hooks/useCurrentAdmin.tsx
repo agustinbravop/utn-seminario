@@ -5,6 +5,7 @@ import jwtDecode from "jwt-decode";
 import { JWT } from "../utils/api";
 import { useToast } from "@chakra-ui/react";
 import { refreshToken } from "@/utils/api/auth";
+import { useNavigate } from "react-router";
 
 interface ICurrentAdminContext {
   admin: Administrador;
@@ -56,6 +57,7 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     readAdminFromStorage()
   );
   const toast = useToast(); // Para dar un mensaje de error.
+  const navigate = useNavigate(); // Para redirigir al home en un logout.
 
   const updateCurrentAdmin = () => {
     const usuario = readAdminFromStorage();
@@ -81,6 +83,7 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
             description: "Por favor inicie sesión de nuevo.",
             status: "error",
           });
+          navigate("/");
         }
       }
     }
@@ -92,8 +95,13 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   }, [toast]);
 
   const logout = () => {
+    toast({
+      title: "Se cerró la sesión actual.",
+      status: "info",
+    });
     localStorage.removeItem("token");
     setCurrentAdmin(undefined);
+    navigate("/");
   };
 
   const isAdmin = Boolean(currentAdmin);

@@ -47,30 +47,19 @@ export function useEstablecimientosByAdminID(
 }
 
 //PROVISIONAL
-export function useEstablecimientosPlayer(
+export function useBuscarEstablecimientos(
   queryParams: Busqueda,
   options?: UseApiQueryOptions<Establecimiento[]>
 ) {
   return useApiQuery(
-    ["establecimientos", "jugador", queryParams],
-    `${API_URL}/establecimientos/ests/search`,
+    ["establecimientos", "search", queryParams],
+    `${API_URL}/establecimientos/ests/search?` +
+      new URLSearchParams(queryParams).toString(),
     {
       ...options,
       initialData: [],
-      queryFn: () => getEstablecimientoSearch(queryParams),
     }
   );
-}
-async function getEstablecimientoSearch(queryParams: Busqueda) {
-  const url =
-    `${API_URL}/establecimientos/ests/search?` +
-    new URLSearchParams(queryParams).toString();
-  console.log(url);
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("No se pudo obtener la lista de establecimientos");
-  }
-  return response.json();
 }
 
 export function useEstablecimientosEliminadosByAdminID(

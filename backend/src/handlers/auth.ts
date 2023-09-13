@@ -7,19 +7,6 @@ import { z } from "zod";
 import { Jugador, jugadorSchema } from "../models/jugador.js";
 import { UnauthorizedError, ForbiddenError } from "../utils/apierrors.js";
 
-/*
-export const registrarAdminSchema = z.object({
-  nombre: z.string().nonempty(),
-  apellido: z.string().nonempty(),
-  telefono: z.string().nonempty(),
-  correo: z.string().nonempty(),
-  usuario: z.string().nonempty(),
-  clave: z.string().nonempty(),
-  idSuscripcion: z.number().positive().int(),
-  tarjeta: tarjetaSchema.omit({ id: true }),
-});
-*/
-
 export const registrarAdminSchema = administradorSchema
   .omit({ id: true, tarjeta: true, suscripcion: true })
   .extend({
@@ -64,11 +51,11 @@ export class AuthHandler {
 
   login(): RequestHandler {
     return async (_req, res) => {
-      const loginReq: Login = res.locals.body;
+      const login: Login = res.locals.body;
 
       const token = await this.service.loginUsuario(
-        loginReq.correoOUsuario,
-        loginReq.clave
+        login.correoOUsuario,
+        login.clave
       );
       res.status(200).json({ token });
     };

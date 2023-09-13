@@ -30,8 +30,13 @@ export type JWT = {
  * @returns una promesa con el `ApiError` parseado.
  */
 async function reject(res: Response): Promise<ApiError> {
+  if (!res) {
+    return Promise.reject(
+      new ApiError(500, "Ocurrió un error inesperado")
+    ).catch((e) => e);
+  }
   const body = await res.json();
-  console.error(body.message);
+  console.error(body?.message);
 
   // Un status code `401 Unauthorized` significa que el JSON Web Token venció.
   if (res.status === 401) {
@@ -62,8 +67,9 @@ async function request<T>(
 ): Promise<T> {
   const token = readLocalStorage<JWT>("token");
 
+  let res = undefined;
   try {
-    const res = await fetch(endpoint, {
+    res = await fetch(endpoint, {
       method,
       body,
       headers: {
@@ -73,18 +79,18 @@ async function request<T>(
       mode: "cors",
       cache: "default",
     });
-
-    if (res.ok) {
-      // El status code está entre 200 y 299, y la petición fue exitosa.
-      return res.json();
-    } else {
-      // Se lanza un `ApiError`. Sirve para determinar por qué falló una request.
-      throw reject(res);
-    }
   } catch {
     // `fetch()` lanza un error cuando hay errores de red (ej: sin WiFi).
     // Como no se tiene un response body, se fabrica un `ApiError` genérico.
     throw new ApiError(500, "Error de red");
+  }
+
+  if (res && res.ok) {
+    // El status code está entre 200 y 299, y la petición fue exitosa.
+    return res.json();
+  } else {
+    // Se lanza un `ApiError`. Sirve para determinar por qué falló una request.
+    throw await reject(res);
   }
 }
 

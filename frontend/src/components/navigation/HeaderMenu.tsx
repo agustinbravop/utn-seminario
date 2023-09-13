@@ -1,6 +1,13 @@
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Link } from "react-router-dom";
-import { Button, HStack, Icon, MenuItem, MenuList } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Icon,
+  MenuItem,
+  MenuList,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Menu, MenuButton } from "@chakra-ui/react";
 import {
@@ -50,6 +57,7 @@ function AdminNav({
   admin: Administrador;
   logout: VoidFunction;
 }) {
+  const usuario = useBreakpointValue({ base: "", sm: admin.usuario });
   return (
     <>
       <Link to={`/admin/${admin.id}`}>
@@ -63,7 +71,7 @@ function AdminNav({
               rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
               leftIcon={<AiOutlineUser size="20" />}
             >
-              {admin.usuario}
+              {usuario}
             </MenuButton>
             <MenuList>
               <Link to={`/admin/${admin.id}/perfil`}>
@@ -94,6 +102,7 @@ function JugadorNav({
   jugador: Jugador;
   logout: VoidFunction;
 }) {
+  const usuario = useBreakpointValue({ base: "", sm: jugador.usuario });
   return (
     <>
       <Link to={`/jugador/${jugador.id}`}>
@@ -107,7 +116,7 @@ function JugadorNav({
               rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
               leftIcon={<AiOutlineUser size="20" />}
             >
-              {jugador.usuario}
+              {usuario}
             </MenuButton>
             <MenuList>
               <Link to={`/jugador/${jugador.id}/reservas`}>

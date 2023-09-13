@@ -1,6 +1,5 @@
 import EstablecimientoJugador from "@/components/EstablecimientoJugador/EstablecimientoJugador";
-import { Busqueda } from "@/models";
-import { useEstablecimientosPlayer } from "@/utils/api/establecimientos";
+import { useBuscarEstablecimientos } from "@/utils/api/establecimientos";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -11,11 +10,10 @@ import {
   InputRightElement,
   Select,
   VStack,
-  Text,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { formatearFecha } from "@/utils/dates";
 
 type ApiGobProv = {
   provincias: Provincia[];
@@ -34,43 +32,20 @@ type Provincia = {
 };
 
 export default function SearchEstab() {
-  const queryClient = useQueryClient();
-
-  const [filtro, setFiltro] = useState("");
   const [localidades, setLocalidades] = useState<string[]>([]);
   const [localidad, setLocalidad] = useState("");
   const [prov, setProv] = useState("");
   const [deporte, setDeporte] = useState("");
-
   const [nombre, setNombre] = useState("");
-  
-  const obtenerFechaActual = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-  const [dateSelect, setDateSelect] = useState(obtenerFechaActual)
+  const [dateSelect, setDateSelect] = useState(formatearFecha(new Date()));
 
-  const { data } = useEstablecimientosPlayer({
+  const { data } = useBuscarEstablecimientos({
     localidad: localidad,
     provincia: prov,
     nombre: nombre,
     disciplina: deporte,
-    fecha: dateSelect
+    fecha: dateSelect,
   });
-
-
-  useEffect(() => {
-    queryClient.refetchQueries(["establecimientos", "jugador"]); //No esta haciendo el refetch :(
-    console.log(nombre, prov, localidad, deporte)
-  }, [nombre || prov || localidad || deporte || dateSelect])
-
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiltro(e.target.value);
-  };
 
   const provincias = useQuery<string[]>(["provincias"], {
     queryFn: () =>
@@ -94,7 +69,7 @@ export default function SearchEstab() {
   return (
     <>
       <Heading size="md" textAlign="center">
-        Busca tu establecimieto deportivo
+        Buscá un establecimiento para jugar
       </Heading>
       <Box width="100%" display="flex" justifyContent="center">
         <VStack>
@@ -166,11 +141,7 @@ export default function SearchEstab() {
                   placeholder="Nombre del establecimiento"
                   size="md"
                   width="100%"
-                  // onChange={handleChange
-                  onChange={(e) => {
-                    setNombre(e.target.value);
-                  }}
-                  // value={filtro}
+                  onChange={(e) => setNombre(e.target.value)}
                 />
               </InputGroup>
             </VStack>

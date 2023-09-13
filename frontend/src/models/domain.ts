@@ -92,7 +92,7 @@ export type Busqueda = {
   localidad?: string | undefined;
   disciplina?: string | undefined;
   fecha?: string | undefined;
-}
+};
 
 export type Reserva = {
   id: number;
