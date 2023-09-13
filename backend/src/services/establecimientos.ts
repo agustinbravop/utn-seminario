@@ -20,7 +20,7 @@ export interface EstablecimientoService {
     imagen?: Express.Multer.File
   ): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
-  getAll(): Promise<Establecimiento[]>
+  getAll(): Promise<Establecimiento[]>;
 }
 
 type Busqueda = {
@@ -33,14 +33,14 @@ type Busqueda = {
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
-  private adminService: AdministradorService;  
+  private adminService: AdministradorService;
 
   constructor(
     repository: EstablecimientoRepository,
-    adminService: AdministradorService,
+    adminService: AdministradorService
   ) {
     this.repo = repository;
-    this.adminService = adminService;  
+    this.adminService = adminService;
   }
 
   async getAll(): Promise<Establecimiento[]> {
@@ -131,8 +131,4 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
     return estabFilter;
   }
-
-  
-
-
 }
