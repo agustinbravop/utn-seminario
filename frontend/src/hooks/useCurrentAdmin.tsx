@@ -92,6 +92,10 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
   }, [toast]);
 
   const logout = () => {
+    toast({
+      title: "Se cerró la sesión actual.",
+      status: "info",
+    });
     localStorage.removeItem("token");
     setCurrentAdmin(undefined);
   };

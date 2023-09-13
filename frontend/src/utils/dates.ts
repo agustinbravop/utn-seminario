@@ -19,17 +19,17 @@ export function decimalAHora(n: number) {
   return `${entero}:${minutos.padEnd(2, "0")}`;
 }
 
-export function formatearFecha(fechaEnFormatoOriginal) {
+export function formatearFecha(fechaEnFormatoOriginal: string) {
   // Parsea la fecha en el formato "aaaa-mm-dd"
   const fechaParseada = new Date(fechaEnFormatoOriginal);
 
   // Obtiene el día, el mes y el año de la fecha parseada
-  const dia = (fechaParseada.getDate() + 1).toString().padStart(2, '0');
-  const mes = (fechaParseada.getMonth() + 1).toString().padStart(2, '0'); // Suma 1 al mes, ya que en JavaScript los meses van de 0 a 11.
+  const dia = (fechaParseada.getDate() + 1).toString().padStart(2, "0");
+  const mes = (fechaParseada.getMonth() + 1).toString().padStart(2, "0"); // Suma 1 al mes, ya que en JavaScript los meses van de 0 a 11.
   const anio = fechaParseada.getFullYear();
 
-  // Formatea la fecha en "dd/mm/aaaa"
-  const fechaFormateada = `${dia}/${mes}/${anio}`;
+  // Formatea la fecha en "aaaa-MM-dd"
+  const fechaFormateada = `${anio}-${mes}-${dia}`;
 
   return fechaFormateada;
 }

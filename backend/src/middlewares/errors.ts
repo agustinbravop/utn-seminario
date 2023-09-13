@@ -23,7 +23,5 @@ export function handleApiErrors(): ErrorRequestHandler {
       logError(e, req, res);
       res.status(e.status).json(e);
     }
-
-    next(err);
   };
 }

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   CardBody,
   CardHeader,
@@ -27,7 +26,6 @@ import React, { useState, useEffect } from "react";
 import { DIAS_ABBR, FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { Link } from "react-router-dom";
 import FormReservarDisponibilidad from "./_formReservar";
 
 export default function VistaJugadorCancha() {
@@ -42,7 +40,7 @@ export default function VistaJugadorCancha() {
 
   useEffect(() => {
     setDisciplina(cancha?.disciplinas[0] ?? "");
-  }, [cancha]);
+  }, [cancha, setDisciplina]);
 
   if (!cancha) {
     return <LoadingSpinner />;
@@ -58,7 +56,7 @@ export default function VistaJugadorCancha() {
 
   return (
     <div>
-      <Heading textAlign="center" paddingBottom="12" mt="40px">
+      <Heading textAlign="center" mt="40px">
         {est?.nombre} - {cancha?.nombre}
       </Heading>
 
@@ -111,7 +109,6 @@ export default function VistaJugadorCancha() {
                   mt="10px"
                   fontSize="sm"
                   value={disciplina}
-                  defaultValue={disciplina}
                   onChange={handleDisciplinaChange}
                 >
                   {disciplinas.map((d, idx) => (
@@ -126,6 +123,7 @@ export default function VistaJugadorCancha() {
                       <Tr>
                         <Th>horario</Th>
                         <Th>precio</Th>
+                        <Th>seña</Th>
                         <Th>dias</Th>
                         <Th></Th>
                       </Tr>
@@ -136,9 +134,14 @@ export default function VistaJugadorCancha() {
                           d.disciplina === disciplina && (
                             <Tr key={d.id}>
                               <Td>
-                                {d.horaInicio}- {d.horaFin}
+                                {d.horaInicio}-{d.horaFin}hs
                               </Td>
-                              <Td> ${d.precioReserva} </Td>
+                              <Td>${d.precioReserva} </Td>
+                              <Td>
+                                {d.precioSenia
+                                  ? `$${d.precioSenia}`
+                                  : "Sin seña"}
+                              </Td>
                               <Td>
                                 {d.dias
                                   .map((dia) => DIAS_ABBR[dia])
@@ -153,21 +156,6 @@ export default function VistaJugadorCancha() {
                     </Tbody>
                   </Table>
                 </TableContainer>
-              </Box>
-              <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                pt="10px"
-              >
-                <Stack direction="row" spacing={50}>
-                  <Link to="canchas">
-                    <Button colorScheme="gray">Ver canchas</Button>
-                  </Link>
-                  <Link to="reservar">
-                    <Button colorScheme="green">Reservar</Button>
-                  </Link>
-                </Stack>
               </Box>
             </Stack>
           </CardBody>
