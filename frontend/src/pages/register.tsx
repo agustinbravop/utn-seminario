@@ -38,7 +38,7 @@ export default function RegisterPage() {
   const { mutate, isLoading, isError } = useRegistrarJugador({
     onSuccess: () => {
       toast({
-        title: "Cuenta registrada correctamente.", 
+        title: "Cuenta registrada correctamente.",
         description: "Inicie sesión para continuar.",
         status: "success",
       });
@@ -62,12 +62,12 @@ export default function RegisterPage() {
         marginTop="100px"
         marginBottom="60px"
       >
-        Registrarse en <br/> Play Finder
+        Registrarse en <br /> Play Finder
       </Heading>
       <FormProvider {...methods}>
         <VStack
           as="form"
-          onSubmit={methods.handleSubmit((values) => mutate(values))} 
+          onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="4"
           width="-webkit-fit-content"
           justifyContent="center"

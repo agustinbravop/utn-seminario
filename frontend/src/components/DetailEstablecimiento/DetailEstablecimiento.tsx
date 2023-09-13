@@ -52,41 +52,37 @@ export default function DetailEstablecimiento() {
         <CardBody marginTop="0px" flex="1">
           <Stack divider={<StackDivider />} spacing="1">
             <Box>
-              <Heading size="xs"  margin="0">
+              <Heading size="xs" margin="0">
                 Dirección
               </Heading>
               <Text fontSize="sm">{data?.direccion}</Text>
             </Box>
             <Box>
-              <Heading size="xs" >
-                Horario atencion
-              </Heading>
+              <Heading size="xs">Horario atencion</Heading>
               <Text fontSize="sm">{data?.horariosDeAtencion}</Text>
             </Box>
             <Box>
-              <Heading size="xs" >
-                Correo de contacto 
-              </Heading>
+              <Heading size="xs">Correo de contacto</Heading>
               <Text fontSize="sm">{data?.correo}</Text>
             </Box>
             <Box>
-              <Heading size="xs" >
-                Numero de teléfono
-              </Heading>
+              <Heading size="xs">Numero de teléfono</Heading>
               <Text fontSize="sm">{data?.telefono}</Text>
             </Box>
             <Box>
-              <Heading size="xs" >
-                Localidad
-              </Heading>
+              <Heading size="xs">Localidad</Heading>
               <Text fontSize="sm">
                 {data?.localidad}, {data?.provincia}
               </Text>
             </Box>
-            <Box width='100%' display='flex' justifyContent='center' pt="10px">
+            <Box width="100%" display="flex" justifyContent="center" pt="10px">
               <Stack direction="row" spacing={50}>
-                <Link to={`canchas?date=${date}`}><Button colorScheme='gray'>Ver canchas</Button></Link>
-                <Link to={`reservar?date=${date}`}><Button colorScheme='green'>Reservar</Button></Link>
+                <Link to={`canchas?date=${date}`}>
+                  <Button colorScheme="gray">Ver canchas</Button>
+                </Link>
+                <Link to={`reservar?date=${date}`}>
+                  <Button colorScheme="green">Reservar</Button>
+                </Link>
               </Stack>
             </Box>
           </Stack>

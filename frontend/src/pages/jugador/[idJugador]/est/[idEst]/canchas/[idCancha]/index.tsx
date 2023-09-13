@@ -30,7 +30,7 @@ export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/est/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
-  const { data: dataEstab } = useEstablecimientoByID(Number(idEst))
+  const { data: dataEstab } = useEstablecimientoByID(Number(idEst));
 
   if (!data) {
     return <p>Cargando...</p>;
@@ -85,9 +85,7 @@ export default function VistaJugadorCancha() {
                 <Text fontSize="sm">{data?.descripcion}</Text>
               </Box>
               <Box>
-                <Heading size="xs" >
-                  Disciplinas
-                </Heading>
+                <Heading size="xs">Disciplinas</Heading>
                 <Text fontSize="sm">
                   {disciplinas.map((disciplina, index) => (
                     <React.Fragment key={index}>
@@ -98,18 +96,14 @@ export default function VistaJugadorCancha() {
                 </Text>
               </Box>
               <Box>
-                <Heading size="xs" >
-                  Habilitación
-                </Heading>
+                <Heading size="xs">Habilitación</Heading>
                 <Text fontSize="sm">
                   Esta cancha {data.habilitada ? "" : "no"} se encuentra
                   habilitada
                 </Text>
               </Box>
               <Box>
-                <Heading size="xs" >
-                  Disponibilidades
-                </Heading>
+                <Heading size="xs">Disponibilidades</Heading>
                 <Text fontSize="sm">
                   Estas son las disponibilidades de la cancha.
                 </Text>
@@ -167,8 +161,6 @@ export default function VistaJugadorCancha() {
           </CardBody>
         </Card>
       </Box>
-
-
     </div>
   );
 }

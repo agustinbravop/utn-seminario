@@ -43,9 +43,11 @@ export default function VistaJugador() {
           </>
           <>
             <Heading>Canchas</Heading>
-            <HStack display="flex" flexWrap="wrap" justifyContent="left">
-            
-            </HStack>
+            <HStack
+              display="flex"
+              flexWrap="wrap"
+              justifyContent="left"
+            ></HStack>
           </>
         </SwipeableViews>
       </Box>

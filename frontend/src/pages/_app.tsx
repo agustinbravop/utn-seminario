@@ -31,7 +31,7 @@ export default function RootLayout() {
     <>
       <HeaderMenu />
 
-      <Box as="main"  m={{ base: "20px", md: "40px" }}>
+      <Box as="main" m={{ base: "20px", md: "40px" }}>
         <Outlet />
       </Box>
 

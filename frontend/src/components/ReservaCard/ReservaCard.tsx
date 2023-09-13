@@ -24,20 +24,19 @@ import {
 export default function ReservaCard() {
   return (
     <>
-      <Card size="sm" m={2} textAlign="center" height='270px'>
-        <CardHeader  borderRadius="6px" backgroundColor='cyan.100'>
-          <HStack justifyContent='center'>
-
-          <Icon viewBox="0 0 200 200" color='whatsapp.500' >
-            <path
-              fill="currentColor"
-              d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-            />
-          </Icon>
-          <Text> Pagada</Text>
+      <Card size="sm" m={2} textAlign="center" height="270px">
+        <CardHeader borderRadius="6px" backgroundColor="cyan.100">
+          <HStack justifyContent="center">
+            <Icon viewBox="0 0 200 200" color="whatsapp.500">
+              <path
+                fill="currentColor"
+                d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+              />
+            </Icon>
+            <Text> Pagada</Text>
           </HStack>
         </CardHeader>
-        
+
         <CardBody textAlign="center">
           <Heading
             justifyContent="center"
@@ -46,45 +45,48 @@ export default function ReservaCard() {
           >
             <Text>San Fer</Text>
           </Heading>
-          <VStack fontSize={{ base: "20px", md: "17px", lg: "15px" }} mr='25px'>
-            <Text >
-              <Icon as={MdPlace} boxSize={4} mr="2" alignSelf="start"  /> Direccion
+          <VStack fontSize={{ base: "20px", md: "17px", lg: "15px" }} mr="25px">
+            <Text>
+              <Icon as={MdPlace} boxSize={4} mr="2" alignSelf="start" />{" "}
+              Direccion
             </Text>
-            <Text >
+            <Text>
               <PhoneIcon boxSize={4} mr="2" alignSelf="start" /> Telefono
             </Text>
           </VStack>
           <br />
-          <HStack spacing={2} justifyContent="center" fontSize={{ base: "15px", md: "17px", lg: "15px" }} mb={3}>
+          <HStack
+            spacing={2}
+            justifyContent="center"
+            fontSize={{ base: "15px", md: "17px", lg: "15px" }}
+            mb={3}
+          >
             <Tag size="sm" variant="subtle" colorScheme="teal">
               <TagLeftIcon as={LuClock5} boxSize={4} />
-              <TagLabel >
-                17:00
-              </TagLabel>
+              <TagLabel>17:00</TagLabel>
             </Tag>
             <Tag size="sm" variant="subtle" colorScheme="whatsapp">
               <TagLeftIcon as={BiTennisBall} boxSize={4} />
-              <TagLabel>
-                TENIS
-              </TagLabel>
+              <TagLabel>TENIS</TagLabel>
             </Tag>
           </HStack>
-          <HStack spacing={4} justifyContent="center" mt='10px'>
-            <Button colorScheme="red" size="sm" >Cancelar Reserva</Button>
+          <HStack spacing={4} justifyContent="center" mt="10px">
+            <Button colorScheme="red" size="sm">
+              Cancelar Reserva
+            </Button>
           </HStack>
         </CardBody>
       </Card>
-      <Card size="sm" m={2} textAlign="center" height='270px'>
-        <CardHeader backgroundColor='red.200' borderRadius="6px">
-          <HStack justifyContent='center'>
-
-          <Icon viewBox="0 0 200 200" color='red' >
-            <path
-              fill="currentColor"
-              d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-            />
-          </Icon>
-          <Text> Sin Pagar</Text>
+      <Card size="sm" m={2} textAlign="center" height="270px">
+        <CardHeader backgroundColor="red.200" borderRadius="6px">
+          <HStack justifyContent="center">
+            <Icon viewBox="0 0 200 200" color="red">
+              <path
+                fill="currentColor"
+                d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+              />
+            </Icon>
+            <Text> Sin Pagar</Text>
           </HStack>
         </CardHeader>
         <CardBody textAlign="center">
@@ -95,32 +97,38 @@ export default function ReservaCard() {
           >
             <Text>Las Palmeras</Text>
           </Heading>
-          <VStack fontSize={{ base: "20px", md: "17px", lg: "15px" }} mr='25px'>
-            <Text >
-              <Icon as={MdPlace} boxSize={4} mr="2" alignSelf="start"  /> Direccion
+          <VStack fontSize={{ base: "20px", md: "17px", lg: "15px" }} mr="25px">
+            <Text>
+              <Icon as={MdPlace} boxSize={4} mr="2" alignSelf="start" />{" "}
+              Direccion
             </Text>
-            <Text >
+            <Text>
               <PhoneIcon boxSize={4} mr="2" alignSelf="start" /> Telefono
             </Text>
           </VStack>
           <br />
-          <HStack spacing={2} justifyContent="center" fontSize={{ base: "15px", md: "17px", lg: "15px" }} mb={3}>
+          <HStack
+            spacing={2}
+            justifyContent="center"
+            fontSize={{ base: "15px", md: "17px", lg: "15px" }}
+            mb={3}
+          >
             <Tag size="sm" variant="subtle" colorScheme="teal">
               <TagLeftIcon as={LuClock5} boxSize={4} />
-              <TagLabel >
-                17:00
-              </TagLabel>
+              <TagLabel>17:00</TagLabel>
             </Tag>
             <Tag size="sm" variant="subtle" colorScheme="whatsapp">
               <TagLeftIcon as={BiTennisBall} boxSize={4} />
-              <TagLabel>
-                TENIS
-              </TagLabel>
+              <TagLabel>TENIS</TagLabel>
             </Tag>
           </HStack>
-          <HStack spacing={4} justifyContent="center" mt='10px'>
-            <Button colorScheme="red" size="sm" >Cancelar </Button>
-            <Button colorScheme="brand" size="sm">Pagar</Button>
+          <HStack spacing={4} justifyContent="center" mt="10px">
+            <Button colorScheme="red" size="sm">
+              Cancelar{" "}
+            </Button>
+            <Button colorScheme="brand" size="sm">
+              Pagar
+            </Button>
           </HStack>
         </CardBody>
       </Card>
