@@ -91,7 +91,8 @@ export type Busqueda = {
   provincia?: string | undefined;
   localidad?: string | undefined;
   disciplina?: string | undefined;
-}
+  fecha?: string | undefined;
+};
 
 export type Reserva = {
   id: number;

@@ -13,7 +13,7 @@ export interface EstablecimientoRepository {
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
-  getEstabDispByDate(fecha: Date): Promise<Establecimiento[]>;
+  getEstabDispByDate(fecha: string): Promise<Establecimiento[]>;
 }
 
 export class PrismaEstablecimientoRepository
@@ -267,39 +267,40 @@ export class PrismaEstablecimientoRepository
 
   //REVISAR
   //Me devuelve los estabs que tienen al menos 1 disponibilidad libre en una cierta fecha
-  async getEstabDispByDate(fecha: Date): Promise<Establecimiento[]> {
+  async getEstabDispByDate(fecha: string): Promise<Establecimiento[]> {
     const estabs = await this.prisma.establecimiento.findMany({
       where: {
         canchas: {
           //Busco en todas las canchas
           some: {
             //Busco en todas las disponibilidades
-            OR: [
-              {
-                disponibilidades: {
+            //OR: [
+
+            disponibilidades: {
+              some: {
+                reservas: {
                   some: {
-                    reservas: {
-                      some: {
-                        //Que al menos 1 no tenga la fecha de reserva elegida
-                        fechaReservada: {
-                          not: fecha,
-                        },
-                      },
+                    //Que al menos 1 no tenga la fecha de reserva elegida
+                    fechaReservada: {
+                      equals: new Date(fecha).toISOString(),
                     },
                   },
                 },
               },
-              /*
+            },
+
+            /*
               {
                 disponibilidades: {
                   some:{
                     reservas: {
-                      isEmpty: true,
+                      isEmpty: true, //OR comentado xq esta parte no funcona
+                      //Lo ignoro por ahora, me lo apunto para corregir dsps (Aldo)
                     },
                   }
                 },
               },*/
-            ],
+            //    ],
           },
         },
       },
@@ -315,7 +316,7 @@ type Busqueda = {
   provincia?: string;
   localidad?: string;
   disciplina?: string;
-  fecha?: Date;
+  fecha?: string;
 };
 
 type establecimientoDB = establecimiento & {
