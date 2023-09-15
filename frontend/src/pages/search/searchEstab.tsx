@@ -155,13 +155,17 @@ export default function SearchEstab() {
         pt="20px"
         w="330"
       >
-        {data.map((est) => (
-          <EstablecimientoJugador
-            key={est.id}
-            establecimiento={est}
-            date={dateSelect}
-          />
-        ))}
+        {data.length > 0 ? (
+          data.map((est) => (
+            <EstablecimientoJugador
+              key={est.id}
+              establecimiento={est}
+              date={dateSelect}
+            />
+          ))
+        ) : (
+          <p>No se encontraron establecimientos</p>
+        )}
       </HStack>
     </>
   );

@@ -67,7 +67,7 @@ export default function PerfilPage() {
   });
 
   return (
-    <Card m="auto" boxSize="40rem" width="40%" height="70%" mt="5%">
+    <Card m="auto" maxWidth="400px" height="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Editar Perfil

@@ -54,7 +54,7 @@ export default function JugadorEditarPerfilPage() {
   });
 
   return (
-    <Card boxSize="40rem" m="auto" width="40%" height="70%" marginTop="5%">
+    <Card m="auto" maxWidth="400px" height="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Editar Perfil

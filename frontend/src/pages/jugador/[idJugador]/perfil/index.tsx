@@ -18,7 +18,7 @@ export default function JugadorPerfilPage() {
   const { jugador } = useCurrentJugador();
 
   return (
-    <Card boxSize="40rem" width="40%" height="70%" marginTop="5%">
+    <Card maxWidth="400px" m="auto" height="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Mi perfil
@@ -45,7 +45,7 @@ export default function JugadorPerfilPage() {
             <Text fontSize="sm">{jugador.telefono}</Text>
           </Box>
         </Stack>
-        <HStack width="100%" mt="20px" display="flex">
+        <HStack width="100%" mt="20px" wrap="wrap">
           <Link to="editar">
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>

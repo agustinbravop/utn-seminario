@@ -20,14 +20,13 @@ import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 export default function DetailEstablecimiento() {
   const { idEst } = useParams();
   const { data } = useEstablecimientoByID(Number(idEst));
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const date = searchParams.get("date");
 
   if (!data) {
     return <LoadingSpinner />;
   }
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const date = searchParams.get("date");
 
   return (
     <Box justifyContent="center">

@@ -1,18 +1,8 @@
+import { ConfirmSubmitButton } from "@/components/forms";
 import { useParams } from "@/router";
 import { useEliminarDisponibilidad } from "@/utils/api/disponibilidades";
 import { DeleteIcon } from "@chakra-ui/icons";
-import {
-  useDisclosure,
-  useToast,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Modal,
-} from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 interface FormDeleteDisponibilidadProps {
   idDisp: number;
@@ -22,8 +12,6 @@ export default function FormDeleteDisponibilidad({
   idDisp,
 }: FormDeleteDisponibilidadProps) {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha/disps");
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
   const { mutate: mutateDelete } = useEliminarDisponibilidad({
@@ -42,36 +30,25 @@ export default function FormDeleteDisponibilidad({
       });
     },
   });
-  const handleEliminar = () => {
-    mutateDelete({ idEst: Number(idEst), idCancha: Number(idCancha), idDisp });
-    onClose();
-  };
 
   return (
-    <>
-      <Button size="sm" color="red" onClick={onOpen} title="eliminar">
-        <DeleteIcon />
-      </Button>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Eliminar disponibilidad</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>¿Está seguro de eliminar la disponibilidad?</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button
-              colorScheme="blackAlpha"
-              backgroundColor="black"
-              onClick={handleEliminar}
-            >
-              Aceptar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <ConfirmSubmitButton
+      size="sm"
+      colorScheme="gray"
+      color="red"
+      title="eliminar"
+      header="Eliminar disponibilidad"
+      body="¿Está seguro de eliminar la disponibilidad?"
+      confirm="Aceptar"
+      onSubmit={() =>
+        mutateDelete({
+          idEst: Number(idEst),
+          idCancha: Number(idCancha),
+          idDisp,
+        })
+      }
+    >
+      <DeleteIcon />
+    </ConfirmSubmitButton>
   );
 }
