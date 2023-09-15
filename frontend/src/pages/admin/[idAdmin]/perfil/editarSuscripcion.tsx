@@ -33,7 +33,7 @@ export default function SuscripcionesPage() {
         description: `Suscripción actualizada exitosamente.`,
         status: "success",
       });
-      navigate(-2);
+      navigate(`/admin/${admin.id}/perfil`);
     },
     onError: () => {
       toast({
