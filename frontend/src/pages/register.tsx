@@ -8,11 +8,14 @@ import {
   HStack,
   useToast,
 } from "@chakra-ui/react";
-import { FormProvider } from "react-hook-form";
-import { InputControl, SubmitButton } from "@/components/forms";
+import { FormProvider, useWatch } from "react-hook-form";
+import { InputControl, SubmitButton, SelectControl } from "@/components/forms";
 import { RegistrarJugador, useRegistrarJugador } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { DISCIPLINAS } from "@/utils/consts";
 
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
@@ -25,7 +28,26 @@ const validationSchema = Yup.object({
   clave: Yup.string()
     .min(8, "La contraseña debe tener al menos 8 caracteres")
     .required("Obligatorio"),
+  localidad: Yup.string().optional(),
+  provincia: Yup.string().optional(),
+  disciplina: Yup.string().optional(),
 });
+
+type ApiGobProv = {
+  provincias: Provincia[];
+};
+
+type ApiGobLoc = {
+  municipios: Localidad[];
+};
+
+type Localidad = { id: number; nombre: string };
+
+type Provincia = {
+  centroide: {};
+  id: number;
+  nombre: string;
+};
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -34,6 +56,29 @@ export default function RegisterPage() {
   const methods = useYupForm<RegistrarJugador>({
     validationSchema,
   });
+
+  const [localidades, setLocalidades] = useState<string[]>([]);
+
+  const { data: provincias } = useQuery<string[]>(["provincias"], {
+    queryFn: () =>
+      fetch("https://apis.datos.gob.ar/georef/api/provincias")
+        .then((req) => req.json())
+        .then(
+          (data: ApiGobProv) => data?.provincias?.map((p) => p.nombre) ?? []
+        ),
+  });
+
+  const provincia = useWatch({ name: "provincia", control: methods.control });
+  useEffect(() => {
+    fetch(
+      `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=nombre&max=150`
+    )
+      .then((response) => response.json())
+      .then((data: ApiGobLoc) => {
+        setLocalidades(data?.municipios?.map((m) => m.nombre) ?? []);
+      });
+    methods.resetField("localidad");
+  }, [provincia, methods]);
 
   const { mutate, isLoading, isError } = useRegistrarJugador({
     onSuccess: () => {
@@ -70,6 +115,7 @@ export default function RegisterPage() {
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="4"
           width="-webkit-fit-content"
+          maxW='400px'
           justifyContent="center"
           margin="auto"
           my="20px"
@@ -104,6 +150,44 @@ export default function RegisterPage() {
               isRequired
             />
           </HStack>
+          <HStack>
+            <SelectControl
+              name="provincia"
+              label="Provincia"
+              placeholder="Provincia"
+              children={provincias?.sort().map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            />
+            <SelectControl
+              name="localidad"
+              label="Localidad"
+              placeholder="Localidad"
+              
+            >
+              {localidades.sort().map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+              <option key="Otra" value="Otra">
+                Otra
+              </option>
+            </SelectControl>
+          </HStack>
+          <SelectControl
+            placeholder="Seleccionar disciplina "
+            name="disciplina"
+            
+          >
+            {DISCIPLINAS.map((disciplina, i) => (
+              <option key={i} value={disciplina}>
+                {disciplina}
+              </option>
+            ))}
+          </SelectControl>
           <InputControl
             label="Correo electrónico"
             placeholder="abc@ejemplo.com"

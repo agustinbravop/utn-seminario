@@ -158,6 +158,25 @@ export class PrismaAuthRepository implements AuthRepository {
           correo: jugador.correo,
           usuario: jugador.usuario,
           clave: clave,
+          localidad: {
+            connectOrCreate: {
+              where: {
+                nombre_idProvincia: {
+                  nombre: jugador.localidad ?? " ",
+                  idProvincia: jugador.provincia ?? " ",
+                },
+              },
+              create: {
+                nombre: jugador.localidad ?? " ",
+                provincia: {
+                  connectOrCreate: {
+                    where: { provincia: jugador.provincia ?? " " },
+                    create: { provincia: jugador.provincia ?? " "},
+                  },
+                },
+              },
+            },
+          },
         },
       });
       return toJugador(dbJugador);

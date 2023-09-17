@@ -25,8 +25,26 @@ export class PrismaJugadorRepository implements JugadorRepository {
           correo: jugador.correo,
           telefono: jugador.telefono,
           usuario: jugador.usuario,
+          localidad: {
+            connectOrCreate: {
+              where: {
+                nombre_idProvincia: {
+                  nombre: jugador.localidad?? "",
+                  idProvincia: jugador.provincia?? "",
+                },
+              },
+              create: {
+                nombre: jugador.localidad?? "",
+                provincia: {
+                  connectOrCreate: {
+                    where: { provincia: jugador.provincia },
+                    create: { provincia: jugador.provincia?? "" },
+                  },
+                },
+              },
+            },
         },
-      });
+      }});
 
       return toJugador(dbJugador);
     } catch {
