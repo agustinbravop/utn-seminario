@@ -7,6 +7,7 @@ import {
   Text,
   HStack,
   useToast,
+  Box,
 } from "@chakra-ui/react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { InputControl, SubmitButton, SelectControl } from "@/components/forms";
@@ -73,8 +74,8 @@ export default function RegisterPage() {
         textAlign="center"
         size="2xl"
         fontSize="40px"
-        marginTop="100px"
-        marginBottom="60px"
+        mt="60px"
+        mb="60px"
       >
         Registrarse en Play Finder
       </Heading>
@@ -89,6 +90,12 @@ export default function RegisterPage() {
           margin="auto"
           my="20px"
         >
+          <Box alignSelf="start">
+            <Heading size="md">Perfil</Heading>
+            <Text alignSelf="start">
+              Con estos datos podés acceder a tu cuenta.
+            </Text>
+          </Box>
           <HStack>
             <InputControl
               label="Nombre"
@@ -105,9 +112,8 @@ export default function RegisterPage() {
           </HStack>
           <HStack>
             <InputControl
-              label="Nombre de usuario"
+              label="Usuario"
               placeholder="usuario"
-              minWidth="180px"
               name="usuario"
               isRequired
             />
@@ -119,6 +125,27 @@ export default function RegisterPage() {
               isRequired
             />
           </HStack>
+          <InputControl
+            label="Correo electrónico"
+            placeholder="abc@ejemplo.com"
+            name="correo"
+            type="email"
+            isRequired
+          />
+          <InputControl
+            label="Contraseña"
+            placeholder=" "
+            name="clave"
+            type="password"
+            isRequired
+          />
+          <Box alignSelf="start" mt="20px">
+            <Heading size="md">Preferencias</Heading>
+            <Text alignSelf="start">
+              Estos datos opcionales nos facilitan mostrarte las canchas que más
+              te puedan interesar.
+            </Text>
+          </Box>
           <HStack>
             <SelectControl
               name="provincia"
@@ -155,20 +182,6 @@ export default function RegisterPage() {
               </option>
             ))}
           </SelectControl>
-          <InputControl
-            label="Correo electrónico"
-            placeholder="abc@ejemplo.com"
-            name="correo"
-            type="email"
-            isRequired
-          />
-          <InputControl
-            label="Contraseña"
-            placeholder=" "
-            name="clave"
-            type="password"
-            isRequired
-          />
           <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
           {isError && (
             <Alert status="error" margin="20px">
