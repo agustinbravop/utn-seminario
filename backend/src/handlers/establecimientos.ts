@@ -6,22 +6,28 @@ import {
 } from "../models/establecimiento.js";
 import { ForbiddenError } from "../utils/apierrors.js";
 
-export const crearEstablecimientoReqSchema = establecimientoSchema.omit({
+export const crearEstablecimientoSchema = establecimientoSchema.omit({
   id: true,
   urlImagen: true,
   eliminado: true,
 });
 
-export const modificarEstablecimientoReqSchema = establecimientoSchema.omit({
+export const modificarEstablecimientoSchema = establecimientoSchema.omit({
   urlImagen: true,
   id: true,
-  //eliminado: true,
 });
 
 export class EstablecimientoHandler {
   private service: EstablecimientoService;
   constructor(service: EstablecimientoService) {
     this.service = service;
+  }
+
+  getAllEstablecimientos(): RequestHandler {
+    return async (_req, res) => {
+      const ests = await this.service.getAll();
+      res.status(200).json(ests);
+    };
   }
 
   postEstablecimiento(): RequestHandler {
@@ -96,13 +102,12 @@ export class EstablecimientoHandler {
     };
   }
 
-  getEstablecimientoSearch():RequestHandler { 
-    return async (req, res)=>{ 
-      const query=req.query; 
-      const result=await this.service.getConsulta(query)
-      res.status(200).json(result)
-
-    }
+  getEstablecimientoSearch(): RequestHandler {
+    return async (req, res) => {
+      const query = req.query;
+      const result = await this.service.getConsulta(query);
+      res.status(200).json(result);
+    };
   }
 
   /**

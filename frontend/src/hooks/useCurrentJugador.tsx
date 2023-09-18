@@ -77,6 +77,10 @@ export function CurrentJugadorProvider({
   }, [toast]);
 
   const logout = () => {
+    toast({
+      title: "Se cerró la sesión actual.",
+      status: "info",
+    });
     localStorage.removeItem("token");
     setCurrentJugador(undefined);
   };

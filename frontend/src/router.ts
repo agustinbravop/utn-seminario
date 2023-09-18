@@ -9,6 +9,7 @@ export type Path =
   | `/admin/:idAdmin/mejorarSuscripcion`
   | `/admin/:idAdmin/nuevoEstablecimiento`
   | `/admin/:idAdmin/perfil`
+  | `/admin/:idAdmin/perfil/cambiarClave`
   | `/admin/:idAdmin/perfil/editar`
   | `/admin/:idAdmin/perfil/editarSuscripcion`
   | `/admin/:idAdmin/perfil/selectEstab`
@@ -22,8 +23,19 @@ export type Path =
   | `/ests/:idEst/editar`
   | `/ests/:idEst/reservas`
   | `/jugador/:idJugador`
+  | `/jugador/:idJugador/est/:idEst`
+  | `/jugador/:idJugador/est/:idEst/canchas`
+  | `/jugador/:idJugador/est/:idEst/canchas/:idCancha`
+  | `/jugador/:idJugador/est/:idEst/reservar`
+  | `/jugador/:idJugador/perfil`
+  | `/jugador/:idJugador/perfil/cambiarClave`
+  | `/jugador/:idJugador/perfil/editar`
+  | `/jugador/:idJugador/reservas`
   | `/login`
+  | `/play/:idEst/canchas/:idCancha/vistaJugadorCancha`
+  | `/play/:idEst/vistaJugador`
   | `/register`
+  | `/search/searchEstab`
   | `/subscribe`
   | `/suscripciones`
 
@@ -32,6 +44,7 @@ export type Params = {
   '/admin/:idAdmin/mejorarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/nuevoEstablecimiento': { idAdmin: string }
   '/admin/:idAdmin/perfil': { idAdmin: string }
+  '/admin/:idAdmin/perfil/cambiarClave': { idAdmin: string }
   '/admin/:idAdmin/perfil/editar': { idAdmin: string }
   '/admin/:idAdmin/perfil/editarSuscripcion': { idAdmin: string }
   '/admin/:idAdmin/perfil/selectEstab': { idAdmin: string }
@@ -45,6 +58,16 @@ export type Params = {
   '/ests/:idEst/editar': { idEst: string }
   '/ests/:idEst/reservas': { idEst: string }
   '/jugador/:idJugador': { idJugador: string }
+  '/jugador/:idJugador/est/:idEst': { idJugador: string; idEst: string }
+  '/jugador/:idJugador/est/:idEst/canchas': { idJugador: string; idEst: string }
+  '/jugador/:idJugador/est/:idEst/canchas/:idCancha': { idJugador: string; idEst: string; idCancha: string }
+  '/jugador/:idJugador/est/:idEst/reservar': { idJugador: string; idEst: string }
+  '/jugador/:idJugador/perfil': { idJugador: string }
+  '/jugador/:idJugador/perfil/cambiarClave': { idJugador: string }
+  '/jugador/:idJugador/perfil/editar': { idJugador: string }
+  '/jugador/:idJugador/reservas': { idJugador: string }
+  '/play/:idEst/canchas/:idCancha/vistaJugadorCancha': { idEst: string; idCancha: string }
+  '/play/:idEst/vistaJugador': { idEst: string }
 }
 
 export type ModalPath = never

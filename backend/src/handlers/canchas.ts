@@ -4,7 +4,7 @@ import { Cancha, canchaSchema } from "../models/cancha.js";
 import { z } from "zod";
 import { disponibilidadSchema } from "../models/disponibilidad.js";
 
-export const crearCanchaReqSchema = canchaSchema
+export const crearCanchaSchema = canchaSchema
   .omit({
     id: true,
     urlImagen: true,
@@ -14,8 +14,7 @@ export const crearCanchaReqSchema = canchaSchema
     disponibilidades: z.array(disponibilidadSchema.omit({ id: true })),
   });
 
-
-export const modificarCanchaReqSchema = canchaSchema
+export const modificarCanchaSchema = canchaSchema
   .omit({
     id: true,
     urlImagen: true,
@@ -24,7 +23,6 @@ export const modificarCanchaReqSchema = canchaSchema
   .extend({
     disponibilidades: z.array(disponibilidadSchema.partial({ id: true })),
   });
-
 
 export class CanchaHandler {
   private service: CanchaService;
@@ -54,21 +52,16 @@ export class CanchaHandler {
 
   putCancha(): RequestHandler {
     return async (req, res) => {
-      //console.log(res.locals.body);      
-      
       const cancha: Cancha = {
         ...res.locals.body,
       };
       cancha.id = Number(req.params["idCancha"]);
-      
-      
-      
-       //Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
+
+      //Las dsponibilidades nuevas vienen sin id. Le asignamos un 0 para evitar errores.
       cancha.disponibilidades = cancha.disponibilidades
         .filter((d) => !d.id)
         .map((d) => ({ ...d, id: 0 }));
-      
-      
+
       const canchaActualizada = await this.service.modificar(cancha);
       res.status(200).json(canchaActualizada);
     };

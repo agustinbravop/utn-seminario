@@ -2,17 +2,17 @@ import express from "express";
 import { Router } from "express";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
 import { EstablecimientoHandler } from "../handlers/establecimientos.js";
-import { AuthMiddleware } from "../middlewares/auth.js";
 import {
   DisponibilidadHandler,
-  crearDisponibilidadReqSchema,
-  modificarDisponibilidadReqSchema,
+  crearDisponibilidadSchema,
+  modificarDisponibilidadSchema,
 } from "../handlers/disponibilidades.js";
+import { AuthHandler } from "../handlers/auth.js";
 
 export function disponibilidadesRouter(
   handler: DisponibilidadHandler,
   estHandler: EstablecimientoHandler,
-  authMiddle: AuthMiddleware
+  authMiddle: AuthHandler
 ): Router {
   const router = express.Router();
 
@@ -22,7 +22,7 @@ export function disponibilidadesRouter(
   );
   router.post(
     "/:idEst/canchas/:idCancha/disponibilidades",
-    validateBody(crearDisponibilidadReqSchema),
+    validateBody(crearDisponibilidadSchema),
     handler.postDisponibilidad()
   );
 
@@ -39,7 +39,7 @@ export function disponibilidadesRouter(
     "/:idEst/canchas/:idCancha/disponibilidades/:idDisp",
     authMiddle.isAdmin(),
     estHandler.validateAdminOwnsEstablecimiento(),
-    validateBody(modificarDisponibilidadReqSchema),
+    validateBody(modificarDisponibilidadSchema),
     handler.putDisponibilidad()
   );
   router.delete(

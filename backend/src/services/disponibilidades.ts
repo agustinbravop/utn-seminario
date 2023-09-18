@@ -1,5 +1,5 @@
 import { Disponibilidad } from "../models/disponibilidad.js";
-import { DisponibilidadRepository } from "../repositories/disponibilidades.js";
+import { DisponibilidadRepository } from "../repositories/disponibilidades";
 
 export interface DisponibilidadService {
   getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
@@ -12,8 +12,8 @@ export interface DisponibilidadService {
 export class DisponibilidadServiceimpl implements DisponibilidadService {
   private repo: DisponibilidadRepository;
 
-  constructor(service: DisponibilidadRepository) {
-    this.repo = service;
+  constructor(repository: DisponibilidadRepository) {
+    this.repo = repository;
   }
 
   async getByCanchaID(idCancha: number) {
