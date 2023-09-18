@@ -171,7 +171,7 @@ export class PrismaAuthRepository implements AuthRepository {
                 provincia: {
                   connectOrCreate: {
                     where: { provincia: jugador.provincia ?? " " },
-                    create: { provincia: jugador.provincia ?? " "},
+                    create: { provincia: jugador.provincia ?? " " },
                   },
                 },
               },

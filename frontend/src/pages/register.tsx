@@ -13,9 +13,9 @@ import { InputControl, SubmitButton, SelectControl } from "@/components/forms";
 import { RegistrarJugador, useRegistrarJugador } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { DISCIPLINAS } from "@/utils/consts";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
 
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
@@ -33,22 +33,6 @@ const validationSchema = Yup.object({
   disciplina: Yup.string().optional(),
 });
 
-type ApiGobProv = {
-  provincias: Provincia[];
-};
-
-type ApiGobLoc = {
-  municipios: Localidad[];
-};
-
-type Localidad = { id: number; nombre: string };
-
-type Provincia = {
-  centroide: {};
-  id: number;
-  nombre: string;
-};
-
 export default function RegisterPage() {
   const navigate = useNavigate();
   const toast = useToast();
@@ -57,26 +41,11 @@ export default function RegisterPage() {
     validationSchema,
   });
 
-  const [localidades, setLocalidades] = useState<string[]>([]);
-
-  const { data: provincias } = useQuery<string[]>(["provincias"], {
-    queryFn: () =>
-      fetch("https://apis.datos.gob.ar/georef/api/provincias")
-        .then((req) => req.json())
-        .then(
-          (data: ApiGobProv) => data?.provincias?.map((p) => p.nombre) ?? []
-        ),
-  });
+  const { data: provincias } = useProvincias();
 
   const provincia = useWatch({ name: "provincia", control: methods.control });
+  const { data: localidades } = useLocalidadesByProvincia(provincia);
   useEffect(() => {
-    fetch(
-      `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=nombre&max=150`
-    )
-      .then((response) => response.json())
-      .then((data: ApiGobLoc) => {
-        setLocalidades(data?.municipios?.map((m) => m.nombre) ?? []);
-      });
     methods.resetField("localidad");
   }, [provincia, methods]);
 
@@ -107,7 +76,7 @@ export default function RegisterPage() {
         marginTop="100px"
         marginBottom="60px"
       >
-        Registrarse en <br /> Play Finder
+        Registrarse en Play Finder
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -115,7 +84,7 @@ export default function RegisterPage() {
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="4"
           width="-webkit-fit-content"
-          maxW='400px'
+          maxW="400px"
           justifyContent="center"
           margin="auto"
           my="20px"
@@ -165,7 +134,6 @@ export default function RegisterPage() {
               name="localidad"
               label="Localidad"
               placeholder="Localidad"
-              
             >
               {localidades.sort().map((l) => (
                 <option key={l} value={l}>
@@ -180,7 +148,6 @@ export default function RegisterPage() {
           <SelectControl
             placeholder="Seleccionar disciplina "
             name="disciplina"
-            
           >
             {DISCIPLINAS.map((disciplina, i) => (
               <option key={i} value={disciplina}>
