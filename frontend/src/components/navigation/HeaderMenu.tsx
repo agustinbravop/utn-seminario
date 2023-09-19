@@ -16,6 +16,7 @@ import {
   ChevronDownIcon,
   HamburgerIcon,
   InfoIcon,
+  StarIcon,
 } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
@@ -147,10 +148,10 @@ function UnregisteredNav() {
         </MenuButton>
         <MenuList as="nav">
           <Link to="/suscripciones">
-            <MenuItem>Suscripciones</MenuItem>
+            <MenuItem> <StarIcon mr="20px" /> Suscripciones</MenuItem>
           </Link>
           <Link to="/login">
-            <MenuItem>Iniciar Sesión</MenuItem>
+            <MenuItem> <Icon as={AiOutlineUser} mr="20px" /> Iniciar Sesión</MenuItem>
           </Link>
         </MenuList>
       </Menu>
@@ -158,7 +159,7 @@ function UnregisteredNav() {
     sm: (
       <HStack as="nav">
         <Link to="/suscripciones">
-          <Button variant="ghost" size="sm" color="blackAlpha.800">
+          <Button variant="ghost" size="sm" >
             Suscripciones
           </Button>
         </Link>

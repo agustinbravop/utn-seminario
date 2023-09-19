@@ -14,6 +14,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { formatearFecha } from "@/utils/dates";
+import { useCurrentJugador } from "@/hooks";
 
 type ApiGobProv = {
   provincias: Provincia[];
@@ -32,10 +33,12 @@ type Provincia = {
 };
 
 export default function SearchEstab() {
+  const { jugador } = useCurrentJugador();
+
   const [localidades, setLocalidades] = useState<string[]>([]);
-  const [localidad, setLocalidad] = useState("");
-  const [prov, setProv] = useState("");
-  const [deporte, setDeporte] = useState("");
+  const [localidad, setLocalidad] = useState(jugador.localidad);
+  const [prov, setProv] = useState(jugador.provincia);
+  const [deporte, setDeporte] = useState(jugador.disciplina);
   const [nombre, setNombre] = useState("");
   const [dateSelect, setDateSelect] = useState(formatearFecha(new Date()));
 
@@ -88,6 +91,7 @@ export default function SearchEstab() {
                   bg="white"
                   placeholder="Provincia"
                   mr="0px"
+                  focusBorderColor="black"
                   onChange={(e) => setProv(e.target.value)}
                   children={provincias.data?.sort().map((p) => (
                     <option key={p} value={p}>
@@ -99,6 +103,7 @@ export default function SearchEstab() {
                   bg="white"
                   ml="0px"
                   placeholder="Localidad"
+                  focusBorderColor="black"
                   onChange={(e) => setLocalidad(e.target.value)}
                 >
                   {localidades.sort().map((l) => (
@@ -112,20 +117,21 @@ export default function SearchEstab() {
               <Select
                 bg="white"
                 placeholder="Disciplina"
+                value= {deporte} 
                 onChange={(e) => {
                   setDeporte(e.target.value);
                 }}
+                focusBorderColor="black"
               >
                 <option key="Basket">Basket</option>
                 <option key="Futbol">Fútbol</option>
                 <option key="Tenis">Tenis</option>
                 <option key="Padel">Padel</option>
-                <option key="Otra">Otra</option>
               </Select>
               <Input
                 bg="white"
                 type="date"
-                focusBorderColor="lightblue"
+                focusBorderColor="black"
                 size="md"
                 width="100%"
                 onChange={(e) => setDateSelect(e.target.value)}
@@ -136,12 +142,12 @@ export default function SearchEstab() {
                   <SearchIcon color="gray.300" />
                 </InputRightElement>
                 <Input
-                  focusBorderColor="lightblue"
                   _placeholder={{ color: "#1a202c" }}
                   placeholder="Nombre del establecimiento"
                   size="md"
                   width="100%"
                   onChange={(e) => setNombre(e.target.value)}
+                  focusBorderColor="black"
                 />
               </InputGroup>
             </VStack>
@@ -164,7 +170,7 @@ export default function SearchEstab() {
             />
           ))
         ) : (
-          <p>No se encontraron establecimientos</p>
+          <p>No se encontraron establecimientos 99</p>
         )}
       </HStack>
     </>
