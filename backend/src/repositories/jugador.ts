@@ -59,7 +59,12 @@ export class PrismaJugadorRepository implements JugadorRepository {
     try {
       const dbJugador = await this.prisma.jugador.findUnique({
         where: { id },
+        include: {
+          disciplina: true, // Incluir información de disciplina
+          localidad: true,   // Incluir información de localidad
+        },
       });
+      
       if (dbJugador) {
         return toJugador(dbJugador);
       }
