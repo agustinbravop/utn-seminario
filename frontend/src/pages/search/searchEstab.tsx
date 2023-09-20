@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { formatearFecha } from "@/utils/dates";
 import { useCurrentJugador } from "@/hooks";
+import { DISCIPLINAS } from "@/utils/consts";
 
 type ApiGobProv = {
   provincias: Provincia[];
@@ -123,10 +124,11 @@ export default function SearchEstab() {
                 }}
                 focusBorderColor="black"
               >
-                <option key="Basket">Basket</option>
-                <option key="Futbol">Fútbol</option>
-                <option key="Tenis">Tenis</option>
-                <option key="Padel">Padel</option>
+                {DISCIPLINAS.sort().map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
               </Select>
               <Input
                 bg="white"
