@@ -9,7 +9,6 @@ import {
   SortingState,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { Disponibilidad } from "@/models";
 import FormReservarDisponibilidad from "@/pages/jugador/[idJugador]/est/[idEst]/canchas/[idCancha]/_formReservar";
 
 export type DataTableProps<Data extends object> = {
