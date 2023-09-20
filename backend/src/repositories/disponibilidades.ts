@@ -1,4 +1,4 @@
-import { Dia, Disponibilidad } from "../models/disponibilidad.js";
+import { DIAS, Dia, Disponibilidad } from "../models/disponibilidad.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, dia, disciplina, disponibilidad } from "@prisma/client";
 
@@ -82,7 +82,12 @@ export class PrismaDisponibilidadRepository
           horaInicio: disp.horaInicio,
           precioReserva: disp.precioReserva,
           precioSenia: disp.precioSenia,
-          dias: { connect: disp.dias.map((dia) => ({ dia })) },
+          dias: {
+            connect: disp.dias.map((dia) => ({ dia })),
+            disconnect: DIAS.filter((dia) => !disp.dias.includes(dia)).map(
+              (dia) => ({ dia })
+            ),
+          },
           cancha: { connect: { id: disp.idCancha } },
           disciplina: {
             connectOrCreate: {
