@@ -27,6 +27,7 @@ import { DIAS_ABBR, FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import FormReservarDisponibilidad from "./_formReservar";
+import { ordenarDias } from "@/utils/dias";
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams(
@@ -144,7 +145,7 @@ export default function VistaJugadorCancha() {
                                   : "Sin seña"}
                               </Td>
                               <Td>
-                                {d.dias
+                                {ordenarDias(d.dias)
                                   .map((dia) => DIAS_ABBR[dia])
                                   .join(" - ")}
                               </Td>

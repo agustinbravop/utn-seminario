@@ -21,6 +21,7 @@ import FormDeleteDisponibilidad from "./_formEliminar";
 import { Disponibilidad, DisponibilidadForm } from "@/models";
 import { decimalAHora, horaADecimal } from "@/utils/dates";
 import { CanchaMenu } from "@/components/navigation";
+import { ordenarDias } from "@/utils/dias";
 
 /**
  * Deriva el valor del campo 'minutosReserva' del DisponibilidadForm
@@ -120,7 +121,7 @@ export default function CanchaInfoPage() {
                   {d.horaInicio} - {d.horaFin}
                 </Td>
                 <Td> ${d.precioReserva} </Td>
-                <Td>{d.dias.sort().join(" - ")}</Td>
+                <Td>{ordenarDias(d.dias).join(" - ")}</Td>
                 <Td display="flex" gap="10px" p="0.2em">
                   <FormDisponibilidad
                     variant="modificar"
