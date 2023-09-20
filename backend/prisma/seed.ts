@@ -27,6 +27,14 @@ async function upsertDia(dia: string) {
   });
 }
 
+async function upsertDisciplina(disciplina: string) {
+  return await prisma.disciplina.upsert({
+    where: {disciplina},
+    update: {disciplina},
+    create: {disciplina},
+  });
+}
+
 async function main() {
   // Se cargan las suscripciones.
   const startup = await upsertSuscripcion("Startup", 1, 3999.0);
@@ -45,6 +53,15 @@ async function main() {
   const dom = await upsertDia(Dia.Domingo);
 
   console.info({ lun, mar, mie, jue, vie, sab, dom });
+
+  const futbol = await upsertDisciplina("Fútbol");
+  const basquet = await upsertDisciplina("Básquet");
+  const tenis = await upsertDisciplina("Tenis");
+  const padel = await upsertDisciplina("Pádel");
+  const hockey = await upsertDisciplina("Hockey");
+  const pingPong = await upsertDisciplina("Ping Pong");
+
+  console.info({ futbol, basquet, tenis, padel, hockey, pingPong });
 }
 
 main()

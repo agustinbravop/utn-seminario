@@ -10,12 +10,12 @@ function CarouselButton(props: ButtonProps) {
       top="50%"
       fontSize="1.5rem"
       backgroundColor="transparent"
-      borderRadius="50%"
+      borderRadius="15px"
       padding="5px"
       fontWeight="600"
       cursor="pointer"
       color="rgb(253, 253, 253)"
-      transform="translate(0, -50%)"
+      transform="translate(0, -50%)"      
       {...props}
     />
   );
@@ -70,8 +70,8 @@ export default function Carousel({
     <Box position={"relative" /* para position="absolute" en CarouselButton */}>
       <SlideFade in={loaded}>
         <Image
-          height="500px"
-          width="70vw"
+          height="420px"
+          width="90vw"
           borderRadius="12px"
           objectFit="cover"
           src={images[selectedIndex]}

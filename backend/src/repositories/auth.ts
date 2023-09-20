@@ -150,6 +150,7 @@ export class PrismaAuthRepository implements AuthRepository {
   }
 
   async crearJugador(jugador: Jugador, clave: string) {
+    // console.log(jugador)
     try {
       const dbJugador = await this.prisma.jugador.create({
         data: {

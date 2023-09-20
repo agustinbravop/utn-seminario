@@ -13,8 +13,8 @@ const images = [
 
 export default function LandingPage() {
   return (
-    <Box mx="5vw">
-      <Container m="0" maxW="650px">
+    <Box mx="1.5vw">
+      <Container m="0" maxW="900px">
         <Heading my="35px" fontSize="2.75em">
           Reservá una cancha desde dónde quieras
         </Heading>
