@@ -170,7 +170,7 @@ export default function SearchEstab() {
             />
           ))
         ) : (
-          <p>No se encontraron establecimientos 99</p>
+          <p>No se encontraron establecimientos</p>
         )}
       </HStack>
     </>
