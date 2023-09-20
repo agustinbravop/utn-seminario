@@ -1,7 +1,25 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, disciplina, jugador, localidad } from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Jugador } from "../models/jugador.js";
-import { toJugador } from "./auth.js";
+
+type jugadorDB = jugador & {
+  localidad: localidad | null;
+  disciplina: disciplina | null;
+};
+
+/**
+ * Sirve para sacar la clave, que pasa desapercibida en el tipo `Jugador`.
+ * @param jugador una entidad jugador de Prisma.
+ * @returns un objeto Jugador del dominio.
+ */
+export function toJugador({ clave, ...jugador }: jugadorDB): Jugador {
+  return {
+    ...jugador,
+    disciplina: jugador.idDisciplina ?? undefined,
+    localidad: jugador.localidad?.nombre ?? undefined,
+    provincia: jugador.localidad?.idProvincia ?? undefined,
+  };
+}
 
 export interface JugadorRepository {
   getJugadorByID(id: number): Promise<Jugador>;
@@ -10,6 +28,10 @@ export interface JugadorRepository {
 
 export class PrismaJugadorRepository implements JugadorRepository {
   private prisma: PrismaClient;
+  private include = {
+    localidad: true,
+    disciplina: true,
+  };
 
   constructor(client: PrismaClient) {
     this.prisma = client;
@@ -45,6 +67,7 @@ export class PrismaJugadorRepository implements JugadorRepository {
             },
           },
         },
+        include: this.include,
       });
 
       return toJugador(dbJugador);
@@ -59,6 +82,7 @@ export class PrismaJugadorRepository implements JugadorRepository {
     try {
       const dbJugador = await this.prisma.jugador.findUnique({
         where: { id },
+        include: this.include,
       });
       if (dbJugador) {
         return toJugador(dbJugador);
