@@ -44,6 +44,7 @@ model disciplina {
   disciplina String @id @db.VarChar
 
   disponibilidades disponibilidad[]
+  jugador          jugador[]
 }
 
 model disponibilidad {
@@ -93,6 +94,7 @@ model localidad {
   idProvincia     String
   provincia       provincia         @relation(fields: [idProvincia], references: [provincia])
   establecimiento establecimiento[]
+  jugador         jugador[]
 
   @@unique([nombre, idProvincia])
 }
@@ -118,8 +120,12 @@ model jugador {
   nombre   String @db.VarChar
   apellido String @db.VarChar
   telefono String @db.VarChar
-
-  reservas reserva[]
+  
+  idLocalidad     Int?
+  localidad       localidad?      @relation(fields: [idLocalidad], references: [id])
+  idDisciplina    String?         @map("disciplina") @db.VarChar
+  disciplina      disciplina?     @relation(fields: [idDisciplina], references: [disciplina])
+  reservas        reserva[]
 }
 
 model pago {

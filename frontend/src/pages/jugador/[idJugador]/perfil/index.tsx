@@ -44,8 +44,30 @@ export default function JugadorPerfilPage() {
             <Heading size="xs">Teléfono</Heading>
             <Text fontSize="sm">{jugador.telefono}</Text>
           </Box>
+          <Box>
+          </Box>
+          </Stack>
+          
+          <Heading size="md" textAlign="center" mt="18px">
+          Preferencias de búsqueda
+        </Heading>
+        <Stack divider={<StackDivider />} spacing="2.5" mt="18px">
+          <Box>
+            <Heading size="xs">Provincia</Heading>
+            <Text fontSize="sm">{jugador.provincia ? jugador.provincia : "-"}</Text>
+          </Box>
+          <Box>
+            <Heading size="xs">Localidad</Heading>
+            <Text fontSize="sm">{jugador.localidad ? jugador.localidad : "-" }</Text>
+          </Box>
+          <Box>
+            <Heading size="xs">Disciplina</Heading>
+            <Text fontSize="sm">{jugador.disciplina ? jugador.disciplina : "-"}</Text>
+          </Box>
+          <Box>
+          </Box>
         </Stack>
-        <HStack width="100%" mt="20px" wrap="wrap">
+        <HStack width="100%" mt="10px" wrap="wrap" justifyContent="center">
           <Link to="editar">
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>

@@ -128,7 +128,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
       const estabDisponibles = await this.repo.getEstabDispByDate(
         consulta.fecha
       );
-      console.log("disponibles: " + estabDisponibles);
+      console.log("disponibles:", JSON.stringify(estabDisponibles));
       return estabFilter.filter((e) =>
         estabDisponibles.find(({ id }) => id === e.id)
       );

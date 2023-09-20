@@ -7,12 +7,16 @@ import {
   Text,
   HStack,
   useToast,
+  Box,
 } from "@chakra-ui/react";
-import { FormProvider } from "react-hook-form";
-import { InputControl, SubmitButton } from "@/components/forms";
+import { FormProvider, useWatch } from "react-hook-form";
+import { InputControl, SubmitButton, SelectControl } from "@/components/forms";
 import { RegistrarJugador, useRegistrarJugador } from "@/utils/api/auth";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { DISCIPLINAS } from "@/utils/consts";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
 
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
@@ -25,6 +29,9 @@ const validationSchema = Yup.object({
   clave: Yup.string()
     .min(8, "La contraseña debe tener al menos 8 caracteres")
     .required("Obligatorio"),
+  localidad: Yup.string().optional(),
+  provincia: Yup.string().optional(),
+  disciplina: Yup.string().optional(),
 });
 
 export default function RegisterPage() {
@@ -34,6 +41,14 @@ export default function RegisterPage() {
   const methods = useYupForm<RegistrarJugador>({
     validationSchema,
   });
+
+  const { data: provincias } = useProvincias();
+
+  const provincia = useWatch({ name: "provincia", control: methods.control });
+  const { data: localidades } = useLocalidadesByProvincia(provincia);
+  useEffect(() => {
+    methods.resetField("localidad");
+  }, [provincia, methods]);
 
   const { mutate, isLoading, isError } = useRegistrarJugador({
     onSuccess: () => {
@@ -59,10 +74,10 @@ export default function RegisterPage() {
         textAlign="center"
         size="2xl"
         fontSize="40px"
-        marginTop="100px"
-        marginBottom="60px"
+        mt="60px"
+        mb="60px"
       >
-        Registrarse en <br /> Play Finder
+        Registrarse en Play Finder
       </Heading>
       <FormProvider {...methods}>
         <VStack
@@ -70,10 +85,17 @@ export default function RegisterPage() {
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="4"
           width="-webkit-fit-content"
+          maxW="400px"
           justifyContent="center"
           margin="auto"
           my="20px"
         >
+          <Box alignSelf="start">
+            <Heading size="md">Perfil</Heading>
+            <Text alignSelf="start">
+              Con estos datos podés acceder a tu cuenta.
+            </Text>
+          </Box>
           <HStack>
             <InputControl
               label="Nombre"
@@ -90,9 +112,8 @@ export default function RegisterPage() {
           </HStack>
           <HStack>
             <InputControl
-              label="Nombre de usuario"
+              label="Usuario"
               placeholder="usuario"
-              minWidth="180px"
               name="usuario"
               isRequired
             />
@@ -118,6 +139,49 @@ export default function RegisterPage() {
             type="password"
             isRequired
           />
+          <Box alignSelf="start" mt="20px">
+            <Heading size="md">Preferencias</Heading>
+            <Text alignSelf="start">
+              Estos datos opcionales nos facilitan mostrarte las canchas que más
+              te puedan interesar.
+            </Text>
+          </Box>
+          <HStack>
+            <SelectControl
+              name="provincia"
+              label="Provincia"
+              placeholder="Provincia"
+              children={provincias?.sort().map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            />
+            <SelectControl
+              name="localidad"
+              label="Localidad"
+              placeholder="Localidad"
+            >
+              {localidades.sort().map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+              <option key="Otra" value="Otra">
+                Otra
+              </option>
+            </SelectControl>
+          </HStack>
+          <SelectControl
+            placeholder="Seleccionar disciplina "
+            name="disciplina"
+          >
+            {DISCIPLINAS.map((disciplina, i) => (
+              <option key={i} value={disciplina}>
+                {disciplina}
+              </option>
+            ))}
+          </SelectControl>
           <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
           {isError && (
             <Alert status="error" margin="20px">

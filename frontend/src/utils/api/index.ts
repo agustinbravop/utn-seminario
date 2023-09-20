@@ -30,25 +30,18 @@ export type JWT = {
  * @returns una promesa con el `ApiError` parseado.
  */
 async function reject(res: Response): Promise<ApiError> {
-  if (!res) {
-    return Promise.reject(
-      new ApiError(500, "Ocurrió un error inesperado")
-    ).catch((e) => e);
-  }
   const body = await res.json();
-  console.error(body?.message);
+  console.error(body);
 
   // Un status code `401 Unauthorized` significa que el JSON Web Token venció.
   if (res.status === 401) {
     writeLocalStorage("token", null);
   }
 
-  return Promise.reject(
-    new ApiError(
-      body?.status ?? 500,
-      body?.message ?? "Ocurrió un error inesperado"
-    )
-  ).catch((e) => e); // Sin este `catch()`, se lanza el `ApiError` y JavaScript paniquea.
+  throw new ApiError(
+    body?.status ?? 500,
+    body?.message ?? "Ocurrió un error inesperado"
+  );
 }
 
 /**

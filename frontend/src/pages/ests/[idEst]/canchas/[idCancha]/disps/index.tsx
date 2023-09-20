@@ -64,17 +64,6 @@ export default function CanchaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  const defaultDisponibilidad = {
-    horaFin: "",
-    horaInicio: "",
-    dias: [],
-    disciplina: "",
-    precioReserva: NaN,
-    precioSenia: undefined,
-    minutosReserva: NaN,
-    idCancha: Number(idCancha),
-  };
-
   const handleCrearDisponibilidad = (disp: DisponibilidadForm) => {
     const fin = horaADecimal(disp.horaFin);
     const horasReserva = disp.minutosReserva / 60;
@@ -104,7 +93,7 @@ export default function CanchaInfoPage() {
       <FormDisponibilidad
         variant="crear"
         onSubmit={handleCrearDisponibilidad}
-        resetValues={defaultDisponibilidad}
+        resetValues={{ idCancha: Number(idCancha) }}
       />
       {isError && (
         <Alert status="error" margin="20px">

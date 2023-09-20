@@ -16,7 +16,7 @@ import {
   SelectControl,
   SubmitButton,
 } from "@/components/forms";
-import { FormProvider } from "react-hook-form";
+import { DefaultValues, FormProvider } from "react-hook-form";
 import { GrAddCircle } from "react-icons/gr";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
@@ -25,18 +25,18 @@ import { EditIcon } from "@chakra-ui/icons";
 
 const validationSchema = Yup.object({
   id: Yup.number().integer().positive().optional(),
-  horaInicio: Yup.string().oneOf(HORAS),
-  horaFin: Yup.string().oneOf(HORAS),
-  minutosReserva: Yup.number().positive().integer(),
-  disciplina: Yup.string(),
-  dias: Yup.array(Yup.string().oneOf(DIAS)),
-  precioReserva: Yup.number().integer().positive(),
+  horaInicio: Yup.string().oneOf(HORAS).required("Obligatorio"),
+  horaFin: Yup.string().oneOf(HORAS).required("Obligatorio"),
+  minutosReserva: Yup.number().positive().integer().required("Obligatorio"),
+  disciplina: Yup.string().required("Obligatorio"),
+  dias: Yup.array(Yup.string().oneOf(DIAS)).min(1, "Elija al menos un día"),
+  precioReserva: Yup.number().integer().positive().required("Obligatorio"),
   precioSenia: Yup.number().integer().positive().optional(),
 });
 
 interface FormDisponibilidadProps {
   onSubmit: (disp: DisponibilidadForm) => void;
-  resetValues: DisponibilidadForm;
+  resetValues: DefaultValues<DisponibilidadForm>;
   variant: "crear" | "modificar";
 }
 

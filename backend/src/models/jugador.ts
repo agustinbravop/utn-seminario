@@ -12,4 +12,7 @@ export const jugadorSchema = z.object({
     .string()
     .nonempty()
     .refine((str) => !str.includes(" ")),
+  localidad: z.string().optional(),
+  provincia: z.string().optional(),
+  disciplina: z.string().optional(),
 });
