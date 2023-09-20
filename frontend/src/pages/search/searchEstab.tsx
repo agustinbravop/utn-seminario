@@ -93,6 +93,7 @@ export default function SearchEstab() {
                   placeholder="Provincia"
                   mr="0px"
                   focusBorderColor="black"
+                  value={prov}
                   onChange={(e) => setProv(e.target.value)}
                   children={provincias.data?.sort().map((p) => (
                     <option key={p} value={p}>
@@ -103,6 +104,7 @@ export default function SearchEstab() {
                 <Select
                   bg="white"
                   ml="0px"
+                  value={localidad}
                   placeholder="Localidad"
                   focusBorderColor="black"
                   onChange={(e) => setLocalidad(e.target.value)}
@@ -118,7 +120,7 @@ export default function SearchEstab() {
               <Select
                 bg="white"
                 placeholder="Disciplina"
-                value= {deporte} 
+                value={deporte}
                 onChange={(e) => {
                   setDeporte(e.target.value);
                 }}
