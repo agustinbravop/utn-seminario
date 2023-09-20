@@ -38,8 +38,8 @@ export class PrismaJugadorRepository implements JugadorRepository {
   }
 
   async modificarJugador(jugador: Jugador) {
-    try {
-      const dbJugador = await this.prisma.jugador.update({
+    return awaitQuery(
+      this.prisma.jugador.update({
         where: { id: jugador.id },
         data: {
           nombre: jugador.nombre,
@@ -47,6 +47,14 @@ export class PrismaJugadorRepository implements JugadorRepository {
           correo: jugador.correo,
           telefono: jugador.telefono,
           usuario: jugador.usuario,
+          disciplina: jugador.disciplina
+            ? {
+                connectOrCreate: {
+                  where: { disciplina: jugador.disciplina },
+                  create: { disciplina: jugador.disciplina },
+                },
+              }
+            : {},
           localidad: {
             connectOrCreate: {
               where: {
@@ -68,28 +76,35 @@ export class PrismaJugadorRepository implements JugadorRepository {
           },
         },
         include: this.include,
-      });
-
-      return toJugador(dbJugador);
-    } catch {
-      throw new InternalServerError(
-        "Error al intentar modificar los datos del jugador"
-      );
-    }
+      }),
+      `No se encuentra jugador con id ${jugador.id}`,
+      "Error al intentar modificar los datos del jugador"
+    );
   }
 
   async getJugadorByID(id: number) {
-    try {
-      const dbJugador = await this.prisma.jugador.findUnique({
-        where: { id },
-        include: this.include,
-      });
-      if (dbJugador) {
-        return toJugador(dbJugador);
-      }
-    } catch {
-      throw new InternalServerError("Error al buscar el jugador");
-    }
-    throw new NotFoundError("No existe jugador con id " + id);
+    return awaitQuery(
+      this.prisma.jugador.findUnique({ where: { id }, include: this.include }),
+      `No existe jugador con id ${id}`,
+      "Error al buscar el jugador"
+    );
   }
+}
+
+async function awaitQuery(
+  promise: Promise<jugadorDB | null>,
+  notFoundMsg: string,
+  errorMsg: string
+): Promise<Jugador> {
+  try {
+    const jugadorDB = await promise;
+
+    if (jugadorDB) {
+      return toJugador(jugadorDB);
+    }
+  } catch {
+    throw new InternalServerError(errorMsg);
+  }
+
+  throw new NotFoundError(notFoundMsg);
 }

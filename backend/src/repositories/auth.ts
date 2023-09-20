@@ -159,6 +159,14 @@ export class PrismaAuthRepository implements AuthRepository {
           correo: jugador.correo,
           usuario: jugador.usuario,
           clave: clave,
+          disciplina: jugador.disciplina
+            ? {
+                connectOrCreate: {
+                  where: { disciplina: jugador.disciplina },
+                  create: { disciplina: jugador.disciplina },
+                },
+              }
+            : {},
           localidad: {
             connectOrCreate: {
               where: {
