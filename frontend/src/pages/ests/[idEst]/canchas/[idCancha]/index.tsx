@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   useCanchaByID,
   useEliminarCancha,
-  useModificarCancha,
+  useHabilitarCancha,
 } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
@@ -29,7 +29,7 @@ import { CanchaMenu } from "@/components/navigation";
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
-  const { data: est } = useCanchaByID(Number(idEst), Number(idCancha));
+  const { data: cancha } = useCanchaByID(Number(idEst), Number(idCancha));
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -51,17 +51,19 @@ export default function CanchaInfoPage() {
     },
   });
 
-  const { mutate } = useModificarCancha({
+  const { mutate } = useHabilitarCancha({
     onSuccess: () => {
       toast({
-        title: `Cancha ${!est?.habilitada ? "habilitada" : "deshabilitada"}.`,
-        status: `${!est?.habilitada ? "info" : "warning"}`,
+        title: `Cancha ${
+          !cancha?.habilitada ? "habilitada" : "deshabilitada"
+        }.`,
+        status: `${!cancha?.habilitada ? "info" : "warning"}`,
       });
     },
     onError: () => {
       toast({
         title: `Error al ${
-          !est?.habilitada ? "habilitar" : "deshabilitar"
+          !cancha?.habilitada ? "habilitar" : "deshabilitar"
         } la cancha`,
         description: `Intente de nuevo.`,
         status: "error",
@@ -69,12 +71,16 @@ export default function CanchaInfoPage() {
     },
   });
 
-  if (!est) {
+  if (!cancha) {
     return <LoadingSpinner />;
   }
 
   const handleSwitchChange = () => {
-    mutate({ ...est, habilitada: !est.habilitada });
+    mutate({
+      idCancha: cancha.id,
+      idEst: cancha.idEstablecimiento,
+      habilitada: !cancha.habilitada,
+    });
   };
 
   return (
@@ -86,35 +92,40 @@ export default function CanchaInfoPage() {
       <Card m="auto" height="75%" width="75%">
         <CardBody display="grid" gridTemplateColumns="1fr 1fr">
           <Image
-            src={est?.urlImagen}
+            src={cancha?.urlImagen}
             fallbackSrc={FALLBACK_IMAGE_SRC}
-            maxWidth="20vw"
-            height="400px"
+            height="100%"
             objectFit="cover"
             borderRadius="10px"
           />
 
-          <Stack divider={<StackDivider />} spacing="1" mt="0.5rem" h="100%">
+          <Stack
+            divider={<StackDivider />}
+            spacing="1"
+            m="0.5rem 1.5rem"
+            h="100%"
+          >
             <Box>
               <HStack width="100%">
                 <Heading size="xs">Habilitación</Heading>
                 <Switch
-                  isChecked={est.habilitada}
+                  isChecked={cancha.habilitada}
                   onChange={handleSwitchChange}
                 />
               </HStack>
               <Text fontSize="sm">
-                Esta cancha {est.habilitada ? "" : "no"} se encuentra habilitada
+                Esta cancha {cancha.habilitada ? "" : "no"} se encuentra
+                habilitada
               </Text>
             </Box>
             <Box>
               <Heading size="xs">Descripción</Heading>
-              <Text fontSize="sm">{est.descripcion}</Text>
+              <Text fontSize="sm">{cancha.descripcion}</Text>
             </Box>
             <Box>
               <Heading size="xs">Disciplinas</Heading>
               <Text fontSize="sm">
-                {[...new Set(est.disciplinas)].join(" - ")}
+                {[...new Set(cancha.disciplinas)].join(" - ")}
               </Text>
             </Box>
 
@@ -129,8 +140,8 @@ export default function CanchaInfoPage() {
                 colorScheme="red"
                 onSubmit={() =>
                   mutateDelete({
-                    idEst: est.idEstablecimiento,
-                    idCancha: est.id,
+                    idEst: cancha.idEstablecimiento,
+                    idCancha: cancha.id,
                   })
                 }
                 header="Eliminar cancha"

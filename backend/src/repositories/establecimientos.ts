@@ -30,7 +30,7 @@ export class PrismaEstablecimientoRepository
       const allEstab = await this.prisma.establecimiento.findMany({
         include: this.include,
       });
-      return allEstab.map((e) => toModel(e));
+      return allEstab.map((e) => toEst(e));
     } catch (e) {
       console.error(e);
       throw new InternalServerError("No se pudo obtener los establecimientos");
@@ -71,7 +71,7 @@ export class PrismaEstablecimientoRepository
         },
         include: this.include,
       });
-      return toModel(dbEst);
+      return toEst(dbEst);
     } catch (e) {
       throw new InternalServerError("No se pudo crear el establecimiento");
     }
@@ -97,7 +97,7 @@ export class PrismaEstablecimientoRepository
         include: this.include,
       });
 
-      return estsDB.map((estDB) => toModel(estDB));
+      return estsDB.map((estDB) => toEst(estDB));
     } catch (e) {
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
@@ -112,7 +112,7 @@ export class PrismaEstablecimientoRepository
         include: this.include,
       });
 
-      return estsDB.map((estDB) => toModel(estDB));
+      return estsDB.map((estDB) => toEst(estDB));
     } catch {
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
@@ -249,7 +249,7 @@ export class PrismaEstablecimientoRepository
       },
     });
 
-    return estsDB.map((ests) => toModel(ests));
+    return estsDB.map((ests) => toEst(ests));
   }
 
   //REVISAR
@@ -298,7 +298,7 @@ export class PrismaEstablecimientoRepository
       include: this.include,
     });
 
-    return estabs.map((ests) => toModel(ests));
+    return estabs.map((ests) => toEst(ests));
   }
 
   async verifEstabSinReserva(idEst: number): Promise<boolean> {
@@ -328,7 +328,7 @@ type establecimientoDB = establecimiento & {
   localidad: localidad;
 };
 
-function toModel(est: establecimientoDB): Establecimiento {
+export function toEst(est: establecimientoDB): Establecimiento {
   return {
     ...est,
     localidad: est.localidad.nombre,
@@ -345,7 +345,7 @@ async function awaitQuery(
     const estDB = await promise;
 
     if (estDB) {
-      return toModel(estDB);
+      return toEst(estDB);
     }
   } catch (e) {
     throw new InternalServerError(errorMsg);

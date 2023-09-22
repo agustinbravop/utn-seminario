@@ -1,4 +1,4 @@
-import { API_URL, del, patchFormData, post, put } from ".";
+import { API_URL, del, patch, patchFormData, post, put } from ".";
 import { Cancha, Disponibilidad } from "@/models";
 import {
   useApiQuery,
@@ -86,6 +86,23 @@ export function useModificarCancha(
         `${API_URL}/establecimientos/${cancha.idEstablecimiento}/canchas/${cancha.id}`,
         cancha
       ).then((cancha) => modificarImagen(cancha, imagen)),
+  });
+}
+
+export function useHabilitarCancha(
+  options?: UseApiMutationOptions<
+    { habilitada: boolean; idEst: number; idCancha: number },
+    Cancha
+  >
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (cancha) => ["canchas", cancha.id],
+    mutationFn: ({ habilitada, idEst, idCancha }) =>
+      patch<Cancha>(
+        `${API_URL}/establecimientos/${idEst}/canchas/${idCancha}/habilitada`,
+        { habilitada }
+      ),
   });
 }
 
