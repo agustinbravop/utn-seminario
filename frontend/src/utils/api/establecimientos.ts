@@ -6,6 +6,7 @@ import {
   UseApiQueryOptions,
   useApiMutation,
 } from "@/hooks";
+import queryString from "query-string";
 
 export type CrearEstablecimiento = Omit<Establecimiento, "id" | "urlImagen">;
 
@@ -53,12 +54,12 @@ export function useBuscarEstablecimientos(
 ) {
   return useApiQuery(
     ["establecimientos", "search", queryParams],
-    `${API_URL}/establecimientos/ests/search?` +
-      new URLSearchParams(queryParams).toString(),
-    {
-      ...options,
-      initialData: [],
-    }
+    new URL(
+      `${API_URL}/establecimientos/ests/search?${queryString.stringify(
+        queryParams
+      )}`
+    ),
+    { ...options, initialData: [] }
   );
 }
 
