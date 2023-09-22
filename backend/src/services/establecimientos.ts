@@ -7,6 +7,7 @@ import {
 } from "../utils/apierrors.js";
 import { subirImagen } from "../utils/imagenes.js";
 import { AdministradorService } from "./administrador.js";
+import { CanchaService } from "./canchas.js";
 
 export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
@@ -15,6 +16,7 @@ export interface EstablecimientoService {
   getByID(idEst: number): Promise<Establecimiento>;
   getConsulta(consulta: Busqueda): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
+  habilitar(idEst: number, habilitado: boolean): Promise<Establecimiento>;
   modificarImagen(
     idEst: number,
     imagen?: Express.Multer.File
@@ -34,13 +36,16 @@ type Busqueda = {
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
   private adminService: AdministradorService;
+  private canchaService: CanchaService;
 
   constructor(
     repository: EstablecimientoRepository,
-    adminService: AdministradorService
+    adminService: AdministradorService,
+    canchaService: CanchaService
   ) {
     this.repo = repository;
     this.adminService = adminService;
+    this.canchaService = canchaService;
   }
 
   async getAll(): Promise<Establecimiento[]> {
@@ -104,6 +109,25 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
 
   async eliminar(idEst: number) {
     return await this.repo.eliminar(idEst);
+  }
+
+  /** Si se deshabilita un establecimiento, se deshabilitan todas sus canchas. */
+  async habilitar(idEst: number, habilitado: boolean) {
+    const est = await this.repo.getByID(idEst);
+    if (habilitado === est.habilitado) {
+      return est;
+    }
+
+    if (!habilitado) {
+      const canchas = await this.canchaService.getByEstablecimientoID(idEst);
+      Promise.all(
+        canchas.map((c) =>
+          this.canchaService.modificar({ ...c, habilitada: false })
+        )
+      );
+    }
+
+    return await this.repo.modificar({ ...est, habilitado });
   }
 
   async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {

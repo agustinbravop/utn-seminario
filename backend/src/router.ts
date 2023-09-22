@@ -65,7 +65,11 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const canchaHandler = new CanchaHandler(canchaService);
 
   const estRepo = new PrismaEstablecimientoRepository(prismaClient);
-  const estService = new EstablecimientoServiceImpl(estRepo, adminService);
+  const estService = new EstablecimientoServiceImpl(
+    estRepo,
+    adminService,
+    canchaService
+  );
   const estHandler = new EstablecimientoHandler(estService);
 
   const resRepo = new PrismaReservaRepository(prismaClient);
