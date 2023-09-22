@@ -106,10 +106,6 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     return await this.repo.eliminar(idEst);
   }
 
-  async getEstablecimientoAll(): Promise<Establecimiento[]> {
-    return await this.repo.getEstablecimientoAll();
-  }
-
   async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {
     console.log(consulta);
 
