@@ -175,6 +175,7 @@ export default function RegisterPage() {
           <SelectControl
             placeholder="Seleccionar disciplina "
             name="disciplina"
+            label="Disciplina"
           >
             {DISCIPLINAS.map((disciplina, i) => (
               <option key={i} value={disciplina}>

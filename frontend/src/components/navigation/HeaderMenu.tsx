@@ -73,7 +73,7 @@ function AdminNav({
         >
           {usuario}
         </MenuButton>
-        <MenuList as="nav">
+        <MenuList>
           <Link to={`/admin/${admin.id}/perfil`}>
             <MenuItem>
               <InfoIcon mr="20px" /> Mi perfil
@@ -114,7 +114,7 @@ function JugadorNav({
         >
           {usuario}
         </MenuButton>
-        <MenuList as="nav">
+        <MenuList>
           <Link to={`/jugador/${jugador.id}/reservas`}>
             <MenuItem>
               <CalendarIcon mr="20px" /> Mis reservas
@@ -146,20 +146,25 @@ function UnregisteredNav() {
         <MenuButton as={Button}>
           <HamburgerIcon fontSize="1.5em" />
         </MenuButton>
-        <MenuList as="nav">
+        <MenuList>
           <Link to="/suscripciones">
-            <MenuItem> <StarIcon mr="20px" /> Suscripciones</MenuItem>
+            <MenuItem>
+              <StarIcon mr="20px" />
+              Suscripciones
+            </MenuItem>
           </Link>
           <Link to="/login">
-            <MenuItem> <Icon as={AiOutlineUser} mr="20px" /> Iniciar Sesión</MenuItem>
+            <MenuItem>
+              <Icon as={AiOutlineUser} mr="20px" /> Iniciar Sesión
+            </MenuItem>
           </Link>
         </MenuList>
       </Menu>
     ),
     sm: (
-      <HStack as="nav">
+      <HStack>
         <Link to="/suscripciones">
-          <Button variant="ghost" size="sm" >
+          <Button variant="ghost" size="sm">
             Suscripciones
           </Button>
         </Link>

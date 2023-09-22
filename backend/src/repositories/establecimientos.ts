@@ -9,7 +9,9 @@ export interface EstablecimientoRepository {
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   getEstablecimientoAll(): Promise<Establecimiento[]>;
   getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
-  getEstablecimientoDisciplina(disciplina: string): Promise<Establecimiento[]>;
+  getEstablecimientosByDisciplina(
+    disciplina: string
+  ): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
@@ -31,7 +33,7 @@ export class PrismaEstablecimientoRepository
       const allEstab = await this.prisma.establecimiento.findMany({
         include: this.include,
       });
-      return allEstab.map((e) => toModel(e));
+      return allEstab.map((e) => toEst(e));
     } catch (e) {
       console.error(e);
       throw new InternalServerError("No se pudo obtener los establecimientos");
@@ -72,7 +74,7 @@ export class PrismaEstablecimientoRepository
         },
         include: this.include,
       });
-      return toModel(dbEst);
+      return toEst(dbEst);
     } catch (e) {
       throw new InternalServerError("No se pudo crear el establecimiento");
     }
@@ -92,13 +94,11 @@ export class PrismaEstablecimientoRepository
   async getByAdminID(idAdmin: number) {
     try {
       const estsDB = await this.prisma.establecimiento.findMany({
-        where: {
-          AND: [{ idAdministrador: idAdmin }, { eliminado: false }],
-        },
+        where: { AND: [{ idAdministrador: idAdmin }, { eliminado: false }] },
         include: this.include,
       });
 
-      return estsDB.map((estDB) => toModel(estDB));
+      return estsDB.map((estDB) => toEst(estDB));
     } catch (e) {
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
@@ -113,7 +113,7 @@ export class PrismaEstablecimientoRepository
         include: this.include,
       });
 
-      return estsDB.map((estDB) => toModel(estDB));
+      return estsDB.map((estDB) => toEst(estDB));
     } catch {
       throw new InternalServerError("No se pudo obtener los establecimientos");
     }
@@ -173,13 +173,11 @@ export class PrismaEstablecimientoRepository
   }
 
   //Busca los establecimientos por disciplina
-  async getEstablecimientoDisciplina(
+  async getEstablecimientosByDisciplina(
     disciplina: string
   ): Promise<Establecimiento[]> {
-    const disDB = await this.prisma.disponibilidad.findMany({
-      where: {
-        idDisciplina: disciplina,
-      },
+    const dispDB = await this.prisma.disponibilidad.findMany({
+      where: { idDisciplina: disciplina },
       include: {
         cancha: {
           include: {
@@ -193,11 +191,7 @@ export class PrismaEstablecimientoRepository
       },
     });
 
-    const arreglo = new Array();
-    disDB.map((dis) => {
-      arreglo.push(dis.cancha.establecimiento);
-    });
-    return arreglo;
+    return dispDB.map((d) => toEst(d.cancha.establecimiento));
   }
 
   //Busca los establecimientos por nombre
@@ -210,7 +204,7 @@ export class PrismaEstablecimientoRepository
       include: this.include,
     });
 
-    return estDB.map((est) => toModel(est));
+    return estDB.map((est) => toEst(est));
   }
 
   async getEstabsByFiltro(params: Busqueda): Promise<Establecimiento[]> {
@@ -263,7 +257,7 @@ export class PrismaEstablecimientoRepository
       },
     });
 
-    return estsDB.map((ests) => toModel(ests));
+    return estsDB.map((ests) => toEst(ests));
   }
 
   //REVISAR
@@ -312,7 +306,7 @@ export class PrismaEstablecimientoRepository
       include: this.include,
     });
 
-    return estabs.map((ests) => toModel(ests));
+    return estabs.map((ests) => toEst(ests));
   }
 
   async verifEstabSinReserva(idEst: number): Promise<boolean> {
@@ -342,7 +336,7 @@ type establecimientoDB = establecimiento & {
   localidad: localidad;
 };
 
-function toModel(est: establecimientoDB): Establecimiento {
+function toEst(est: establecimientoDB): Establecimiento {
   return {
     ...est,
     localidad: est.localidad.nombre,
@@ -359,7 +353,7 @@ async function awaitQuery(
     const estDB = await promise;
 
     if (estDB) {
-      return toModel(estDB);
+      return toEst(estDB);
     }
   } catch (e) {
     throw new InternalServerError(errorMsg);

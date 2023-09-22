@@ -13,7 +13,11 @@ import {
 import * as Yup from "yup";
 import { useModificarJugador } from "@/utils/api/auth";
 import { FormProvider, useWatch } from "react-hook-form";
-import { InputControl, ConfirmSubmitButton, SelectControl } from "@/components/forms";
+import {
+  InputControl,
+  ConfirmSubmitButton,
+  SelectControl,
+} from "@/components/forms";
 import { useNavigate } from "react-router";
 import { useCurrentJugador, useYupForm } from "@/hooks";
 import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
@@ -31,14 +35,11 @@ const validationSchema = Yup.object({
   usuario: Yup.string().required("Debe ingresar un nombre de usuario"),
 });
 
-
 export default function JugadorEditarPerfilPage() {
   const toast = useToast();
   const navigate = useNavigate();
 
   const { jugador } = useCurrentJugador();
-
-
   const { data: provincias } = useProvincias();
 
   const methods = useYupForm({ validationSchema, resetValues: jugador });
@@ -63,8 +64,8 @@ export default function JugadorEditarPerfilPage() {
   const provincia = useWatch({ name: "provincia", control: methods.control });
   const { data: localidades } = useLocalidadesByProvincia(provincia);
   useEffect(() => {
-    methods.resetField("localidad");
-  }, [provincia, methods]);
+    methods.resetField("localidad", { defaultValue: jugador.localidad });
+  }, [provincia, methods, jugador]);
 
   return (
     <Card m="auto" maxWidth="400px" height="70%" mt="5%">
@@ -116,7 +117,7 @@ export default function JugadorEditarPerfilPage() {
             </Box>
             <Box>
               <Heading size="xs">Localidad</Heading>
-            <SelectControl
+              <SelectControl
                 name="localidad"
                 placeholder="Localidad"
                 isRequired
@@ -133,7 +134,7 @@ export default function JugadorEditarPerfilPage() {
             </Box>
             <Box>
               <Heading size="xs">Disciplina</Heading>
-            <SelectControl
+              <SelectControl
                 name="disciplina"
                 placeholder="Disciplina"
                 isRequired
