@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   CanchaHandler,
   crearCanchaSchema,
+  habilitarCanchaSchema,
   modificarCanchaSchema,
 } from "../handlers/canchas.js";
 import multer from "multer";
@@ -45,6 +46,13 @@ export function canchasRouter(
     estHandler.validateAdminOwnsEstablecimiento(),
     upload.single("imagen"),
     handler.patchImagenCancha()
+  );
+  router.patch(
+    "/:idEst/canchas/:idCancha/habilitada",
+    authMiddle.isAdmin(),
+    estHandler.validateAdminOwnsEstablecimiento(),
+    validateBody(habilitarCanchaSchema),
+    handler.patchHabilitarCancha()
   );
   router.delete(
     "/:idEst/canchas/:idCancha",

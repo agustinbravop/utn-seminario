@@ -24,6 +24,10 @@ export const modificarCanchaSchema = canchaSchema
     disponibilidades: z.array(disponibilidadSchema.partial({ id: true })),
   });
 
+export const habilitarCanchaSchema = z.object({
+  habilitada: z.boolean(),
+});
+
 export class CanchaHandler {
   private service: CanchaService;
 
@@ -77,6 +81,16 @@ export class CanchaHandler {
         imagen
       );
       res.status(200).json(canchaActualizada);
+    };
+  }
+
+  patchHabilitarCancha(): RequestHandler {
+    return async (req, res) => {
+      const idCancha = Number(req.params["idCancha"]);
+      const { habilitada } = res.locals.body;
+
+      const cancha = await this.service.habilitar(idCancha, habilitada);
+      res.status(200).json(cancha);
     };
   }
 

@@ -1,4 +1,4 @@
-import { API_URL, del, patchFormData, put, post } from ".";
+import { API_URL, del, patchFormData, put, post, patch } from ".";
 import { Busqueda, Establecimiento } from "@/models";
 import {
   useApiQuery,
@@ -101,6 +101,23 @@ export function useModificarEstablecimiento(
     mutationFn: ({ imagen, ...est }) =>
       put<Establecimiento>(`${API_URL}/establecimientos/${est.id}`, est).then(
         (est) => modificarImagen(est, imagen)
+      ),
+  });
+}
+
+export function useHabilitarEstablecimiento(
+  options?: UseApiMutationOptions<
+    { habilitado: boolean; idEst: number },
+    Establecimiento
+  >
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (est) => ["establecimientos", est.id],
+    mutationFn: ({ habilitado, idEst }) =>
+      patch<Establecimiento>(
+        `${API_URL}/establecimientos/${idEst}/habilitado`,
+        { habilitado }
       ),
   });
 }

@@ -20,7 +20,7 @@ import { EstablecimientoServiceImpl } from "./services/establecimientos.js";
 import { establecimientosRouter } from "./routers/establecimientos.js";
 import { canchasRouter } from "./routers/canchas.js";
 import { PrismaCanchaRepository } from "./repositories/canchas.js";
-import { CanchaServiceimpl } from "./services/canchas.js";
+import { CanchaServiceImpl } from "./services/canchas.js";
 import { CanchaHandler } from "./handlers/canchas.js";
 import morgan from "morgan";
 import { handleApiErrors } from "./middlewares/errors.js";
@@ -61,11 +61,15 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const dispHandler = new DisponibilidadHandler(dispService);
 
   const canchaRepo = new PrismaCanchaRepository(prismaClient, dispRepo);
-  const canchaService = new CanchaServiceimpl(canchaRepo);
+  const canchaService = new CanchaServiceImpl(canchaRepo);
   const canchaHandler = new CanchaHandler(canchaService);
 
   const estRepo = new PrismaEstablecimientoRepository(prismaClient);
-  const estService = new EstablecimientoServiceImpl(estRepo, adminService);
+  const estService = new EstablecimientoServiceImpl(
+    estRepo,
+    adminService,
+    canchaService
+  );
   const estHandler = new EstablecimientoHandler(estService);
 
   const resRepo = new PrismaReservaRepository(prismaClient);

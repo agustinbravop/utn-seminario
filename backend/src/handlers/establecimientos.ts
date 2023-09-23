@@ -5,6 +5,7 @@ import {
   establecimientoSchema,
 } from "../models/establecimiento.js";
 import { ForbiddenError } from "../utils/apierrors.js";
+import { z } from "zod";
 
 export const crearEstablecimientoSchema = establecimientoSchema.omit({
   id: true,
@@ -15,6 +16,10 @@ export const crearEstablecimientoSchema = establecimientoSchema.omit({
 export const modificarEstablecimientoSchema = establecimientoSchema.omit({
   urlImagen: true,
   id: true,
+});
+
+export const habilitarEstablecimientoSchema = z.object({
+  habilitado: z.boolean(),
 });
 
 export class EstablecimientoHandler {
@@ -89,6 +94,16 @@ export class EstablecimientoHandler {
       const imagen = req.file;
 
       const estActualizado = await this.service.modificarImagen(idEst, imagen);
+      res.status(200).json(estActualizado);
+    };
+  }
+
+  patchHabilitarEstablecimiento(): RequestHandler {
+    return async (req, res) => {
+      const idEst = Number(req.params["idEst"]);
+      const { habilitado } = res.locals.body;
+
+      const estActualizado = await this.service.habilitar(idEst, habilitado);
       res.status(200).json(estActualizado);
     };
   }
