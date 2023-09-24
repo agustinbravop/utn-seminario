@@ -5,12 +5,7 @@ export default function EstablecimientoReservasPage() {
   return (
     <>
       <EstablecimientoMenu />
-      <HStack
-        marginRight="16%"
-        marginLeft="16%"
-        marginBottom="30px"
-        marginTop="0px"
-      >
+      <HStack mr="16%" ml="16%" mb="30px" mt="0px">
         <Text>
           Estas son las reservas actuales de para este establecimiento.
         </Text>

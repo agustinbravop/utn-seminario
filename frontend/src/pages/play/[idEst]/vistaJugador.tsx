@@ -18,7 +18,7 @@ export default function VistaJugador() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="12" mt="40px">
+      <Heading textAlign="center" pb="12" mt="40px">
         Establecimiento {data?.nombre}
       </Heading>
 

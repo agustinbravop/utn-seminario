@@ -81,7 +81,7 @@ export default function VistaJugadorCancha() {
               />
             </Box>
           </CardHeader>
-          <CardBody marginTop="0px" flex="1">
+          <CardBody mt="0px" flex="1">
             <Stack divider={<StackDivider />} spacing="1">
               <Box>
                 <Heading size="xs" margin="0">
@@ -119,7 +119,7 @@ export default function VistaJugadorCancha() {
                     </option>
                   ))}
                 </Select>
-                <TableContainer paddingTop="15px" paddingBottom="20px">
+                <TableContainer paddingTop="15px" pb="20px">
                   <Table variant="simple" size="sm">
                     <Thead>
                       <Tr>

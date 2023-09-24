@@ -84,17 +84,17 @@ export default function DeletedEstablecimiento({
       </Box>
       <CardBody height="300px">
         <VStack spacing="0">
-          <Heading size="md" marginBottom="10px">
+          <Heading size="md" mb="10px">
             {establecimiento.nombre}
           </Heading>
-          <Text marginBottom="0">
+          <Text mb="0">
             <Icon as={MdPlace} boxSize={4} mr="2" /> {establecimiento.direccion}
           </Text>
           <Text>
             <PhoneIcon boxSize={4} mr="2" /> {establecimiento.telefono}
           </Text>
           <Text>{establecimiento.horariosDeAtencion}</Text>
-          <Button onClick={() => handleRecuperar()} marginTop="2">
+          <Button onClick={() => handleRecuperar()} mt="2">
             Recuperar
           </Button>
         </VStack>

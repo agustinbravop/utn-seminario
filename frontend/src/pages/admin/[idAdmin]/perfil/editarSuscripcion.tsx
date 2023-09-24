@@ -77,7 +77,7 @@ export default function SuscripcionesPage() {
         <CardHeader margin="auto">{s.icono}</CardHeader>
         <CardBody textAlign="center">
           <Heading size="md">{s.nombre}</Heading>
-          <Text fontSize="30px" marginBottom="0px">
+          <Text fontSize="30px" mb="0px">
             ${s.costoMensual}
           </Text>
           <Text>por mes</Text>

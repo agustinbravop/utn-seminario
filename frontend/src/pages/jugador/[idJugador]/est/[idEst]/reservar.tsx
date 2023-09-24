@@ -78,7 +78,7 @@ export default function ReservarEstablecimiento() {
       </Select>
       <Heading size="md">Horarios disponibles</Heading>
       <Text>Seleccione un horario a reservar.</Text>
-      <TableContainer paddingTop="15px" paddingBottom="20px">
+      <TableContainer paddingTop="15px" pb="20px">
         <Table variant="striped" size="sm">
           <Thead>
             <Tr>

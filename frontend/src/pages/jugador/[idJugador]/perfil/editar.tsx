@@ -74,14 +74,9 @@ export default function JugadorEditarPerfilPage() {
           Editar Perfil
         </Heading>
       </CardHeader>
-      <CardBody marginTop="28px">
+      <CardBody mt="28px">
         <FormProvider {...methods}>
-          <Stack
-            divider={<StackDivider />}
-            spacing="2.5"
-            marginTop="-2rem"
-            as="form"
-          >
+          <Stack divider={<StackDivider />} spacing="2.5" mt="-2rem" as="form">
             <Box>
               <Heading size="xs">Nombre</Heading>
               <InputControl isRequired name="nombre" />
