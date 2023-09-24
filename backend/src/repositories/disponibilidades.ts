@@ -3,11 +3,11 @@ import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, dia, disciplina, disponibilidad } from "@prisma/client";
 
 export interface DisponibilidadRepository {
-  getDisponibilidadesByCanchaID(idEst: number): Promise<Disponibilidad[]>;
-  getDisponibilidadByID(idDisp: number): Promise<Disponibilidad>;
-  crearDisponibilidad(disp: Disponibilidad): Promise<Disponibilidad>;
-  modificarDisponibilidad(dispUpdate: Disponibilidad): Promise<Disponibilidad>;
-  eliminarDisponibilidad(idDisp: number): Promise<Disponibilidad>;
+  getByCanchaID(idDisp: number): Promise<Disponibilidad[]>;
+  getByID(idDisp: number): Promise<Disponibilidad>;
+  crear(disp: Disponibilidad): Promise<Disponibilidad>;
+  modificar(dispUpdate: Disponibilidad): Promise<Disponibilidad>;
+  eliminar(idDisp: number): Promise<Disponibilidad>;
 }
 
 export class PrismaDisponibilidadRepository
@@ -23,7 +23,7 @@ export class PrismaDisponibilidadRepository
     this.prisma = prismaClient;
   }
 
-  async getDisponibilidadesByCanchaID(idCancha: number) {
+  async getByCanchaID(idCancha: number) {
     try {
       const canchas = await this.prisma.disponibilidad.findMany({
         where: { idCancha: idCancha },
@@ -36,7 +36,7 @@ export class PrismaDisponibilidadRepository
     }
   }
 
-  async getDisponibilidadByID(idDisp: number) {
+  async getByID(idDisp: number) {
     return awaitQuery(
       this.prisma.disponibilidad.findUnique({
         where: { id: idDisp },
@@ -47,7 +47,7 @@ export class PrismaDisponibilidadRepository
     );
   }
 
-  async crearDisponibilidad(disp: Disponibilidad) {
+  async crear(disp: Disponibilidad) {
     try {
       const dbDisp = await this.prisma.disponibilidad.create({
         data: {
@@ -73,7 +73,7 @@ export class PrismaDisponibilidadRepository
     }
   }
 
-  async modificarDisponibilidad(disp: Disponibilidad) {
+  async modificar(disp: Disponibilidad) {
     return awaitQuery(
       this.prisma.disponibilidad.update({
         where: { id: disp.id },
@@ -103,7 +103,7 @@ export class PrismaDisponibilidadRepository
     );
   }
 
-  async eliminarDisponibilidad(idDisp: number) {
+  async eliminar(idDisp: number) {
     return awaitQuery(
       this.prisma.disponibilidad.delete({
         where: { id: idDisp },
