@@ -15,7 +15,7 @@ function CarouselButton(props: ButtonProps) {
       fontWeight="600"
       cursor="pointer"
       color="rgb(253, 253, 253)"
-      transform="translate(0, -50%)"      
+      transform="translate(0, -50%)"
       {...props}
     />
   );
