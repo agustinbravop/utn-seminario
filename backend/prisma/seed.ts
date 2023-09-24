@@ -29,9 +29,9 @@ async function upsertDia(dia: string) {
 
 async function upsertDisciplina(disciplina: string) {
   return await prisma.disciplina.upsert({
-    where: {disciplina},
-    update: {disciplina},
-    create: {disciplina},
+    where: { disciplina },
+    update: { disciplina },
+    create: { disciplina },
   });
 }
 

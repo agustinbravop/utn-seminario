@@ -65,7 +65,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   }
 
   async crear(est: Establecimiento) {
-    await this.validarLimiteEstablecimientos(est.idAdministrador);
+    await this.validarLimiteSuscripcion(est.idAdministrador);
 
     return await this.repo.crear(est);
   }
@@ -97,7 +97,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     return await this.modificar(est);
   }
 
-  private async validarLimiteEstablecimientos(idAdmin: number): Promise<void> {
+  private async validarLimiteSuscripcion(idAdmin: number): Promise<void> {
     const admin = await this.adminService.getByID(idAdmin);
 
     const ests = await this.repo.getByAdminID(admin.id);
@@ -136,7 +136,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     let estabFilter = await this.repo.getEstabsByFiltro(consulta);
 
     if (consulta.disciplina) {
-      const estabDisciplina = await this.repo.getEstablecimientoDisciplina(
+      const estabDisciplina = await this.repo.getEstablecimientosByDisciplina(
         consulta.disciplina
       );
       estabFilter = estabFilter.filter((e) =>

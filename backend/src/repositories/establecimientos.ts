@@ -8,7 +8,9 @@ export interface EstablecimientoRepository {
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
   getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
-  getEstablecimientoDisciplina(disciplina: string): Promise<Establecimiento[]>;
+  getEstablecimientosByDisciplina(
+    disciplina: string
+  ): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
@@ -91,9 +93,7 @@ export class PrismaEstablecimientoRepository
   async getByAdminID(idAdmin: number) {
     try {
       const estsDB = await this.prisma.establecimiento.findMany({
-        where: {
-          AND: [{ idAdministrador: idAdmin }, { eliminado: false }],
-        },
+        where: { AND: [{ idAdministrador: idAdmin }, { eliminado: false }] },
         include: this.include,
       });
 
@@ -172,13 +172,11 @@ export class PrismaEstablecimientoRepository
   }
 
   //Busca los establecimientos por disciplina
-  async getEstablecimientoDisciplina(
+  async getEstablecimientosByDisciplina(
     disciplina: string
   ): Promise<Establecimiento[]> {
-    const disDB = await this.prisma.disponibilidad.findMany({
-      where: {
-        idDisciplina: disciplina,
-      },
+    const dispDB = await this.prisma.disponibilidad.findMany({
+      where: { idDisciplina: disciplina },
       include: {
         cancha: {
           include: {
@@ -192,11 +190,7 @@ export class PrismaEstablecimientoRepository
       },
     });
 
-    const arreglo = new Array();
-    disDB.map((dis) => {
-      arreglo.push(dis.cancha.establecimiento);
-    });
-    return arreglo;
+    return dispDB.map((d) => toEst(d.cancha.establecimiento));
   }
 
   async getEstabsByFiltro(params: Busqueda): Promise<Establecimiento[]> {

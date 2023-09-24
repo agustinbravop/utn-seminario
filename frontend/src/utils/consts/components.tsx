@@ -1,6 +1,7 @@
 import { Icon, Image, ImageProps } from "@chakra-ui/react";
 import { BsBuildings, BsRocket, BsShop } from "react-icons/bs";
 import { FALLBACK_IMAGE_SRC, LOGO_IMAGE_SRC } from ".";
+import QuestionIllustrationSvg from "@/assets/question_illustration.svg";
 
 /** Los iconos SVG de las suscripciones. */
 export const ICONOS_SUSCRIPCIONES = [
@@ -22,6 +23,21 @@ export function LogoImage(props: ImageProps) {
       alt="Play Finder"
       title="Play Finder"
       width={177}
+      {...props}
+    />
+  );
+}
+
+/** Imagen ilustrativa para indicar resultados no encontrados o falta información. */
+export function QuestionImage(props: ImageProps) {
+  return (
+    <Image
+      src={QuestionIllustrationSvg}
+      objectFit="cover"
+      objectPosition="50% 50%"
+      boxSize="40vh"
+      alt="Hombre cuestionándose con un signo de pregunta"
+      margin="auto"
       {...props}
     />
   );
