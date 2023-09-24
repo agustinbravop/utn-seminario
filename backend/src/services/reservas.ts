@@ -68,7 +68,7 @@ export class ReservaServiceImpl implements ReservaService {
 
   /** Lanza error al intentar reservar una cancha deshabilitada o eliminada. */
   private async validarCanchaHabilitada(res: CrearReserva) {
-    const cancha = await this.canchaRepository.getCanchaByDisponibilidadID(
+    const cancha = await this.canchaRepository.getByDisponibilidadID(
       res.idDisponibilidad
     );
     if (!cancha.habilitada || cancha.eliminada) {

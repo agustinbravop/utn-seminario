@@ -7,7 +7,6 @@ export interface EstablecimientoRepository {
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
-  getEstablecimientoAll(): Promise<Establecimiento[]>;
   getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
   getEstablecimientosByDisciplina(
     disciplina: string
@@ -194,19 +193,6 @@ export class PrismaEstablecimientoRepository
     return dispDB.map((d) => toEst(d.cancha.establecimiento));
   }
 
-  //Busca los establecimientos por nombre
-
-  //Lista todos los establecimientos, esto sirve para aplicar alguna logica de negocio capaz,
-  //REVISAR
-
-  async getEstablecimientoAll(): Promise<Establecimiento[]> {
-    const estDB = await this.prisma.establecimiento.findMany({
-      include: this.include,
-    });
-
-    return estDB.map((est) => toEst(est));
-  }
-
   async getEstabsByFiltro(params: Busqueda): Promise<Establecimiento[]> {
     const estsDB = await this.prisma.establecimiento.findMany({
       where: {
@@ -336,7 +322,7 @@ type establecimientoDB = establecimiento & {
   localidad: localidad;
 };
 
-function toEst(est: establecimientoDB): Establecimiento {
+export function toEst(est: establecimientoDB): Establecimiento {
   return {
     ...est,
     localidad: est.localidad.nombre,
