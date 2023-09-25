@@ -1,6 +1,6 @@
 import { Disponibilidad } from "../models/disponibilidad.js";
 import { DisponibilidadRepository } from "../repositories/disponibilidades";
-import { ConflictError } from "../utils/apierrors.js";
+import { BadRequestError, ConflictError } from "../utils/apierrors.js";
 import { horaADecimal } from "../utils/dates.js";
 
 export interface DisponibilidadService {
@@ -45,16 +45,24 @@ export class DisponibilidadServiceimpl implements DisponibilidadService {
   /**
    * Valida que dos disponibilidades no se solapen en una disciplina, día y horario. */
   async validar(disp: Disponibilidad) {
+    if (horaADecimal(disp.horaInicio) > horaADecimal(disp.horaFin)) {
+      throw new BadRequestError(
+        "La disponibilidad debe tener un horario de inicio previo al de fin"
+      );
+    }
+
     let disponibilidades = await this.repo.getByCanchaID(disp.idCancha);
     disponibilidades = disponibilidades
       // Dos disponibilidades se solapan si tienen la misma disciplina,
       .filter((d) => d.disciplina === disp.disciplina)
       // En el mismo día de la semana,
       .filter((d) => d.dias.some((dia) => disp.dias.includes(dia)))
-      // Y una comienza antes que la otra termine,
-      .filter((d) => horaADecimal(d.horaInicio) < horaADecimal(disp.horaFin))
-      // Pero también termina una vez comenzada la otra
-      .filter((d) => horaADecimal(d.horaFin) > horaADecimal(disp.horaInicio));
+      // Y una comienza antes que la otra termine pero también termina una vez comenzada la otra.
+      .filter(
+        (d) =>
+          horaADecimal(d.horaInicio) < horaADecimal(disp.horaFin) &&
+          horaADecimal(d.horaFin) > horaADecimal(disp.horaInicio)
+      );
 
     if (disponibilidades.length !== 0) {
       throw new ConflictError(
