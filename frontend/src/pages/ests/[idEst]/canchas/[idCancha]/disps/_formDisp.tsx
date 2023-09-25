@@ -22,11 +22,16 @@ import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
 import { DIAS, DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
 import { EditIcon } from "@chakra-ui/icons";
+import HorarioControl from "@/components/forms/HorarioControl";
 
 const validationSchema = Yup.object({
   id: Yup.number().integer().positive().optional(),
-  horaInicio: Yup.string().oneOf(HORAS).required("Obligatorio"),
-  horaFin: Yup.string().oneOf(HORAS).required("Obligatorio"),
+  horaInicio: Yup.string()
+    .matches(/\d?\d:\d\d/, "Obligatorio")
+    .required("Obligatorio"),
+  horaFin: Yup.string()
+    .matches(/\d?\d:\d\d/, "Obligatorio")
+    .required("Obligatorio"),
   minutosReserva: Yup.number().positive().integer().required("Obligatorio"),
   disciplina: Yup.string().required("Obligatorio"),
   dias: Yup.array(Yup.string().oneOf(DIAS)).min(1, "Elija al menos un día"),
@@ -40,7 +45,7 @@ interface FormDisponibilidadProps {
   variant: "crear" | "modificar";
 }
 
-export default function FormDisponibilidad({
+export default function FormDisp({
   onSubmit,
   resetValues,
   variant,
@@ -51,6 +56,7 @@ export default function FormDisponibilidad({
     validationSchema,
     resetValues,
   });
+  const horaInicio = methods.watch("horaInicio");
 
   const button =
     variant === "crear" ? (
@@ -81,30 +87,22 @@ export default function FormDisponibilidad({
           </ModalHeader>
           <ModalBody>
             <HStack width="600px" py="10px">
-              <SelectControl
+              <HorarioControl
                 placeholder="Elegir horario"
                 label="Horario de Inicio"
                 name="horaInicio"
                 isRequired
-              >
-                {HORAS.map((hora, i) => (
-                  <option key={i} value={hora}>
-                    {hora}
-                  </option>
-                ))}
-              </SelectControl>
-              <SelectControl
+              />
+              <HorarioControl
                 placeholder="Elegir horario"
                 label="Horario de Fin"
                 name="horaFin"
                 isRequired
-              >
-                {HORAS.map((hora, i) => (
-                  <option key={i} value={hora}>
-                    {hora}
-                  </option>
-                ))}
-              </SelectControl>
+                horas={HORAS.filter(
+                  (h) =>
+                    horaInicio && Number(horaInicio.split(":")[0]) <= Number(h)
+                )}
+              />
             </HStack>
             <HStack width="600px" py="10px">
               <SelectControl
