@@ -42,8 +42,8 @@ export default function LoginPage() {
         textAlign="center"
         size="2xl"
         fontSize="40px"
-        marginTop="100px"
-        marginBottom="60px"
+        mt="60px"
+        mb="60px"
       >
         ¡Bienvenido a Play Finder!
       </Heading>

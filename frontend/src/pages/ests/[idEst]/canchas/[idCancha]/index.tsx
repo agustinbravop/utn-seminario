@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   useCanchaByID,
   useEliminarCancha,
-  useModificarCancha,
+  useHabilitarCancha,
 } from "@/utils/api/canchas";
 import { useParams } from "@/router";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
@@ -29,7 +29,7 @@ import { CanchaMenu } from "@/components/navigation";
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
-  const { data } = useCanchaByID(Number(idEst), Number(idCancha));
+  const { data: cancha } = useCanchaByID(Number(idEst), Number(idCancha));
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -51,17 +51,19 @@ export default function CanchaInfoPage() {
     },
   });
 
-  const { mutate } = useModificarCancha({
+  const { mutate } = useHabilitarCancha({
     onSuccess: () => {
       toast({
-        title: `Cancha ${!data?.habilitada ? "habilitada" : "deshabilitada"}.`,
-        status: `${!data?.habilitada ? "info" : "warning"}`,
+        title: `Cancha ${
+          !cancha?.habilitada ? "habilitada" : "deshabilitada"
+        }.`,
+        status: `${!cancha?.habilitada ? "info" : "warning"}`,
       });
     },
     onError: () => {
       toast({
         title: `Error al ${
-          !data?.habilitada ? "habilitar" : "deshabilitar"
+          !cancha?.habilitada ? "habilitar" : "deshabilitar"
         } la cancha`,
         description: `Intente de nuevo.`,
         status: "error",
@@ -69,109 +71,89 @@ export default function CanchaInfoPage() {
     },
   });
 
-  if (!data) {
+  if (!cancha) {
     return <LoadingSpinner />;
   }
 
   const handleSwitchChange = () => {
-    mutate({ ...data, habilitada: !data.habilitada });
+    mutate({
+      idCancha: cancha.id,
+      idEst: cancha.idEstablecimiento,
+      habilitada: !cancha.habilitada,
+    });
   };
 
   return (
     <>
       <CanchaMenu />
       <HStack mr="16%" ml="16%" mb="30px" mt="0px">
-        <Text>
-          Esta es la información que se muestra al usuario de su cancha.
-        </Text>
+        <Text>Esta es la información de su cancha.</Text>
       </HStack>
-      <Box display="flex" justifyContent="center">
-        <Card
-          boxSize="10rem"
-          justifyContent="center"
-          display="flex"
-          style={{ marginTop: "10px", marginBottom: "1rem" }}
-          height="75%"
-          width="76%"
-        >
-          <CardBody height="100%" marginTop="0px">
-            <Box
-              display="grid"
-              gridTemplateColumns="1fr 1fr"
-              height="100%"
-              width="100%"
-            >
-              <Image
-                src={data?.urlImagen}
-                fallbackSrc={FALLBACK_IMAGE_SRC}
-                maxWidth="20vw"
-                height="400px"
-                objectFit="cover"
-                borderRadius="10px"
-              />
+      <Card m="auto" height="75%" width="75%">
+        <CardBody display="grid" gridTemplateColumns="1fr 1fr">
+          <Image
+            src={cancha?.urlImagen}
+            fallbackSrc={FALLBACK_IMAGE_SRC}
+            height="100%"
+            objectFit="cover"
+            borderRadius="10px"
+          />
 
-              <Box marginTop="55px" marginLeft=" 50px" height="100%">
-                <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
-                  <Box>
-                    <HStack
-                      width="100%"
-                      display="flex"
-                      justifyContent="space-between"
-                    >
-                      <Heading size="xs">Habilitación</Heading>
-                      <Switch
-                        isChecked={data.habilitada}
-                        onChange={handleSwitchChange}
-                      />
-                    </HStack>
-                    <Text fontSize="sm">
-                      Esta cancha {data.habilitada ? "" : "no"} se encuentra
-                      habilitada
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Heading size="xs">Descripción</Heading>
-                    <Text fontSize="sm">{data.descripcion}</Text>
-                  </Box>
-                  <Box>
-                    <Heading size="xs">Disciplinas</Heading>
-                    <Text fontSize="sm">
-                      {[...new Set(data.disciplinas)].join(" - ")}
-                    </Text>
-                  </Box>
-
-                  <Box>
-                    <HStack justifyContent="center" mt="1em" spacing="1.5em">
-                      <Link to="disps">
-                        <Button leftIcon={<GrSchedules />}>
-                          Disponibilidades
-                        </Button>
-                      </Link>
-                      <Link to="editar">
-                        <Button leftIcon={<EditIcon />}>Editar</Button>
-                      </Link>
-                      <ConfirmSubmitButton
-                        colorScheme="red"
-                        onSubmit={() =>
-                          mutateDelete({
-                            idEst: data.idEstablecimiento,
-                            idCancha: data.id,
-                          })
-                        }
-                        header="Eliminar cancha"
-                        body="¿Está seguro de eliminar la cancha?"
-                        leftIcon={<DeleteIcon />}
-                      >
-                        Eliminar
-                      </ConfirmSubmitButton>
-                    </HStack>
-                  </Box>
-                </Stack>
-              </Box>
+          <Stack
+            divider={<StackDivider />}
+            spacing="1"
+            m="0.5rem 1.5rem"
+            h="100%"
+          >
+            <Box>
+              <HStack width="100%">
+                <Heading size="xs">Habilitación</Heading>
+                <Switch
+                  isChecked={cancha.habilitada}
+                  onChange={handleSwitchChange}
+                />
+              </HStack>
+              <Text fontSize="sm">
+                Esta cancha {cancha.habilitada ? "" : "no"} se encuentra
+                habilitada
+              </Text>
             </Box>
-          </CardBody>
-        </Card>
-      </Box>
+            <Box>
+              <Heading size="xs">Descripción</Heading>
+              <Text fontSize="sm">{cancha.descripcion}</Text>
+            </Box>
+            <Box>
+              <Heading size="xs">Disciplinas</Heading>
+              <Text fontSize="sm">
+                {[...new Set(cancha.disciplinas)].join(" - ")}
+              </Text>
+            </Box>
+
+            <HStack justifyContent="center" mt="1em" spacing="1.5em">
+              <Link to="disps">
+                <Button leftIcon={<GrSchedules />}>Disponibilidades</Button>
+              </Link>
+              <Link to="editar">
+                <Button leftIcon={<EditIcon />}>Editar</Button>
+              </Link>
+              <ConfirmSubmitButton
+                colorScheme="red"
+                onSubmit={() =>
+                  mutateDelete({
+                    idEst: cancha.idEstablecimiento,
+                    idCancha: cancha.id,
+                  })
+                }
+                header="Eliminar cancha"
+                body="¿Está seguro de eliminar la cancha?"
+                leftIcon={<DeleteIcon />}
+              >
+                Eliminar
+              </ConfirmSubmitButton>
+            </HStack>
+          </Stack>
+        </CardBody>
+      </Card>
     </>
   );
 }

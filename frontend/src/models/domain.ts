@@ -16,6 +16,9 @@ export type Jugador = {
   telefono: string;
   correo: string;
   usuario: string;
+  localidad?: string;
+  provincia?: string;
+  disciplina?: string;
 };
 
 export type Cancha = {

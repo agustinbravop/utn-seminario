@@ -30,7 +30,7 @@ export function useApiQuery<
   TQueryKey extends QueryKey = QueryKey,
 >(
   queryKey: TQueryKey,
-  endpoint?: string,
+  endpoint?: URL | RequestInfo,
   options?: Omit<
     UseApiQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
     "initialData"
@@ -44,7 +44,7 @@ export function useApiQuery<
   TQueryKey extends QueryKey = QueryKey,
 >(
   queryKey: TQueryKey,
-  endpoint?: string,
+  endpoint?: URL | RequestInfo,
   options?: UseApiQueryOptions<TQueryFnData, TError, TData, TQueryKey>
 ): UseQueryResult<TData, TError>;
 
@@ -63,7 +63,7 @@ export function useApiQuery<
   TQueryKey extends QueryKey = QueryKey,
 >(
   queryKey: TQueryKey,
-  endpoint?: string,
+  endpoint?: URL | RequestInfo,
   options: UseApiQueryOptions<TQueryFnData, TError, TData, TQueryKey> = {}
 ) {
   if (!options.queryFn && endpoint) {

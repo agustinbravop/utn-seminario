@@ -1,5 +1,9 @@
 import { Cancha } from "../models/cancha.js";
-import { BadRequestError, InternalServerError } from "../utils/apierrors.js";
+import {
+  BadRequestError,
+  ConflictError,
+  InternalServerError,
+} from "../utils/apierrors.js";
 import { CanchaRepository } from "../repositories/canchas.js";
 import { subirImagen } from "../utils/imagenes.js";
 
@@ -8,6 +12,7 @@ export interface CanchaService {
   getByID(idCancha: number): Promise<Cancha>;
   crear(cancha: Cancha): Promise<Cancha>;
   modificar(cancha: Cancha): Promise<Cancha>;
+  habilitar(idCancha: number, habilitada: boolean): Promise<Cancha>;
   modificarImagen(
     idCancha: number,
     imagen?: Express.Multer.File
@@ -15,7 +20,7 @@ export interface CanchaService {
   eliminar(idCancha: number): Promise<Cancha>;
 }
 
-export class CanchaServiceimpl implements CanchaService {
+export class CanchaServiceImpl implements CanchaService {
   private repo: CanchaRepository;
 
   constructor(repository: CanchaRepository) {
@@ -23,23 +28,23 @@ export class CanchaServiceimpl implements CanchaService {
   }
 
   async getByEstablecimientoID(idEst: number) {
-    return await this.repo.getCanchasByEstablecimientoID(idEst);
+    return await this.repo.getByEstablecimientoID(idEst);
   }
 
   async getByID(idCancha: number) {
-    return await this.repo.getCanchaByID(idCancha);
+    return await this.repo.getByID(idCancha);
   }
 
   async crear(cancha: Cancha) {
-    return await this.repo.crearCancha(cancha);
+    return await this.repo.crear(cancha);
   }
 
   async modificar(cancha: Cancha) {
-    return await this.repo.modificarCancha(cancha);
+    return await this.repo.modificar(cancha);
   }
 
   async modificarImagen(idCancha: number, imagen?: Express.Multer.File) {
-    const cancha = await this.repo.getCanchaByID(idCancha);
+    const cancha = await this.repo.getByID(idCancha);
 
     // Si no se envió una imagen, se considera que se desea eliminar la imagen existente.
     if (!imagen) {
@@ -61,7 +66,29 @@ export class CanchaServiceimpl implements CanchaService {
     return await this.modificar(cancha);
   }
 
+  async habilitar(idCancha: number, habilitada: boolean) {
+    const cancha = await this.repo.getByID(idCancha);
+    if (habilitada === cancha.habilitada) {
+      console.log("Coincidencia");
+
+      return cancha;
+    }
+
+    if (habilitada) {
+      const est = await this.repo.getEstablecimiento(cancha.id);
+      console.log(est);
+
+      if (!est.habilitado) {
+        throw new ConflictError(
+          "No se puede habilitar la cancha de un establecimiento deshabilitado"
+        );
+      }
+    }
+
+    return await this.repo.modificar({ ...cancha, habilitada });
+  }
+
   async eliminar(idCancha: number) {
-    return await this.repo.eliminarCancha(idCancha);
+    return await this.repo.eliminar(idCancha);
   }
 }

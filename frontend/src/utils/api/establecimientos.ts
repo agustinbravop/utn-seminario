@@ -1,4 +1,4 @@
-import { API_URL, del, patchFormData, put, post } from ".";
+import { API_URL, del, patchFormData, put, post, patch } from ".";
 import { Busqueda, Establecimiento } from "@/models";
 import {
   useApiQuery,
@@ -6,6 +6,7 @@ import {
   UseApiQueryOptions,
   useApiMutation,
 } from "@/hooks";
+import queryString from "query-string";
 
 export type CrearEstablecimiento = Omit<Establecimiento, "id" | "urlImagen">;
 
@@ -53,12 +54,12 @@ export function useBuscarEstablecimientos(
 ) {
   return useApiQuery(
     ["establecimientos", "search", queryParams],
-    `${API_URL}/establecimientos/ests/search?` +
-      new URLSearchParams(queryParams).toString(),
-    {
-      ...options,
-      initialData: [],
-    }
+    new URL(
+      `${API_URL}/establecimientos/ests/search?${queryString.stringify(
+        queryParams
+      )}`
+    ),
+    { ...options, initialData: [] }
   );
 }
 
@@ -101,6 +102,23 @@ export function useModificarEstablecimiento(
     mutationFn: ({ imagen, ...est }) =>
       put<Establecimiento>(`${API_URL}/establecimientos/${est.id}`, est).then(
         (est) => modificarImagen(est, imagen)
+      ),
+  });
+}
+
+export function useHabilitarEstablecimiento(
+  options?: UseApiMutationOptions<
+    { habilitado: boolean; idEst: number },
+    Establecimiento
+  >
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (est) => ["establecimientos", est.id],
+    mutationFn: ({ habilitado, idEst }) =>
+      patch<Establecimiento>(
+        `${API_URL}/establecimientos/${idEst}/habilitado`,
+        { habilitado }
       ),
   });
 }

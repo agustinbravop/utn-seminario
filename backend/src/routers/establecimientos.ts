@@ -4,6 +4,7 @@ import multer from "multer";
 import {
   EstablecimientoHandler,
   crearEstablecimientoSchema,
+  habilitarEstablecimientoSchema,
   modificarEstablecimientoSchema,
 } from "../handlers/establecimientos.js";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
@@ -60,6 +61,13 @@ export function establecimientosRouter(
     handler.validateAdminOwnsEstablecimiento(),
     upload.single("imagen"),
     handler.patchImagenEstablecimiento()
+  );
+  router.patch(
+    "/:idEst/habilitado",
+    authMiddle.isAdmin(),
+    validateBody(habilitarEstablecimientoSchema),
+    handler.validateAdminOwnsEstablecimiento(),
+    handler.patchHabilitarEstablecimiento()
   );
 
   router.delete(

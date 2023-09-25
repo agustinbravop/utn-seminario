@@ -14,7 +14,9 @@ import {
   ArrowForwardIcon,
   CalendarIcon,
   ChevronDownIcon,
+  HamburgerIcon,
   InfoIcon,
+  StarIcon,
 } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
@@ -63,31 +65,27 @@ function AdminNav({
       <Link to={`/admin/${admin.id}`}>
         <LogoImage />
       </Link>
-      <nav style={{ paddingRight: "0px" }}>
-        <HStack>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
-              leftIcon={<AiOutlineUser size="20" />}
-            >
-              {usuario}
-            </MenuButton>
-            <MenuList>
-              <Link to={`/admin/${admin.id}/perfil`}>
-                <MenuItem>
-                  <InfoIcon mr="20px" /> Mi perfil
-                </MenuItem>
-              </Link>
-              <Link to={`/`}>
-                <MenuItem onClick={logout}>
-                  <ArrowForwardIcon mr="20px" /> Cerrar sesión
-                </MenuItem>
-              </Link>
-            </MenuList>
-          </Menu>
-        </HStack>
-      </nav>
+      <Menu>
+        <MenuButton
+          as={Button}
+          rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
+          leftIcon={<AiOutlineUser size="20" />}
+        >
+          {usuario}
+        </MenuButton>
+        <MenuList>
+          <Link to={`/admin/${admin.id}/perfil`}>
+            <MenuItem>
+              <InfoIcon mr="20px" /> Mi perfil
+            </MenuItem>
+          </Link>
+          <Link to={`/`}>
+            <MenuItem onClick={logout}>
+              <ArrowForwardIcon mr="20px" /> Cerrar sesión
+            </MenuItem>
+          </Link>
+        </MenuList>
+      </Menu>
     </>
   );
 }
@@ -108,36 +106,32 @@ function JugadorNav({
       <Link to={`/jugador/${jugador.id}`}>
         <LogoImage />
       </Link>
-      <nav style={{ paddingRight: "0px" }}>
-        <HStack>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
-              leftIcon={<AiOutlineUser size="20" />}
-            >
-              {usuario}
-            </MenuButton>
-            <MenuList>
-              <Link to={`/jugador/${jugador.id}/reservas`}>
-                <MenuItem>
-                  <CalendarIcon mr="20px" /> Mis reservas
-                </MenuItem>
-              </Link>
-              <Link to={`/jugador/${jugador.id}/perfil`}>
-                <MenuItem>
-                  <InfoIcon mr="20px" /> Mi perfil
-                </MenuItem>
-              </Link>
-              <Link to={`/`}>
-                <MenuItem onClick={logout}>
-                  <ArrowForwardIcon mr="20px" /> Cerrar sesión
-                </MenuItem>
-              </Link>
-            </MenuList>
-          </Menu>
-        </HStack>
-      </nav>
+      <Menu>
+        <MenuButton
+          as={Button}
+          rightIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
+          leftIcon={<AiOutlineUser size="20" />}
+        >
+          {usuario}
+        </MenuButton>
+        <MenuList>
+          <Link to={`/jugador/${jugador.id}/reservas`}>
+            <MenuItem>
+              <CalendarIcon mr="20px" /> Mis reservas
+            </MenuItem>
+          </Link>
+          <Link to={`/jugador/${jugador.id}/perfil`}>
+            <MenuItem>
+              <InfoIcon mr="20px" /> Mi perfil
+            </MenuItem>
+          </Link>
+          <Link to={`/`}>
+            <MenuItem onClick={logout}>
+              <ArrowForwardIcon mr="20px" /> Cerrar sesión
+            </MenuItem>
+          </Link>
+        </MenuList>
+      </Menu>
     </>
   );
 }
@@ -146,25 +140,48 @@ function JugadorNav({
  * La barra superior que se le muestra a alguien que no inició sesión.
  */
 function UnregisteredNav() {
+  const nav = useBreakpointValue({
+    base: (
+      <Menu>
+        <MenuButton as={Button}>
+          <HamburgerIcon fontSize="1.5em" />
+        </MenuButton>
+        <MenuList>
+          <Link to="/suscripciones">
+            <MenuItem>
+              <StarIcon mr="20px" />
+              Suscripciones
+            </MenuItem>
+          </Link>
+          <Link to="/login">
+            <MenuItem>
+              <Icon as={AiOutlineUser} mr="20px" /> Iniciar Sesión
+            </MenuItem>
+          </Link>
+        </MenuList>
+      </Menu>
+    ),
+    sm: (
+      <HStack>
+        <Link to="/suscripciones">
+          <Button variant="ghost" size="sm">
+            Suscripciones
+          </Button>
+        </Link>
+        <Link to="/login">
+          <Button variant="outline" size="sm">
+            Iniciar Sesión
+          </Button>
+        </Link>
+      </HStack>
+    ),
+  });
   return (
     <>
       <Link to="/">
         <LogoImage />
       </Link>
-      <nav>
-        <HStack>
-          <Link to="/suscripciones">
-            <Button variant="ghost" size="sm" color="blackAlpha.800">
-              Suscripciones
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button variant="outline" size="sm">
-              Iniciar Sesión
-            </Button>
-          </Link>
-        </HStack>
-      </nav>
+      {nav}
     </>
   );
 }
