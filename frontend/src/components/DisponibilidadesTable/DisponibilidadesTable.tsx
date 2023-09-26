@@ -10,16 +10,20 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import FormReservarDisponibilidad from "@/pages/jugador/[idJugador]/est/[idEst]/canchas/[idCancha]/_formReservar";
+import { Disponibilidad } from "@/models";
 
 export type DataTableProps<Data extends object> = {
   data: Data[];
   columns: ColumnDef<Data, any>[];
 };
 
-export function DisponibilidadesTable<Data extends object>({
+type FilaDisponibilidad = Disponibilidad & {cancha: string}
+
+
+export function DisponibilidadesTable({
   data,
   columns,
-}: DataTableProps<Data>) {
+}: DataTableProps<FilaDisponibilidad>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
     columns,
@@ -68,17 +72,14 @@ export function DisponibilidadesTable<Data extends object>({
       <Tbody>
         {table.getRowModel().rows.map((row) => (
           <Tr key={row.id}>
-            {row.getVisibleCells().map((cell) => {
-              const meta: any = cell.column.columnDef.meta;
-              return (
-                <Td key={cell.id} isNumeric={meta?.isNumeric}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              );
-              
-            })}
+            {row.getVisibleCells().map((cell) => (
+              <Td key={cell.id}>
+                {cell.id !== "reserva" &&
+                  flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </Td>
+            ))}
             <Td>
-              <FormReservarDisponibilidad disp={row.getValue("reserva")} />
+              <FormReservarDisponibilidad disp={row.original} />
             </Td>
           </Tr>
         ))}

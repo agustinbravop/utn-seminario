@@ -31,6 +31,7 @@ type Columnas = {
     disciplina: string;
     dias: Dia[];
     idCancha: number;
+
 }
 
 
@@ -97,7 +98,7 @@ export default function ReservarEstablecimiento() {
       cell: (info) => info.getValue(),
       header: "Cancha"
     }),
-    columnHelper.accessor((r => r), {header:"", id: "reserva"})
+    //columnHelper.accessor((r => r), {id: "reserva", header:"ede"})
   ];
   
 
