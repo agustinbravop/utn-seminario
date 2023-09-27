@@ -13,6 +13,10 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon, SmallCloseIcon, TriangleUpIcon, TriangleDownIcon, MinusIcon } from '@chakra-ui/icons'
 import { useNavigate } from "react-router";
+import { useParams } from "@/router";
+import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
+import { useEffect } from "react";
+import { fechaISOaDDMMAAAA } from "@/utils/dates";
 
 const dataReservas = {
   reservas: [
@@ -48,7 +52,14 @@ const dataReservas = {
 }
 
 export default function EstablecimientoReservasPage() {
+  const { idEst } = useParams("/reservas/:idEst");
   const navigate = useNavigate();
+
+  const { data: reservas } = useReservasByEstablecimientoID(Number(idEst));
+
+  useEffect(() => {
+    console.log(reservas)
+  }, [reservas])
 
   return (
     <>
@@ -72,7 +83,7 @@ export default function EstablecimientoReservasPage() {
           <Thead>
             <Tr>
               <Th textAlign='center'>Cancha</Th>
-              <Th textAlign='center'>Día</Th>
+              <Th textAlign='center'>Fecha</Th>
               <Th textAlign='center'>Jugador</Th>
               <Th textAlign='center'>Ver Detalle</Th>
               <Th textAlign='center'>Estado</Th>
@@ -80,20 +91,29 @@ export default function EstablecimientoReservasPage() {
             </Tr>
           </Thead>
           <Tbody>
-            {dataReservas?.reservas.map(
-              (r) =>
+            {reservas?.map(
+              (r) => {
+                let estado = <TriangleDownIcon color='Red' />
+                if (r.idPagoReserva) {
+                  estado = <TriangleUpIcon color='Green' />
+                } else if (r.idPagoSenia) {
+                  estado = <MinusIcon color='orange' />
+                }
+                return (
                   <Tr key={r.id}>
                     <Td textAlign='center'>
-                      {r.cancha}
+                      {r.disponibilidad.cancha.nombre}
                     </Td>
-                    <Td textAlign='center'>{r.fechaReserva} </Td>
-                    <Td textAlign='center'>{r.jugador}</Td>
-                    {/* <Td>{r.dias.map((dia) => DIAS_ABBR[dia]).join(", ")}</Td> */}
+                    <Td textAlign='center'>{fechaISOaDDMMAAAA(r.fechaReservada)} </Td>
+                    <Td textAlign='center'>{r.jugador.apellido + ", " + r.jugador.nombre}</Td>
                     <Td textAlign='center'>
-                      <Button onClick={() => navigate(`${r.id}`)}>Ver Detalle</Button>
+                      <Button colorScheme="brand" variant='outline' onClick={() => navigate(`${r.id}`)}>Ver Detalle</Button>
                     </Td>
-                    <Td textAlign='center'>{r.estado == 'Pagado' ? <TriangleUpIcon color='Green' /> /*'●'*/ : (r.estado == 'Sin Pagar' ? <TriangleDownIcon color='Red' /> : <MinusIcon color='yellow' />) }</Td>
+                    <Td textAlign='center'>{estado}</Td>
                   </Tr>
+                )
+              }
+
             )}
           </Tbody>
         </Table>
