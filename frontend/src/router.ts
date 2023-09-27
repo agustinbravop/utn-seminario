@@ -22,6 +22,8 @@ export type Path =
   | `/ests/:idEst/canchas/nueva`
   | `/ests/:idEst/editar`
   | `/ests/:idEst/reservas`
+  | `/ests/:idEst/reservas/:idReserva`
+  | `/ests/:idEst/reservas/prueba`
   | `/jugador/:idJugador`
   | `/jugador/:idJugador/est/:idEst`
   | `/jugador/:idJugador/est/:idEst/canchas`
@@ -57,6 +59,8 @@ export type Params = {
   '/ests/:idEst/canchas/nueva': { idEst: string }
   '/ests/:idEst/editar': { idEst: string }
   '/ests/:idEst/reservas': { idEst: string }
+  '/ests/:idEst/reservas/:idReserva': { idEst: string; idReserva: string }
+  '/ests/:idEst/reservas/prueba': { idEst: string }
   '/jugador/:idJugador': { idJugador: string }
   '/jugador/:idJugador/est/:idEst': { idJugador: string; idEst: string }
   '/jugador/:idJugador/est/:idEst/canchas': { idJugador: string; idEst: string }
