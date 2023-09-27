@@ -4,7 +4,7 @@ import BaseFormControl, {
   NoVariantBaseFormControlProps,
 } from "./BaseFormControl";
 
-interface SelectControlProps
+export interface SelectControlProps
   extends NoVariantBaseFormControlProps,
     Omit<SelectProps, keyof NoVariantBaseFormControlProps> {}
 
@@ -16,10 +16,7 @@ interface SelectControlProps
 export default function SelectControl(props: SelectControlProps) {
   const { name, control, icon, placeholder, variant, children, ...rest } =
     props;
-  const { field } = useController({
-    name,
-    control,
-  });
+  const { field } = useController({ name, control });
 
   return (
     <BaseFormControl name={name} control={control} {...rest}>

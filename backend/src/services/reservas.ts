@@ -55,7 +55,7 @@ export class ReservaServiceImpl implements ReservaService {
     await this.validarCanchaHabilitada(crearReserva);
     await this.validarDisponibilidadLibre(crearReserva);
 
-    const disp = await this.dispRepository.getDisponibilidadByID(
+    const disp = await this.dispRepository.getByID(
       crearReserva.idDisponibilidad
     );
     await this.validarDiaDeSemana(crearReserva, disp);

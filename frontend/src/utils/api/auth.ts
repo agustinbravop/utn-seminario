@@ -1,7 +1,7 @@
 import jwtDecode from "jwt-decode";
 import { post, JWT, API_URL, get, patch } from ".";
 import { Administrador, Jugador, Suscripcion, Tarjeta } from "@/models";
-import { writeLocalStorage } from "../storage/localStorage";
+import { writeLocalStorage } from "../localStorage";
 import {
   UseApiQueryOptions,
   UseApiMutationOptions,

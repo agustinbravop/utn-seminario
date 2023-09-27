@@ -56,7 +56,7 @@ export default function CanchaNuevaPage() {
 
   return (
     <>
-      <Heading textAlign="center" mt="40px" paddingBottom="60px">
+      <Heading textAlign="center" mt="40px" pb="60px">
         Nueva cancha
       </Heading>
 

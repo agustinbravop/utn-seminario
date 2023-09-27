@@ -24,7 +24,7 @@ export default function CanchaMenu() {
   }
 
   return (
-    <Heading textAlign="center" paddingBottom="7" mt="40px">
+    <Heading textAlign="center" pb="7" mt="40px">
       {est.nombre}: {cancha.nombre}
     </Heading>
   );

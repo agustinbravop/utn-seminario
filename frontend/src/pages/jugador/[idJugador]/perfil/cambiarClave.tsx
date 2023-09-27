@@ -48,17 +48,17 @@ export default function JugadorCambiarClavePage() {
   });
 
   return (
-    <Card m="auto" maxWidth="clamp(400px, 100%)" height="70%" marginTop="5%">
+    <Card m="auto" maxWidth="clamp(400px, 100%)" height="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Cambiar contraseña
         </Heading>
       </CardHeader>
-      <CardBody marginTop="28px">
+      <CardBody mt="28px">
         <FormProvider {...methods}>
           <Stack
             spacing="5"
-            marginTop="-2rem"
+            mt="-2rem"
             as="form"
             onSubmit={methods.handleSubmit((values) => mutate(values))}
           >

@@ -8,7 +8,7 @@ interface FormDeleteDisponibilidadProps {
   idDisp: number;
 }
 
-export default function FormDeleteDisponibilidad({
+export default function FormEliminarDisp({
   idDisp,
 }: FormDeleteDisponibilidadProps) {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha/disps");

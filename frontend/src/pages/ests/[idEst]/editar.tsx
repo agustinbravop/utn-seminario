@@ -72,7 +72,7 @@ export default function EstablecimientoEditarPage() {
 
   return (
     <div>
-      <Heading textAlign="center" mt="40px" paddingBottom="60px">
+      <Heading textAlign="center" mt="40px" pb="60px">
         Editar Establecimiento
       </Heading>
       <FormProvider {...methods}>

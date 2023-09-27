@@ -10,17 +10,18 @@ import {
 } from "@chakra-ui/react";
 import { useCanchaByID } from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import FormDisponibilidad from "./_formDisp";
+import FormDisp from "./_FormDisp";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import {
   useCrearDisponibilidad,
   useDisponibilidadesByCanchaID,
   useModificarDisponibilidad,
 } from "@/utils/api/disponibilidades";
-import FormDeleteDisponibilidad from "./_formEliminar";
+import FormEliminarDisp from "./_FormEliminarDisp";
 import { Disponibilidad, DisponibilidadForm } from "@/models";
 import { decimalAHora, horaADecimal } from "@/utils/dates";
 import { CanchaMenu } from "@/components/navigation";
+import { ordenarDias } from "@/utils/dias";
 
 /**
  * Deriva el valor del campo 'minutosReserva' del DisponibilidadForm
@@ -67,9 +68,10 @@ export default function CanchaInfoPage() {
   const handleCrearDisponibilidad = (disp: DisponibilidadForm) => {
     const fin = horaADecimal(disp.horaFin);
     const horasReserva = disp.minutosReserva / 60;
-    let dispInicio = horaADecimal(disp.horaInicio);
-    while (dispInicio < fin) {
-      const dispFin = dispInicio + horasReserva;
+    const dispInicio = horaADecimal(disp.horaInicio);
+
+    let dispFin = dispInicio + horasReserva;
+    while (dispFin <= fin) {
       mutateCrear({
         ...disp,
         horaInicio: decimalAHora(dispInicio),
@@ -77,7 +79,7 @@ export default function CanchaInfoPage() {
         idEst: Number(idEst),
         idCancha: Number(idCancha),
       });
-      dispInicio += horasReserva;
+      dispFin += horasReserva;
     }
   };
 
@@ -90,7 +92,7 @@ export default function CanchaInfoPage() {
         Las reservas que sus clientes vayan a realizar, ocuparán una
         disponibilidad en la fecha reservada.
       </Text>
-      <FormDisponibilidad
+      <FormDisp
         variant="crear"
         onSubmit={handleCrearDisponibilidad}
         resetValues={{ idCancha: Number(idCancha) }}
@@ -120,9 +122,9 @@ export default function CanchaInfoPage() {
                   {d.horaInicio} - {d.horaFin}
                 </Td>
                 <Td> ${d.precioReserva} </Td>
-                <Td>{d.dias.sort().join(" - ")}</Td>
+                <Td>{ordenarDias(d.dias).join(" - ")}</Td>
                 <Td display="flex" gap="10px" p="0.2em">
-                  <FormDisponibilidad
+                  <FormDisp
                     variant="modificar"
                     onSubmit={(disp) =>
                       mutateModificar({
@@ -136,7 +138,7 @@ export default function CanchaInfoPage() {
                       minutosReserva: calcularMinutosReserva(d),
                     }}
                   />
-                  <FormDeleteDisponibilidad idDisp={d.id} />
+                  <FormEliminarDisp idDisp={d.id} />
                 </Td>
               </Tr>
             ))}

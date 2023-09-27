@@ -40,11 +40,11 @@ export default function Court({ cancha }: estabProps) {
         />
         <CardBody height="300px">
           <VStack spacing="0">
-            <Heading size="md" marginBottom="10px">
+            <Heading size="md" mb="10px">
               {cancha.nombre}
             </Heading>
-            <Text marginBottom="5">{cancha.descripcion}</Text>
-            <Text marginBottom="0">
+            <Text mb="5">{cancha.descripcion}</Text>
+            <Text mb="0">
               <Icon
                 as={cancha.habilitada ? CheckIcon : SmallCloseIcon}
                 boxSize={4}
