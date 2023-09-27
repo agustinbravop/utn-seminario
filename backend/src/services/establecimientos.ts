@@ -7,6 +7,7 @@ import {
 } from "../utils/apierrors.js";
 import { subirImagen } from "../utils/imagenes.js";
 import { AdministradorService } from "./administrador.js";
+import { CanchaService } from "./canchas.js";
 
 export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
@@ -15,6 +16,7 @@ export interface EstablecimientoService {
   getByID(idEst: number): Promise<Establecimiento>;
   getConsulta(consulta: Busqueda): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
+  habilitar(idEst: number, habilitado: boolean): Promise<Establecimiento>;
   modificarImagen(
     idEst: number,
     imagen?: Express.Multer.File
@@ -34,13 +36,16 @@ type Busqueda = {
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
   private adminService: AdministradorService;
+  private canchaService: CanchaService;
 
   constructor(
     repository: EstablecimientoRepository,
-    adminService: AdministradorService
+    adminService: AdministradorService,
+    canchaService: CanchaService
   ) {
     this.repo = repository;
     this.adminService = adminService;
+    this.canchaService = canchaService;
   }
 
   async getAll(): Promise<Establecimiento[]> {
@@ -60,7 +65,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   }
 
   async crear(est: Establecimiento) {
-    await this.validarLimiteEstablecimientos(est.idAdministrador);
+    await this.validarLimiteSuscripcion(est.idAdministrador);
 
     return await this.repo.crear(est);
   }
@@ -92,7 +97,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     return await this.modificar(est);
   }
 
-  private async validarLimiteEstablecimientos(idAdmin: number): Promise<void> {
+  private async validarLimiteSuscripcion(idAdmin: number): Promise<void> {
     const admin = await this.adminService.getByID(idAdmin);
 
     const ests = await this.repo.getByAdminID(admin.id);
@@ -106,8 +111,23 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     return await this.repo.eliminar(idEst);
   }
 
-  async getEstablecimientoAll(): Promise<Establecimiento[]> {
-    return await this.repo.getEstablecimientoAll();
+  /** Si se deshabilita un establecimiento, se deshabilitan todas sus canchas. */
+  async habilitar(idEst: number, habilitado: boolean) {
+    const est = await this.repo.getByID(idEst);
+    if (habilitado === est.habilitado) {
+      return est;
+    }
+
+    if (!habilitado) {
+      const canchas = await this.canchaService.getByEstablecimientoID(idEst);
+      Promise.all(
+        canchas.map((c) =>
+          this.canchaService.modificar({ ...c, habilitada: false })
+        )
+      );
+    }
+
+    return await this.repo.modificar({ ...est, habilitado });
   }
 
   async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {
@@ -116,7 +136,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     let estabFilter = await this.repo.getEstabsByFiltro(consulta);
 
     if (consulta.disciplina) {
-      const estabDisciplina = await this.repo.getEstablecimientoDisciplina(
+      const estabDisciplina = await this.repo.getEstablecimientosByDisciplina(
         consulta.disciplina
       );
       estabFilter = estabFilter.filter((e) =>
@@ -128,7 +148,7 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
       const estabDisponibles = await this.repo.getEstabDispByDate(
         consulta.fecha
       );
-      console.log("disponibles: " + estabDisponibles);
+      console.log("disponibles:", JSON.stringify(estabDisponibles));
       return estabFilter.filter((e) =>
         estabDisponibles.find(({ id }) => id === e.id)
       );

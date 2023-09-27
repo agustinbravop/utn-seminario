@@ -20,29 +20,13 @@ import {
   SelectControl,
   SubmitButton,
 } from "@/components/forms";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
 import { useYupForm } from "@/hooks/useYupForm";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
 
 type FormState = CrearEstablecimiento & {
   imagen: File | undefined;
-};
-
-type ApiGobProv = {
-  provincias: Provincia[];
-};
-
-type ApiGobLoc = {
-  municipios: Localidad[];
-};
-
-type Localidad = { id: number; nombre: string };
-
-type Provincia = {
-  centroide: {};
-  id: number;
-  nombre: string;
 };
 
 const validationSchema = Yup.object({
@@ -63,16 +47,6 @@ function NewEstab() {
   const { admin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
-  const [localidades, setLocalidades] = useState<string[]>([]);
-
-  const { data: provincias } = useQuery<string[]>(["provincias"], {
-    queryFn: () =>
-      fetch("https://apis.datos.gob.ar/georef/api/provincias")
-        .then((req) => req.json())
-        .then(
-          (data: ApiGobProv) => data?.provincias?.map((p) => p.nombre) ?? []
-        ),
-  });
 
   const methods = useYupForm<FormState>({
     validationSchema,
@@ -99,15 +73,10 @@ function NewEstab() {
     },
   });
 
+  const { data: provincias } = useProvincias();
   const provincia = useWatch({ name: "provincia", control: methods.control });
+  const { data: localidades } = useLocalidadesByProvincia(provincia);
   useEffect(() => {
-    fetch(
-      `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=nombre&max=150`
-    )
-      .then((response) => response.json())
-      .then((data: ApiGobLoc) => {
-        setLocalidades(data?.municipios?.map((m) => m.nombre) ?? []);
-      });
     methods.resetField("localidad");
   }, [provincia, methods]);
 

@@ -23,4 +23,3 @@ jobs:
           # Parámetros obtenidos de: https://github.com/marketplace/actions/prettier-action
           prettier_options: --write **/*.{js,jsx,tsx,ts,md}
           same_commit: True
-          only_changed: True

@@ -1,7 +1,8 @@
 import { Button } from "@chakra-ui/button";
-import { Box, Heading, Text, VStack } from "@chakra-ui/layout";
+import { Box, Heading, Text, Stack, VStack } from "@chakra-ui/layout";
 import Carousel from "@/components/Carousel/Carousel";
 import { Link } from "@/router";
+import { Container } from "@chakra-ui/react";
 
 const images = [
   "https://civideportes.com.co/wp-content/uploads/2020/08/asphalt-tennis-court-5354328_640.jpg",
@@ -12,58 +13,44 @@ const images = [
 
 export default function LandingPage() {
   return (
-    <>
-      <Box marginLeft="120px">
-        <Heading
-          style={{
-            width: "500px",
-            marginTop: "35px",
-            display: "flex",
-            fontSize: "40px",
-            alignContent: "center",
-          }}
-        >
-          Reserva una cancha desde donde quieras
+    <Box mx="1.5vw">
+      <Container m="0" maxW="900px">
+        <Heading my="35px" fontSize="2.75em">
+          Reservá una cancha desde dónde quieras
         </Heading>
-        <Text>
-          Encontrá tu cancha preferida para jugar con tus amigos de entre más de
-          mil establecimientos
+        <Text fontSize="1.1em">
+          Encontrá tu cancha preferida de entre más de mil establecimientos para
+          jugar con tus amigos. Estás a un solo click de distancia.
         </Text>
-        <Button marginTop="15px" type="button">
-          Buscar
-        </Button>
-        <VStack
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "40px",
-          }}
-        >
-          <Box display="flex" alignContent="column" width="100%">
-            <Box width="65%" display="flex" justifyContent="center">
-              <Carousel images={images} autoPlay={true} showButtons={true} />
-            </Box>
-            <Box
-              marginTop="100px"
-              marginLeft="20px"
-              justifyContent="center"
-              width="35%"
-            >
-              <Heading style={{ fontSize: "20px" }}>
-                ¿Querés publicitar tu establecimiento?
-              </Heading>
-              <Text maxWidth="400px" textAlign="left">
-                Play Finder te permite administrar las reservas de tus canchas,
-                aceptar pagos a través de Mercado Pago, ver reportes de ingresos
-                y mucho más.
-              </Text>
-              <Link to="/suscripciones">
-                <Button marginTop="20px">Ver Opciones</Button>
-              </Link>
-            </Box>
-          </Box>
+        <Link to="/login">
+          <Button mt="15px" type="button">
+            Buscar
+          </Button>
+        </Link>
+      </Container>
+      <Stack
+        display="flex"
+        justifyContent="center"
+        mt="40px"
+        alignItems="center"
+        gap="50px"
+        flexDirection={{ base: "column", md: "row" }}
+      >
+        <Carousel images={images} autoPlay showButtons />
+        <VStack textAlign="center" alignItems="center">
+          <Heading fontSize="20px">
+            ¿Querés publicitar tu establecimiento?
+          </Heading>
+          <Text maxWidth="400px">
+            Play Finder te permite administrar las reservas de tus canchas,
+            aceptar pagos a través de Mercado Pago, ver reportes de ingresos y
+            mucho más.
+          </Text>
+          <Link to="/suscripciones">
+            <Button marginTop="20px">Ver Opciones</Button>
+          </Link>
         </VStack>
-      </Box>
-    </>
+      </Stack>
+    </Box>
   );
 }

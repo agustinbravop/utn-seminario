@@ -36,12 +36,7 @@ export default function EstablecimientoCanchasPage() {
   return (
     <>
       <EstablecimientoMenu />
-      <HStack
-        marginRight="16%"
-        marginLeft="16%"
-        marginBottom="50px"
-        marginTop="0px"
-      >
+      <HStack mr="16%" ml="16%" mb="50px" mt="0px">
         <InputGroup width="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />

@@ -1,42 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Box, Button, ButtonProps, Image, SlideFade } from "@chakra-ui/react";
 
-const CarouselImg = styled.img`
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: 0.5s;
-  border-radius: 12px;
-  object-fit: cover;
-  &.loaded {
-    transition: 0.5s;
-    opacity: 1;
-  }
-`;
-
-const CarouselImageContainer = styled.div`
-  max-width: 800px;
-  width: 800px;
-  max-height: 500px;
-  height: 500px;
-  border-radius: 12px;
-  position: relative;
-`;
-
-const CarouselButton = styled.button`
-  display: flex;
-  position: absolute;
-  top: 50%;
-  font-size: 1.5rem;
-  background-color: transparent;
-  border-radius: 50%;
-  padding: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  color: rgb(253, 253, 253);
-  transform: translate(0, -50%);
-`;
+function CarouselButton(props: ButtonProps) {
+  return (
+    <Button
+      display="flex"
+      position="absolute"
+      top="50%"
+      fontSize="1.5rem"
+      backgroundColor="transparent"
+      borderRadius="15px"
+      padding="5px"
+      fontWeight="600"
+      cursor="pointer"
+      color="rgb(253, 253, 253)"
+      transform="translate(0, -50%)"
+      {...props}
+    />
+  );
+}
 
 interface CarouselProps {
   images: string[];
@@ -66,51 +49,46 @@ export default function Carousel({
   }
 
   const selectNewImage = useCallback(
-    (images: string[], offset: number) => {
+    (offset: number) => {
       setLoaded(false);
-      setTimeout(() => {
-        let nextIndex = (selectedIndex + offset) % images.length;
-        setSelectedIndex(nextIndex);
-      }, 500);
+      let nextIndex = (selectedIndex + offset) % images.length;
+      setSelectedIndex(nextIndex);
     },
-    [selectedIndex]
+    [selectedIndex, images.length]
   );
 
   useEffect(() => {
     if (autoPlay) {
       const interval = setInterval(() => {
-        selectNewImage(images, +1);
+        selectNewImage(+1);
       }, 4000);
       return () => clearInterval(interval);
     }
   }, [autoPlay, images, selectNewImage]);
 
-  const previous = () => {
-    selectNewImage(images, -1);
-  };
-
-  const next = () => {
-    selectNewImage(images, +1);
-  };
-
   return (
-    <CarouselImageContainer>
-      <CarouselImg
-        src={images[selectedIndex]}
-        alt="Imagen del carousel"
-        className={loaded ? "loaded" : ""}
-        onLoad={() => setLoaded(true)}
-      />
+    <Box position={"relative" /* para position="absolute" en CarouselButton */}>
+      <SlideFade in={loaded}>
+        <Image
+          height="420px"
+          width="90vw"
+          borderRadius="12px"
+          objectFit="cover"
+          src={images[selectedIndex]}
+          alt="Cancha de deportes"
+          onLoad={() => setLoaded(true)}
+        />
+      </SlideFade>
       {showButtons && (
         <>
-          <CarouselButton onClick={previous} style={{ left: "10px" }}>
+          <CarouselButton onClick={() => selectNewImage(-1)} left="10px">
             <ChevronLeftIcon boxSize={10} />
           </CarouselButton>
-          <CarouselButton onClick={next} style={{ right: "10px" }}>
+          <CarouselButton onClick={() => selectNewImage(+1)} right="10px">
             <ChevronRightIcon boxSize={10} />
           </CarouselButton>
         </>
       )}
-    </CarouselImageContainer>
+    </Box>
   );
 }

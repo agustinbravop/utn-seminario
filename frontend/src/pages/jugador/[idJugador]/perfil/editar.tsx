@@ -12,10 +12,17 @@ import {
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { useModificarJugador } from "@/utils/api/auth";
-import { FormProvider } from "react-hook-form";
-import { InputControl, ConfirmSubmitButton } from "@/components/forms";
+import { FormProvider, useWatch } from "react-hook-form";
+import {
+  InputControl,
+  ConfirmSubmitButton,
+  SelectControl,
+} from "@/components/forms";
 import { useNavigate } from "react-router";
 import { useCurrentJugador, useYupForm } from "@/hooks";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
+import { useEffect } from "react";
+import { DISCIPLINAS } from "@/utils/consts";
 
 const validationSchema = Yup.object({
   id: Yup.number(),
@@ -33,6 +40,7 @@ export default function JugadorEditarPerfilPage() {
   const navigate = useNavigate();
 
   const { jugador } = useCurrentJugador();
+  const { data: provincias } = useProvincias();
 
   const methods = useYupForm({ validationSchema, resetValues: jugador });
   const { mutate, isLoading } = useModificarJugador({
@@ -52,6 +60,12 @@ export default function JugadorEditarPerfilPage() {
       });
     },
   });
+
+  const provincia = useWatch({ name: "provincia", control: methods.control });
+  const { data: localidades } = useLocalidadesByProvincia(provincia);
+  useEffect(() => {
+    methods.resetField("localidad", { defaultValue: jugador.localidad });
+  }, [provincia, methods, jugador]);
 
   return (
     <Card m="auto" maxWidth="400px" height="70%" mt="5%">
@@ -87,6 +101,50 @@ export default function JugadorEditarPerfilPage() {
             <Box>
               <Heading size="xs">Teléfono</Heading>
               <InputControl isRequired name="telefono" />
+            </Box>
+            <Box>
+              <Heading size="xs">Provincia</Heading>
+              <SelectControl
+                name="provincia"
+                placeholder="Provincia"
+                isRequired
+                children={provincias?.sort().map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              />
+            </Box>
+            <Box>
+              <Heading size="xs">Localidad</Heading>
+              <SelectControl
+                name="localidad"
+                placeholder="Localidad"
+                isRequired
+              >
+                {localidades.sort().map((l) => (
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
+                ))}
+                <option key="Otra" value="Otra">
+                  Otra
+                </option>
+              </SelectControl>
+            </Box>
+            <Box>
+              <Heading size="xs">Disciplina</Heading>
+              <SelectControl
+                name="disciplina"
+                placeholder="Disciplina"
+                isRequired
+              >
+                {DISCIPLINAS.sort().map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </SelectControl>
             </Box>
             <Center>
               <Button onClick={() => navigate(-1)} mr={15}>

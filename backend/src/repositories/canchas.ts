@@ -13,14 +13,17 @@ import {
   disponibilidad,
 } from "@prisma/client";
 import { DisponibilidadRepository } from "./disponibilidades.js";
+import { Establecimiento } from "../models/establecimiento.js";
+import { toEst } from "./establecimientos.js";
 
 export interface CanchaRepository {
-  getCanchasByEstablecimientoID(idEst: number): Promise<Cancha[]>;
-  getCanchaByDisponibilidadID(idDisp: number): Promise<Cancha>;
-  getCanchaByID(idCancha: number): Promise<Cancha>;
-  crearCancha(cancha: Cancha): Promise<Cancha>;
-  modificarCancha(canchaUpdate: Cancha): Promise<Cancha>;
-  eliminarCancha(idCancha: number): Promise<Cancha>;
+  getByEstablecimientoID(idEst: number): Promise<Cancha[]>;
+  getByDisponibilidadID(idDisp: number): Promise<Cancha>;
+  getByID(idCancha: number): Promise<Cancha>;
+  getEstablecimiento(idCancha: number): Promise<Establecimiento>;
+  crear(cancha: Cancha): Promise<Cancha>;
+  modificar(canchaUpdate: Cancha): Promise<Cancha>;
+  eliminar(idCancha: number): Promise<Cancha>;
 }
 
 export class PrismaCanchaRepository implements CanchaRepository {
@@ -43,7 +46,25 @@ export class PrismaCanchaRepository implements CanchaRepository {
     this.dispRepository = dispRepository;
   }
 
-  async getCanchasByEstablecimientoID(idEst: number) {
+  async getEstablecimiento(idCancha: number) {
+    try {
+      const est = await this.prisma.cancha.findUnique({
+        where: { id: idCancha },
+        include: { establecimiento: { include: { localidad: true } } },
+      });
+      if (!est) {
+        throw new NotFoundError(`No existe cancha con id ${idCancha}`);
+      }
+
+      return toEst(est.establecimiento);
+    } catch {
+      throw new InternalServerError(
+        "Error al intentar obtener el establecimento de la cancha"
+      );
+    }
+  }
+
+  async getByEstablecimientoID(idEst: number) {
     try {
       const canchas = await this.prisma.cancha.findMany({
         where: {
@@ -59,7 +80,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async getCanchaByID(idCancha: number) {
+  async getByID(idCancha: number) {
     return awaitQuery(
       this.prisma.cancha.findUnique({
         where: { id: idCancha },
@@ -70,13 +91,13 @@ export class PrismaCanchaRepository implements CanchaRepository {
     );
   }
 
-  async getCanchaByDisponibilidadID(idDisp: number) {
+  async getByDisponibilidadID(idDisp: number) {
     const disp = await this.dispRepository.getDisponibilidadByID(idDisp);
 
-    return await this.getCanchaByID(disp.idCancha);
+    return await this.getByID(disp.idCancha);
   }
 
-  async crearCancha(cancha: Cancha) {
+  async crear(cancha: Cancha) {
     try {
       validarDisponibilidades(cancha);
       const { id } = await this.prisma.cancha.create({
@@ -98,7 +119,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         })
       );
 
-      return await this.getCanchaByID(id);
+      return await this.getByID(id);
     } catch {
       throw new InternalServerError(
         "Error interno al intentar cargar la cancha"
@@ -106,7 +127,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async modificarCancha(cancha: Cancha) {
+  async modificar(cancha: Cancha) {
     try {
       const { id } = await this.prisma.cancha.update({
         where: { id: cancha.id },
@@ -129,7 +150,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         })
       );
 
-      return await this.getCanchaByID(id);
+      return await this.getByID(id);
     } catch {
       throw new InternalServerError(
         "Error interno al intentar modificar la cancha"
@@ -137,7 +158,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
     }
   }
 
-  async eliminarCancha(idCancha: number) {
+  async eliminar(idCancha: number) {
     return awaitQuery(
       this.prisma.cancha.update({
         where: { id: idCancha },

@@ -1,7 +1,6 @@
 import {
   PrismaClient,
   administrador,
-  jugador,
   suscripcion,
   tarjeta,
 } from "@prisma/client";
@@ -13,6 +12,7 @@ import {
 } from "../utils/apierrors.js";
 import { Rol, Usuario } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
+import { toJugador } from "./jugador.js";
 
 export type AdministradorConClave = {
   admin: Administrador;
@@ -70,6 +70,7 @@ export class PrismaAuthRepository implements AuthRepository {
             { usuario: { equals: correoOUsuario } },
           ],
         },
+        include: { disciplina: true, localidad: true },
       });
       return { jugador: toJugador(j), clave: j.clave };
     } catch (e) {
@@ -149,6 +150,7 @@ export class PrismaAuthRepository implements AuthRepository {
   }
 
   async crearJugador(jugador: Jugador, clave: string) {
+    // console.log(jugador)
     try {
       const dbJugador = await this.prisma.jugador.create({
         data: {
@@ -158,7 +160,35 @@ export class PrismaAuthRepository implements AuthRepository {
           correo: jugador.correo,
           usuario: jugador.usuario,
           clave: clave,
+          disciplina: jugador.disciplina
+            ? {
+                connectOrCreate: {
+                  where: { disciplina: jugador.disciplina },
+                  create: { disciplina: jugador.disciplina },
+                },
+              }
+            : {},
+          localidad: {
+            connectOrCreate: {
+              where: {
+                nombre_idProvincia: {
+                  nombre: jugador.localidad ?? " ",
+                  idProvincia: jugador.provincia ?? " ",
+                },
+              },
+              create: {
+                nombre: jugador.localidad ?? " ",
+                provincia: {
+                  connectOrCreate: {
+                    where: { provincia: jugador.provincia ?? " " },
+                    create: { provincia: jugador.provincia ?? " " },
+                  },
+                },
+              },
+            },
+          },
         },
+        include: { disciplina: true, localidad: true },
       });
       return toJugador(dbJugador);
     } catch (e) {
@@ -172,6 +202,7 @@ export class PrismaAuthRepository implements AuthRepository {
       const dbJugador = await this.prisma.jugador.update({
         where: { id: jugador.id },
         data: { clave },
+        include: { disciplina: true, localidad: true },
       });
       return dbJugador;
     } catch (e) {
@@ -225,13 +256,4 @@ export function toAdmin({
   ...admin
 }: administradorDB): Administrador {
   return admin;
-}
-
-/**
- * Sirve para sacar la clave, que pasa desapercibida en el tipo `Jugador`.
- * @param jugador una entidad jugador de Prisma.
- * @returns un objeto Jugador del dominio.
- */
-export function toJugador({ clave, ...jugador }: jugador): Jugador {
-  return jugador;
 }

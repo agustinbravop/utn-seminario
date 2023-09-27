@@ -1,9 +1,11 @@
+import Decimal from "decimal.js";
 import { Disponibilidad } from "../models/disponibilidad";
 import { Reserva } from "../models/reserva";
 import { CanchaRepository } from "../repositories/canchas";
 import { DisponibilidadRepository } from "../repositories/disponibilidades";
+import { PagoRepository } from "../repositories/pago";
 import { ReservaRepository } from "../repositories/reservas";
-import { ConflictError } from "../utils/apierrors";
+import { ConflictError, InternalServerError } from "../utils/apierrors";
 import { getDayOfWeek } from "../utils/dates";
 
 export type CrearReserva = {
@@ -18,21 +20,38 @@ export interface ReservaService {
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
   crear(res: CrearReserva): Promise<Reserva>;
+  pagarSenia(res : Reserva, monto:Decimal) : Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
   private repo: ReservaRepository;
   private canchaRepository: CanchaRepository;
   private dispRepository: DisponibilidadRepository;
+  private pagoRepo : PagoRepository;
 
   constructor(
     repository: ReservaRepository,
     canchaRepository: CanchaRepository,
-    dispRepository: DisponibilidadRepository
+    dispRepository: DisponibilidadRepository,
+    pagoRepo : PagoRepository
   ) {
     this.repo = repository;
     this.canchaRepository = canchaRepository;
     this.dispRepository = dispRepository;
+    this.pagoRepo = pagoRepo
+  }
+
+  async pagarSenia(res : Reserva, monto:Decimal) : Promise<Reserva>{
+    if(!res.disponibilidad.precioSenia){throw new Error(`La disponibilidad ${res.disponibilidad.id} no admite señas`)}
+    if(res.pagoSenia){throw new Error("Reserva con seña existente")};
+    if(monto < res.disponibilidad.precioSenia){throw new Error(`La disponibilidad ${res.disponibilidad.id} requiere una seña de $${res.disponibilidad.precioSenia}`)}
+    try {
+      const pago = await this.pagoRepo.crearPago(monto, "Efectivo", res.fechaReservada)
+      res.pagoSenia = pago.id
+      return await this.repo.updateReserva(res)
+    } catch (e) {
+      throw new InternalServerError("Error al registrar el pago")
+    }
   }
 
   async getByEstablecimientoID(idEst: number) {
@@ -68,7 +87,7 @@ export class ReservaServiceImpl implements ReservaService {
 
   /** Lanza error al intentar reservar una cancha deshabilitada o eliminada. */
   private async validarCanchaHabilitada(res: CrearReserva) {
-    const cancha = await this.canchaRepository.getCanchaByDisponibilidadID(
+    const cancha = await this.canchaRepository.getByDisponibilidadID(
       res.idDisponibilidad
     );
     if (!cancha.habilitada || cancha.eliminada) {

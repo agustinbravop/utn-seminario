@@ -30,25 +30,18 @@ export type JWT = {
  * @returns una promesa con el `ApiError` parseado.
  */
 async function reject(res: Response): Promise<ApiError> {
-  if (!res) {
-    return Promise.reject(
-      new ApiError(500, "Ocurrió un error inesperado")
-    ).catch((e) => e);
-  }
   const body = await res.json();
-  console.error(body?.message);
+  console.error(body);
 
   // Un status code `401 Unauthorized` significa que el JSON Web Token venció.
   if (res.status === 401) {
     writeLocalStorage("token", null);
   }
 
-  return Promise.reject(
-    new ApiError(
-      body?.status ?? 500,
-      body?.message ?? "Ocurrió un error inesperado"
-    )
-  ).catch((e) => e); // Sin este `catch()`, se lanza el `ApiError` y JavaScript paniquea.
+  throw new ApiError(
+    body?.status ?? 500,
+    body?.message ?? "Ocurrió un error inesperado"
+  );
 }
 
 /**
@@ -61,7 +54,7 @@ async function reject(res: Response): Promise<ApiError> {
  */
 async function request<T>(
   method: string,
-  endpoint: string,
+  endpoint: URL | RequestInfo,
   body?: BodyInit,
   headers: HeadersInit = {}
 ): Promise<T> {
@@ -94,34 +87,43 @@ async function request<T>(
   }
 }
 
-export async function get<T>(endpoint: string): Promise<T> {
+export async function get<T>(endpoint: URL | RequestInfo): Promise<T> {
   return request("GET", endpoint);
 }
 
-export async function post<T>(endpoint: string, body: any): Promise<T> {
+export async function post<T>(
+  endpoint: URL | RequestInfo,
+  body: any
+): Promise<T> {
   return request("POST", endpoint, JSON.stringify(body), {
     "Content-Type": "application/json",
   });
 }
 
-export async function put<T>(endpoint: string, body: any): Promise<T> {
+export async function put<T>(
+  endpoint: URL | RequestInfo,
+  body: any
+): Promise<T> {
   return request("PUT", endpoint, JSON.stringify(body), {
     "Content-Type": "application/json",
   });
 }
 
-export async function patch<T>(endpoint: string, body: any): Promise<T> {
+export async function patch<T>(
+  endpoint: URL | RequestInfo,
+  body: any
+): Promise<T> {
   return request("PATCH", endpoint, JSON.stringify(body), {
     "Content-Type": "application/json",
   });
 }
 
-export async function del<T = void>(endpoint: string): Promise<T> {
+export async function del<T = void>(endpoint: URL | RequestInfo): Promise<T> {
   return request("DELETE", endpoint);
 }
 
 export async function patchFormData<T>(
-  endpoint: string,
+  endpoint: URL | RequestInfo,
   formData: FormData
 ): Promise<T> {
   return request("PATCH", endpoint, formData);

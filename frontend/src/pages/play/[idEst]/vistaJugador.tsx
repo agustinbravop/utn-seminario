@@ -4,7 +4,6 @@ import { useEstablecimientoByID } from "@/utils/api/establecimientos";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import DetailEstablecimiento from "@/components/DetailEstablecimiento/DetailEstablecimiento";
-import ReservaForm from "@/components/ReservaForm/ReservaForm";
 
 export default function VistaJugador() {
   const { idEst } = useParams();
@@ -28,7 +27,6 @@ export default function VistaJugador() {
           <DetailEstablecimiento />
           <>
             <Heading textAlign="center">¡Reservá ahora!</Heading>
-            <ReservaForm />
           </>
           <>
             <Heading>Canchas</Heading>

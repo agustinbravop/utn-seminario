@@ -29,12 +29,11 @@ export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
 
   const { data } = useCanchaByID(Number(idEst), Number(idCancha));
+  const [disciplina, setDisciplina] = useState("");
 
   if (!data) {
     return <p>Cargando...</p>;
   }
-
-  const [disciplina, setDisciplina] = useState("");
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDisciplina(event.target.value);

@@ -31,3 +31,17 @@ export function formatearFecha(fecha: Date) {
   // Formatea la fecha en "aaaa-MM-dd"
   return `${anio}-${mes}-${dia}`;
 }
+
+export function fechaISOaDDMMAAAA(date: string) {
+  const fechaOriginal = date;
+  const fecha = new Date(fechaOriginal);
+
+  const dia = fecha.getUTCDate();
+  const mes = fecha.getUTCMonth() + 1;
+  const año = fecha.getUTCFullYear();
+
+  const diaFormateado = dia.toString().padStart(2, '0');
+  const mesFormateado = mes.toString().padStart(2, '0');
+
+  return `${diaFormateado}/${mesFormateado}/${año}`;
+}

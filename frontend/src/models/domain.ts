@@ -16,6 +16,9 @@ export type Jugador = {
   telefono: string;
   correo: string;
   usuario: string;
+  localidad?: string;
+  provincia?: string;
+  disciplina?: string;
 };
 
 export type Cancha = {
@@ -99,6 +102,8 @@ export type Reserva = {
   fechaReservada: Date;
   fechaCreada: Date;
   precio: number;
+  idPagoReserva: number;
+  idPagoSenia: number;
   jugador: Jugador;
   disponibilidad: Disponibilidad;
 };
