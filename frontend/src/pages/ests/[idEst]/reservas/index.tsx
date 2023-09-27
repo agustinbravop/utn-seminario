@@ -17,24 +17,28 @@ import { useNavigate } from "react-router";
 const dataReservas = {
   reservas: [
     {
+      id: 1,
       cancha: 'Cancha 1',
       fechaReserva: '2023-05-07',
       jugador: 'Pepe',
       estado: 'Pagado'
     },
     {
+      id: 2,
       cancha: 'Cancha 2',
       fechaReserva: '2023-05-07',
       jugador: 'Coqui',
       estado: 'Sin Pagar'
     },
     {
+      id: 3,
       cancha: 'Cancha 3',
       fechaReserva: '2023-05-07',
       jugador: 'Paola',
       estado: 'Señado'
     },
     {
+      id: 4,
       cancha: 'Cancha 4',
       fechaReserva: '2023-05-07',
       jugador: 'Moni',
@@ -86,7 +90,7 @@ export default function EstablecimientoReservasPage() {
                     <Td textAlign='center'>{r.jugador}</Td>
                     {/* <Td>{r.dias.map((dia) => DIAS_ABBR[dia]).join(", ")}</Td> */}
                     <Td textAlign='center'>
-                      <Button onClick={() => alert(`Detalle de la reserva de ${r.jugador} :)` /*() => navigate(`/...`) */)}>Ver Detalle</Button>
+                      <Button onClick={() => navigate(`${r.id}`)}>Ver Detalle</Button>
                     </Td>
                     <Td textAlign='center'>{r.estado == 'Pagado' ? <TriangleUpIcon color='Green' /> /*'●'*/ : (r.estado == 'Sin Pagar' ? <TriangleDownIcon color='Red' /> : <MinusIcon color='yellow' />) }</Td>
                   </Tr>

@@ -45,7 +45,6 @@ import { useReservaByID } from "@/utils/api/reservas";
 
     return (
       <>
-        <CanchaMenu />
         <HStack mr="16%" ml="16%" mb="30px" mt="0px">
           <Text>Esta es la información de la reserva.</Text>
         </HStack>
@@ -55,7 +54,7 @@ import { useReservaByID } from "@/utils/api/reservas";
             <Heading> Datos de la reserva</Heading>
               <Box>
                 <Heading size="xs">Fecha</Heading>
-                <Text fontSize="sm"> {reserva?.fechaReservada.toDateString()} </Text>
+                <Text fontSize="sm"> {reserva?.fechaReservada} </Text>
               </Box>
               <Box>
                 <Heading size="xs"> Horario </Heading>
