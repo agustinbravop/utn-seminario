@@ -19,7 +19,11 @@ import {
   import { CanchaMenu } from "@/components/navigation";
 import { useReservaByID } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
+
 import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+
+import { fechaISOaDDMMAAAA } from "@/utils/dates";
+
   
   export default function ReservaInfoPage() {
     const { idEst, idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -66,7 +70,7 @@ import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
               </Box>
             <Box>
                 <Heading size="xs">Fecha</Heading>
-                <Text fontSize="sm"> {reserva?.fechaReservada} </Text>
+                <Text fontSize="sm"> {fechaISOaDDMMAAAA(reserva?.fechaReservada)} </Text>
               </Box>
               <Box>
                 <Heading size="xs"> Horario </Heading>
