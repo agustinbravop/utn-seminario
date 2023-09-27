@@ -12,4 +12,6 @@ export const reservaSchema = z.object({
   fechaCreada: z.date(),
   jugador: jugadorSchema,
   disponibilidad: disponibilidadSchema,
+  pagoReserva: z.number().int().positive().optional(),
+  pagoSenia: z.number().int().positive().optional(),
 });
