@@ -6,7 +6,9 @@ import {
     HStack,
     Heading,
     Stack,
+    StackDivider,
     Text,
+    VStack,
     useToast,
   } from "@chakra-ui/react";
   import { Link, useNavigate } from "react-router-dom";
@@ -16,6 +18,7 @@ import {
   import { useParams } from "@/router";
   import { CanchaMenu } from "@/components/navigation";
 import { useReservaByID } from "@/utils/api/reservas";
+import { ConfirmSubmitButton } from "@/components/forms";
   
   export default function ReservaInfoPage() {
     const { idEst, idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -45,14 +48,11 @@ import { useReservaByID } from "@/utils/api/reservas";
 
     return (
       <>
-        <HStack mr="16%" ml="16%" mb="30px" mt="0px">
-          <Text>Esta es la información de la reserva.</Text>
-        </HStack>
-        <Card m="auto" height="75%" width="75%">
-          <CardBody display="grid" gridTemplateColumns="1fr 1fr">
-            <Stack>
-            <Heading> Datos de la reserva</Heading>
-              <Box>
+        <Card m="auto" height="60%" width="36%" mt="5%">
+          <CardBody  m="15px">
+            <Stack  divider={<StackDivider />} spacing="2.5" >
+            <Heading as='h3' size='lg' textAlign="center" > Datos de la reserva</Heading>
+            <Box>
                 <Heading size="xs">Fecha</Heading>
                 <Text fontSize="sm"> {reserva?.fechaReservada} </Text>
               </Box>
@@ -65,23 +65,30 @@ import { useReservaByID } from "@/utils/api/reservas";
                 <Text fontSize="sm"> {reserva?.precio} </Text>
               </Box>
               <Box>
-                <Heading size="xs">Disciplinas</Heading>
+                <Heading size="xs">Disciplina</Heading>
+                <Text fontSize="sm"> {reserva?.disponibilidad.disciplina} </Text>
               </Box>
+              <Box>
+              </Box>
+            </Stack>
 
-              <Heading> Datos del jugador</Heading>
+            <Heading textAlign="center"  as='h3' size='lg'> Datos del jugador</Heading>
+
+            <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
               <Box>
-                <Heading size="xs">Fecha</Heading>
-                <Text fontSize="sm"> {reserva?.jugador.nombre} </Text>
+                <Heading size="xs">Nombre</Heading>
+                <Text fontSize="sm"> {reserva?.jugador.nombre} {reserva?.jugador.apellido} </Text>
               </Box>
               <Box>
-                <Heading size="xs"> Horario </Heading>
-                <Text fontSize="sm"> {reserva?.disponibilidad.horaInicio} - {reserva?.disponibilidad.horaFin} </Text>
+                <Heading size="xs"> Telefono </Heading>
+                <Text fontSize="sm"> {reserva?.jugador.telefono}  </Text>
               </Box>
-              <Box>
-                <Heading size="xs"> Precio </Heading>
-                <Text fontSize="sm"> {reserva?.precio} </Text>
-              </Box>
-              </Stack>
+             </Stack>
+
+            <HStack justifyContent="center" spacing="10px" pt="30px">
+                <ConfirmSubmitButton> Señar </ConfirmSubmitButton>
+                <ConfirmSubmitButton> Pagar </ConfirmSubmitButton>
+            </HStack>
           </CardBody>
         </Card>
       </>
