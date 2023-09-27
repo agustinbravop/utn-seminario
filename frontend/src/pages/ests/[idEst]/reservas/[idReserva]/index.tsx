@@ -50,8 +50,12 @@ import { ConfirmSubmitButton } from "@/components/forms";
       <>
         <Card m="auto" height="60%" width="36%" mt="5%">
           <CardBody  m="15px">
-            <Stack  divider={<StackDivider />} spacing="2.5" >
-            <Heading as='h3' size='lg' textAlign="center" > Datos de la reserva</Heading>
+          <Heading as='h3' size='lg' textAlign="center" > Datos de la reserva</Heading>
+            <Stack  divider={<StackDivider />} spacing="2.5" pt="10px">
+            <Box>
+                <Heading size="xs">Estado</Heading>
+                <Text fontSize="sm"> {reserva?.id} </Text>
+              </Box>
             <Box>
                 <Heading size="xs">Fecha</Heading>
                 <Text fontSize="sm"> {reserva?.fechaReservada} </Text>
@@ -68,11 +72,9 @@ import { ConfirmSubmitButton } from "@/components/forms";
                 <Heading size="xs">Disciplina</Heading>
                 <Text fontSize="sm"> {reserva?.disponibilidad.disciplina} </Text>
               </Box>
-              <Box>
-              </Box>
             </Stack>
 
-            <Heading textAlign="center"  as='h3' size='lg'> Datos del jugador</Heading>
+            <Heading textAlign="center"  as='h3' size='lg' pt="10px"> Datos del jugador</Heading>
 
             <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
               <Box>
@@ -85,9 +87,17 @@ import { ConfirmSubmitButton } from "@/components/forms";
               </Box>
              </Stack>
 
-            <HStack justifyContent="center" spacing="10px" pt="30px">
-                <ConfirmSubmitButton> Señar </ConfirmSubmitButton>
-                <ConfirmSubmitButton> Pagar </ConfirmSubmitButton>
+            <HStack justifyContent="center" spacing="20px" pt="30px">
+                <ConfirmSubmitButton
+                 header="Seña"
+                 body="¿Está seguro que desea efectuar la seña?"
+                
+                 > Señar </ConfirmSubmitButton>
+                <ConfirmSubmitButton
+                 header="Pago"
+                 body="¿Está seguro que desea efectuar el pago?"
+                
+                 > Pagar </ConfirmSubmitButton>
             </HStack>
           </CardBody>
         </Card>
