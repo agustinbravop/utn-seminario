@@ -39,7 +39,7 @@ const validationSchema = Yup.object({
   precioSenia: Yup.number().integer().positive().optional(),
 });
 
-interface FormDisponibilidadProps {
+interface FormDispProps {
   onSubmit: (disp: DisponibilidadForm) => void;
   resetValues: DefaultValues<DisponibilidadForm>;
   variant: "crear" | "modificar";
@@ -49,7 +49,7 @@ export default function FormDisp({
   onSubmit,
   resetValues,
   variant,
-}: FormDisponibilidadProps) {
+}: FormDispProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const methods = useYupForm<DisponibilidadForm>({

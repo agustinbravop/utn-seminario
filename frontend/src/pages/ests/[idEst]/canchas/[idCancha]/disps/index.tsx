@@ -1,4 +1,4 @@
-import { Alert, Heading, Text, useToast } from "@chakra-ui/react";
+import { Heading, Text, useToast } from "@chakra-ui/react";
 import {
   Table,
   Thead,
@@ -42,7 +42,22 @@ export default function CanchaInfoPage() {
   );
   const toast = useToast();
 
-  const { mutate: mutateCrear, isError } = useCrearDisponibilidad();
+  const { mutate: mutateCrear } = useCrearDisponibilidad({
+    onSuccess: () => {
+      toast({
+        title: "Disponibilidad creada.",
+        description: `Se registró exitosamente.`,
+        status: "success",
+      });
+    },
+    onError: (e) => {
+      toast({
+        title: e.conflictMsg("Error al crear la disponibilidad."),
+        description: `Intente de nuevo.`,
+        status: "error",
+      });
+    },
+  });
 
   const { mutate: mutateModificar } = useModificarDisponibilidad({
     onSuccess: () => {
@@ -97,12 +112,6 @@ export default function CanchaInfoPage() {
         onSubmit={handleCrearDisponibilidad}
         resetValues={{ idCancha: Number(idCancha) }}
       />
-      {isError && (
-        <Alert status="error" margin="20px">
-          Hubo un error inesperado al intentar crear la disponibilidad. Intente
-          de nuevo.
-        </Alert>
-      )}
       <TableContainer pt="15px" pb="20px" mr="100px">
         <Table size="sm">
           <Thead>
