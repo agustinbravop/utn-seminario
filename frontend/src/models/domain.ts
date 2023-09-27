@@ -102,6 +102,8 @@ export type Reserva = {
   fechaReservada: Date;
   fechaCreada: Date;
   precio: number;
+  idPagoReserva: number;
+  idPagoSenia: number;
   jugador: Jugador;
   disponibilidad: Disponibilidad;
 };

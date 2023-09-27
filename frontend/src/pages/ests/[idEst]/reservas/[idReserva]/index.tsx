@@ -19,6 +19,7 @@ import {
   import { CanchaMenu } from "@/components/navigation";
 import { useReservaByID } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
+import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
   
   export default function ReservaInfoPage() {
     const { idEst, idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -44,6 +45,13 @@ import { ConfirmSubmitButton } from "@/components/forms";
         });
       },
     });
+    
+    let estado = <TriangleDownIcon color='Red' />
+                if (reserva?.idPagoReserva) {
+                  estado = <TriangleUpIcon color='Green' />
+                } else if (reserva?.idPagoSenia) {
+                  estado = <MinusIcon color='orange' />
+                }
   
 
     return (
@@ -54,7 +62,7 @@ import { ConfirmSubmitButton } from "@/components/forms";
             <Stack  divider={<StackDivider />} spacing="2.5" pt="10px">
             <Box>
                 <Heading size="xs">Estado</Heading>
-                <Text fontSize="sm"> {reserva?.id} </Text>
+                <Text fontSize="sm"> {estado} </Text>
               </Box>
             <Box>
                 <Heading size="xs">Fecha</Heading>
