@@ -19,6 +19,7 @@ import {
   import { CanchaMenu } from "@/components/navigation";
 import { useReservaByID } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
+import { fechaISOaDDMMAAAA } from "@/utils/dates";
   
   export default function ReservaInfoPage() {
     const { idEst, idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -54,7 +55,7 @@ import { ConfirmSubmitButton } from "@/components/forms";
             <Heading as='h3' size='lg' textAlign="center" > Datos de la reserva</Heading>
             <Box>
                 <Heading size="xs">Fecha</Heading>
-                <Text fontSize="sm"> {reserva?.fechaReservada} </Text>
+                <Text fontSize="sm"> {fechaISOaDDMMAAAA(reserva?.fechaReservada)} </Text>
               </Box>
               <Box>
                 <Heading size="xs"> Horario </Heading>
