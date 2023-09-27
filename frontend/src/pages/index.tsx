@@ -47,7 +47,7 @@ export default function LandingPage() {
             mucho más.
           </Text>
           <Link to="/suscripciones">
-            <Button marginTop="20px">Ver Opciones</Button>
+            <Button mt="20px">Ver Opciones</Button>
           </Link>
         </VStack>
       </Stack>

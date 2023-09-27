@@ -11,7 +11,7 @@ import {
   ModificarEstablecimiento,
   useEstablecimientoByID,
   useModificarEstablecimiento,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import * as Yup from "yup";
 import { FormProvider } from "react-hook-form";
 import {
@@ -72,7 +72,7 @@ export default function EstablecimientoEditarPage() {
 
   return (
     <div>
-      <Heading textAlign="center" mt="40px" paddingBottom="60px">
+      <Heading textAlign="center" mt="40px" pb="60px">
         Editar Establecimiento
       </Heading>
       <FormProvider {...methods}>

@@ -14,7 +14,7 @@ import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Box } from "@chakra-ui/react";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
-import { useModificarEstablecimiento } from "@/utils/api/establecimientos";
+import { useModificarEstablecimiento } from "@/utils/api";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -84,17 +84,17 @@ export default function DeletedEstablecimiento({
       </Box>
       <CardBody height="300px">
         <VStack spacing="0">
-          <Heading size="md" marginBottom="10px">
+          <Heading size="md" mb="10px">
             {establecimiento.nombre}
           </Heading>
-          <Text marginBottom="0">
+          <Text mb="0">
             <Icon as={MdPlace} boxSize={4} mr="2" /> {establecimiento.direccion}
           </Text>
           <Text>
             <PhoneIcon boxSize={4} mr="2" /> {establecimiento.telefono}
           </Text>
           <Text>{establecimiento.horariosDeAtencion}</Text>
-          <Button onClick={() => handleRecuperar()} marginTop="2">
+          <Button onClick={() => handleRecuperar()} mt="2">
             Recuperar
           </Button>
         </VStack>

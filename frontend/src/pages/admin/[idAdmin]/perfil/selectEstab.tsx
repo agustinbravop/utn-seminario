@@ -2,7 +2,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { useState } from "react";
 import {
@@ -21,8 +21,8 @@ import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router";
 import { Box } from "@chakra-ui/react";
-import { useCambiarSuscripcion } from "@/utils/api/auth";
-import { useSuscripciones } from "@/utils/api/auth";
+import { useCambiarSuscripcion } from "@/utils/api";
+import { useSuscripciones } from "@/utils/api";
 
 export default function SelectEstablecimiento() {
   const { admin } = useCurrentAdmin();
@@ -89,10 +89,10 @@ export default function SelectEstablecimiento() {
           </Box>
           <CardBody height="300px">
             <VStack spacing="0">
-              <Heading size="md" marginBottom="10px">
+              <Heading size="md" mb="10px">
                 {est.nombre}
               </Heading>
-              <Text marginBottom="0">
+              <Text mb="0">
                 <Icon as={MdPlace} boxSize={4} mr="2" /> {est.direccion}
               </Text>
               <Text>
@@ -131,7 +131,7 @@ export default function SelectEstablecimiento() {
 
   return (
     <>
-      <Box marginLeft="12%">
+      <Box ml="12%">
         <Heading size="lg" mb="10px">
           Seleccione los establecimientos que desea conservar
         </Heading>

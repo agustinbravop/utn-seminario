@@ -11,12 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { InputControl, SubmitButton, SelectControl } from "@/components/forms";
-import { RegistrarJugador, useRegistrarJugador } from "@/utils/api/auth";
+import { RegistrarJugador, useRegistrarJugador } from "@/utils/api";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { DISCIPLINAS } from "@/utils/consts";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),

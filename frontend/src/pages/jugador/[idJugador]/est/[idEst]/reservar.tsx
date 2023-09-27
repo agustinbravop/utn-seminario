@@ -11,19 +11,20 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { useEstablecimientoByID } from "@/utils/api";
+import { useCanchasByEstablecimientoID } from "@/utils/api";
 import { DIAS_ABBR } from "@/utils/consts";
 import FormReservarDisponibilidad from "./canchas/[idCancha]/_formReservar";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Cancha } from "@/models";
+import { ordenarDias } from "@/utils/dias";
 
 // TODO: falta filtrar por disponibilidades ya ocupadas en la fecha dada.
 /** Genera las filas de disponibilidades que se muestran en la tabla para reservar. */
 function construirDisponibilidades(canchas: Cancha[]) {
   return canchas
-    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c.nombre })))
+    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c })))
     .flat()
     .sort(
       (a, b) =>
@@ -35,7 +36,10 @@ export default function ReservarEstablecimiento() {
 
   const { data: est } = useEstablecimientoByID(Number(idEst));
   const { data: canchas } = useCanchasByEstablecimientoID(Number(idEst));
-  const disciplinas = [...new Set(canchas?.map((c) => c.disciplinas).flat())];
+  const disciplinas = useMemo(
+    () => [...new Set(canchas?.map((c) => c.disciplinas).flat())],
+    [canchas]
+  );
   const [disciplina, setDisciplina] = useState(disciplinas[0] ?? "");
 
   useEffect(() => {
@@ -74,7 +78,7 @@ export default function ReservarEstablecimiento() {
       </Select>
       <Heading size="md">Horarios disponibles</Heading>
       <Text>Seleccione un horario a reservar.</Text>
-      <TableContainer paddingTop="15px" paddingBottom="20px">
+      <TableContainer pt="15px" pb="20px">
         <Table variant="striped" size="sm">
           <Thead>
             <Tr>
@@ -96,8 +100,12 @@ export default function ReservarEstablecimiento() {
                     </Td>
                     <Td>${d.precioReserva} </Td>
                     <Td>{d.precioSenia ? `$${d.precioSenia}` : "Sin seña"}</Td>
-                    <Td>{d.dias.map((dia) => DIAS_ABBR[dia]).join(", ")}</Td>
-                    <Td>{d.cancha}</Td>
+                    <Td>
+                      {ordenarDias(d.dias)
+                        .map((dia) => DIAS_ABBR[dia])
+                        .join(", ")}
+                    </Td>
+                    <Td>{d.cancha.nombre}</Td>
                     <Td>
                       <FormReservarDisponibilidad disp={d} />
                     </Td>

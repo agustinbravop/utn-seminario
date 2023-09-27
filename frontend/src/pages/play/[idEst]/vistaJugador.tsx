@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { Box, HStack, Heading } from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
+import { useEstablecimientoByID } from "@/utils/api";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import DetailEstablecimiento from "@/components/DetailEstablecimiento/DetailEstablecimiento";
@@ -18,7 +18,7 @@ export default function VistaJugador() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="12" mt="40px">
+      <Heading textAlign="center" pb="12" mt="40px">
         Establecimiento {data?.nombre}
       </Heading>
 

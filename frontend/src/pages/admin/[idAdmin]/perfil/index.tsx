@@ -26,8 +26,8 @@ export default function AdminPerfilPage() {
           Mi perfil
         </Heading>
       </CardHeader>
-      <CardBody marginTop="28px">
-        <Stack divider={<StackDivider />} spacing="2.5" marginTop="-2rem">
+      <CardBody mt="28px">
+        <Stack divider={<StackDivider />} spacing="2.5" mt="-2rem">
           <Box>
             <Heading size="xs">Nombre</Heading>
             <Text fontSize="sm">

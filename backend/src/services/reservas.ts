@@ -20,37 +20,51 @@ export interface ReservaService {
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
   crear(res: CrearReserva): Promise<Reserva>;
-  pagarSenia(res : Reserva, monto:Decimal) : Promise<Reserva>;
+  pagarSenia(res: Reserva, monto: Decimal): Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
   private repo: ReservaRepository;
   private canchaRepository: CanchaRepository;
   private dispRepository: DisponibilidadRepository;
-  private pagoRepo : PagoRepository;
+  private pagoRepo: PagoRepository;
 
   constructor(
     repository: ReservaRepository,
     canchaRepository: CanchaRepository,
     dispRepository: DisponibilidadRepository,
-    pagoRepo : PagoRepository
+    pagoRepo: PagoRepository
   ) {
     this.repo = repository;
     this.canchaRepository = canchaRepository;
     this.dispRepository = dispRepository;
-    this.pagoRepo = pagoRepo
+    this.pagoRepo = pagoRepo;
   }
 
-  async pagarSenia(res : Reserva, monto:Decimal) : Promise<Reserva>{
-    if(!res.disponibilidad.precioSenia){throw new Error(`La disponibilidad ${res.disponibilidad.id} no admite señas`)}
-    if(res.pagoSenia){throw new Error("Reserva con seña existente")};
-    if(monto < res.disponibilidad.precioSenia){throw new Error(`La disponibilidad ${res.disponibilidad.id} requiere una seña de $${res.disponibilidad.precioSenia}`)}
+  async pagarSenia(res: Reserva, monto: Decimal): Promise<Reserva> {
+    if (!res.disponibilidad.precioSenia) {
+      throw new Error(
+        `La disponibilidad ${res.disponibilidad.id} no admite señas`
+      );
+    }
+    if (res.pagoSenia) {
+      throw new Error("Reserva con seña existente");
+    }
+    if (monto < res.disponibilidad.precioSenia) {
+      throw new Error(
+        `La disponibilidad ${res.disponibilidad.id} requiere una seña de $${res.disponibilidad.precioSenia}`
+      );
+    }
     try {
-      const pago = await this.pagoRepo.crearPago(monto, "Efectivo", res.fechaReservada)
-      res.pagoSenia = pago.id
-      return await this.repo.updateReserva(res)
+      const pago = await this.pagoRepo.crearPago(
+        monto,
+        "Efectivo",
+        res.fechaReservada
+      );
+      res.pagoSenia = pago.id;
+      return await this.repo.updateReserva(res);
     } catch (e) {
-      throw new InternalServerError("Error al registrar el pago")
+      throw new InternalServerError("Error al registrar el pago");
     }
   }
 
@@ -74,7 +88,7 @@ export class ReservaServiceImpl implements ReservaService {
     await this.validarCanchaHabilitada(crearReserva);
     await this.validarDisponibilidadLibre(crearReserva);
 
-    const disp = await this.dispRepository.getDisponibilidadByID(
+    const disp = await this.dispRepository.getByID(
       crearReserva.idDisponibilidad
     );
     await this.validarDiaDeSemana(crearReserva, disp);
@@ -92,7 +106,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     if (!cancha.habilitada || cancha.eliminada) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} es de una cancha deshabilitada o eliminada`
+        `La disponibilidad es de una cancha deshabilitada o eliminada`
       );
     }
   }
@@ -105,7 +119,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     if (yaFueReservada) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} ya fue reservada en la fecha ${res.fechaReservada}`
+        `La disponibilidad ya fue reservada en la fecha ${res.fechaReservada}`
       );
     }
   }
@@ -115,7 +129,7 @@ export class ReservaServiceImpl implements ReservaService {
     const dia = getDayOfWeek(res.fechaReservada);
     if (!disp.dias.includes(dia)) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} solo está disponible los días ${disp.dias}`
+        `La disponibilidad de ${disp.horaInicio} a ${disp.horaFin} solo está disponible los días ${disp.dias}`
       );
     }
   }

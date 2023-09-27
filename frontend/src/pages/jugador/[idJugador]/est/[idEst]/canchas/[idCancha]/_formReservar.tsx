@@ -2,7 +2,7 @@ import { SubmitButton } from "@/components/forms";
 import DateControl from "@/components/forms/DateControl";
 import { useYupForm } from "@/hooks";
 import { Disponibilidad } from "@/models";
-import { CrearReserva, useCrearReserva } from "@/utils/api/reservas";
+import { CrearReserva, useCrearReserva } from "@/utils/api";
 import { formatearFecha } from "@/utils/dates";
 import {
   useDisclosure,
@@ -39,7 +39,7 @@ export default function FormReservarDisponibilidad({
 }: FormReservarDisponibilidadProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const searchParams = new URLSearchParams(location.search);
+  const searchParams = new URLSearchParams(window.location.href);
   const date = searchParams.get("date")!;
 
   const { mutate, isLoading } = useCrearReserva({
@@ -51,12 +51,8 @@ export default function FormReservarDisponibilidad({
       });
     },
     onError: (error) => {
-      const msg =
-        error.status === 409
-          ? error.message
-          : "Error al intentar crear la reserva";
       toast({
-        title: msg,
+        title: error.conflictMsg("Error al intentar crear la reserva"),
         description: "Intente de nuevo.",
         status: "error",
       });

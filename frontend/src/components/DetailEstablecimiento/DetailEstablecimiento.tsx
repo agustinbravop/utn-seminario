@@ -1,4 +1,4 @@
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
+import { useEstablecimientoByID } from "@/utils/api";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import {
   Card,
@@ -49,7 +49,7 @@ export default function DetailEstablecimiento() {
             />
           </Box>
         </CardHeader>
-        <CardBody marginTop="0px" flex="1">
+        <CardBody mt="0px" flex="1">
           <Stack divider={<StackDivider />} spacing="1">
             <Box>
               <Heading size="xs" margin="0">

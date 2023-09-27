@@ -6,7 +6,7 @@ import {
   ModificarCancha,
   useCanchaByID,
   useModificarCancha,
-} from "@/utils/api/canchas";
+} from "@/utils/api";
 import { ConfirmSubmitButton, InputControl } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import { useYupForm } from "@/hooks";

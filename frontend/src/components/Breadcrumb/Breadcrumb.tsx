@@ -68,7 +68,7 @@ export default function Breadcrumb({ cancha, establecimiento, admin }: Params) {
   };
 
   return (
-    <HStack paddingTop={2} marginLeft="17.3%" marginRight="17.%" spacing={1}>
+    <HStack pt={2} ml="17.3%" mr="17.%" spacing={1}>
       <Button size="xs" backgroundColor="white" onClick={() => next(false)}>
         <ChevronLeftIcon boxSize={6} />
       </Button>
