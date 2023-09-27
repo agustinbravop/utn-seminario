@@ -19,7 +19,11 @@ import {
   import { CanchaMenu } from "@/components/navigation";
 import { useReservaByID } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
+
+import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+
 import { fechaISOaDDMMAAAA } from "@/utils/dates";
+
   
   export default function ReservaInfoPage() {
     const { idEst, idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -45,14 +49,25 @@ import { fechaISOaDDMMAAAA } from "@/utils/dates";
         });
       },
     });
+    
+    let estado = <TriangleDownIcon color='Red' />
+                if (reserva?.idPagoReserva) {
+                  estado = <TriangleUpIcon color='Green' />
+                } else if (reserva?.idPagoSenia) {
+                  estado = <MinusIcon color='orange' />
+                }
   
 
     return (
       <>
         <Card m="auto" height="60%" width="36%" mt="5%">
           <CardBody  m="15px">
-            <Stack  divider={<StackDivider />} spacing="2.5" >
-            <Heading as='h3' size='lg' textAlign="center" > Datos de la reserva</Heading>
+          <Heading as='h3' size='lg' textAlign="center" > Datos de la reserva</Heading>
+            <Stack  divider={<StackDivider />} spacing="2.5" pt="10px">
+            <Box>
+                <Heading size="xs">Estado</Heading>
+                <Text fontSize="sm"> {estado} </Text>
+              </Box>
             <Box>
                 <Heading size="xs">Fecha</Heading>
                 <Text fontSize="sm"> {fechaISOaDDMMAAAA(reserva?.fechaReservada)} </Text>
@@ -69,11 +84,9 @@ import { fechaISOaDDMMAAAA } from "@/utils/dates";
                 <Heading size="xs">Disciplina</Heading>
                 <Text fontSize="sm"> {reserva?.disponibilidad.disciplina} </Text>
               </Box>
-              <Box>
-              </Box>
             </Stack>
 
-            <Heading textAlign="center"  as='h3' size='lg'> Datos del jugador</Heading>
+            <Heading textAlign="center"  as='h3' size='lg' pt="10px"> Datos del jugador</Heading>
 
             <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
               <Box>
@@ -86,9 +99,17 @@ import { fechaISOaDDMMAAAA } from "@/utils/dates";
               </Box>
              </Stack>
 
-            <HStack justifyContent="center" spacing="10px" pt="30px">
-                <ConfirmSubmitButton> Señar </ConfirmSubmitButton>
-                <ConfirmSubmitButton> Pagar </ConfirmSubmitButton>
+            <HStack justifyContent="center" spacing="20px" pt="30px">
+                <ConfirmSubmitButton
+                 header="Seña"
+                 body="¿Está seguro que desea efectuar la seña?"
+                
+                 > Señar </ConfirmSubmitButton>
+                <ConfirmSubmitButton
+                 header="Pago"
+                 body="¿Está seguro que desea efectuar el pago?"
+                
+                 > Pagar </ConfirmSubmitButton>
             </HStack>
           </CardBody>
         </Card>
