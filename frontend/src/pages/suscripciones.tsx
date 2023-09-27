@@ -8,7 +8,7 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { useSuscripciones } from "@/utils/api/auth";
+import { useSuscripciones } from "@/utils/api";
 import { Link } from "react-router-dom";
 import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
 

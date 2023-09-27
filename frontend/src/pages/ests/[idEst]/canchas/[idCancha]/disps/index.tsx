@@ -8,7 +8,7 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api/canchas";
+import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 import FormDisp from "./_FormDisp";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -16,7 +16,7 @@ import {
   useCrearDisponibilidad,
   useDisponibilidadesByCanchaID,
   useModificarDisponibilidad,
-} from "@/utils/api/disponibilidades";
+} from "@/utils/api";
 import FormEliminarDisp from "./_FormEliminarDisp";
 import { Disponibilidad, DisponibilidadForm } from "@/models";
 import { decimalAHora, horaADecimal } from "@/utils/dates";
@@ -52,9 +52,9 @@ export default function CanchaInfoPage() {
         status: "success",
       });
     },
-    onError: () => {
+    onError: (e) => {
       toast({
-        title: "Error al modificar la disponibilidad.",
+        title: e.conflictMsg("Error al modificar la disponibilidad."),
         description: `Intente de nuevo.`,
         status: "error",
       });

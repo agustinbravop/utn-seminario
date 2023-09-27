@@ -2,7 +2,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { useState } from "react";
 import {
@@ -21,8 +21,8 @@ import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router";
 import { Box } from "@chakra-ui/react";
-import { useCambiarSuscripcion } from "@/utils/api/auth";
-import { useSuscripciones } from "@/utils/api/auth";
+import { useCambiarSuscripcion } from "@/utils/api";
+import { useSuscripciones } from "@/utils/api";
 
 export default function SelectEstablecimiento() {
   const { admin } = useCurrentAdmin();

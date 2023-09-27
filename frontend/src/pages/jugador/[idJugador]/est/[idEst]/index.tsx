@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { Heading } from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
+import { useEstablecimientoByID } from "@/utils/api";
 import DetailEstablecimiento from "@/components/DetailEstablecimiento/DetailEstablecimiento";
 
 export default function VistaJugador() {

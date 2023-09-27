@@ -73,7 +73,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     if (!cancha.habilitada || cancha.eliminada) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} es de una cancha deshabilitada o eliminada`
+        `La disponibilidad es de una cancha deshabilitada o eliminada`
       );
     }
   }
@@ -86,7 +86,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     if (yaFueReservada) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} ya fue reservada en la fecha ${res.fechaReservada}`
+        `La disponibilidad ya fue reservada en la fecha ${res.fechaReservada}`
       );
     }
   }
@@ -96,7 +96,7 @@ export class ReservaServiceImpl implements ReservaService {
     const dia = getDayOfWeek(res.fechaReservada);
     if (!disp.dias.includes(dia)) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} solo está disponible los días ${disp.dias}`
+        `La disponibilidad de ${disp.horaInicio} a ${disp.horaFin} solo está disponible los días ${disp.dias}`
       );
     }
   }

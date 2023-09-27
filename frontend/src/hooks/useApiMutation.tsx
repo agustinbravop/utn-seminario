@@ -5,7 +5,7 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ApiError } from "../utils/api";
+import { ApiError } from "@/utils/api";
 
 /**
  * Es similar a `UseMutationOptions` de '@tanstack/react-query', pero en TError

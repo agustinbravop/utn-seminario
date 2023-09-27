@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useModificarAdministrador } from "@/utils/api/auth";
+import { useModificarAdministrador } from "@/utils/api";
 import { FormProvider } from "react-hook-form";
 import { InputControl, ConfirmSubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";

@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useModificarJugador } from "@/utils/api/auth";
+import { useModificarJugador } from "@/utils/api";
 import { FormProvider, useWatch } from "react-hook-form";
 import {
   InputControl,
@@ -20,7 +20,7 @@ import {
 } from "@/components/forms";
 import { useNavigate } from "react-router";
 import { useCurrentJugador, useYupForm } from "@/hooks";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 import { useEffect } from "react";
 import { DISCIPLINAS } from "@/utils/consts";
 

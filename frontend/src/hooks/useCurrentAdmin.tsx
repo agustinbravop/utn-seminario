@@ -2,9 +2,9 @@ import { useEffect, useContext, createContext, useState } from "react";
 import { Administrador } from "../models";
 import { readLocalStorage } from "../utils/localStorage";
 import jwtDecode from "jwt-decode";
-import { JWT } from "../utils/api";
+import { JWT } from "@/utils/api";
 import { useToast } from "@chakra-ui/react";
-import { refreshToken } from "@/utils/api/auth";
+import { refreshToken } from "@/utils/api";
 
 interface ICurrentAdminContext {
   admin: Administrador;

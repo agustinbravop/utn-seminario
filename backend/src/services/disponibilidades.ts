@@ -43,7 +43,8 @@ export class DisponibilidadServiceimpl implements DisponibilidadService {
   }
 
   /**
-   * Valida que dos disponibilidades no se solapen en una disciplina, día y horario. */
+   * Valida que una disponibilidad no tenga conflictos con el resto de disponibilidades.
+   */
   async validar(disp: Disponibilidad) {
     if (horaADecimal(disp.horaInicio) > horaADecimal(disp.horaFin)) {
       throw new BadRequestError(
@@ -51,23 +52,20 @@ export class DisponibilidadServiceimpl implements DisponibilidadService {
       );
     }
 
-    let disponibilidades = await this.repo.getByCanchaID(disp.idCancha);
-    disponibilidades = disponibilidades
-      // Dos disponibilidades se solapan si tienen la misma disciplina,
-      .filter((d) => d.disciplina === disp.disciplina)
-      // En el mismo día de la semana,
-      .filter((d) => d.dias.some((dia) => disp.dias.includes(dia)))
-      // Y una comienza antes que la otra termine pero también termina una vez comenzada la otra.
-      .filter(
-        (d) =>
-          horaADecimal(d.horaInicio) < horaADecimal(disp.horaFin) &&
-          horaADecimal(d.horaFin) > horaADecimal(disp.horaInicio)
-      );
-
-    if (disponibilidades.length !== 0) {
-      throw new ConflictError(
-        "Los horarios se solapan con otras disponibilidades"
-      );
+    const disponibilidades = await this.repo.getByCanchaID(disp.idCancha);
+    for (const d of disponibilidades) {
+      if (
+        // Dos disponibilidades se solapan si tienen la misma disciplina,
+        d.disciplina === disp.disciplina &&
+        // en el mismo día de la semana,
+        d.dias.some((dia) => disp.dias.includes(dia)) &&
+        // y una comienza antes de que la otra termine,
+        horaADecimal(d.horaInicio) < horaADecimal(disp.horaFin) &&
+        // pero también termina después de que la otra haya comenzado.
+        horaADecimal(d.horaFin) > horaADecimal(disp.horaInicio)
+      ) {
+        throw new ConflictError("El horario se solapa con otra disponibilidad");
+      }
     }
   }
 }

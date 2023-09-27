@@ -28,7 +28,7 @@ import { Link } from "react-router-dom";
 import {
   useEstablecimientosByAdminID,
   useEstablecimientosEliminadosByAdminID,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
 
 interface EstablecimientosListProps {

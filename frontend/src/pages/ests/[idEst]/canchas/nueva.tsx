@@ -1,7 +1,7 @@
 import { Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { Button, Heading, HStack, useToast, VStack } from "@chakra-ui/react";
-import { CrearCancha, useCrearCancha } from "@/utils/api/canchas";
+import { CrearCancha, useCrearCancha } from "@/utils/api";
 import { ImageControl, InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import * as Yup from "yup";

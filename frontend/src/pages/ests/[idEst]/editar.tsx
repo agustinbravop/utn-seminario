@@ -11,7 +11,7 @@ import {
   ModificarEstablecimiento,
   useEstablecimientoByID,
   useModificarEstablecimiento,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import * as Yup from "yup";
 import { FormProvider } from "react-hook-form";
 import {

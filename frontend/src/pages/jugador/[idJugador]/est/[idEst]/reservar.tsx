@@ -11,8 +11,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { useEstablecimientoByID } from "@/utils/api";
+import { useCanchasByEstablecimientoID } from "@/utils/api";
 import { DIAS_ABBR } from "@/utils/consts";
 import FormReservarDisponibilidad from "./canchas/[idCancha]/_formReservar";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";

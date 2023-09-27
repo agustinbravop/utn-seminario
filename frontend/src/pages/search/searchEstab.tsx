@@ -1,5 +1,5 @@
 import EstablecimientoJugador from "@/components/EstablecimientoJugador/EstablecimientoJugador";
-import { useBuscarEstablecimientos } from "@/utils/api/establecimientos";
+import { useBuscarEstablecimientos } from "@/utils/api";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   HStack,
@@ -12,7 +12,7 @@ import { formatearFecha } from "@/utils/dates";
 import { useCurrentJugador, useYupForm } from "@/hooks";
 import { useWatch } from "react-hook-form";
 import { DISCIPLINAS, QuestionImage } from "@/utils/consts";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 import { InputControl, SelectControl } from "@/components/forms";
 import { Busqueda } from "@/models";
 import { FormProvider } from "react-hook-form";

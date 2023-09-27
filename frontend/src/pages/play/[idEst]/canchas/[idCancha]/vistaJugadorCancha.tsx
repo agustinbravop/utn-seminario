@@ -19,7 +19,7 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api/canchas";
+import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 
 import React, { useState } from "react";
