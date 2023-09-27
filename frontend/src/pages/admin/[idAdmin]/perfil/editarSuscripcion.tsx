@@ -10,13 +10,13 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { useSuscripciones } from "@/utils/api/auth";
+import { useSuscripciones } from "@/utils/api";
 import { Suscripcion } from "@/models";
 import { useNavigate } from "react-router";
-import { useCambiarSuscripcion } from "@/utils/api/auth";
+import { useCambiarSuscripcion } from "@/utils/api";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
-import { useEstablecimientosByAdminID } from "@/utils/api/establecimientos";
+import { useEstablecimientosByAdminID } from "@/utils/api";
 import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
 import { ConfirmSubmitButton } from "@/components/forms";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";

@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { Box, HStack, Heading } from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
+import { useEstablecimientoByID } from "@/utils/api";
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import DetailEstablecimiento from "@/components/DetailEstablecimiento/DetailEstablecimiento";

@@ -1,4 +1,4 @@
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
+import { useEstablecimientoByID } from "@/utils/api";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import {
   Card,

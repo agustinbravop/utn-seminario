@@ -1,6 +1,5 @@
 import { useParams } from "react-router";
 import {
-  Box,
   Button,
   HStack,
   Icon,
@@ -8,9 +7,10 @@ import {
   InputGroup,
   InputRightElement,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import Courts from "@/components/Courts/Courts";
-import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { useCanchasByEstablecimientoID } from "@/utils/api";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
 import Alerta from "@/components/Alerta/Alerta";
@@ -56,23 +56,25 @@ export default function EstablecimientoCanchasPage() {
           </Link>
         </HStack>
       </HStack>
-      <HStack ml="16%" mr="16%">
-        {isError ? (
-          <Alerta
-            mensaje="Error inesperado. No podemos listar las canchas"
-            status="error"
-          />
-        ) : isLoading ? (
-          <LoadingSpinner />
-        ) : canchas.length === 0 && isFetchedAfterMount ? (
-          <Box m="auto">
-            <QuestionImage />
-            <Text>Este establecimiento no tiene canchas</Text>
-          </Box>
-        ) : (
-          <Courts canchas={(filtro ? canchas : data) || []} />
-        )}
-      </HStack>
+      {isError ? (
+        <Alerta
+          mensaje="Error inesperado. No podemos listar las canchas"
+          status="error"
+        />
+      ) : isLoading ? (
+        <LoadingSpinner />
+      ) : canchas.length === 0 && isFetchedAfterMount ? (
+        <VStack m="auto">
+          <QuestionImage />
+          <Text>
+            {filtro
+              ? "No hay canchas con ese nombre."
+              : "Este establecimiento no tiene canchas."}
+          </Text>
+        </VStack>
+      ) : (
+        <Courts canchas={canchas} />
+      )}
     </>
   );
 }

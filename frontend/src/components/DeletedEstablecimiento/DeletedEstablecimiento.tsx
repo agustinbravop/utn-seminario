@@ -14,7 +14,7 @@ import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Box } from "@chakra-ui/react";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
-import { useModificarEstablecimiento } from "@/utils/api/establecimientos";
+import { useModificarEstablecimiento } from "@/utils/api";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useQueryClient } from "@tanstack/react-query";
 

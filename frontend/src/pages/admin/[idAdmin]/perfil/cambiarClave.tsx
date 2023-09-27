@@ -9,7 +9,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { CambiarClave, useCambiarClave } from "@/utils/api/auth";
+import { CambiarClave, useCambiarClave } from "@/utils/api";
 import { FormProvider } from "react-hook-form";
 import { PasswordControl, SubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";

@@ -2,7 +2,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import { useState } from "react";
 import {
