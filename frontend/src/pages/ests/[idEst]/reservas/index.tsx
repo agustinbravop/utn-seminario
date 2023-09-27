@@ -70,9 +70,10 @@ export default function EstablecimientoReservasPage() {
         marginBottom="30px"
         marginTop="0px"
       >
-        <Text>
-          Estas son las reservas actuales de para este establecimiento.
-        </Text>
+
+    <Text>
+      {reservas.length > 0 ? "Estas son las reservas actuales para este establecimiento." : "Actualmente no hay reservas para este establecimiento."}
+    </Text>
       </HStack>
       <TableContainer paddingTop="15px" paddingBottom="20px"
         marginRight="16%"
