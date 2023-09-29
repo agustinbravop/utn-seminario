@@ -10,13 +10,16 @@ import {
   Td,
   Tbody,
   Button,
+  Input,
+  FormControl,
+  FormLabel
 } from "@chakra-ui/react";
 import { TriangleUpIcon, TriangleDownIcon, MinusIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
 import { formatearISO } from "@/utils/dates";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -53,6 +56,13 @@ export default function EstablecimientoReservasPage() {
     }
   });
 
+  const [filtroNombre, setFiltroNombre] = useState(""); // Nuevo estado para el filtro
+
+  const reservasFiltradas = reservasOrdenadas.filter((r) => {
+    const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
+    return nombreJugador.toLowerCase().includes(filtroNombre.toLowerCase());
+  });
+
   return (
     <>
       <EstablecimientoMenu />
@@ -62,6 +72,20 @@ export default function EstablecimientoReservasPage() {
             ? "Estas son las reservas actuales para este establecimiento."
             : "Actualmente no hay reservas para este establecimiento."}
         </Text>
+      </HStack>
+      <HStack mr="16%" ml="16%" mb="20px" mt="0px">
+        <FormControl
+          variant="floating"
+          width='auto'
+        >
+          <Input
+            type="text"
+            placeholder="Jugador"
+            value={filtroNombre}
+            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroNombre(e.target.value)}
+          />
+          <FormLabel>Jugador</FormLabel>
+        </FormControl>
       </HStack>
       <TableContainer pt="15px" pb="20px" mr="16%" ml="16%" mb="30px" mt="0px">
         <Table variant="striped" size="sm">
@@ -74,11 +98,10 @@ export default function EstablecimientoReservasPage() {
               >
                 Cancha{" "}
                 {ordenColumna === "Cancha" && (
-                  // Flecha de ordenamiento ascendente o descendente según el estado
                   <>
-                    {ordenAscendente ? 
+                    {ordenAscendente ?
                       <TriangleUpIcon color="blue.500" />
-                    :
+                      :
                       <TriangleDownIcon color="blue.500" />
                     }
                   </>
@@ -122,7 +145,7 @@ export default function EstablecimientoReservasPage() {
             </Tr>
           </Thead>
           <Tbody>
-            {reservasOrdenadas?.map((r) => {
+            {reservasFiltradas?.map((r) => {
               let estado = <TriangleDownIcon color="Red" />;
               if (r.idPagoReserva) {
                 estado = <TriangleUpIcon color="Green" />;
