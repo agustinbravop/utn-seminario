@@ -56,12 +56,18 @@ export default function EstablecimientoReservasPage() {
     }
   });
 
-  const [filtroNombre, setFiltroNombre] = useState(""); // Nuevo estado para el filtro
+  const [filtroNombre, setFiltroNombre] = useState(""); 
+  const [filtroFecha, setFiltroFecha] = useState(""); 
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
     const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
-    return nombreJugador.toLowerCase().includes(filtroNombre.toLowerCase());
+
+    const nombreIncluido = nombreJugador.toLowerCase().includes(filtroNombre.toLowerCase());
+    const fechaCoincide = filtroFecha === "" || formatearISO(r.fechaReservada) === formatearISO(filtroFecha);
+
+    return nombreIncluido && fechaCoincide;
   });
+
 
   return (
     <>
@@ -85,6 +91,15 @@ export default function EstablecimientoReservasPage() {
             onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroNombre(e.target.value)}
           />
           <FormLabel>Jugador</FormLabel>
+        </FormControl>
+        <FormControl variant="floating" width='auto'>
+          <Input
+            type="date"
+            placeholder="Fecha"
+            value={filtroFecha}
+            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroFecha(e.target.value)}
+          />
+          <FormLabel>Fecha</FormLabel>
         </FormControl>
       </HStack>
       <TableContainer pt="15px" pb="20px" mr="16%" ml="16%" mb="30px" mt="0px">
@@ -141,7 +156,6 @@ export default function EstablecimientoReservasPage() {
               </Th>
               <Th textAlign="center">Ver Detalle</Th>
               <Th textAlign="center" onClick={() => handleOrdenarColumna("Estado")}>Estado</Th>
-              <Th></Th>
             </Tr>
           </Thead>
           <Tbody>
