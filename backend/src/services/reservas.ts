@@ -42,23 +42,21 @@ export class ReservaServiceImpl implements ReservaService {
   }
 
   async pagarSenia(res: Reserva): Promise<Reserva> {
-    //if (!res.disponibilidad.precioSenia) {
-      //throw new Error(
-        //`La disponibilidad ${res.disponibilidad.id} no admite señas`
-      //);
-    //}
+    if (!res.disponibilidad.precioSenia) {
+      throw new Error(
+        `La disponibilidad ${res.disponibilidad.id} no admite señas`
+      );
+    }
+    console.log(res.pagoSenia, "garganta")
     if (res.pagoSenia) {
       throw new Error("Reserva con seña existente");
     }
     try {
       const pago = await this.pagoRepo.crearPago(
-        new Decimal(500), //???
-        "Efectivo",
-        res.fechaReservada // no sense
+        new Decimal(res.precio), //???
+        "Efectivo"
       );
       res.pagoSenia = pago.id;
-      console.log("eustaquio", res.pagoSenia)
-
       return await this.repo.updateReserva(res);
     } catch (e) {
       throw new InternalServerError("Error al registrar el pago");

@@ -68,9 +68,7 @@ export class ReservaHandler {
 
   seniarReserva(): RequestHandler {
     return async (_req, res) => {
-      console.log()
-      const reserva: Reserva = {id: Number(_req.params["idRes"]), ..._req.body};
-      console.log("culpa del handleer", reserva)
+      const reserva: Reserva = {id: Number(_req.params["idRes"]), pagoSenia:_req.body.idPagoSenia, pagoReserva: _req.body.idPagoReserva, ..._req.body};
       const reservaUpdated = await this.service.pagarSenia(reserva);
       res.status(201).json(reservaUpdated);
     };

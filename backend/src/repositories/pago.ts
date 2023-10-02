@@ -4,7 +4,7 @@ import Decimal from "decimal.js";
 import { InternalServerError } from "../utils/apierrors";
 
 export interface PagoRepository {
-  crearPago(monto: Decimal, metodoPago: string, fecha: Date): Promise<Pago>;
+  crearPago(monto: Decimal, metodoPago: string): Promise<Pago>;
   getPagosAll(): Promise<Pago[]>;
 }
 
@@ -27,17 +27,12 @@ export class PrismaPagoRepository implements PagoRepository {
   async crearPago(
     monto: Decimal,
     metodoPago: string,
-    fecha: Date
   ): Promise<Pago> {
     try {
-
-      const fecha2 = new Date()
-      console.log("monoxido")
-      console.log(monto, metodoPago, fecha)
+      const fecha = new Date()
       const pagoDB = await this.prisma.pago.create({
         data: {
-          // id: undefined, no es necesario
-          fechaPago: fecha2,
+          fechaPago: fecha,
           monto: monto,
           metodoDePago: { connectOrCreate: {
             where: { metodoDePago: metodoPago },
@@ -45,7 +40,6 @@ export class PrismaPagoRepository implements PagoRepository {
           } },
         },
       });
-
       return pagoDB;
     } catch {
       throw new InternalServerError("Error al crear el pago");
