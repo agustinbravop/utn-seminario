@@ -12,14 +12,17 @@ import {
   Button,
   Input,
   FormControl,
-  FormLabel
+  FormLabel,
+  Box
 } from "@chakra-ui/react";
-import { TriangleUpIcon, TriangleDownIcon, MinusIcon } from "@chakra-ui/icons";
+import { TriangleUpIcon, TriangleDownIcon, MinusIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
-import { formatearISO } from "@/utils/dates";
+import { formatearFecha, formatearISO } from "@/utils/dates";
 import { SetStateAction, useState } from "react";
+import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
+
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -56,8 +59,8 @@ export default function EstablecimientoReservasPage() {
     }
   });
 
-  const [filtroNombre, setFiltroNombre] = useState(""); 
-  const [filtroFecha, setFiltroFecha] = useState(""); 
+  const [filtroNombre, setFiltroNombre] = useState("");
+  const [filtroFecha, setFiltroFecha] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
     const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
@@ -97,6 +100,7 @@ export default function EstablecimientoReservasPage() {
             type="date"
             placeholder="Fecha"
             value={filtroFecha}
+            defaultValue={formatearFecha(new Date())}
             onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroFecha(e.target.value)}
           />
           <FormLabel>Fecha</FormLabel>
@@ -154,17 +158,18 @@ export default function EstablecimientoReservasPage() {
                   </>
                 )}
               </Th>
-              <Th textAlign="center">Ver Detalle</Th>
               <Th textAlign="center" onClick={() => handleOrdenarColumna("Estado")}>Estado</Th>
+              <Th textAlign="center">Ver Detalle</Th>
+
             </Tr>
           </Thead>
           <Tbody>
             {reservasFiltradas?.map((r) => {
-              let estado = <TriangleDownIcon color="Red" />;
+              let estado = <HStack width='100%' display='flex' justifyContent='center'><Box width='40%' ml='10%'>No Pagado</Box> <CircleIcon color="Red" width='40%' />  </HStack>;
               if (r.idPagoReserva) {
-                estado = <TriangleUpIcon color="Green" />;
+                estado = <HStack width='100%' display='flex' justifyContent='center' > <Box width='40%' ml='10%'>Pagado</Box> <CircleIcon color="Green" width='40%' /> </HStack>;
               } else if (r.idPagoSenia) {
-                estado = <MinusIcon color="orange" />;
+                estado = <HStack width='100%' display='flex' justifyContent='center' ><Box width='40%' ml='10%'>Señado</Box> <CircleIcon color="orange" width='40%' /></HStack>;
               }
               return (
                 <Tr key={r.id}>
@@ -173,16 +178,10 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">
                     {r.jugador.nombre} {r.jugador.apellido}
                   </Td>
-                  <Td textAlign="center">
-                    <Button
-                      colorScheme="brand"
-                      variant="outline"
-                      onClick={() => navigate(`${r.id}`)}
-                    >
-                      Ver Detalle
-                    </Button>
-                  </Td>
                   <Td textAlign="center">{estado}</Td>
+                  <Td textAlign="center">
+                    <PlusSquareIcon w={5} h={5} style={{ cursor: "pointer" }} onClick={() => navigate(`${r.id}`)} />
+                  </Td>
                 </Tr>
               );
             })}

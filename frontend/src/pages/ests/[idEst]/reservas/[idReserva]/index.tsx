@@ -15,13 +15,14 @@ import { ConfirmSubmitButton } from "@/components/forms";
 import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { formatearISO } from "@/utils/dates";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
 
 export default function ReservaInfoPage() {
   const { idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
   const { data: reserva } = useReservaByID(Number(idReserva));
   const toast = useToast();
-  
-  const {mutate} = useSeniarReserva({
+
+  const { mutate } = useSeniarReserva({
     onSuccess: () => {
       toast({
         title: `Reserva`,
@@ -30,15 +31,15 @@ export default function ReservaInfoPage() {
       });
     },
     onError: () => {
-        toast({
-          title: "Error al señar la reserva",
-          description: "Intente de nuevo.",
-          status: "error",
-        });
-      },
+      toast({
+        title: "Error al señar la reserva",
+        description: "Intente de nuevo.",
+        status: "error",
+      });
+    },
   });
 
-  const {mutate: mutatePago} = usePagarReserva({
+  const { mutate: mutatePago } = usePagarReserva({
     onSuccess: () => {
       toast({
         title: `Pago`,
@@ -47,23 +48,23 @@ export default function ReservaInfoPage() {
       });
     },
     onError: () => {
-        toast({
-          title: "Error al realizar el pago",
-          description: "Intente de nuevo.",
-          status: "error",
-        });
-      },
+      toast({
+        title: "Error al realizar el pago",
+        description: "Intente de nuevo.",
+        status: "error",
+      });
+    },
   });
 
   if (!reserva) {
     return <LoadingSpinner />;
   }
 
-  let estado = <Text> No pagado <TriangleDownIcon color="Red" /> </Text> ;
+  let estado = <Text> No pagado <CircleIcon color="Red" /> </Text>;
   if (reserva.idPagoReserva) {
-    estado = <Text> Pagado <TriangleUpIcon color="Green" /> </Text>;
+    estado = <Text> Pagado <CircleIcon color="Green" /> </Text>;
   } else if (reserva.idPagoSenia) {
-    estado = <Text> Señado <MinusIcon color="orange" /> </Text>;
+    estado = <Text> Señado <CircleIcon color="orange" /> </Text>;
   }
 
   return (
@@ -91,7 +92,7 @@ export default function ReservaInfoPage() {
             </Box>
             <Box>
               <Heading size="xs"> Precio </Heading>
-              <Text fontSize="sm"> {reserva.precio} </Text>
+              <Text fontSize="sm"> ${reserva.precio} </Text>
             </Box>
             <Box>
               <Heading size="xs">Disciplina</Heading>
@@ -117,20 +118,22 @@ export default function ReservaInfoPage() {
           </Stack>
 
           <HStack justifyContent="center" spacing="20px" pt="30px">
-            <ConfirmSubmitButton
-              header="Seña"
-              body="¿Está seguro que desea efectuar la seña?"
-              onSubmit={() => mutate(reserva)}
-            >
-              Señar
-            </ConfirmSubmitButton>
-            <ConfirmSubmitButton
+            {(!reserva.idPagoSenia && !reserva.idPagoReserva && reserva.disponibilidad.precioSenia)
+              && <ConfirmSubmitButton
+                header="Seña"
+                body="¿Está seguro que desea efectuar la seña?"
+                onSubmit={() => mutate(reserva)}
+              >
+                Señar
+              </ConfirmSubmitButton>}
+
+            {!reserva.idPagoReserva && <ConfirmSubmitButton
               header="Pago"
               body="¿Está seguro que desea efectuar el pago?"
               onSubmit={() => mutatePago(reserva)}
             >
               Pagar
-            </ConfirmSubmitButton>
+            </ConfirmSubmitButton>}
           </HStack>
         </CardBody>
       </Card>
