@@ -59,11 +59,11 @@ export default function ReservaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  let estado = <TriangleDownIcon color="Red" />;
+  let estado = <Text> No pagado <TriangleDownIcon color="Red" /> </Text> ;
   if (reserva.idPagoReserva) {
-    estado = <TriangleUpIcon color="Green" />;
+    estado = <Text> Pagado <TriangleUpIcon color="Green" /> </Text>;
   } else if (reserva.idPagoSenia) {
-    estado = <MinusIcon color="orange" />;
+    estado = <Text> Señado <MinusIcon color="orange" /> </Text>;
   }
 
   return (
@@ -99,11 +99,11 @@ export default function ReservaInfoPage() {
             </Box>
           </Stack>
 
-          <Heading textAlign="center" as="h3" size="lg" pt="10px">
+          <Heading textAlign="center" fontSize='24px' pt="15px">
             Datos del jugador
           </Heading>
 
-          <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
+          <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
             <Box>
               <Heading size="xs">Nombre y Apellido</Heading>
               <Text fontSize="sm">

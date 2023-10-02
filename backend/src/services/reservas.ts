@@ -53,7 +53,7 @@ export class ReservaServiceImpl implements ReservaService {
     }
     try {
       const pago = await this.pagoRepo.crearPago(
-        new Decimal(res.precio), //???
+        new Decimal(res.disponibilidad.precioSenia), //???
         "Efectivo"
       );
       res.pagoSenia = pago.id;
