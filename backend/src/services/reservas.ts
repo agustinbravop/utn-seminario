@@ -20,7 +20,7 @@ export interface ReservaService {
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
   crear(res: CrearReserva): Promise<Reserva>;
-  pagarSenia(res: Reserva, monto: Decimal): Promise<Reserva>;
+  pagarSenia(res: Reserva): Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
@@ -41,7 +41,7 @@ export class ReservaServiceImpl implements ReservaService {
     this.pagoRepo = pagoRepo;
   }
 
-  async pagarSenia(res: Reserva, monto: Decimal): Promise<Reserva> {
+  async pagarSenia(res: Reserva): Promise<Reserva> {
     if (!res.disponibilidad.precioSenia) {
       throw new Error(
         `La disponibilidad ${res.disponibilidad.id} no admite señas`
@@ -50,14 +50,9 @@ export class ReservaServiceImpl implements ReservaService {
     if (res.pagoSenia) {
       throw new Error("Reserva con seña existente");
     }
-    if (monto < res.disponibilidad.precioSenia) {
-      throw new Error(
-        `La disponibilidad ${res.disponibilidad.id} requiere una seña de $${res.disponibilidad.precioSenia}`
-      );
-    }
     try {
       const pago = await this.pagoRepo.crearPago(
-        monto,
+        new Decimal(res.pagoSenia || 0), //???
         "Efectivo",
         res.fechaReservada
       );

@@ -36,7 +36,7 @@ export function reservasRouter(
     //Solo el admin seña por ahora, el metodo de
     //pago hardcodeado es "Efectivo" por ahora
     authMiddle.isAdmin(),
-    //validateBody(crearReservaSchema) debería validar el body?
+    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
     handler.seniarReserva()
   );
 

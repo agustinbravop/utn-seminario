@@ -68,8 +68,7 @@ export class ReservaHandler {
   seniarReserva(): RequestHandler {
     return async (_req, res) => {
       const reserva = res.locals.body;
-      const senia = res.locals.monto;
-      const reservaUpdated = await this.service.pagarSenia(reserva, senia);
+      const reservaUpdated = await this.service.pagarSenia(reserva);
       res.status(201).json(reservaUpdated);
     };
   }
