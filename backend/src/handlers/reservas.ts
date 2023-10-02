@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { z } from "zod";
 import { CrearReserva, ReservaService } from "../services/reservas.js";
 import { BadRequestError } from "../utils/apierrors.js";
+import { Reserva } from "../models/reserva.js";
 
 export const crearReservaSchema = z.object({
   idDisponibilidad: z.number().positive().int(),
@@ -67,7 +68,9 @@ export class ReservaHandler {
 
   seniarReserva(): RequestHandler {
     return async (_req, res) => {
-      const reserva = res.locals.body;
+      console.log()
+      const reserva: Reserva = {id: Number(_req.params["idRes"]), ..._req.body};
+      console.log("culpa del handleer", reserva)
       const reservaUpdated = await this.service.pagarSenia(reserva);
       res.status(201).json(reservaUpdated);
     };

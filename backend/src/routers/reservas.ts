@@ -32,7 +32,7 @@ export function reservasRouter(
   );
 
   router.patch(
-    "/",
+    "/:idRes", //validateIDParams("idRes"),
     //Solo el admin seña por ahora, el metodo de
     //pago hardcodeado es "Efectivo" por ahora
     authMiddle.isAdmin(),

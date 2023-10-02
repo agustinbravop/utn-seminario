@@ -34,10 +34,11 @@ export class PrismaReservaRepository implements ReservaRepository {
 
   async updateReserva(res: Reserva): Promise<Reserva> {
     try {
+      console.log(res)
       const nuevaReserva = await this.prisma.reserva.update({
         where: { id: res.id },
         data: {
-          fechaCreada: res.fechaCreada,
+          fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
           fechaReservada: res.fechaReservada,
           precio: res.precio,
           jugador: { connect: { id: res.jugador.id } },

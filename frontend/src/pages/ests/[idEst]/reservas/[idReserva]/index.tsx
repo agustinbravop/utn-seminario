@@ -7,19 +7,36 @@ import {
   Stack,
   StackDivider,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useParams } from "@/router";
-import { useReservaByID } from "@/utils/api/reservas";
+import { useReservaByID, useSeniarReserva } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
-
 import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-
 import { formatearISO } from "@/utils/dates";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function ReservaInfoPage() {
   const { idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
   const { data: reserva } = useReservaByID(Number(idReserva));
+  const toast = useToast();
+  
+  const {mutate} = useSeniarReserva({
+    onSuccess: () => {
+      toast({
+        title: `Reserva`,
+        description: "Reserva señada exitosamente",
+        status: "success"
+      });
+    },
+    onError: () => {
+        toast({
+          title: "Error al señar la reserva",
+          description: "Intente de nuevo.",
+          status: "error",
+        });
+      },
+  });
 
   if (!reserva) {
     return <LoadingSpinner />;
@@ -86,6 +103,7 @@ export default function ReservaInfoPage() {
             <ConfirmSubmitButton
               header="Seña"
               body="¿Está seguro que desea efectuar la seña?"
+              onSubmit={() => mutate(reserva)}
             >
               Señar
             </ConfirmSubmitButton>

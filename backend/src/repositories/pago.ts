@@ -11,7 +11,7 @@ export interface PagoRepository {
 export class PrismaPagoRepository implements PagoRepository {
   private prisma: PrismaClient;
 
-  constructor(prismaClient: PrismaClient) {
+  constructor(prismaClient: PrismaClient) { 
     this.prisma = prismaClient;
   }
 
@@ -30,12 +30,19 @@ export class PrismaPagoRepository implements PagoRepository {
     fecha: Date
   ): Promise<Pago> {
     try {
+
+      const fecha2 = new Date()
+      console.log("monoxido")
+      console.log(monto, metodoPago, fecha)
       const pagoDB = await this.prisma.pago.create({
         data: {
-          id: undefined,
-          fechaPago: fecha,
+          // id: undefined, no es necesario
+          fechaPago: fecha2,
           monto: monto,
-          metodoDePago: { connect: { metodoDePago: metodoPago } },
+          metodoDePago: { connectOrCreate: {
+            where: { metodoDePago: metodoPago },
+            create: { metodoDePago: metodoPago }
+          } },
         },
       });
 
@@ -45,3 +52,4 @@ export class PrismaPagoRepository implements PagoRepository {
     }
   }
 }
+
