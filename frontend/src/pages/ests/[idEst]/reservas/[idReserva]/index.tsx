@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useParams } from "@/router";
-import { useReservaByID, useSeniarReserva } from "@/utils/api/reservas";
+import { usePagarReserva, useReservaByID, useSeniarReserva } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
 import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { formatearISO } from "@/utils/dates";
@@ -32,6 +32,23 @@ export default function ReservaInfoPage() {
     onError: () => {
         toast({
           title: "Error al señar la reserva",
+          description: "Intente de nuevo.",
+          status: "error",
+        });
+      },
+  });
+
+  const {mutate: mutatePago} = usePagarReserva({
+    onSuccess: () => {
+      toast({
+        title: `Pago`,
+        description: "Pago realizado exitosamente",
+        status: "success"
+      });
+    },
+    onError: () => {
+        toast({
+          title: "Error al realizar el pago",
           description: "Intente de nuevo.",
           status: "error",
         });
@@ -110,6 +127,7 @@ export default function ReservaInfoPage() {
             <ConfirmSubmitButton
               header="Pago"
               body="¿Está seguro que desea efectuar el pago?"
+              onSubmit={() => mutatePago(reserva)}
             >
               Pagar
             </ConfirmSubmitButton>

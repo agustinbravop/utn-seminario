@@ -72,6 +72,23 @@ export function useSeniarReserva(
   });
 }
 
+
+export function usePagarReserva(
+  options?: UseApiMutationOptions<
+    Reserva
+  >
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: () => ["reservas"],
+    mutationFn: ( reserva ) =>
+      patch<Reserva>(
+        `${API_URL}/reservas/pagar/${reserva.id}`,
+        reserva
+      ),
+  });
+}
+
 export function useCrearReserva(options?: UseApiMutationOptions<CrearReserva>) {
   return useApiMutation({
     ...options,

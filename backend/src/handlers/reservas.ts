@@ -73,4 +73,12 @@ export class ReservaHandler {
       res.status(201).json(reservaUpdated);
     };
   }
+
+  pagarReserva(): RequestHandler {
+    return async (_req, res) => {
+      const reserva: Reserva = {id: Number(_req.params["idRes"]), pagoSenia:_req.body.idPagoSenia, pagoReserva: _req.body.idPagoReserva, ..._req.body};
+      const reservaUpdated = await this.service.pagarReserva(reserva);
+      res.status(201).json(reservaUpdated);
+    };
+  }
 }

@@ -21,6 +21,7 @@ export interface ReservaService {
   getByID(idRes: number): Promise<Reserva>;
   crear(res: CrearReserva): Promise<Reserva>;
   pagarSenia(res: Reserva): Promise<Reserva>;
+  pagarReserva(res: Reserva): Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
@@ -47,7 +48,6 @@ export class ReservaServiceImpl implements ReservaService {
         `La disponibilidad ${res.disponibilidad.id} no admite señas`
       );
     }
-    console.log(res.pagoSenia, "garganta")
     if (res.pagoSenia) {
       throw new Error("Reserva con seña existente");
     }
@@ -59,7 +59,23 @@ export class ReservaServiceImpl implements ReservaService {
       res.pagoSenia = pago.id;
       return await this.repo.updateReserva(res);
     } catch (e) {
-      throw new InternalServerError("Error al registrar el pago");
+      throw new InternalServerError("Error al registrar el pago de la seña");
+    }
+  }
+
+  async pagarReserva(res: Reserva): Promise<Reserva> {
+    if (res.pagoReserva) {
+      throw new Error("Reserva con pago existente");
+    }
+    try {
+      const pago = await this.pagoRepo.crearPago(
+        new Decimal(res.precio),
+        "Efectivo"
+      );
+      res.pagoReserva = pago.id;
+      return await this.repo.updateReserva(res);
+    } catch (e) {
+      throw new InternalServerError("Error al registrar el pago de la reserva");
     }
   }
 

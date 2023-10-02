@@ -40,5 +40,14 @@ export function reservasRouter(
     handler.seniarReserva()
   );
 
+  router.patch(
+    "/pagar/:idRes", //validateIDParams("idRes"),
+    //Solo el admin seña por ahora, el metodo de
+    //pago hardcodeado es "Efectivo" por ahora
+    authMiddle.isAdmin(),
+    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
+    handler.pagarReserva()
+  );
+
   return router;
 }
