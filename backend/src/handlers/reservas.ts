@@ -68,7 +68,12 @@ export class ReservaHandler {
 
   seniarReserva(): RequestHandler {
     return async (_req, res) => {
-      const reserva: Reserva = {id: Number(_req.params["idRes"]), pagoSenia:_req.body.idPagoSenia, pagoReserva: _req.body.idPagoReserva, ..._req.body};
+      const reserva: Reserva = {
+        id: Number(_req.params["idRes"]),
+        pagoSenia: _req.body.idPagoSenia,
+        pagoReserva: _req.body.idPagoReserva,
+        ..._req.body,
+      };
       const reservaUpdated = await this.service.pagarSenia(reserva);
       res.status(201).json(reservaUpdated);
     };
@@ -76,7 +81,12 @@ export class ReservaHandler {
 
   pagarReserva(): RequestHandler {
     return async (_req, res) => {
-      const reserva: Reserva = {id: Number(_req.params["idRes"]), pagoSenia:_req.body.idPagoSenia, pagoReserva: _req.body.idPagoReserva, ..._req.body};
+      const reserva: Reserva = {
+        id: Number(_req.params["idRes"]),
+        pagoSenia: _req.body.idPagoSenia,
+        pagoReserva: _req.body.idPagoReserva,
+        ..._req.body,
+      };
       const reservaUpdated = await this.service.pagarReserva(reserva);
       res.status(201).json(reservaUpdated);
     };

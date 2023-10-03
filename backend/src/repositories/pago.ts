@@ -12,7 +12,7 @@ export interface PagoRepository {
 export class PrismaPagoRepository implements PagoRepository {
   private prisma: PrismaClient;
 
-  constructor(prismaClient: PrismaClient) { 
+  constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
   }
 
@@ -30,32 +30,30 @@ export class PrismaPagoRepository implements PagoRepository {
       const newPago = await this.prisma.pago.findUnique({
         where: { id },
       });
-      
+
       if (newPago === null) {
         return null;
       }
-      
+
       return newPago;
     } catch (e) {
       throw new InternalServerError("Error al obtener el pago");
     }
   }
-  
 
-  async crearPago(
-    monto: Decimal,
-    metodoPago: string,
-  ): Promise<Pago> {
+  async crearPago(monto: Decimal, metodoPago: string): Promise<Pago> {
     try {
-      const fecha = new Date()
+      const fecha = new Date();
       const pagoDB = await this.prisma.pago.create({
         data: {
           fechaPago: fecha,
           monto: monto,
-          metodoDePago: { connectOrCreate: {
-            where: { metodoDePago: metodoPago },
-            create: { metodoDePago: metodoPago }
-          } },
+          metodoDePago: {
+            connectOrCreate: {
+              where: { metodoDePago: metodoPago },
+              create: { metodoDePago: metodoPago },
+            },
+          },
         },
       });
       return pagoDB;

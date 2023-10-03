@@ -65,8 +65,8 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
 
   const handleSubmit = () => {
     onSubmit();
-    onClose()
-  }
+    onClose();
+  };
 
   return (
     <>

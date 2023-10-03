@@ -56,36 +56,21 @@ export function useReservaByID(
   );
 }
 
-export function useSeniarReserva(
-  options?: UseApiMutationOptions<
-    Reserva
-  >
-) {
+export function useSeniarReserva(options?: UseApiMutationOptions<Reserva>) {
   return useApiMutation({
     ...options,
     invalidateOnSuccess: (r: Reserva) => ["reservas"],
-    mutationFn: ( reserva ) =>
-      patch<Reserva>(
-        `${API_URL}/reservas/${reserva.id}`,
-        reserva
-      ),
+    mutationFn: (reserva) =>
+      patch<Reserva>(`${API_URL}/reservas/${reserva.id}`, reserva),
   });
 }
 
-
-export function usePagarReserva(
-  options?: UseApiMutationOptions<
-    Reserva
-  >
-) {
+export function usePagarReserva(options?: UseApiMutationOptions<Reserva>) {
   return useApiMutation({
     ...options,
     invalidateOnSuccess: () => ["reservas"],
-    mutationFn: ( reserva ) =>
-      patch<Reserva>(
-        `${API_URL}/reservas/pagar/${reserva.id}`,
-        reserva
-      ),
+    mutationFn: (reserva) =>
+      patch<Reserva>(`${API_URL}/reservas/pagar/${reserva.id}`, reserva),
   });
 }
 

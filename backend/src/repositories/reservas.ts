@@ -34,7 +34,7 @@ export class PrismaReservaRepository implements ReservaRepository {
 
   async updateReserva(res: Reserva): Promise<Reserva> {
     try {
-      console.log(res)
+      console.log(res);
       const nuevaReserva = await this.prisma.reserva.update({
         where: { id: res.id },
         data: {

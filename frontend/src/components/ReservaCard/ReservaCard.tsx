@@ -18,37 +18,35 @@ import {
 } from "@chakra-ui/react";
 import { Reserva } from "@/models";
 
-export default function ReservaCard( {reserva}: {reserva: Reserva} ) {
+export default function ReservaCard({ reserva }: { reserva: Reserva }) {
   return (
     <>
       <Card size="sm" m={2} textAlign="center" height="270px">
-
-      {reserva.idPagoReserva ? (
-        <CardHeader borderRadius="6px" backgroundColor="cyan.100">
-          <HStack justifyContent="center">
-            <Icon viewBox="0 0 200 200" color="whatsapp.500">
-              <path
-                fill="currentColor"
-                d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-              />
-            </Icon>
-            <Text> Pagada</Text>
-          </HStack>
-        </CardHeader>
-      ) : (
-        <CardHeader backgroundColor="red.200" borderRadius="6px">
-          <HStack justifyContent="center">
-            <Icon viewBox="0 0 200 200" color="red">
-              <path
-                fill="currentColor"
-                d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-              />
-            </Icon>
-            <Text> No pagada</Text>
-          </HStack>
-        </CardHeader>
-      )}
-
+        {reserva.idPagoReserva ? (
+          <CardHeader borderRadius="6px" backgroundColor="cyan.100">
+            <HStack justifyContent="center">
+              <Icon viewBox="0 0 200 200" color="whatsapp.500">
+                <path
+                  fill="currentColor"
+                  d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                />
+              </Icon>
+              <Text> Pagada</Text>
+            </HStack>
+          </CardHeader>
+        ) : (
+          <CardHeader backgroundColor="red.200" borderRadius="6px">
+            <HStack justifyContent="center">
+              <Icon viewBox="0 0 200 200" color="red">
+                <path
+                  fill="currentColor"
+                  d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                />
+              </Icon>
+              <Text> No pagada</Text>
+            </HStack>
+          </CardHeader>
+        )}
 
         <CardBody textAlign="center">
           <Heading
@@ -80,7 +78,7 @@ export default function ReservaCard( {reserva}: {reserva: Reserva} ) {
             </Tag>
             <Tag size="sm" variant="subtle" colorScheme="whatsapp">
               <TagLeftIcon as={BiTennisBall} boxSize={4} />
-              <TagLabel> {reserva.disponibilidad.disciplina } </TagLabel>
+              <TagLabel> {reserva.disponibilidad.disciplina} </TagLabel>
             </Tag>
           </HStack>
           <HStack spacing={4} justifyContent="center" mt="10px">

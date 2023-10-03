@@ -10,7 +10,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useParams } from "@/router";
-import { usePagarReserva, useReservaByID, useSeniarReserva } from "@/utils/api/reservas";
+import {
+  usePagarReserva,
+  useReservaByID,
+  useSeniarReserva,
+} from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
 import { formatearISO } from "@/utils/dates";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -26,7 +30,7 @@ export default function ReservaInfoPage() {
       toast({
         title: `Reserva`,
         description: "Reserva señada exitosamente",
-        status: "success"
+        status: "success",
       });
     },
     onError: () => {
@@ -43,7 +47,7 @@ export default function ReservaInfoPage() {
       toast({
         title: `Pago`,
         description: "Pago realizado exitosamente",
-        status: "success"
+        status: "success",
       });
     },
     onError: () => {
@@ -59,11 +63,26 @@ export default function ReservaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  let estado = <Text> No pagado <CircleIcon color="Red" /> </Text>;
+  let estado = (
+    <Text>
+      {" "}
+      No pagado <CircleIcon color="Red" />{" "}
+    </Text>
+  );
   if (reserva.idPagoReserva) {
-    estado = <Text> Pagado <CircleIcon color="Green" /> </Text>;
+    estado = (
+      <Text>
+        {" "}
+        Pagado <CircleIcon color="Green" />{" "}
+      </Text>
+    );
   } else if (reserva.idPagoSenia) {
-    estado = <Text> Señado <CircleIcon color="orange" /> </Text>;
+    estado = (
+      <Text>
+        {" "}
+        Señado <CircleIcon color="orange" />{" "}
+      </Text>
+    );
   }
 
   return (
@@ -99,7 +118,7 @@ export default function ReservaInfoPage() {
             </Box>
           </Stack>
 
-          <Heading textAlign="center" fontSize='24px' pt="15px">
+          <Heading textAlign="center" fontSize="24px" pt="15px">
             Datos del jugador
           </Heading>
 
@@ -117,22 +136,27 @@ export default function ReservaInfoPage() {
           </Stack>
 
           <HStack justifyContent="center" spacing="20px" pt="30px">
-            {(!reserva.idPagoSenia && !reserva.idPagoReserva && reserva.disponibilidad.precioSenia)
-              && <ConfirmSubmitButton
-                header="Seña"
-                body="¿Está seguro que desea efectuar la seña?"
-                onSubmit={() => mutate(reserva)}
-              >
-                Señar
-              </ConfirmSubmitButton>}
+            {!reserva.idPagoSenia &&
+              !reserva.idPagoReserva &&
+              reserva.disponibilidad.precioSenia && (
+                <ConfirmSubmitButton
+                  header="Seña"
+                  body="¿Está seguro que desea efectuar la seña?"
+                  onSubmit={() => mutate(reserva)}
+                >
+                  Señar
+                </ConfirmSubmitButton>
+              )}
 
-            {!reserva.idPagoReserva && <ConfirmSubmitButton
-              header="Pago"
-              body="¿Está seguro que desea efectuar el pago?"
-              onSubmit={() => mutatePago(reserva)}
-            >
-              Pagar
-            </ConfirmSubmitButton>}
+            {!reserva.idPagoReserva && (
+              <ConfirmSubmitButton
+                header="Pago"
+                body="¿Está seguro que desea efectuar el pago?"
+                onSubmit={() => mutatePago(reserva)}
+              >
+                Pagar
+              </ConfirmSubmitButton>
+            )}
           </HStack>
         </CardBody>
       </Card>
