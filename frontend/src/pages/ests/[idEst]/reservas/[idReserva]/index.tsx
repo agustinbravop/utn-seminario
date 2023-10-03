@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardBody,
   HStack,
@@ -19,17 +20,19 @@ import { ConfirmSubmitButton } from "@/components/forms";
 import { formatearISO } from "@/utils/dates";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
+import { useNavigate } from "react-router";
 
 export default function ReservaInfoPage() {
   const { idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
   const { data: reserva } = useReservaByID(Number(idReserva));
   const toast = useToast();
+  const navigate = useNavigate();
 
   const { mutate } = useSeniarReserva({
     onSuccess: () => {
       toast({
-        title: `Reserva`,
-        description: "Reserva señada exitosamente",
+        title: "Reserva señada",
+        description: "Se registró la seña de la reserva.",
         status: "success",
       });
     },
@@ -45,8 +48,8 @@ export default function ReservaInfoPage() {
   const { mutate: mutatePago } = usePagarReserva({
     onSuccess: () => {
       toast({
-        title: `Pago`,
-        description: "Pago realizado exitosamente",
+        title: "Reserva pagada",
+        description: "Se registró el pago de la reserva.",
         status: "success",
       });
     },
@@ -65,22 +68,19 @@ export default function ReservaInfoPage() {
 
   let estado = (
     <Text>
-      {" "}
-      No pagado <CircleIcon color="Red" />{" "}
+      No pagado <CircleIcon color="Red" />
     </Text>
   );
   if (reserva.idPagoReserva) {
     estado = (
       <Text>
-        {" "}
-        Pagado <CircleIcon color="Green" />{" "}
+        Pagado <CircleIcon color="Green" />
       </Text>
     );
   } else if (reserva.idPagoSenia) {
     estado = (
       <Text>
-        {" "}
-        Señado <CircleIcon color="orange" />{" "}
+        Señado <CircleIcon color="orange" />
       </Text>
     );
   }
@@ -118,8 +118,8 @@ export default function ReservaInfoPage() {
             </Box>
           </Stack>
 
-          <Heading textAlign="center" fontSize="24px" pt="15px">
-            Datos del jugador
+          <Heading size="md" mt="1.5rem">
+            Jugador
           </Heading>
 
           <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
@@ -130,12 +130,13 @@ export default function ReservaInfoPage() {
               </Text>
             </Box>
             <Box>
-              <Heading size="xs"> Telefono </Heading>
+              <Heading size="xs"> Teléfono </Heading>
               <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
             </Box>
           </Stack>
 
           <HStack justifyContent="center" spacing="20px" pt="30px">
+            <Button onClick={() => navigate(-1)}>Retroceder</Button>
             {!reserva.idPagoSenia &&
               !reserva.idPagoReserva &&
               reserva.disponibilidad.precioSenia && (

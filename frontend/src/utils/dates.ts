@@ -39,7 +39,8 @@ export function formatearFecha(fecha: Date) {
 }
 
 /**
- * Toma un string de una fecha en formato ISO la devuelve en formato local.
+ * Toma un string de una fecha en formato ISO y la devuelve en formato local.
+ * Usar esta función para mostrar la fecha al usuario de manera amigable.
  */
 export function formatearISO(iso: string) {
   return new Date(iso).toLocaleDateString("es-ar");

@@ -63,8 +63,10 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
     [onOpen]
   );
 
-  const handleSubmit = () => {
-    onSubmit();
+  const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
+    if (onSubmit) {
+      onSubmit(e);
+    }
     onClose();
   };
 

@@ -24,7 +24,7 @@ import { useNavigate } from "react-router";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
 import { formatearFecha, formatearISO } from "@/utils/dates";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
 
 export default function EstablecimientoReservasPage() {
@@ -32,7 +32,7 @@ export default function EstablecimientoReservasPage() {
   const navigate = useNavigate();
   const { data: reservas } = useReservasByEstablecimientoID(Number(idEst));
 
-  const [ordenColumna, setOrdenColumna] = useState(null);
+  const [ordenColumna, setOrdenColumna] = useState("");
   const [ordenAscendente, setOrdenAscendente] = useState(true);
 
   const handleOrdenarColumna = (nombreColumna: string) => {
@@ -100,8 +100,7 @@ export default function EstablecimientoReservasPage() {
       .toLowerCase()
       .includes(filtroNombre.toLowerCase());
     const fechaCoincide =
-      filtroFecha === "" ||
-      formatearISO(r.fechaReservada) === formatearISO(filtroFecha);
+      filtroFecha === "" || r.fechaReservada === filtroFecha;
 
     var estadoCoincide = false;
     if (filtroEstado === estado && estado === "Pagado") {
@@ -133,9 +132,7 @@ export default function EstablecimientoReservasPage() {
             type="text"
             placeholder="Jugador"
             value={filtroNombre}
-            onChange={(e: { target: { value: SetStateAction<string> } }) =>
-              setFiltroNombre(e.target.value)
-            }
+            onChange={(e) => setFiltroNombre(e.target.value)}
           />
           <FormLabel>Jugador</FormLabel>
         </FormControl>
@@ -145,9 +142,7 @@ export default function EstablecimientoReservasPage() {
             placeholder="Fecha"
             value={filtroFecha}
             defaultValue={formatearFecha(new Date())}
-            onChange={(e: { target: { value: SetStateAction<string> } }) =>
-              setFiltroFecha(e.target.value)
-            }
+            onChange={(e) => setFiltroFecha(e.target.value)}
           />
           <FormLabel>Fecha</FormLabel>
         </FormControl>
@@ -156,9 +151,7 @@ export default function EstablecimientoReservasPage() {
           <Select
             width="auto"
             placeholder="Estado de pago..."
-            onChange={(e: { target: { value: SetStateAction<string> } }) =>
-              setFiltroEstado(e.target.value)
-            }
+            onChange={(e) => setFiltroEstado(e.target.value)}
           >
             {["Pagado", "Señado", "No Pagado"].map((pago, i) => (
               <option key={i} value={pago}>
@@ -178,7 +171,7 @@ export default function EstablecimientoReservasPage() {
                 onClick={() => handleOrdenarColumna("Cancha")}
                 style={{ cursor: "pointer" }}
               >
-                Cancha{" "}
+                Cancha
                 {ordenColumna === "Cancha" && (
                   <>
                     {ordenAscendente ? (
@@ -194,7 +187,7 @@ export default function EstablecimientoReservasPage() {
                 onClick={() => handleOrdenarColumna("Fecha")}
                 style={{ cursor: "pointer" }}
               >
-                Fecha{" "}
+                Fecha
                 {ordenColumna === "Fecha" && (
                   <>
                     {ordenAscendente ? (
@@ -210,7 +203,7 @@ export default function EstablecimientoReservasPage() {
                 onClick={() => handleOrdenarColumna("Jugador")}
                 style={{ cursor: "pointer" }}
               >
-                Jugador{" "}
+                Jugador
                 {ordenColumna === "Jugador" && (
                   <>
                     {ordenAscendente ? (
@@ -225,7 +218,7 @@ export default function EstablecimientoReservasPage() {
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Estado")}
               >
-                Estado{" "}
+                Estado
                 {ordenColumna === "Estado" && (
                   <>
                     {ordenAscendente ? (
@@ -240,32 +233,25 @@ export default function EstablecimientoReservasPage() {
             </Tr>
           </Thead>
           <Tbody>
-            {reservasFiltradas?.map((r) => {
+            {reservasFiltradas.map((r) => {
               let estado = (
                 <HStack width="100%" display="flex" justifyContent="center">
-                  <Box width="40%" ml="10%">
-                    No Pagado
-                  </Box>{" "}
-                  <CircleIcon color="Red" width="40%" />{" "}
+                  <Box ml="10%">No Pagado</Box>
+                  <CircleIcon color="Red" />
                 </HStack>
               );
               if (r.idPagoReserva) {
                 estado = (
                   <HStack width="100%" display="flex" justifyContent="center">
-                    {" "}
-                    <Box width="40%" ml="10%">
-                      Pagado
-                    </Box>{" "}
-                    <CircleIcon color="Green" width="40%" />{" "}
+                    <Box ml="10%">Pagado</Box>
+                    <CircleIcon color="Green" />
                   </HStack>
                 );
               } else if (r.idPagoSenia) {
                 estado = (
                   <HStack width="100%" display="flex" justifyContent="center">
-                    <Box width="40%" ml="10%">
-                      Señado
-                    </Box>{" "}
-                    <CircleIcon color="orange" width="40%" />
+                    <Box ml="10%">Señado</Box>
+                    <CircleIcon color="orange" />
                   </HStack>
                 );
               }
