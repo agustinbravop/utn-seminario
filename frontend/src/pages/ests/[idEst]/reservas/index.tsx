@@ -13,7 +13,8 @@ import {
   Input,
   FormControl,
   FormLabel,
-  Box
+  Box,
+  Select
 } from "@chakra-ui/react";
 import { TriangleUpIcon, TriangleDownIcon, MinusIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router";
@@ -54,6 +55,22 @@ export default function EstablecimientoReservasPage() {
       const nombreA = `${a.jugador.nombre} ${a.jugador.apellido}`;
       const nombreB = `${b.jugador.nombre} ${b.jugador.apellido}`;
       return ordenAscendente ? nombreA.localeCompare(nombreB) : nombreB.localeCompare(nombreA);
+    } else if (ordenColumna === "Estado") {
+      const estadoA = a.idPagoReserva ?
+        "C - Pagado" :
+        a.idPagoSenia ?
+          "B - Señado" :
+          "A - No Pagado"
+
+      const estadoB = b.idPagoReserva ?
+        "C - Pagado" :
+        b.idPagoSenia ?
+          "B - Señado" :
+          "A - No Pagado"
+
+      return ordenAscendente
+        ? estadoA.localeCompare(estadoB)
+        : estadoB.localeCompare(estadoA);
     } else {
       return 0;
     }
@@ -61,14 +78,31 @@ export default function EstablecimientoReservasPage() {
 
   const [filtroNombre, setFiltroNombre] = useState("");
   const [filtroFecha, setFiltroFecha] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
     const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
+    const estado = r.idPagoReserva ?
+      "Pagado" :
+      r.idPagoSenia ?
+        "Señado" :
+        "No Pagado"
 
     const nombreIncluido = nombreJugador.toLowerCase().includes(filtroNombre.toLowerCase());
     const fechaCoincide = filtroFecha === "" || formatearISO(r.fechaReservada) === formatearISO(filtroFecha);
 
-    return nombreIncluido && fechaCoincide;
+    var estadoCoincide = false;
+    if (filtroEstado === estado && estado === "Pagado") {
+      estadoCoincide = true;
+    } else if (filtroEstado === estado && filtroEstado === "No Pagado") {
+      estadoCoincide = true;
+    } else if (filtroEstado === estado && filtroEstado === "Señado") {
+      estadoCoincide = true;
+    } else if (filtroEstado === "") {
+      return nombreIncluido && fechaCoincide;
+    }
+
+    return nombreIncluido && fechaCoincide && estadoCoincide;
   });
 
 
@@ -105,6 +139,30 @@ export default function EstablecimientoReservasPage() {
           />
           <FormLabel>Fecha</FormLabel>
         </FormControl>
+
+        <FormControl variant="floating" width='auto'>
+          {/* <Input
+            type="date"
+            placeholder="Fecha"
+            value={filtroFecha}
+            defaultValue={formatearFecha(new Date())}
+            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroFecha(e.target.value)}
+          /> */}
+          <Select
+            width='auto'
+            placeholder="Estado de pago..."
+            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroEstado(e.target.value)}
+          // onChange={handleChangeFiltroEstado}
+          >
+            {["Pagado", "Señado", "No Pagado"].map((pago, i) => (
+              <option key={i} value={pago}>
+                {pago}
+              </option>
+            ))}
+          </Select>
+          <FormLabel>Estado</FormLabel>
+        </FormControl>
+
       </HStack>
       <TableContainer pt="15px" pb="20px" mr="16%" ml="16%" mb="30px" mt="0px">
         <Table variant="striped" size="sm">
@@ -158,9 +216,19 @@ export default function EstablecimientoReservasPage() {
                   </>
                 )}
               </Th>
-              <Th textAlign="center" onClick={() => handleOrdenarColumna("Estado")}>Estado</Th>
+              <Th textAlign="center" onClick={() => handleOrdenarColumna("Estado")}>
+                Estado{" "}
+                {ordenColumna === "Estado" && (
+                  <>
+                    {ordenAscendente ?
+                      <TriangleUpIcon color="blue.500" />
+                      :
+                      <TriangleDownIcon color="blue.500" />
+                    }
+                  </>
+                )}
+              </Th>
               <Th textAlign="center">Ver Detalle</Th>
-
             </Tr>
           </Thead>
           <Tbody>
