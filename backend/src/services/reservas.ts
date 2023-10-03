@@ -7,8 +7,6 @@ import { PagoRepository } from "../repositories/pago";
 import { ReservaRepository } from "../repositories/reservas";
 import { ConflictError, InternalServerError } from "../utils/apierrors";
 import { getDayOfWeek } from "../utils/dates";
-import { Pago } from "../models/pago";
-import { number } from "zod";
 
 export type CrearReserva = {
   fechaReservada: Date;
@@ -72,9 +70,8 @@ export class ReservaServiceImpl implements ReservaService {
     try {
       var monto = new Decimal(0);
       if (res.pagoSenia) {
-        const pagoSenia = await this.pagoRepo.getPagoById(Number(res.pagoSenia));
         const precioDecimal = new Decimal(res.precio);
-        const pagoSeniaDecimal = new Decimal(pagoSenia.monto);
+        const pagoSeniaDecimal = new Decimal(res.disponibilidad.precioSenia ? res.disponibilidad.precioSenia : 0)
         monto = precioDecimal.minus(pagoSeniaDecimal);
       } else {
         monto = new Decimal(res.precio);
