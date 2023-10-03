@@ -68,8 +68,9 @@ export class ReservaServiceImpl implements ReservaService {
       throw new Error("Reserva con pago existente");
     }
     try {
+
       const pago = await this.pagoRepo.crearPago(
-        new Decimal(res.precio),
+        res.pagoSenia? res.precio.minus(new Decimal(res.pagoSenia))  : new Decimal(res.precio),
         "Efectivo"
       );
       res.pagoReserva = pago.id;
