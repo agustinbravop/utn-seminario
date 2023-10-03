@@ -119,7 +119,7 @@ export default function VistaJugadorCancha() {
                     </option>
                   ))}
                 </Select>
-                <TableContainer paddingTop="15px" pb="20px">
+                <TableContainer pt="15px" pb="20px">
                   <Table variant="simple" size="sm">
                     <Thead>
                       <Tr>

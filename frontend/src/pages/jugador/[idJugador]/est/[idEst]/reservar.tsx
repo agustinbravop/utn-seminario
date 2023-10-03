@@ -24,7 +24,7 @@ import { ordenarDias } from "@/utils/dias";
 /** Genera las filas de disponibilidades que se muestran en la tabla para reservar. */
 function construirDisponibilidades(canchas: Cancha[]) {
   return canchas
-    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c.nombre })))
+    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c })))
     .flat()
     .sort(
       (a, b) =>
@@ -78,7 +78,7 @@ export default function ReservarEstablecimiento() {
       </Select>
       <Heading size="md">Horarios disponibles</Heading>
       <Text>Seleccione un horario a reservar.</Text>
-      <TableContainer paddingTop="15px" pb="20px">
+      <TableContainer pt="15px" pb="20px">
         <Table variant="striped" size="sm">
           <Thead>
             <Tr>
@@ -105,7 +105,7 @@ export default function ReservarEstablecimiento() {
                         .map((dia) => DIAS_ABBR[dia])
                         .join(", ")}
                     </Td>
-                    <Td>{d.cancha}</Td>
+                    <Td>{d.cancha.nombre}</Td>
                     <Td>
                       <FormReservarDisponibilidad disp={d} />
                     </Td>

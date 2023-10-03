@@ -1,9 +1,11 @@
+import Decimal from "decimal.js";
 import { Disponibilidad } from "../models/disponibilidad";
 import { Reserva } from "../models/reserva";
 import { CanchaRepository } from "../repositories/canchas";
 import { DisponibilidadRepository } from "../repositories/disponibilidades";
+import { PagoRepository } from "../repositories/pago";
 import { ReservaRepository } from "../repositories/reservas";
-import { ConflictError } from "../utils/apierrors";
+import { ConflictError, InternalServerError } from "../utils/apierrors";
 import { getDayOfWeek } from "../utils/dates";
 
 export type CrearReserva = {
@@ -18,21 +20,70 @@ export interface ReservaService {
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
   crear(res: CrearReserva): Promise<Reserva>;
+  pagarSenia(res: Reserva): Promise<Reserva>;
+  pagarReserva(res: Reserva): Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
   private repo: ReservaRepository;
   private canchaRepository: CanchaRepository;
   private dispRepository: DisponibilidadRepository;
+  private pagoRepo: PagoRepository;
 
   constructor(
     repository: ReservaRepository,
     canchaRepository: CanchaRepository,
-    dispRepository: DisponibilidadRepository
+    dispRepository: DisponibilidadRepository,
+    pagoRepo: PagoRepository
   ) {
     this.repo = repository;
     this.canchaRepository = canchaRepository;
     this.dispRepository = dispRepository;
+    this.pagoRepo = pagoRepo;
+  }
+
+  async pagarSenia(res: Reserva): Promise<Reserva> {
+    if (!res.disponibilidad.precioSenia) {
+      throw new Error(
+        `La disponibilidad ${res.disponibilidad.id} no admite señas`
+      );
+    }
+    if (res.pagoSenia) {
+      throw new Error("Reserva con seña existente");
+    }
+    try {
+      const pago = await this.pagoRepo.crearPago(
+        new Decimal(res.disponibilidad.precioSenia), //???
+        "Efectivo"
+      );
+      res.pagoSenia = pago.id;
+      return await this.repo.updateReserva(res);
+    } catch (e) {
+      throw new InternalServerError("Error al registrar el pago de la seña");
+    }
+  }
+
+  async pagarReserva(res: Reserva): Promise<Reserva> {
+    if (res.pagoReserva) {
+      throw new Error("Reserva con pago existente");
+    }
+    try {
+      var monto = new Decimal(0);
+      if (res.pagoSenia) {
+        const precioDecimal = new Decimal(res.precio);
+        const pagoSeniaDecimal = new Decimal(
+          res.disponibilidad.precioSenia ? res.disponibilidad.precioSenia : 0
+        );
+        monto = precioDecimal.minus(pagoSeniaDecimal);
+      } else {
+        monto = new Decimal(res.precio);
+      }
+      const pago = await this.pagoRepo.crearPago(monto, "Efectivo");
+      res.pagoReserva = pago.id;
+      return await this.repo.updateReserva(res);
+    } catch (e) {
+      throw new InternalServerError("Error al registrar el pago de la reserva");
+    }
   }
 
   async getByEstablecimientoID(idEst: number) {

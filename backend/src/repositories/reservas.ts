@@ -12,6 +12,7 @@ export interface ReservaRepository {
   getReservaByID(id: number): Promise<Reserva>;
   crearReserva(res: CrearReserva & { precio: Decimal }): Promise<Reserva>;
   existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean>;
+  updateReserva(res: Reserva): Promise<Reserva>;
 }
 
 export class PrismaReservaRepository implements ReservaRepository {
@@ -22,12 +23,39 @@ export class PrismaReservaRepository implements ReservaRepository {
       include: {
         disciplina: true,
         dias: true,
+        cancha: true,
       },
     },
   };
 
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
+  }
+
+  async updateReserva(res: Reserva): Promise<Reserva> {
+    try {
+      console.log(res);
+      const nuevaReserva = await this.prisma.reserva.update({
+        where: { id: res.id },
+        data: {
+          fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
+          fechaReservada: res.fechaReservada,
+          precio: res.precio,
+          jugador: { connect: { id: res.jugador.id } },
+          disponibilidad: { connect: { id: res.disponibilidad.id } },
+          pagoReserva: res.pagoReserva
+            ? { connect: { id: res.pagoReserva } }
+            : undefined,
+          pagoSenia: res.pagoSenia
+            ? { connect: { id: res.pagoSenia } }
+            : undefined,
+        },
+        include: this.include,
+      });
+      return toRes(nuevaReserva);
+    } catch (error) {
+      throw new InternalServerError("Error al intentar actualizar la reserva");
+    }
   }
 
   async getReservasByDisponibilidadID(idDisp: number) {

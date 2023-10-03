@@ -5,13 +5,13 @@ asignatura de la carrera Ingeniería en Sistemas de Información necesaria para 
 
 ## Equipo
 
-- Andres, Aldo Omar
-- Arrejin, Sixto Feliciano
-- Bravo Pérez, Agustín Nicolás
-- Bustamante, Matias Iván
-- Esquivel, Emilio Matias
-- Ortiz, Claudia Marisela
-- San Lorenzo, André Leandro
+- Andres, Aldo Omar.
+- Arrejin, Sixto Feliciano.
+- Bravo Pérez, Agustín Nicolás.
+- Bustamante, Matias Iván.
+- Esquivel, Emilio Matias.
+- Ortiz, Claudia Marisela.
+- San Lorenzo, André Leandro.
 
 ## Levantar la app en entorno local
 

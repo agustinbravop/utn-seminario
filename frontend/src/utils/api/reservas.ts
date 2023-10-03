@@ -5,7 +5,7 @@ import {
   useApiMutation,
 } from "@/hooks";
 import { Reserva } from "@/models";
-import { API_URL, post } from ".";
+import { API_URL, patch, post } from ".";
 
 export type CrearReserva = {
   idDisponibilidad: number;
@@ -54,6 +54,28 @@ export function useReservaByID(
     `${API_URL}/reservas/${idRes}`,
     options
   );
+}
+
+export function useSeniarReserva(
+  options?: UseApiMutationOptions<Reserva, Reserva>
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (r) => ["reservas", r.id],
+    mutationFn: (reserva) =>
+      patch<Reserva>(`${API_URL}/reservas/${reserva.id}`, reserva),
+  });
+}
+
+export function usePagarReserva(
+  options?: UseApiMutationOptions<Reserva, Reserva>
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (r) => ["reservas", r.id],
+    mutationFn: (reserva) =>
+      patch<Reserva>(`${API_URL}/reservas/pagar/${reserva.id}`, reserva),
+  });
 }
 
 export function useCrearReserva(options?: UseApiMutationOptions<CrearReserva>) {
