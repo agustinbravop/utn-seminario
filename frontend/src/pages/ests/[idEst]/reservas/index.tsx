@@ -9,14 +9,13 @@ import {
   Th,
   Td,
   Tbody,
-  Button,
   Input,
   FormControl,
   FormLabel,
   Box,
   Select
 } from "@chakra-ui/react";
-import { TriangleUpIcon, TriangleDownIcon, MinusIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import { TriangleUpIcon, TriangleDownIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
@@ -141,18 +140,10 @@ export default function EstablecimientoReservasPage() {
         </FormControl>
 
         <FormControl variant="floating" width='auto'>
-          {/* <Input
-            type="date"
-            placeholder="Fecha"
-            value={filtroFecha}
-            defaultValue={formatearFecha(new Date())}
-            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroFecha(e.target.value)}
-          /> */}
           <Select
             width='auto'
             placeholder="Estado de pago..."
             onChange={(e: { target: { value: SetStateAction<string>; }; }) => setFiltroEstado(e.target.value)}
-          // onChange={handleChangeFiltroEstado}
           >
             {["Pagado", "Señado", "No Pagado"].map((pago, i) => (
               <option key={i} value={pago}>
@@ -171,7 +162,7 @@ export default function EstablecimientoReservasPage() {
               <Th
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Cancha")}
-                style={{ cursor: "pointer" }} // Cambia el cursor al pasar el mouse
+                style={{ cursor: "pointer" }}
               >
                 Cancha{" "}
                 {ordenColumna === "Cancha" && (

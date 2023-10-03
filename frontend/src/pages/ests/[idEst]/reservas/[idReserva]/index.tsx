@@ -12,7 +12,6 @@ import {
 import { useParams } from "@/router";
 import { usePagarReserva, useReservaByID, useSeniarReserva } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
-import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { formatearISO } from "@/utils/dates";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
