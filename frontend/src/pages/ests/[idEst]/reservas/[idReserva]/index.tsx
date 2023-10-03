@@ -8,61 +8,90 @@ import {
   Stack,
   StackDivider,
   Text,
-  VStack,
   useToast,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  useEliminarCancha,
-} from "@/utils/api/canchas";
 import { useParams } from "@/router";
-import { CanchaMenu } from "@/components/navigation";
-import { useReservaByID } from "@/utils/api/reservas";
+import {
+  usePagarReserva,
+  useReservaByID,
+  useSeniarReserva,
+} from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
-
-import { MinusIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
-
-import { fechaISOaDDMMAAAA } from "@/utils/dates";
-
+import { formatearISO } from "@/utils/dates";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
+import { useNavigate } from "react-router";
 
 export default function ReservaInfoPage() {
-  const { idEst, idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
-
+  const { idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
   const { data: reserva } = useReservaByID(Number(idReserva));
-  const navigate = useNavigate();
   const toast = useToast();
+  const navigate = useNavigate();
 
-  const { mutate: mutateDelete } = useEliminarCancha({
+  const { mutate } = useSeniarReserva({
     onSuccess: () => {
       toast({
-        title: "Cancha Eliminada.",
-        description: `Cancha Eliminada exitosamente.`,
+        title: "Reserva señada",
+        description: "Se registró la seña de la reserva.",
         status: "success",
       });
-      navigate(-1);
     },
     onError: () => {
       toast({
-        title: "Error al eliminar la cancha",
-        description: `Intente de nuevo.`,
+        title: "Error al señar la reserva",
+        description: "Intente de nuevo.",
         status: "error",
       });
     },
   });
 
-  let estado = <TriangleDownIcon color='Red' />
-  if (reserva?.idPagoReserva) {
-    estado = <TriangleUpIcon color='Green' />
-  } else if (reserva?.idPagoSenia) {
-    estado = <MinusIcon color='orange' />
+  const { mutate: mutatePago } = usePagarReserva({
+    onSuccess: () => {
+      toast({
+        title: "Reserva pagada",
+        description: "Se registró el pago de la reserva.",
+        status: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error al realizar el pago",
+        description: "Intente de nuevo.",
+        status: "error",
+      });
+    },
+  });
+
+  if (!reserva) {
+    return <LoadingSpinner />;
   }
 
+  let estado = (
+    <Text>
+      No pagado <CircleIcon color="Red" />
+    </Text>
+  );
+  if (reserva.idPagoReserva) {
+    estado = (
+      <Text>
+        Pagado <CircleIcon color="Green" />
+      </Text>
+    );
+  } else if (reserva.idPagoSenia) {
+    estado = (
+      <Text>
+        Señado <CircleIcon color="orange" />
+      </Text>
+    );
+  }
 
   return (
     <>
-      <Card m="auto" height="60%" width="43%" mt="5%">
+      <Card m="auto" height="60%" width="38%" mt="5%">
         <CardBody m="15px">
-          <Heading as='h3' size='lg' textAlign="center" > Datos de la reserva</Heading>
+          <Heading as="h3" size="lg" textAlign="center">
+            Datos de la reserva
+          </Heading>
           <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
             <Box>
               <Heading size="xs">Estado</Heading>
@@ -70,46 +99,65 @@ export default function ReservaInfoPage() {
             </Box>
             <Box>
               <Heading size="xs">Fecha</Heading>
-              <Text fontSize="sm"> {fechaISOaDDMMAAAA(reserva?.fechaReservada)} </Text>
+              <Text fontSize="sm">{formatearISO(reserva.fechaReservada)}</Text>
             </Box>
             <Box>
               <Heading size="xs"> Horario </Heading>
-              <Text fontSize="sm"> {reserva?.disponibilidad.horaInicio} - {reserva?.disponibilidad.horaFin} hs</Text>
+              <Text fontSize="sm">
+                {reserva.disponibilidad.horaInicio} -
+                {reserva.disponibilidad.horaFin} hs
+              </Text>
             </Box>
             <Box>
               <Heading size="xs"> Precio </Heading>
-              <Text fontSize="sm"> {reserva?.precio} </Text>
+              <Text fontSize="sm"> ${reserva.precio} </Text>
             </Box>
             <Box>
               <Heading size="xs">Disciplina</Heading>
-              <Text fontSize="sm"> {reserva?.disponibilidad.disciplina} </Text>
+              <Text fontSize="sm"> {reserva.disponibilidad.disciplina} </Text>
             </Box>
           </Stack>
 
-          <Heading textAlign="center" as='h3' size='lg' pt="10px"> Datos del jugador</Heading>
+          <Heading size="md" mt="1.5rem">
+            Jugador
+          </Heading>
 
-          <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
+          <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
             <Box>
               <Heading size="xs">Nombre y Apellido</Heading>
-              <Text fontSize="sm"> {reserva?.jugador.nombre} {reserva?.jugador.apellido} </Text>
+              <Text fontSize="sm">
+                {reserva.jugador.nombre} {reserva.jugador.apellido}
+              </Text>
             </Box>
             <Box>
-              <Heading size="xs"> Telefono </Heading>
-              <Text fontSize="sm"> {reserva?.jugador.telefono}  </Text>
+              <Heading size="xs"> Teléfono </Heading>
+              <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
             </Box>
           </Stack>
 
           <HStack justifyContent="center" spacing="20px" pt="30px">
-            <ConfirmSubmitButton
-              header="Seña"
-              body="¿Está seguro que desea efectuar la seña?"
+            <Button onClick={() => navigate(-1)}>Retroceder</Button>
+            {!reserva.idPagoSenia &&
+              !reserva.idPagoReserva &&
+              reserva.disponibilidad.precioSenia && (
+                <ConfirmSubmitButton
+                  header="Seña"
+                  body="¿Está seguro que desea efectuar la seña?"
+                  onSubmit={() => mutate(reserva)}
+                >
+                  Señar
+                </ConfirmSubmitButton>
+              )}
 
-            > Señar </ConfirmSubmitButton>
-            <ConfirmSubmitButton
-              header="Pago"
-              body="¿Está seguro que desea efectuar el pago?"
-
-            > Pagar </ConfirmSubmitButton>
+            {!reserva.idPagoReserva && (
+              <ConfirmSubmitButton
+                header="Pago"
+                body="¿Está seguro que desea efectuar el pago?"
+                onSubmit={() => mutatePago(reserva)}
+              >
+                Pagar
+              </ConfirmSubmitButton>
+            )}
           </HStack>
         </CardBody>
       </Card>

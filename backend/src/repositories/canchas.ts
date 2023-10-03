@@ -92,7 +92,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
   }
 
   async getByDisponibilidadID(idDisp: number) {
-    const disp = await this.dispRepository.getDisponibilidadByID(idDisp);
+    const disp = await this.dispRepository.getByID(idDisp);
 
     return await this.getByID(disp.idCancha);
   }
@@ -115,7 +115,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       // Creo las disponibilidades por separado, por limitaciones de Prisma
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.dispRepository.crearDisponibilidad(disp);
+          await this.dispRepository.crear(disp);
         })
       );
 
@@ -146,7 +146,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
       // Si una disponibilidad tiene `id`, se la modifica. Si su id no existe, se lanza un error.
       await Promise.all(
         cancha.disponibilidades.map(async (disp) => {
-          await this.dispRepository.modificarDisponibilidad(disp);
+          await this.dispRepository.modificar(disp);
         })
       );
 

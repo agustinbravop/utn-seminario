@@ -1,11 +1,21 @@
 # utn-seminario
 
 Aplicación web responsive que permite la gestión y reserva de canchas deportivas. Proyecto realizado en el cursado 2023 de Seminario Integrador / Habilitación Profesional,
-materia de la carrera Ingeniería en Sistemas de Información de la Universidad Tecnológica Nacional, Facultad Regional Resistencia.
+asignatura de la carrera Ingeniería en Sistemas de Información necesaria para el título intermedio "Analista Desarrollador Universitario en Sistemas de Información" de la Universidad Tecnológica Nacional, Facultad Regional Resistencia.
+
+## Equipo
+
+- Andres, Aldo Omar.
+- Arrejin, Sixto Feliciano.
+- Bravo Pérez, Agustín Nicolás.
+- Bustamante, Matias Iván.
+- Esquivel, Emilio Matias.
+- Ortiz, Claudia Marisela.
+- San Lorenzo, André Leandro.
 
 ## Levantar la app en entorno local
 
-NOTA: Tener en cuenta que las variables de entorno que se muestran acá tienen valores placeholders o defaults.
+NOTA: Las variables de entorno que se muestran tienen valores por defecto y pueden ser cambiados a conveniencia.
 
 1. Clonar el repositorio:
 
@@ -15,7 +25,7 @@ git clone https://github.com/agustinbravop/utn-seminario
 
 ### Iniciar el back end
 
-Requisitos: tener en local una base de datos PostgreSQL. Se puede descargar en https://www.postgresql.org/download/. Conviene además tener una interfaz como [DBeaver](https://dbeaver.io/download/).
+Requisitos: tener una base de datos PostgreSQL local o en la nube. Se puede descargar en https://www.postgresql.org/download/. Es útil además tener una interfaz como [DBeaver](https://dbeaver.io/download/).
 
 2. Crear en la carpeta `backend/` un archivo `.env` con las siguientes variables de entorno:
 
@@ -32,7 +42,7 @@ PORT=3001
 
 ```
 npm install
-npx prisma migrate dev
+npx run build
 ```
 
 4. Levantar el servidor:
@@ -47,7 +57,7 @@ npm run start
 
 ```
 cd ../frontend
-echo "REACT_APP_API_BASE_URL=http://localhost:3001" > .env
+echo "VITE_API_BASE_URL=http://localhost:3001" > .env
 yarn install
 ```
 

@@ -9,10 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import {
-  CrearEstablecimiento,
-  useCrearEstablecimiento,
-} from "@/utils/api/establecimientos";
+import { CrearEstablecimiento, useCrearEstablecimiento } from "@/utils/api";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import {
   ImageControl,
@@ -23,7 +20,7 @@ import {
 import { useEffect } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useYupForm } from "@/hooks/useYupForm";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 
 type FormState = CrearEstablecimiento & {
   imagen: File | undefined;

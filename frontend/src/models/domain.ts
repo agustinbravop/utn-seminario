@@ -63,6 +63,7 @@ export type Disponibilidad = {
   disciplina: string;
   dias: Dia[];
   idCancha: number;
+  cancha?: Cancha;
 };
 
 export type Dia =
@@ -99,11 +100,11 @@ export type Busqueda = {
 
 export type Reserva = {
   id: number;
-  fechaReservada: Date;
-  fechaCreada: Date;
+  fechaReservada: string;
+  fechaCreada: string;
   precio: number;
   idPagoReserva: number;
   idPagoSenia: number;
   jugador: Jugador;
-  disponibilidad: Disponibilidad;
+  disponibilidad: Disponibilidad & { cancha: Cancha };
 };

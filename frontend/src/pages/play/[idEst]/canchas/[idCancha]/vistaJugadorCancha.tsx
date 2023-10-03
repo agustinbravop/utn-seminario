@@ -19,7 +19,7 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api/canchas";
+import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 
 import React, { useState } from "react";
@@ -65,15 +65,15 @@ export default function VistaJugadorCancha() {
               />
             </Box>
           </CardHeader>
-          <CardBody height="100%" marginTop="-10px">
+          <CardBody height="100%" mt="-10px">
             <Box
               display="flex"
               justifyContent="left"
               height="100%"
               width="100%"
             >
-              <Box marginTop="55px" height="100%">
-                <Stack divider={<StackDivider />} spacing="1" marginTop="-2rem">
+              <Box mt="55px" height="100%">
+                <Stack divider={<StackDivider />} spacing="1" mt="-2rem">
                   <Box>
                     <Heading size="xs" textTransform="uppercase">
                       Descripción
@@ -122,7 +122,7 @@ export default function VistaJugadorCancha() {
                         <option value={d}>{d}</option>
                       ))}
                     </Select>
-                    <TableContainer paddingTop="15px" paddingBottom="20px">
+                    <TableContainer pt="15px" pb="20px">
                       <Table variant="simple" size="sm">
                         <Thead>
                           <Tr>

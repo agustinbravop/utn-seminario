@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function MejorarSuscripcionPage() {
   return (
     <>
-      <Box marginLeft="12%">
+      <Box ml="12%">
         <Heading size="lg">Mejore su suscripción</Heading>
         <br />
         <Text>
@@ -12,7 +12,7 @@ export default function MejorarSuscripcionPage() {
           Le recomendamos mejorar su suscripción.
         </Text>
       </Box>
-      <HStack marginLeft="12%" gap="7%" my="50px">
+      <HStack ml="12%" gap="7%" my="50px">
         <Image
           borderRadius="10"
           src="https://bedsttest.dk/wp-content/uploads/2022/02/Padel-tennis-bat-test.webp"

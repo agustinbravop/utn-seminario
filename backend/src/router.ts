@@ -36,6 +36,7 @@ import { JugadorHandler } from "./handlers/jugador.js";
 import { PrismaJugadorRepository } from "./repositories/jugador.js";
 import { JugadorServiceImpl } from "./services/jugador.js";
 import { jugadoresRouter } from "./routers/jugador.js";
+import { PrismaPagoRepository } from "./repositories/pago.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -72,8 +73,15 @@ export function createRouter(prismaClient: PrismaClient): Router {
   );
   const estHandler = new EstablecimientoHandler(estService);
 
+  const pagoRepo = new PrismaPagoRepository(prismaClient);
+
   const resRepo = new PrismaReservaRepository(prismaClient);
-  const resService = new ReservaServiceImpl(resRepo, canchaRepo, dispRepo);
+  const resService = new ReservaServiceImpl(
+    resRepo,
+    canchaRepo,
+    dispRepo,
+    pagoRepo
+  );
   const resHandler = new ReservaHandler(resService);
 
   const upload = multer({ dest: "imagenes/" });

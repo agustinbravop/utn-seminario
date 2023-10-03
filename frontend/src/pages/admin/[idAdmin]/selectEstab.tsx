@@ -2,7 +2,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
 import { useState } from "react";
 import {
@@ -60,10 +60,10 @@ export default function SelectEstablecimiento() {
         </Box>
         <CardBody height="300px">
           <VStack spacing="0">
-            <Heading size="md" marginBottom="10px">
+            <Heading size="md" mb="10px">
               {e.nombre}
             </Heading>
-            <Text marginBottom="0">
+            <Text mb="0">
               <Icon as={MdPlace} boxSize={5} color="gray" /> {e.direccion}
             </Text>
             <Text>

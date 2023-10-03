@@ -11,6 +11,16 @@ export enum Dia {
   Domingo = "Domingo",
 }
 
+export const DIAS = [
+  Dia.Lunes,
+  Dia.Martes,
+  Dia.Miercoles,
+  Dia.Jueves,
+  Dia.Viernes,
+  Dia.Sabado,
+  Dia.Domingo,
+];
+
 export type Disponibilidad = z.infer<typeof disponibilidadSchema>;
 
 export const disponibilidadSchema = z.object({

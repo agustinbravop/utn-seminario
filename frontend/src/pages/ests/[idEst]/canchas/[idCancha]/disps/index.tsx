@@ -1,4 +1,4 @@
-import { Alert, Heading, Text, useToast } from "@chakra-ui/react";
+import { Heading, Text, useToast } from "@chakra-ui/react";
 import {
   Table,
   Thead,
@@ -9,16 +9,16 @@ import {
   TableContainer,
   chakra,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api/canchas";
+import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
-import FormDisponibilidad from "./_formDisp";
+import FormDisp from "./_FormDisp";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import {
   useCrearDisponibilidad,
   useDisponibilidadesByCanchaID,
   useModificarDisponibilidad,
-} from "@/utils/api/disponibilidades";
-import FormDeleteDisponibilidad from "./_formEliminar";
+} from "@/utils/api";
+import FormEliminarDisp from "./_FormEliminarDisp";
 import { Disponibilidad, DisponibilidadForm } from "@/models";
 import { decimalAHora, horaADecimal } from "@/utils/dates";
 import { CanchaMenu } from "@/components/navigation";
@@ -27,12 +27,9 @@ import {
   useReactTable,
   flexRender,
   getCoreRowModel,
-  ColumnDef,
   SortingState,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { DisponibilidadesTablePlayer } from "@/components/DisponibilidadesTablePlayer/DisponibilidadesTablePlayer";
-import { DIAS, DIAS_ABBR } from "@/utils/consts";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 
@@ -74,11 +71,7 @@ export default function CanchaInfoPage() {
       header: "Precio",
     }),
     columnHelper.accessor("dias", {
-      cell: (info) =>
-        info
-          .getValue()
-          .sort()
-          .join(" - "),
+      cell: (info) => info.getValue().sort().join(" - "),
       header: "Dias",
     }),
   ];
@@ -98,7 +91,22 @@ export default function CanchaInfoPage() {
 
   const toast = useToast();
 
-  const { mutate: mutateCrear, isError } = useCrearDisponibilidad();
+  const { mutate: mutateCrear } = useCrearDisponibilidad({
+    onSuccess: () => {
+      toast({
+        title: "Disponibilidad creada.",
+        description: `Se registró exitosamente.`,
+        status: "success",
+      });
+    },
+    onError: (e) => {
+      toast({
+        title: e.conflictMsg("Error al crear la disponibilidad."),
+        description: `Intente de nuevo.`,
+        status: "error",
+      });
+    },
+  });
 
   const { mutate: mutateModificar } = useModificarDisponibilidad({
     onSuccess: () => {
@@ -108,9 +116,9 @@ export default function CanchaInfoPage() {
         status: "success",
       });
     },
-    onError: () => {
+    onError: (e) => {
       toast({
-        title: "Error al modificar la disponibilidad.",
+        title: e.conflictMsg("Error al modificar la disponibilidad."),
         description: `Intente de nuevo.`,
         status: "error",
       });
@@ -124,9 +132,10 @@ export default function CanchaInfoPage() {
   const handleCrearDisponibilidad = (disp: DisponibilidadForm) => {
     const fin = horaADecimal(disp.horaFin);
     const horasReserva = disp.minutosReserva / 60;
-    let dispInicio = horaADecimal(disp.horaInicio);
-    while (dispInicio < fin) {
-      const dispFin = dispInicio + horasReserva;
+    const dispInicio = horaADecimal(disp.horaInicio);
+
+    let dispFin = dispInicio + horasReserva;
+    while (dispFin <= fin) {
       mutateCrear({
         ...disp,
         horaInicio: decimalAHora(dispInicio),
@@ -134,7 +143,7 @@ export default function CanchaInfoPage() {
         idEst: Number(idEst),
         idCancha: Number(idCancha),
       });
-      dispInicio += horasReserva;
+      dispFin += horasReserva;
     }
   };
 
@@ -147,17 +156,11 @@ export default function CanchaInfoPage() {
         Las reservas que sus clientes vayan a realizar, ocuparán una
         disponibilidad en la fecha reservada.
       </Text>
-      <FormDisponibilidad
+      <FormDisp
         variant="crear"
         onSubmit={handleCrearDisponibilidad}
         resetValues={{ idCancha: Number(idCancha) }}
       />
-      {isError && (
-        <Alert status="error" margin="20px">
-          Hubo un error inesperado al intentar crear la disponibilidad. Intente
-          de nuevo.
-        </Alert>
-      )}
       <TableContainer pt="15px" pb="20px" mr="100px">
         <Table size="sm">
           <Thead>
@@ -201,9 +204,8 @@ export default function CanchaInfoPage() {
                       flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Td>
                 ))}
-                
                 <Td display="flex" gap="10px" p="0.2em">
-                  <FormDisponibilidad
+                  <FormDisp
                     variant="modificar"
                     onSubmit={(disp) =>
                       mutateModificar({
@@ -217,9 +219,8 @@ export default function CanchaInfoPage() {
                       minutosReserva: calcularMinutosReserva(row.original),
                     }}
                   />
-                  <FormDeleteDisponibilidad idDisp={row.original.id} />
+                  <FormEliminarDisp idDisp={row.original.id} />
                 </Td>
-                
               </Tr>
             ))}
           </Tbody>

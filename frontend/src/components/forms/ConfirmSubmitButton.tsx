@@ -63,6 +63,13 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
     [onOpen]
   );
 
+  const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
+    if (onSubmit) {
+      onSubmit(e);
+    }
+    onClose();
+  };
+
   return (
     <>
       <SubmitButton isLoading={isLoading} {...rest} onClick={handleClick}>
@@ -80,7 +87,7 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
             <Button colorScheme="gray" mr={3} onClick={onClose}>
               {cancel ?? "Cancelar"}
             </Button>
-            <SubmitButton isLoading={isLoading} onClick={onSubmit}>
+            <SubmitButton isLoading={isLoading} onClick={handleSubmit}>
               {confirm ?? "Aceptar"}
             </SubmitButton>
           </ModalFooter>

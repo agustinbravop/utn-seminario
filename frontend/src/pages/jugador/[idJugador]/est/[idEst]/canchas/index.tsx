@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { Box, HStack, Heading } from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { useEstablecimientoByID } from "@/utils/api";
+import { useCanchasByEstablecimientoID } from "@/utils/api";
 import CanchaJugador from "@/components/EstablecimientosJugador/CanchaJugador";
 import { useLocation } from "react-router";
 import { formatearFecha } from "@/utils/dates";
@@ -17,7 +17,7 @@ export default function VistaJugador() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="12" mt="40px">
+      <Heading textAlign="center" pb="12" mt="40px">
         Establecimiento {data?.nombre}
       </Heading>
       <Box>

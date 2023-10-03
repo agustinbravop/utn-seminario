@@ -1,25 +1,21 @@
 import { useParams } from "react-router";
-import {
-  Heading,
-  Select,
-  Text,
-} from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { Heading, Select, Text } from "@chakra-ui/react";
+import { useEstablecimientoByID } from "@/utils/api";
+import { useCanchasByEstablecimientoID } from "@/utils/api";
 import { DIAS_ABBR } from "@/utils/consts";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Cancha, Disponibilidad } from "@/models";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DisponibilidadesTablePlayer } from "@/components/DisponibilidadesTablePlayer/DisponibilidadesTablePlayer";
 
-type Columnas = Disponibilidad & { cancha?: string };
+type Columnas = Disponibilidad;
 
 // TODO: falta filtrar por disponibilidades ya ocupadas en la fecha dada.
 /** Genera las filas de disponibilidades que se muestran en la tabla para reservar. */
 function construirDisponibilidades(canchas: Cancha[]) {
   return canchas
-    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c.nombre })))
+    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c })))
     .flat()
     .sort(
       (a, b) =>
@@ -31,7 +27,10 @@ export default function ReservarEstablecimiento() {
 
   const { data: est } = useEstablecimientoByID(Number(idEst));
   const { data: canchas } = useCanchasByEstablecimientoID(Number(idEst));
-  const disciplinas = [...new Set(canchas?.map((c) => c.disciplinas).flat())];
+  const disciplinas = useMemo(
+    () => [...new Set(canchas?.map((c) => c.disciplinas).flat())],
+    [canchas]
+  );
   const [disciplina, setDisciplina] = useState(disciplinas[0] ?? "");
 
   useEffect(() => {
@@ -77,7 +76,7 @@ export default function ReservarEstablecimiento() {
           .join(", "),
       header: "Dias",
     }),
-    columnHelper.accessor("cancha", {
+    columnHelper.accessor("cancha.nombre", {
       cell: (info) => info.getValue(),
       header: "Cancha",
     }),
@@ -108,37 +107,3 @@ export default function ReservarEstablecimiento() {
     </>
   );
 }
-
-/*
-<Table variant="striped" size="sm">
-          <Thead>
-            <Tr>
-              <Th>horario</Th>
-              <Th>precio</Th>
-              <Th>seña</Th>
-              <Th>dias</Th>
-              <Th>cancha</Th>
-              <Th></Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {disponibilidades.map(
-              (d) =>
-                d.disciplina === disciplina && (
-                  <Tr key={d.id}>
-                    <Td>
-                      {d.horaInicio}-{d.horaFin}hs
-                    </Td>
-                    <Td>${d.precioReserva} </Td>
-                    <Td>{d.precioSenia ? `$${d.precioSenia}` : "Sin seña"}</Td>
-                    <Td>{d.dias.map((dia) => DIAS_ABBR[dia]).join(", ")}</Td>
-                    <Td>{d.cancha}</Td>
-                    <Td>
-                      <FormReservarDisponibilidad disp={d} />
-                    </Td>
-                  </Tr>
-                )
-            )}
-          </Tbody>
-        </Table>
-*/

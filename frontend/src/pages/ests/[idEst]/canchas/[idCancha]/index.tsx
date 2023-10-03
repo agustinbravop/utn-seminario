@@ -17,7 +17,7 @@ import {
   useCanchaByID,
   useEliminarCancha,
   useHabilitarCancha,
-} from "@/utils/api/canchas";
+} from "@/utils/api";
 import { useParams } from "@/router";
 import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";

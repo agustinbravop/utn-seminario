@@ -1,10 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { Pago } from "../models/pago";
 import Decimal from "decimal.js";
 import { InternalServerError } from "../utils/apierrors";
 
 export interface PagoRepository {
-  crearPago(monto: Decimal, metodoPago: string, fecha: Date): Promise<Pago>;
+  getPagoById(pagoSenia: number): unknown;
+  crearPago(monto: Decimal, metodoPago: string): Promise<Pago>;
   getPagosAll(): Promise<Pago[]>;
 }
 
@@ -24,21 +25,37 @@ export class PrismaPagoRepository implements PagoRepository {
     }
   }
 
-  async crearPago(
-    monto: Decimal,
-    metodoPago: string,
-    fecha: Date
-  ): Promise<Pago> {
+  async getPagoById(id: number): Promise<Pago | null> {
     try {
-      const pagoDB = await this.prisma.pago.create({
-        data: {
-          id: undefined,
-          fechaPago: fecha,
-          monto: monto,
-          metodoDePago: { connect: { metodoDePago: metodoPago } },
-        },
+      const newPago = await this.prisma.pago.findUnique({
+        where: { id },
       });
 
+      if (newPago === null) {
+        return null;
+      }
+
+      return newPago;
+    } catch (e) {
+      throw new InternalServerError("Error al obtener el pago");
+    }
+  }
+
+  async crearPago(monto: Decimal, metodoPago: string): Promise<Pago> {
+    try {
+      const fecha = new Date();
+      const pagoDB = await this.prisma.pago.create({
+        data: {
+          fechaPago: fecha,
+          monto: monto,
+          metodoDePago: {
+            connectOrCreate: {
+              where: { metodoDePago: metodoPago },
+              create: { metodoDePago: metodoPago },
+            },
+          },
+        },
+      });
       return pagoDB;
     } catch {
       throw new InternalServerError("Error al crear el pago");

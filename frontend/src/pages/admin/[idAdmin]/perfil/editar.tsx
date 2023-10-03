@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useModificarAdministrador } from "@/utils/api/auth";
+import { useModificarAdministrador } from "@/utils/api";
 import { FormProvider } from "react-hook-form";
 import { InputControl, ConfirmSubmitButton } from "@/components/forms";
 import { useNavigate } from "react-router";
@@ -73,14 +73,9 @@ export default function PerfilPage() {
           Editar Perfil
         </Heading>
       </CardHeader>
-      <CardBody marginTop="28px">
+      <CardBody mt="28px">
         <FormProvider {...methods}>
-          <Stack
-            divider={<StackDivider />}
-            spacing="2.5"
-            marginTop="-2rem"
-            as="form"
-          >
+          <Stack divider={<StackDivider />} spacing="2.5" mt="-2rem" as="form">
             <Box>
               <Heading size="xs">Nombre</Heading>
               <InputControl isRequired name="nombre" />

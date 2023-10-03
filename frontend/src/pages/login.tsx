@@ -7,7 +7,7 @@ import {
   PasswordControl,
   SubmitButton,
 } from "@/components/forms";
-import { useLogin } from "@/utils/api/auth";
+import { useLogin } from "@/utils/api";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 

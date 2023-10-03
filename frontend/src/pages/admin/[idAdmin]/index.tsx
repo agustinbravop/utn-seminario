@@ -28,7 +28,7 @@ import { Link } from "react-router-dom";
 import {
   useEstablecimientosByAdminID,
   useEstablecimientosEliminadosByAdminID,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
 
 interface EstablecimientosListProps {
@@ -66,58 +66,42 @@ export default function EstablecimientosPage() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="12" mt="40px">
+      <Heading textAlign="center" pb="12" mt="40px">
         Establecimientos
       </Heading>
-      <HStack
-        marginRight="16%"
-        marginLeft="16%"
-        marginBottom="50px"
-        marginTop="20px"
-      >
+      <HStack mr="16%" ml="16%" mb="50px" mt="20px">
         <InputGroup width="300px">
-          <InputRightElement pointerEvents="none">
+          <InputRightElement>
             <SearchIcon color="gray.300" />
           </InputRightElement>
           <Input
             focusBorderColor="lightblue"
-            placeholder="Nombre del establecimiento"
+            placeholder="Nombre"
             size="md"
-            width="100%"
             onChange={handleChange}
             value={filtro}
           />
         </InputGroup>
-        <HStack
-          marginLeft="auto"
-          display="flex"
-          alignContent="column"
-          spacing={5}
-          align="center"
-        >
+        <HStack ml="auto" spacing={4}>
           <Text mb="0">
             {data.length} / {admin.suscripcion.limiteEstablecimientos}{" "}
             establecimiento{data?.length === 1 || "s"}
           </Text>
-          {data.length < admin.suscripcion.limiteEstablecimientos ? (
-            <Link to="nuevoEstablecimiento">
-              <Button leftIcon={<Icon as={GrAddCircle} />}>
-                Agregar Establecimiento
-              </Button>
-            </Link>
-          ) : (
-            <Link to="mejorarSuscripcion">
-              <Button leftIcon={<Icon as={GrAddCircle} />}>
-                Agregar Establecimiento
-              </Button>
-            </Link>
-          )}
+          <Link
+            to={
+              data.length < admin.suscripcion.limiteEstablecimientos
+                ? "nuevoEstablecimiento"
+                : "mejorarSuscripcion"
+            }
+          >
+            <Button leftIcon={<Icon as={GrAddCircle} />}>Agregar</Button>
+          </Link>
           <Button onClick={onOpen}>
             <Icon as={DeleteIcon} />
           </Button>
         </HStack>
       </HStack>
-      <HStack marginLeft="16%" marginRight="16%">
+      <HStack ml="16%" mr="16%">
         {isLoading ? (
           <LoadingSpinner />
         ) : isError ? (
@@ -144,7 +128,7 @@ export default function EstablecimientosPage() {
                 status="error"
               />
             ) : methods.data.length === 0 ? (
-              <Text> No hay establecimientos en la papelera </Text>
+              <Text>No hay establecimientos en la papelera</Text>
             ) : (
               <DeletedEstablecimientoList
                 establecimientos={methods.data}

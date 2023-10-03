@@ -131,8 +131,6 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   }
 
   async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {
-    console.log(consulta);
-
     let estabFilter = await this.repo.getEstabsByFiltro(consulta);
 
     if (consulta.disciplina) {
@@ -148,7 +146,6 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
       const estabDisponibles = await this.repo.getEstabDispByDate(
         consulta.fecha
       );
-      console.log("disponibles:", JSON.stringify(estabDisponibles));
       return estabFilter.filter((e) =>
         estabDisponibles.find(({ id }) => id === e.id)
       );

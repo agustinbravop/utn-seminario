@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 import { Table, Thead, Tbody, Tr, Th, Td, chakra } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
@@ -17,13 +17,10 @@ export type DataTableProps<Data extends object> = {
   columns: ColumnDef<Data, any>[];
 };
 
-type FilaDisponibilidad = Disponibilidad & {cancha?: string}
-
-
 export function DisponibilidadesTablePlayer({
   data,
   columns,
-}: DataTableProps<FilaDisponibilidad>) {
+}: DataTableProps<Disponibilidad>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     columns,
@@ -79,7 +76,7 @@ export function DisponibilidadesTablePlayer({
               </Td>
             ))}
             <Td>
-                <FormReservarDisponibilidad disp={row.original} />
+              <FormReservarDisponibilidad disp={row.original} />
             </Td>
           </Tr>
         ))}
