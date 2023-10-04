@@ -2,11 +2,11 @@ import { PrismaClient, pago } from "@prisma/client";
 import { Pago } from "../models/pago";
 import Decimal from "decimal.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors";
-import { Filtros } from "../services/pagos";
+import { BuscarPagoQuery } from "../services/pagos";
 
 export interface PagoRepository {
   getByID(idPago: number): Promise<Pago>;
-  buscar(filtros: Filtros): Promise<Pago[]>;
+  buscar(filtros: BuscarPagoQuery): Promise<Pago[]>;
   crear(monto: Decimal, metodoPago: string): Promise<Pago>;
   getAll(): Promise<Pago[]>;
 }
@@ -27,10 +27,14 @@ export class PrismaPagoRepository implements PagoRepository {
     }
   }
 
-  async buscar(filtros: Filtros) {
+  async buscar(filtros: BuscarPagoQuery) {
     try {
       const pagos = await this.prisma.pago.findMany({
         where: {
+          fechaPago: {
+            gte: filtros.fechaDesde,
+            lte: filtros.fechaHasta,
+          },
           reservas: {
             some: {
               disponibilidad: {
@@ -45,6 +49,7 @@ export class PrismaPagoRepository implements PagoRepository {
       });
       return pagos.map((p) => toPago(p));
     } catch (e) {
+      console.error(e);
       throw new InternalServerError("Error interno al obtener los pagos");
     }
   }

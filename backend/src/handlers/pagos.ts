@@ -1,10 +1,18 @@
 import { RequestHandler } from "express";
-import { Filtros, PagoService } from "../services/pagos.js";
+import { BuscarPagoQuery, PagoService } from "../services/pagos.js";
 import { z } from "zod";
 
 export const buscarPagoQuerySchema = z.object({
-  idCancha: z.number().int().optional(),
-  idEst: z.number().int().optional(),
+  idCancha: z.coerce.number().int().optional(),
+  idEst: z.coerce.number().int().optional(),
+  fechaDesde: z.coerce
+    .string()
+    .optional()
+    .transform((data) => data && new Date(data).toISOString()),
+  fechaHasta: z.coerce
+    .string()
+    .optional()
+    .transform((data) => data && new Date(data).toISOString()),
 });
 
 export class PagoHandler {
@@ -23,8 +31,8 @@ export class PagoHandler {
   }
 
   buscarPagos(): RequestHandler {
-    return async (req, res) => {
-      const filtros: Filtros = req.query;
+    return async (_req, res) => {
+      const filtros: BuscarPagoQuery = res.locals.query;
       const pagos = await this.service.buscar(filtros);
       res.status(200).json(pagos);
     };

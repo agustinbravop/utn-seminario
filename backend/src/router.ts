@@ -40,6 +40,9 @@ import { PrismaPagoRepository } from "./repositories/pagos.js";
 import { pagosRouter } from "./routers/pagos.js";
 import { PagoServiceImpl } from "./services/pagos.js";
 import { PagoHandler } from "./handlers/pagos.js";
+import { informesRouter } from "./routers/informes.js";
+import { InformeServiceImpl } from "./services/informes.js";
+import { InformeHandler } from "./handlers/informes.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -89,6 +92,13 @@ export function createRouter(prismaClient: PrismaClient): Router {
   );
   const resHandler = new ReservaHandler(resService);
 
+  const informeService = new InformeServiceImpl(
+    estService,
+    canchaService,
+    pagoService
+  );
+  const informeHandler = new InformeHandler(informeService);
+
   const upload = multer({ dest: "imagenes/" });
 
   // Middlewares globales a todos los endpoints.
@@ -113,6 +123,7 @@ export function createRouter(prismaClient: PrismaClient): Router {
   );
   router.use("/reservas", reservasRouter(resHandler, authHandler));
   router.use("/pagos", pagosRouter(pagoHandler));
+  router.use("/informes", informesRouter(informeHandler));
 
   // Error handler global. Ataja los errores tirados por los otros handlers.
   router.use(handleApiErrors());

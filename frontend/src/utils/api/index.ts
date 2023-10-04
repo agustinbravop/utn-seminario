@@ -5,3 +5,5 @@ export * from "./disponibilidades";
 export * from "./establecimientos";
 export * from "./geo";
 export * from "./reservas";
+export * from "./pagos";
+export * from "./informes";
