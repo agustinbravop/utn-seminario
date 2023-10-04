@@ -3,7 +3,7 @@ import { Disponibilidad } from "../models/disponibilidad";
 import { Reserva } from "../models/reserva";
 import { CanchaRepository } from "../repositories/canchas";
 import { DisponibilidadRepository } from "../repositories/disponibilidades";
-import { PagoRepository } from "../repositories/pago";
+import { PagoRepository } from "../repositories/pagos";
 import { ReservaRepository } from "../repositories/reservas";
 import { ConflictError, InternalServerError } from "../utils/apierrors";
 import { getDayOfWeek } from "../utils/dates";
@@ -14,11 +14,20 @@ export type CrearReserva = {
   idDisponibilidad: number;
 };
 
+export type BuscarReservaQuery = {
+  idCancha?: number;
+  idEst?: number;
+  fechaCreadaDesde?: string;
+  fechaCreadaHasta?: string;
+};
+
 export interface ReservaService {
   getByEstablecimientoID(idEst: number): Promise<Reserva[]>;
   getByDisponibilidadID(idDisp: number): Promise<Reserva[]>;
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
+  getByCanchaID(idCancha: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
+  buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
   crear(res: CrearReserva): Promise<Reserva>;
   pagarSenia(res: Reserva): Promise<Reserva>;
   pagarReserva(res: Reserva): Promise<Reserva>;
@@ -52,11 +61,11 @@ export class ReservaServiceImpl implements ReservaService {
       throw new Error("Reserva con seña existente");
     }
     try {
-      const pago = await this.pagoRepo.crearPago(
+      const pago = await this.pagoRepo.crear(
         new Decimal(res.disponibilidad.precioSenia), //???
         "Efectivo"
       );
-      res.pagoSenia = pago.id;
+      res.pagoSenia = pago;
       return await this.repo.updateReserva(res);
     } catch (e) {
       throw new InternalServerError("Error al registrar el pago de la seña");
@@ -78,8 +87,8 @@ export class ReservaServiceImpl implements ReservaService {
       } else {
         monto = new Decimal(res.precio);
       }
-      const pago = await this.pagoRepo.crearPago(monto, "Efectivo");
-      res.pagoReserva = pago.id;
+      const pago = await this.pagoRepo.crear(monto, "Efectivo");
+      res.pagoReserva = pago;
       return await this.repo.updateReserva(res);
     } catch (e) {
       throw new InternalServerError("Error al registrar el pago de la reserva");
@@ -94,12 +103,20 @@ export class ReservaServiceImpl implements ReservaService {
     return await this.repo.getReservasByDisponibilidadID(idDisp);
   }
 
+  async getByCanchaID(idCancha: number) {
+    return await this.repo.getReservasByCanchaID(idCancha);
+  }
+
   async getByJugadorID(idJugador: number) {
     return await this.repo.getReservasByJugadorID(idJugador);
   }
 
   async getByID(idRes: number) {
     return await this.repo.getReservaByID(idRes);
+  }
+
+  async buscar(filtros: BuscarReservaQuery) {
+    return await this.repo.buscar(filtros);
   }
 
   async crear(crearReserva: CrearReserva) {

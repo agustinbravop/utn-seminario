@@ -1,0 +1,33 @@
+import { API_URL } from ".";
+import { Cancha, Establecimiento, Reserva } from "@/models";
+import { useApiQuery, UseApiQueryOptions } from "@/hooks";
+import queryString from "query-string";
+
+export type IngresosPorCanchaQuery = {
+  idEst?: number;
+  fechaDesde?: string;
+  fechaHasta?: string;
+};
+
+type IngresosPorCancha = Establecimiento & {
+  canchas: (Cancha & {
+    reservas: Reserva[];
+    total: number;
+  })[];
+  total: number;
+};
+
+export function useInformePagosPorCancha(
+  query: IngresosPorCanchaQuery,
+  options?: UseApiQueryOptions<IngresosPorCancha>
+) {
+  console.log(query);
+
+  return useApiQuery(
+    ["informes", "pagosPorCancha", query],
+    new URL(
+      `${API_URL}/informes/ingresosPorCancha?${queryString.stringify(query)}`
+    ),
+    { ...options }
+  );
+}

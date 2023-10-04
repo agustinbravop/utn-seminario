@@ -36,7 +36,13 @@ import { JugadorHandler } from "./handlers/jugador.js";
 import { PrismaJugadorRepository } from "./repositories/jugador.js";
 import { JugadorServiceImpl } from "./services/jugador.js";
 import { jugadoresRouter } from "./routers/jugador.js";
-import { PrismaPagoRepository } from "./repositories/pago.js";
+import { PrismaPagoRepository } from "./repositories/pagos.js";
+import { pagosRouter } from "./routers/pagos.js";
+import { PagoServiceImpl } from "./services/pagos.js";
+import { PagoHandler } from "./handlers/pagos.js";
+import { informesRouter } from "./routers/informes.js";
+import { InformeServiceImpl } from "./services/informes.js";
+import { InformeHandler } from "./handlers/informes.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -74,6 +80,8 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const estHandler = new EstablecimientoHandler(estService);
 
   const pagoRepo = new PrismaPagoRepository(prismaClient);
+  const pagoService = new PagoServiceImpl(pagoRepo);
+  const pagoHandler = new PagoHandler(pagoService);
 
   const resRepo = new PrismaReservaRepository(prismaClient);
   const resService = new ReservaServiceImpl(
@@ -83,6 +91,13 @@ export function createRouter(prismaClient: PrismaClient): Router {
     pagoRepo
   );
   const resHandler = new ReservaHandler(resService);
+
+  const informeService = new InformeServiceImpl(
+    estService,
+    canchaService,
+    resService
+  );
+  const informeHandler = new InformeHandler(informeService);
 
   const upload = multer({ dest: "imagenes/" });
 
@@ -107,6 +122,8 @@ export function createRouter(prismaClient: PrismaClient): Router {
     disponibilidadesRouter(dispHandler, estHandler, authHandler)
   );
   router.use("/reservas", reservasRouter(resHandler, authHandler));
+  router.use("/pagos", pagosRouter(pagoHandler));
+  router.use("/informes", informesRouter(informeHandler));
 
   // Error handler global. Ataja los errores tirados por los otros handlers.
   router.use(handleApiErrors());
