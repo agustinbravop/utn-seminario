@@ -30,7 +30,7 @@ export function decimalAHora(n: number | undefined) {
  */
 export function formatearFecha(fecha: Date) {
   // Obtiene el día, el mes y el año de la fecha parseada
-  const dia = (fecha.getDate() + 1).toString().padStart(2, "0");
+  const dia = fecha.getDate().toString().padStart(2, "0");
   const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
   const anio = fecha.getFullYear();
 
@@ -43,5 +43,9 @@ export function formatearFecha(fecha: Date) {
  * Usar esta función para mostrar la fecha al usuario de manera amigable.
  */
 export function formatearISO(iso: string) {
-  return new Date(iso).toLocaleDateString("es-ar");
+  const fecha = new Date(iso);
+  const dia = (fecha.getDate() + 1).toString().padStart(2, "0");
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+  const anio = fecha.getFullYear();
+  return `${dia}/${mes}/${anio}`;
 }

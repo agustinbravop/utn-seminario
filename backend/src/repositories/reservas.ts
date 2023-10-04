@@ -23,7 +23,11 @@ export class PrismaReservaRepository implements ReservaRepository {
       include: {
         disciplina: true,
         dias: true,
-        cancha: true,
+        cancha: {
+          include: {
+            establecimiento: true,
+          },
+        },
       },
     },
   };

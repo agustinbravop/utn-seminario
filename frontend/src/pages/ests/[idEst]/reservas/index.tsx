@@ -85,7 +85,7 @@ export default function EstablecimientoReservasPage() {
   });
 
   const [filtroNombre, setFiltroNombre] = useState("");
-  const [filtroFecha, setFiltroFecha] = useState("");
+  const [filtroFecha, setFiltroFecha] = useState(formatearFecha(new Date()));
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
@@ -100,7 +100,8 @@ export default function EstablecimientoReservasPage() {
       .toLowerCase()
       .includes(filtroNombre.toLowerCase());
     const fechaCoincide =
-      filtroFecha === "" || r.fechaReservada === filtroFecha;
+      filtroFecha === "" ||
+      formatearISO(r.fechaReservada) === formatearISO(filtroFecha);
 
     var estadoCoincide = false;
     if (filtroEstado === estado && estado === "Pagado") {
@@ -171,7 +172,7 @@ export default function EstablecimientoReservasPage() {
                 onClick={() => handleOrdenarColumna("Cancha")}
                 style={{ cursor: "pointer" }}
               >
-                Cancha
+                Cancha{" "}
                 {ordenColumna === "Cancha" && (
                   <>
                     {ordenAscendente ? (
@@ -187,7 +188,7 @@ export default function EstablecimientoReservasPage() {
                 onClick={() => handleOrdenarColumna("Fecha")}
                 style={{ cursor: "pointer" }}
               >
-                Fecha
+                Fecha{" "}
                 {ordenColumna === "Fecha" && (
                   <>
                     {ordenAscendente ? (
@@ -203,7 +204,7 @@ export default function EstablecimientoReservasPage() {
                 onClick={() => handleOrdenarColumna("Jugador")}
                 style={{ cursor: "pointer" }}
               >
-                Jugador
+                Jugador{" "}
                 {ordenColumna === "Jugador" && (
                   <>
                     {ordenAscendente ? (
@@ -218,7 +219,7 @@ export default function EstablecimientoReservasPage() {
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Estado")}
               >
-                Estado
+                Estado{" "}
                 {ordenColumna === "Estado" && (
                   <>
                     {ordenAscendente ? (
@@ -236,29 +237,35 @@ export default function EstablecimientoReservasPage() {
             {reservasFiltradas.map((r) => {
               let estado = (
                 <HStack width="100%" display="flex" justifyContent="center">
-                  <Box ml="10%">No Pagado</Box>
-                  <CircleIcon color="Red" />
+                  <Box ml="10%" width="40%">
+                    No Pagado
+                  </Box>
+                  <CircleIcon color="Red" width="40%" />
                 </HStack>
               );
               if (r.idPagoReserva) {
                 estado = (
                   <HStack width="100%" display="flex" justifyContent="center">
-                    <Box ml="10%">Pagado</Box>
-                    <CircleIcon color="Green" />
+                    <Box ml="10%" width="40%">
+                      Pagado
+                    </Box>
+                    <CircleIcon color="Green" width="40%" />
                   </HStack>
                 );
               } else if (r.idPagoSenia) {
                 estado = (
                   <HStack width="100%" display="flex" justifyContent="center">
-                    <Box ml="10%">Señado</Box>
-                    <CircleIcon color="orange" />
+                    <Box ml="10%" width="40%">
+                      Señado
+                    </Box>
+                    <CircleIcon color="orange" width="40%" />
                   </HStack>
                 );
               }
               return (
                 <Tr key={r.id}>
                   <Td textAlign="center">{r.disponibilidad.cancha?.nombre}</Td>
-                  <Td textAlign="center">{formatearISO(r.fechaReservada)} </Td>
+                  <Td textAlign="center">{formatearISO(r.fechaReservada)}</Td>
                   <Td textAlign="center">
                     {r.jugador.nombre} {r.jugador.apellido}
                   </Td>
