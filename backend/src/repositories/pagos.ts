@@ -1,0 +1,103 @@
+import { PrismaClient, pago } from "@prisma/client";
+import { Pago } from "../models/pago";
+import Decimal from "decimal.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors";
+import { Filtros } from "../services/pagos";
+
+export interface PagoRepository {
+  getByID(idPago: number): Promise<Pago>;
+  buscar(filtros: Filtros): Promise<Pago[]>;
+  crear(monto: Decimal, metodoPago: string): Promise<Pago>;
+  getAll(): Promise<Pago[]>;
+}
+
+export class PrismaPagoRepository implements PagoRepository {
+  private prisma: PrismaClient;
+
+  constructor(prismaClient: PrismaClient) {
+    this.prisma = prismaClient;
+  }
+
+  async getAll(): Promise<Pago[]> {
+    try {
+      const pagos = await this.prisma.pago.findMany();
+      return pagos.map((p) => toPago(p));
+    } catch (e) {
+      throw new InternalServerError("Error interno al obtener los pagos");
+    }
+  }
+
+  async buscar(filtros: Filtros) {
+    try {
+      const pagos = await this.prisma.pago.findMany({
+        where: {
+          reservas: {
+            some: {
+              disponibilidad: {
+                cancha: {
+                  id: filtros.idCancha,
+                  idEstablecimiento: filtros.idEst,
+                },
+              },
+            },
+          },
+        },
+      });
+      return pagos.map((p) => toPago(p));
+    } catch (e) {
+      throw new InternalServerError("Error interno al obtener los pagos");
+    }
+  }
+
+  async getByID(id: number) {
+    return awaitQuery(
+      this.prisma.pago.findUnique({ where: { id } }),
+      "Error al buscar el pago",
+      "Error intero del servidor"
+    );
+  }
+
+  async crear(monto: Decimal, metodoPago: string): Promise<Pago> {
+    try {
+      const fecha = new Date();
+      const pagoDB = await this.prisma.pago.create({
+        data: {
+          fechaPago: fecha,
+          monto: monto,
+          metodoDePago: {
+            connectOrCreate: {
+              where: { metodoDePago: metodoPago },
+              create: { metodoDePago: metodoPago },
+            },
+          },
+        },
+      });
+      return pagoDB;
+    } catch {
+      throw new InternalServerError("Error al crear el pago");
+    }
+  }
+}
+
+type PagoDB = pago;
+
+function toPago(pago: PagoDB): Pago {
+  return { ...pago };
+}
+
+async function awaitQuery(
+  promise: Promise<PagoDB | null>,
+  notFoundMsg: string,
+  errorMsg: string
+): Promise<Pago> {
+  try {
+    const pagoDB = await promise;
+
+    if (pagoDB) {
+      return toPago(pagoDB);
+    }
+  } catch {
+    throw new InternalServerError(errorMsg);
+  }
+  throw new NotFoundError(notFoundMsg);
+}

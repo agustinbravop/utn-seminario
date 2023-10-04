@@ -104,7 +104,16 @@ export type Reserva = {
   fechaCreada: string;
   precio: number;
   idPagoReserva: number;
+  pagoReserva: Pago;
   idPagoSenia: number;
+  pagoSenia: Pago;
   jugador: Jugador;
   disponibilidad: Disponibilidad & { cancha: Cancha };
+};
+
+export type Pago = {
+  id: number;
+  monto: number;
+  fechaPago: string;
+  idMetodoDePago: string;
 };

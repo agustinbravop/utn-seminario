@@ -1,6 +1,6 @@
 import { Reserva } from "../models/reserva.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
-import { PrismaClient, jugador, reserva } from "@prisma/client";
+import { PrismaClient, jugador, pago, reserva } from "@prisma/client";
 import { disponibilidadDB, toDisp } from "./disponibilidades.js";
 import { CrearReserva } from "../services/reservas.js";
 import Decimal from "decimal.js";
@@ -26,6 +26,8 @@ export class PrismaReservaRepository implements ReservaRepository {
         cancha: true,
       },
     },
+    pagoReserva: true,
+    pagoSenia: true,
   };
 
   constructor(prismaClient: PrismaClient) {
@@ -44,10 +46,10 @@ export class PrismaReservaRepository implements ReservaRepository {
           jugador: { connect: { id: res.jugador.id } },
           disponibilidad: { connect: { id: res.disponibilidad.id } },
           pagoReserva: res.pagoReserva
-            ? { connect: { id: res.pagoReserva } }
+            ? { connect: { id: res.pagoReserva.id } }
             : undefined,
           pagoSenia: res.pagoSenia
-            ? { connect: { id: res.pagoSenia } }
+            ? { connect: { id: res.pagoSenia.id } }
             : undefined,
         },
         include: this.include,
@@ -158,26 +160,34 @@ export class PrismaReservaRepository implements ReservaRepository {
   }
 }
 
-type reservaDB = reserva & {
+type ReservaDB = reserva & {
   jugador: jugador;
   disponibilidad: disponibilidadDB;
+  pagoReserva: pago | null;
+  pagoSenia?: pago | null;
 };
 
-function toRes(res: reservaDB): Reserva {
+function toRes(res: ReservaDB): Reserva {
   const { clave, ...jugador } = res.jugador;
-  return { ...res, jugador, disponibilidad: toDisp(res.disponibilidad) };
+  return {
+    ...res,
+    jugador,
+    disponibilidad: toDisp(res.disponibilidad),
+    pagoReserva: res.pagoReserva ?? undefined,
+    pagoSenia: res.pagoSenia ?? undefined,
+  };
 }
 
 async function awaitQuery(
-  promise: Promise<reservaDB | null>,
+  promise: Promise<ReservaDB | null>,
   notFoundMsg: string,
   errorMsg: string
 ): Promise<Reserva> {
   try {
-    const cancha = await promise;
+    const reservaDB = await promise;
 
-    if (cancha) {
-      return toRes(cancha);
+    if (reservaDB) {
+      return toRes(reservaDB);
     }
   } catch {
     throw new InternalServerError(errorMsg);

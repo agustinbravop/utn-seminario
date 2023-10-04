@@ -3,7 +3,7 @@ import { Disponibilidad } from "../models/disponibilidad";
 import { Reserva } from "../models/reserva";
 import { CanchaRepository } from "../repositories/canchas";
 import { DisponibilidadRepository } from "../repositories/disponibilidades";
-import { PagoRepository } from "../repositories/pago";
+import { PagoRepository } from "../repositories/pagos";
 import { ReservaRepository } from "../repositories/reservas";
 import { ConflictError, InternalServerError } from "../utils/apierrors";
 import { getDayOfWeek } from "../utils/dates";
@@ -52,11 +52,11 @@ export class ReservaServiceImpl implements ReservaService {
       throw new Error("Reserva con seña existente");
     }
     try {
-      const pago = await this.pagoRepo.crearPago(
+      const pago = await this.pagoRepo.crear(
         new Decimal(res.disponibilidad.precioSenia), //???
         "Efectivo"
       );
-      res.pagoSenia = pago.id;
+      res.pagoSenia = pago;
       return await this.repo.updateReserva(res);
     } catch (e) {
       throw new InternalServerError("Error al registrar el pago de la seña");
@@ -78,8 +78,8 @@ export class ReservaServiceImpl implements ReservaService {
       } else {
         monto = new Decimal(res.precio);
       }
-      const pago = await this.pagoRepo.crearPago(monto, "Efectivo");
-      res.pagoReserva = pago.id;
+      const pago = await this.pagoRepo.crear(monto, "Efectivo");
+      res.pagoReserva = pago;
       return await this.repo.updateReserva(res);
     } catch (e) {
       throw new InternalServerError("Error al registrar el pago de la reserva");

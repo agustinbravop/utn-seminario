@@ -9,5 +9,4 @@ export const pagoSchema = z.object({
   monto: decimalSchema,
   fechaPago: z.date(),
   idMetodoDePago: z.string().nonempty(),
-  //Hace falta agregar a qué reserva pertenece?
 });
