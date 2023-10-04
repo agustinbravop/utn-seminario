@@ -23,7 +23,7 @@ import {
 import { useNavigate } from "react-router";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
-import { formatearFecha, formatearISO } from "@/utils/dates";
+import { formatearFecha, formatearISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
 
@@ -258,7 +258,9 @@ export default function EstablecimientoReservasPage() {
               return (
                 <Tr key={r.id}>
                   <Td textAlign="center">{r.disponibilidad.cancha?.nombre}</Td>
-                  <Td textAlign="center">{formatearISO(r.fechaReservada)} </Td>
+                  <Td textAlign="center">
+                    {formatearISOFecha(r.fechaReservada)}{" "}
+                  </Td>
                   <Td textAlign="center">
                     {r.jugador.nombre} {r.jugador.apellido}
                   </Td>
