@@ -108,7 +108,9 @@ export type Reserva = {
   idPagoSenia: number;
   pagoSenia: Pago;
   jugador: Jugador;
-  disponibilidad: Disponibilidad & { cancha: Cancha };
+  disponibilidad: Disponibilidad & {
+    cancha: Cancha & { establecimiento: Establecimiento };
+  };
 };
 
 export type Pago = {

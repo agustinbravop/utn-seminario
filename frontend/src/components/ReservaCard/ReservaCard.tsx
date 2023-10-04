@@ -1,7 +1,6 @@
 import { MdPlace } from "react-icons/md";
 import { LuClock5 } from "react-icons/lu";
-import { BiTennisBall } from "react-icons/bi";
-import { PhoneIcon } from "@chakra-ui/icons";
+import { PhoneIcon, CalendarIcon } from "@chakra-ui/icons";
 import {
   Card,
   CardHeader,
@@ -14,36 +13,39 @@ import {
   TagLabel,
   HStack,
   VStack,
-  Button,
+  CardProps,
+  Stack,
 } from "@chakra-ui/react";
 import { Reserva } from "@/models";
+import { CircleIcon } from "../CircleIcon/CircleIcon";
 import { formatearISO } from "@/utils/dates";
 
-export default function ReservaCard({ reserva }: { reserva: Reserva }) {
+interface ReservaCardProps extends CardProps {
+  reserva: Reserva;
+}
+
+export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
   return (
     <>
-      <Card size="sm" m={2} textAlign="center" h="270px" w="min(80vw, 400px)">
+      <Card size="sm" m={2} w="min(80vw, 400px)" {...props}>
         {reserva.idPagoReserva ? (
-          <CardHeader borderRadius="6px" backgroundColor="cyan.100">
+          <CardHeader borderRadius="6px" backgroundColor="green.100">
             <HStack justifyContent="center">
-              <Icon viewBox="0 0 200 200" color="whatsapp.500">
-                <path
-                  fill="currentColor"
-                  d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-                />
-              </Icon>
-              <Text> Pagada</Text>
+              <CircleIcon color="green" />
+              <Text> Pagada </Text>
+            </HStack>
+          </CardHeader>
+        ) : reserva.idPagoSenia ? (
+          <CardHeader borderRadius="6px" backgroundColor="orange.100">
+            <HStack justifyContent="center">
+              <CircleIcon color="orange" />
+              <Text> Señada </Text>
             </HStack>
           </CardHeader>
         ) : (
           <CardHeader backgroundColor="red.200" borderRadius="6px">
             <HStack justifyContent="center">
-              <Icon viewBox="0 0 200 200" color="red">
-                <path
-                  fill="currentColor"
-                  d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-                />
-              </Icon>
+              <CircleIcon color="red" />
               <Text> No pagada</Text>
             </HStack>
           </CardHeader>
@@ -53,9 +55,10 @@ export default function ReservaCard({ reserva }: { reserva: Reserva }) {
           <Heading
             justifyContent="center"
             display="flex"
-            fontSize={{ base: "25px", md: "25px", lg: "27px" }}
+            fontSize={{ base: "23px", md: "23px", lg: "25px" }}
+            mb="5px"
           >
-            <Text> Club hercules </Text>
+            <Text>{reserva.disponibilidad.cancha.establecimiento.nombre}</Text>
           </Heading>
           <VStack
             fontSize={{ base: "20px", md: "17px", lg: "15px" }}
@@ -63,35 +66,47 @@ export default function ReservaCard({ reserva }: { reserva: Reserva }) {
             mb={3}
           >
             <Text>
-              <Icon as={MdPlace} boxSize={4} mr="2" alignSelf="start" />{" "}
-              Direccion
+              <Icon as={MdPlace} boxSize={4} mr="2" alignSelf="start" />
+              {reserva.disponibilidad.cancha.establecimiento.direccion}
             </Text>
             <Text>
-              <PhoneIcon boxSize={4} mr="2" alignSelf="start" /> Telefono
+              <PhoneIcon boxSize={4} mr="2" alignSelf="start" />
+              {reserva.disponibilidad.cancha.establecimiento.telefono}
             </Text>
           </VStack>
-          <HStack
-            spacing={2}
-            justifyContent="center"
-            fontSize={{ base: "15px", md: "17px", lg: "15px" }}
-            mb={3}
-          >
-            <Tag size="sm" variant="subtle" colorScheme="teal">
-              <TagLeftIcon as={LuClock5} boxSize={4} />
-              <TagLabel> {formatearISO(reserva.fechaReservada)} </TagLabel>
-            </Tag>
-            <Tag size="sm" variant="subtle" colorScheme="whatsapp">
-              <TagLeftIcon as={BiTennisBall} boxSize={4} />
-              <TagLabel> {reserva.disponibilidad.disciplina} </TagLabel>
-            </Tag>
-          </HStack>
-          <HStack spacing={4} justifyContent="center" mt="10px">
-            <Button colorScheme="red" size="sm">
-              Cancelar Reserva
-            </Button>
-          </HStack>
+
+          <ReservaCardTags reserva={reserva} />
         </CardBody>
       </Card>
     </>
+  );
+}
+
+function ReservaCardTags({ reserva }: { reserva: Reserva }) {
+  return (
+    <Stack
+      direction={{ base: "column", sm: "row" }}
+      spacing={2}
+      align="center"
+      justifyContent="center"
+      fontSize={{ base: "15px", md: "17px", lg: "15px" }}
+      mb={3}
+    >
+      <Tag size="sm" variant="subtle" colorScheme="blue">
+        <TagLeftIcon as={LuClock5} boxSize={4} />
+        <TagLabel>
+          {reserva.disponibilidad.horaInicio}
+          {"- "}
+          {reserva.disponibilidad.horaFin}
+        </TagLabel>
+      </Tag>
+      <Tag size="sm" variant="subtle" colorScheme="gray">
+        <TagLeftIcon as={CalendarIcon} boxSize={4} />
+        <TagLabel>{formatearISO(reserva.fechaReservada)}</TagLabel>
+      </Tag>
+      <Tag size="sm" variant="subtle" colorScheme="purple">
+        <TagLabel> {reserva.disponibilidad.disciplina} </TagLabel>
+      </Tag>
+    </Stack>
   );
 }

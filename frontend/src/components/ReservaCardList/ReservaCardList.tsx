@@ -13,7 +13,7 @@ export default function ReservaCardList() {
       </Heading>
       <VStack>
         {reservas.map((reserva) => (
-          <ReservaCard reserva={reserva} />
+          <ReservaCard key={reserva.id} reserva={reserva} />
         ))}
       </VStack>
     </>
