@@ -20,10 +20,10 @@ export class InformeHandler {
     this.service = service;
   }
 
-  pagosPorCancha(): RequestHandler {
+  ingresosPorCancha(): RequestHandler {
     return async (_req, res) => {
       const query: PagosPorCanchaQuery = res.locals.query;
-      const pagosPorCancha = await this.service.pagosPorCancha(query);
+      const pagosPorCancha = await this.service.ingresosPorCancha(query);
       res.status(200).json(pagosPorCancha);
     };
   }

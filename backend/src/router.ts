@@ -95,7 +95,7 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const informeService = new InformeServiceImpl(
     estService,
     canchaService,
-    pagoService
+    resService
   );
   const informeHandler = new InformeHandler(informeService);
 

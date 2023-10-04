@@ -1,13 +1,13 @@
 import { Cancha } from "../models/cancha";
 import { Establecimiento } from "../models/establecimiento";
-import { Pago } from "../models/pago";
+import { Reserva } from "../models/reserva";
 import { CanchaService } from "./canchas";
 import { EstablecimientoService } from "./establecimientos";
-import { PagoService } from "./pagos";
+import { ReservaService } from "./reservas";
 
-type PagosPorCancha = Establecimiento & {
+type IngresosPorCancha = Establecimiento & {
   canchas: (Cancha & {
-    pagos: Pago[];
+    reservas: Reserva[];
     total: number;
   })[];
   total: number;
@@ -19,38 +19,42 @@ export type PagosPorCanchaQuery = {
   fechaHasta?: string;
 };
 export interface InformeService {
-  pagosPorCancha(query: PagosPorCanchaQuery): Promise<PagosPorCancha>;
+  ingresosPorCancha(query: PagosPorCanchaQuery): Promise<IngresosPorCancha>;
 }
 
 export class InformeServiceImpl implements InformeService {
-  estService: EstablecimientoService;
-  pagoService: PagoService;
-  canchaService: CanchaService;
+  private estService: EstablecimientoService;
+  private canchaService: CanchaService;
+  private reservaService: ReservaService;
 
   constructor(
     estService: EstablecimientoService,
     canchaService: CanchaService,
-    pagoService: PagoService
+    reservaService: ReservaService
   ) {
     this.estService = estService;
-    this.pagoService = pagoService;
     this.canchaService = canchaService;
+    this.reservaService = reservaService;
   }
 
-  async pagosPorCancha(query: PagosPorCanchaQuery) {
+  async ingresosPorCancha(query: PagosPorCanchaQuery) {
     const est = await this.estService.getByID(query.idEst);
     const canchas = await this.canchaService.getByEstablecimientoID(est.id);
-    const res: PagosPorCancha = { ...est, canchas: [], total: 0 };
+    const res: IngresosPorCancha = { ...est, canchas: [], total: 0 };
 
     for (const c of canchas) {
-      const pagos = await this.pagoService.buscar({
+      let reservas = await this.reservaService.buscar({
         idCancha: c.id,
-        fechaDesde: query.fechaDesde,
-        fechaHasta: query.fechaHasta,
+        fechaCreadaDesde: query.fechaDesde,
+        fechaCreadaHasta: query.fechaHasta,
       });
 
-      const total = pagos.reduce((acum, p) => acum + p.monto.toNumber(), 0);
-      res.canchas.push({ ...c, pagos, total });
+      const total = reservas.reduce((acum, r) => {
+        const senia = r.pagoSenia?.monto.toNumber() ?? 0;
+        const monto = r.pagoReserva?.monto.toNumber() ?? 0;
+        return acum + senia + monto;
+      }, 0);
+      res.canchas.push({ ...c, reservas, total });
     }
 
     res.total = res.canchas.reduce((acum, cancha) => acum + cancha.total, 0);

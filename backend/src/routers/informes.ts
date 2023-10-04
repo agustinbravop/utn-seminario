@@ -9,9 +9,9 @@ export function informesRouter(handler: InformeHandler): Router {
   const router = express.Router();
 
   router.get(
-    "/pagosPorCancha",
+    "/ingresosPorCancha",
     validateQueryParams(informePagosPorCanchaQuerySchema),
-    handler.pagosPorCancha()
+    handler.ingresosPorCancha()
   );
 
   return router;

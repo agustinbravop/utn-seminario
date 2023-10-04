@@ -2,14 +2,16 @@ import { Reserva } from "../models/reserva.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, jugador, pago, reserva } from "@prisma/client";
 import { disponibilidadDB, toDisp } from "./disponibilidades.js";
-import { CrearReserva } from "../services/reservas.js";
+import { BuscarReservaQuery, CrearReserva } from "../services/reservas.js";
 import Decimal from "decimal.js";
 
 export interface ReservaRepository {
   getReservasByEstablecimientoID(idEst: number): Promise<Reserva[]>;
   getReservasByDisponibilidadID(idDisp: number): Promise<Reserva[]>;
   getReservasByJugadorID(idJugador: number): Promise<Reserva[]>;
+  getReservasByCanchaID(idCancha: number): Promise<Reserva[]>;
   getReservaByID(id: number): Promise<Reserva>;
+  buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
   crearReserva(res: CrearReserva & { precio: Decimal }): Promise<Reserva>;
   existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean>;
   updateReserva(res: Reserva): Promise<Reserva>;
@@ -36,7 +38,6 @@ export class PrismaReservaRepository implements ReservaRepository {
 
   async updateReserva(res: Reserva): Promise<Reserva> {
     try {
-      console.log(res);
       const nuevaReserva = await this.prisma.reserva.update({
         where: { id: res.id },
         data: {
@@ -90,6 +91,21 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
+  async getReservasByCanchaID(idCancha: number) {
+    try {
+      const reservas = await this.prisma.reserva.findMany({
+        where: { disponibilidad: { idCancha: idCancha } },
+        orderBy: [{ fechaReservada: "asc" }],
+        include: this.include,
+      });
+      return reservas.map((r) => toRes(r));
+    } catch {
+      throw new InternalServerError(
+        `Error al listar las reservas del jugador con id ${idCancha}`
+      );
+    }
+  }
+
   async getReservasByEstablecimientoID(idEst: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
@@ -116,6 +132,30 @@ export class PrismaReservaRepository implements ReservaRepository {
       `No existe reserva con id ${id}`,
       "Error al intentar obtener la reserva"
     );
+  }
+
+  async buscar(filtros: BuscarReservaQuery) {
+    try {
+      const reservas = await this.prisma.reserva.findMany({
+        where: {
+          fechaCreada: {
+            gte: filtros.fechaCreadaDesde,
+            lte: filtros.fechaCreadaHasta,
+          },
+          disponibilidad: {
+            cancha: {
+              id: filtros.idCancha,
+              idEstablecimiento: filtros.idEst,
+            },
+          },
+        },
+        include: this.include,
+      });
+      return reservas.map((p) => toRes(p));
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerError("Error interno al obtener los pagos");
+    }
   }
 
   async crearReserva(res: CrearReserva & { precio: Decimal }) {

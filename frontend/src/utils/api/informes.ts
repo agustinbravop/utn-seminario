@@ -1,31 +1,32 @@
 import { API_URL } from ".";
-import { Cancha, Establecimiento, Pago } from "@/models";
+import { Cancha, Establecimiento, Reserva } from "@/models";
 import { useApiQuery, UseApiQueryOptions } from "@/hooks";
 import queryString from "query-string";
 
-export type PagosPorCanchaQuery = {
+export type IngresosPorCanchaQuery = {
   idEst?: number;
   fechaDesde?: string;
   fechaHasta?: string;
 };
 
-type PagosPorCancha = Establecimiento & {
+type IngresosPorCancha = Establecimiento & {
   canchas: (Cancha & {
-    pagos: Pago[];
+    reservas: Reserva[];
     total: number;
   })[];
   total: number;
 };
 
 export function useInformePagosPorCancha(
-  query: PagosPorCanchaQuery,
-  options?: UseApiQueryOptions<PagosPorCancha>
+  query: IngresosPorCanchaQuery,
+  options?: UseApiQueryOptions<IngresosPorCancha>
 ) {
   console.log(query);
+
   return useApiQuery(
     ["informes", "pagosPorCancha", query],
     new URL(
-      `${API_URL}/informes/pagosPorCancha?${queryString.stringify(query)}`
+      `${API_URL}/informes/ingresosPorCancha?${queryString.stringify(query)}`
     ),
     { ...options }
   );

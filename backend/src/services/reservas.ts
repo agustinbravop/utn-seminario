@@ -14,11 +14,20 @@ export type CrearReserva = {
   idDisponibilidad: number;
 };
 
+export type BuscarReservaQuery = {
+  idCancha?: number;
+  idEst?: number;
+  fechaCreadaDesde?: string;
+  fechaCreadaHasta?: string;
+};
+
 export interface ReservaService {
   getByEstablecimientoID(idEst: number): Promise<Reserva[]>;
   getByDisponibilidadID(idDisp: number): Promise<Reserva[]>;
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
+  getByCanchaID(idCancha: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
+  buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
   crear(res: CrearReserva): Promise<Reserva>;
   pagarSenia(res: Reserva): Promise<Reserva>;
   pagarReserva(res: Reserva): Promise<Reserva>;
@@ -94,12 +103,20 @@ export class ReservaServiceImpl implements ReservaService {
     return await this.repo.getReservasByDisponibilidadID(idDisp);
   }
 
+  async getByCanchaID(idCancha: number) {
+    return await this.repo.getReservasByCanchaID(idCancha);
+  }
+
   async getByJugadorID(idJugador: number) {
     return await this.repo.getReservasByJugadorID(idJugador);
   }
 
   async getByID(idRes: number) {
     return await this.repo.getReservaByID(idRes);
+  }
+
+  async buscar(filtros: BuscarReservaQuery) {
+    return await this.repo.buscar(filtros);
   }
 
   async crear(crearReserva: CrearReserva) {
