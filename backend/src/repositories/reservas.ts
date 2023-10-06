@@ -12,6 +12,8 @@ export interface ReservaRepository {
   getReservaByID(id: number): Promise<Reserva>;
   crearReserva(res: CrearReserva & { precio: Decimal }): Promise<Reserva>;
   existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean>;
+  getReservaActiva(idEst:number):Promise<Reserva[]>; 
+  updatePagarSenia(reserva:Reserva & {senia:Decimal}):Promise<Reserva>; 
 }
 
 export class PrismaReservaRepository implements ReservaRepository {
@@ -22,6 +24,17 @@ export class PrismaReservaRepository implements ReservaRepository {
       include: {
         disciplina: true,
         dias: true,
+      },
+    },
+  };
+
+  private includeReserva={ 
+    jugador:true,
+    disponibilidad:{ 
+      include:{ 
+        disciplina:true, 
+        dias:true, 
+        cancha:true
       },
     },
   };
@@ -128,6 +141,46 @@ export class PrismaReservaRepository implements ReservaRepository {
       throw new InternalServerError("Error al consultar la reserva en la DB");
     }
   }
+
+  async getReservaActiva(idEst:number):Promise<Reserva[]>
+  { 
+    const fechaActual=new Date(); 
+    const reserva_activa=await this.prisma.reserva.findMany({ 
+      where: { 
+        AND: 
+        [{ 
+          disponibilidad:{cancha:{establecimiento:{id:idEst}}},
+          fechaReservada: fechaActual
+        }, 
+        
+      ]
+      },
+      orderBy:[{fechaReservada:"asc"}],
+      include:this.includeReserva,
+    }); 
+    
+    if (reserva_activa.length==0) throw new InternalServerError("No existen Reservas activa por el momento"); 
+    return reserva_activa.map((res)=>toRes(res)); 
+
+  }
+
+  async updatePagarSenia(reserva:Reserva & {senia:Decimal}):Promise<reserva>
+  { 
+    const reserva_actualizada =await this.prisma.reserva.update({ 
+      where: { 
+        id:reserva.id
+      }, 
+      data: {
+      pagoSenia: { 
+        create:{ 
+          id:undefined, monto:reserva.senia, idMetodoDePago:"Efectivo",fechaPago:new Date(),
+        },
+      }
+      }
+    });
+    return reserva_actualizada; 
+  }
+
 }
 
 type reservaDB = reserva & {

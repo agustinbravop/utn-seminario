@@ -24,6 +24,8 @@ export function reservasRouter(
     handler.getReserva()
   );
 
+  router.get("/Activas/:idEst", handler.getReservaActiva())
+
   router.post(
     "/",
     authMiddle.isJugador(),

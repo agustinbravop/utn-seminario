@@ -70,7 +70,7 @@ export class PrismaAuthRepository implements AuthRepository {
             { usuario: { equals: correoOUsuario } },
           ],
         },
-        include: { disciplina: true, localidad: true },
+        include: {disciplina: true, localidad: true },
       });
       return { jugador: toJugador(j), clave: j.clave };
     } catch (e) {

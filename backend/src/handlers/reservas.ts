@@ -48,7 +48,7 @@ export class ReservaHandler {
       const idReserva = Number(req.params["idRes"]);
 
       const reserva = await this.service.getByID(idReserva);
-      res.status(200).json(reserva);
+      res.status(200).json(reserva); 
     };
   }
 
@@ -63,5 +63,13 @@ export class ReservaHandler {
       });
       res.status(201).json(reservaCreada);
     };
+  }
+
+  getReservaActiva():RequestHandler { 
+    return async (req, res) => { 
+      const idEst=Number(req.params['idEst']); 
+      const reservas=await this.service.getReservaActiva(idEst); 
+      res.status(200).json(reservas); 
+    }
   }
 }

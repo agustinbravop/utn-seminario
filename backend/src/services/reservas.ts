@@ -18,6 +18,8 @@ export interface ReservaService {
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
   crear(res: CrearReserva): Promise<Reserva>;
+  getReservaActiva(idEst:number):Promise<Reserva[]>; 
+  
 }
 
 export class ReservaServiceImpl implements ReservaService {
@@ -100,4 +102,9 @@ export class ReservaServiceImpl implements ReservaService {
       );
     }
   }
+
+  async  getReservaActiva(idEst: number): Promise<Reserva[]> {
+      return await this.repo.getReservaActiva(idEst); 
+  }
+  
 }
