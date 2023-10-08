@@ -45,7 +45,7 @@ async function reject(res: Response): Promise<ApiError> {
 
   throw new ApiError(
     body?.status ?? 500,
-    body?.message ?? "Ocurrió un error inesperado"
+    body?.message ?? "Ocurrió un error de red"
   );
 }
 
