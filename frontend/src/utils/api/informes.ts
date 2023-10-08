@@ -21,8 +21,6 @@ export function useInformePagosPorCancha(
   query: IngresosPorCanchaQuery,
   options?: UseApiQueryOptions<IngresosPorCancha>
 ) {
-  console.log(query);
-
   return useApiQuery(
     ["informes", "pagosPorCancha", query],
     new URL(

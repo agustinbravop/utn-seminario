@@ -8,6 +8,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Cancha, Disponibilidad } from "@/models";
 import { createColumnHelper } from "@tanstack/react-table";
 import { DisponibilidadesTablePlayer } from "@/components/DisponibilidadesTablePlayer/DisponibilidadesTablePlayer";
+import { ordenarDias } from "@/utils/dias";
 
 type Columnas = Disponibilidad;
 
@@ -70,9 +71,8 @@ export default function ReservarEstablecimiento() {
     }),
     columnHelper.accessor("dias", {
       cell: (info) =>
-        info
-          .getValue()
-          .map((d) => DIAS_ABBR[d])
+        ordenarDias(info.getValue())
+          .map((dia) => DIAS_ABBR[dia])
           .join(", "),
       header: "Dias",
     }),
