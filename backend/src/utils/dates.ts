@@ -11,11 +11,23 @@ const dias: Dia[] = [
   Dia.Sabado,
 ];
 
+/** Convierte una fecha `Date` a otra fecha `Date` en UTC (Universal Coordinated Time).  */
+function convertDateToUTC(date: Date) {
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
+  );
+}
+
 /**
  * Toma una fecha y devuelve qué `Dia` de la semana cae ('Domingo', 'Lunes', etc).
  */
 export function getDayOfWeek(date: Date): Dia {
-  return dias[date.getDay()];
+  return dias[convertDateToUTC(date).getDay()];
 }
 
 /**

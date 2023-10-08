@@ -20,7 +20,7 @@ export async function enviarCorreo(admin: UsuarioConClave) {
       html: `<p>Estimado/a ${admin.admin?.correo} su contraseña se ha cambiado con exito </p>`,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new BadRequestError(
       "Ha ocurrido un error no se pudo enviar el correo. Intente más tarde"
     );

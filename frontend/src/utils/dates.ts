@@ -34,7 +34,6 @@ export function formatearFecha(fecha: Date) {
   const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
   const anio = fecha.getFullYear();
 
-  // Formatea la fecha en "aaaa-MM-dd"
   return `${anio}-${mes}-${dia}`;
 }
 
