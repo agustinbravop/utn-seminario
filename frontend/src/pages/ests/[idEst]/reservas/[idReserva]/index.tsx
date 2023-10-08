@@ -138,7 +138,7 @@ export default function ReservaInfoPage() {
           </Stack>
 
           <HStack justifyContent="center" spacing="20px" pt="30px">
-            <Button onClick={() => navigate(-1)}>Retroceder</Button>
+            <Button onClick={() => navigate(-1)}>Volver</Button>
             {!reserva.idPagoSenia &&
               !reserva.idPagoReserva &&
               reserva.disponibilidad.precioSenia && (

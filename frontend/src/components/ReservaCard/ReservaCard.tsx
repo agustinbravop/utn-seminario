@@ -27,7 +27,7 @@ interface ReservaCardProps extends CardProps {
 export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
   return (
     <>
-      <Card size="sm" m={2} w="min(80vw, 400px)" {...props}>
+      <Card size="sm" m={2} w="min(80vw, 350px)" {...props}>
         {reserva.idPagoReserva ? (
           <CardHeader borderRadius="6px" backgroundColor="green.100">
             <HStack justifyContent="center">

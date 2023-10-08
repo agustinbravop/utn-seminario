@@ -1,6 +1,6 @@
 import { useReservasByJugadorID } from "@/utils/api";
 import ReservaCard from "../ReservaCard/ReservaCard";
-import { Heading, VStack } from "@chakra-ui/react";
+import { HStack, Heading } from "@chakra-ui/react";
 import { useCurrentJugador } from "@/hooks";
 
 export default function ReservaCardList() {
@@ -11,11 +11,11 @@ export default function ReservaCardList() {
       <Heading pb="10px" size="lg" textAlign="center">
         Reservas Activas
       </Heading>
-      <VStack>
+      <HStack wrap="wrap" align="center" justify="center">
         {reservas.map((reserva) => (
           <ReservaCard key={reserva.id} reserva={reserva} />
         ))}
-      </VStack>
+      </HStack>
     </>
   );
 }
