@@ -1,11 +1,12 @@
 import { API_URL, del, post, put } from ".";
-import { Disponibilidad } from "@/models";
+import { Cancha, Disponibilidad } from "@/models";
 import {
   useApiQuery,
   UseApiMutationOptions,
   UseApiQueryOptions,
   useApiMutation,
 } from "@/hooks";
+import queryString from "query-string";
 
 export type CrearDisponibilidad = Omit<Disponibilidad, "id"> & {
   idEst: number;
@@ -38,12 +39,32 @@ export function useDisponibilidadByID(
   );
 }
 
+export type BuscarDisponibilidadesFiltros = {
+  idCancha?: number;
+  idEst?: number;
+};
+
+export type BuscarDisponibilidadResult = Disponibilidad & {
+  cancha: Cancha;
+};
+
+export function useBuscarDisponibilidades(
+  filtros: BuscarDisponibilidadesFiltros,
+  options?: UseApiQueryOptions<BuscarDisponibilidadResult[]>
+) {
+  return useApiQuery(
+    ["disponibilidades", "buscar", filtros],
+    new URL(`${API_URL}/disponibilidades?${queryString.stringify(filtros)}`),
+    { ...options, initialData: [] }
+  );
+}
+
 export function useCrearDisponibilidad(
   options?: UseApiMutationOptions<CrearDisponibilidad, Disponibilidad>
 ) {
   return useApiMutation({
     ...options,
-    invalidateOnSuccess: (d) => ["canchas", d.idCancha, "disponibilidades"],
+    invalidateOnSuccess: () => ["disponibilidades"],
     mutationFn: ({ idEst, ...disp }) =>
       post<Disponibilidad>(`${API_URL}/disponibilidades`, disp),
   });
@@ -54,7 +75,7 @@ export function useModificarDisponibilidad(
 ) {
   return useApiMutation({
     ...options,
-    invalidateOnSuccess: (d) => ["canchas", d.idCancha, "disponibilidades"],
+    invalidateOnSuccess: () => ["disponibilidades"],
     mutationFn: ({ idEst, ...disp }) =>
       put<Disponibilidad>(`${API_URL}/disponibilidades/${disp.id}`, disp),
   });
@@ -68,7 +89,7 @@ export function useEliminarDisponibilidad(
 ) {
   return useApiMutation({
     ...options,
-    invalidateOnSuccess: (d) => ["canchas", d.idCancha, "disponibilidades"],
+    invalidateOnSuccess: () => ["disponibilidades"],
     mutationFn: ({ idDisp }) => del(`${API_URL}/disponibilidades/${idDisp}`),
   });
 }

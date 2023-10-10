@@ -1,16 +1,25 @@
 import { RequestHandler } from "express";
-import { DisponibilidadService } from "../services/disponibilidades";
+import {
+  BuscarDisponibilidadesQuery,
+  DisponibilidadService,
+} from "../services/disponibilidades";
 import {
   Disponibilidad,
   disponibilidadSchema,
 } from "../models/disponibilidad.js";
 import { ForbiddenError } from "../utils/apierrors";
+import { z } from "zod";
 
 export const crearDisponibilidadSchema = disponibilidadSchema.omit({
   id: true,
 });
 
 export const modificarDisponibilidadSchema = disponibilidadSchema;
+
+export const buscarDisponibilidadesQuerySchema = z.object({
+  idCancha: z.coerce.number().int().optional(),
+  idEst: z.coerce.number().int().optional(),
+});
 
 export class DisponibilidadHandler {
   private service: DisponibilidadService;
@@ -35,6 +44,14 @@ export class DisponibilidadHandler {
       const disponibilidad = await this.service.getByID(idDisp);
 
       res.status(200).json(disponibilidad);
+    };
+  }
+
+  buscarDisponibilidades(): RequestHandler {
+    return async (_req, res) => {
+      const filtros: BuscarDisponibilidadesQuery = res.locals.query;
+      const disps = await this.service.buscar(filtros);
+      res.status(200).json(disps);
     };
   }
 

@@ -1,4 +1,5 @@
 import { DIAS, Dia, Disponibilidad } from "../models/disponibilidad.js";
+import { BuscarDisponibilidadesQuery } from "../services/disponibilidades.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, dia, disciplina, disponibilidad } from "@prisma/client";
 
@@ -6,6 +7,7 @@ export interface DisponibilidadRepository {
   getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
   getByAdminID(idAdmin: number): Promise<Disponibilidad[]>;
   getByID(idDisp: number): Promise<Disponibilidad>;
+  buscar(filtros: BuscarDisponibilidadesQuery): Promise<Disponibilidad[]>;
   crear(disp: Disponibilidad): Promise<Disponibilidad>;
   modificar(dispUpdate: Disponibilidad): Promise<Disponibilidad>;
   eliminar(idDisp: number): Promise<Disponibilidad>;
@@ -18,6 +20,7 @@ export class PrismaDisponibilidadRepository
   private include = {
     disciplina: true,
     dias: true,
+    cancha: true,
   };
 
   constructor(prismaClient: PrismaClient) {
@@ -59,6 +62,23 @@ export class PrismaDisponibilidadRepository
       `No existe disponibilidad con id ${idDisp}`,
       "Error al intentar obtener la disponibilidad"
     );
+  }
+
+  async buscar(filtros: BuscarDisponibilidadesQuery) {
+    try {
+      const disps = await this.prisma.disponibilidad.findMany({
+        where: {
+          cancha: {
+            id: filtros.idCancha,
+            idEstablecimiento: filtros.idEst,
+          },
+        },
+        include: this.include,
+      });
+      return disps.map((d) => toDisp(d));
+    } catch {
+      throw new InternalServerError("Error interno al obtener los pagos");
+    }
   }
 
   async crear(disp: Disponibilidad) {
@@ -140,7 +160,6 @@ export function toDisp(disp: disponibilidadDB): Disponibilidad {
     disciplina: disp.disciplina.disciplina,
     precioSenia: disp.precioSenia ?? undefined,
     dias: disp.dias.map((dia) => dia.dia) as Dia[],
-  
   };
 }
 

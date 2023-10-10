@@ -19,7 +19,7 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api";
+import { useBuscarDisponibilidades, useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 
 import React, { useState, useEffect } from "react";
@@ -36,6 +36,9 @@ export default function VistaJugadorCancha() {
 
   const { data: cancha } = useCanchaByID(Number(idEst), Number(idCancha));
   const { data: est } = useEstablecimientoByID(Number(idEst));
+  const { data: disponibilidades } = useBuscarDisponibilidades({
+    idCancha: cancha?.id,
+  });
 
   const [disciplina, setDisciplina] = useState(cancha?.disciplinas[0] ?? "");
 
@@ -44,7 +47,7 @@ export default function VistaJugadorCancha() {
     setDisciplina(cancha?.disciplinas[0] ?? "");
   }, [cancha, setDisciplina]);
 
-  if (!cancha) {
+  if (!cancha || !disponibilidades) {
     return <LoadingSpinner />;
   }
 
@@ -131,7 +134,7 @@ export default function VistaJugadorCancha() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {cancha.disponibilidades.map(
+                      {disponibilidades.map(
                         (d) =>
                           d.disciplina === disciplina && (
                             <Tr key={d.id}>

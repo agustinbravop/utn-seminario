@@ -1,8 +1,13 @@
 import express from "express";
 import { Router } from "express";
-import { validateBody, validateIDParams } from "../middlewares/validation.js";
+import {
+  validateBody,
+  validateIDParams,
+  validateQueryParams,
+} from "../middlewares/validation.js";
 import {
   DisponibilidadHandler,
+  buscarDisponibilidadesQuerySchema,
   crearDisponibilidadSchema,
   modificarDisponibilidadSchema,
 } from "../handlers/disponibilidades.js";
@@ -14,6 +19,11 @@ export function disponibilidadesRouter(
 ): Router {
   const router = express.Router();
 
+  router.get(
+    "/",
+    validateQueryParams(buscarDisponibilidadesQuerySchema),
+    handler.buscarDisponibilidades()
+  );
   router.post(
     "/",
     validateBody(crearDisponibilidadSchema),

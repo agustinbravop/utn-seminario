@@ -3,10 +3,16 @@ import { DisponibilidadRepository } from "../repositories/disponibilidades";
 import { BadRequestError, ConflictError } from "../utils/apierrors.js";
 import { horaADecimal } from "../utils/dates.js";
 
+export type BuscarDisponibilidadesQuery = {
+  idCancha?: number;
+  idEst?: number;
+};
+
 export interface DisponibilidadService {
   getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
   getByAdminID(idAdmin: number): Promise<Disponibilidad[]>;
   getByID(idDisp: number): Promise<Disponibilidad>;
+  buscar(filtros: BuscarDisponibilidadesQuery): Promise<Disponibilidad[]>;
   crear(disp: Disponibilidad): Promise<Disponibilidad>;
   modificar(disp: Disponibilidad): Promise<Disponibilidad>;
   eliminar(idDisp: number): Promise<Disponibilidad>;
@@ -29,6 +35,10 @@ export class DisponibilidadServiceimpl implements DisponibilidadService {
 
   async getByID(idDisp: number) {
     return await this.repo.getByID(idDisp);
+  }
+
+  async buscar(filtros: BuscarDisponibilidadesQuery) {
+    return await this.repo.buscar(filtros);
   }
 
   async crear(disp: Disponibilidad) {
