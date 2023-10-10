@@ -11,13 +11,13 @@ export function usePagoByID(id: number, options?: UseApiQueryOptions<Pago>) {
   );
 }
 
-export type BuscarPagoFiltros = {
+export type BuscarPagosQuery = {
   idCancha?: number;
-  idEstablecimiento?: number;
+  idEst?: number;
 };
 
 export function useBuscarPagos(
-  filtros: BuscarPagoFiltros,
+  filtros: BuscarPagosQuery,
   options?: UseApiQueryOptions<Pago[]>
 ) {
   return useApiQuery(

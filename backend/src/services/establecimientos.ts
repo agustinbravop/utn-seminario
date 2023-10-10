@@ -22,7 +22,7 @@ export interface EstablecimientoService {
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEst: number): Promise<Establecimiento>;
-  getConsulta(consulta: Busqueda): Promise<Establecimiento[]>;
+  buscar(consulta: Busqueda): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   habilitar(idEst: number, habilitado: boolean): Promise<Establecimiento>;
   modificarImagen(
@@ -130,8 +130,8 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     return await this.repo.modificar({ ...est, habilitado });
   }
 
-  async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {
-    let ests = await this.repo.search(consulta);
+  async buscar(consulta: Busqueda): Promise<Establecimiento[]> {
+    let ests = await this.repo.buscar(consulta);
 
     if (consulta.fecha) {
       const estabDisponibles = await this.repo.getByFechaDisponible(

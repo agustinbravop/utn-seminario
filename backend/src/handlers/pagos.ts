@@ -1,8 +1,8 @@
 import { RequestHandler } from "express";
-import { BuscarPagoQuery, PagoService } from "../services/pagos.js";
+import { BuscarPagosQuery, PagoService } from "../services/pagos.js";
 import { z } from "zod";
 
-export const buscarPagoQuerySchema = z.object({
+export const buscarPagosQuerySchema = z.object({
   idCancha: z.coerce.number().int().optional(),
   idEst: z.coerce.number().int().optional(),
   fechaDesde: z.coerce
@@ -32,7 +32,7 @@ export class PagoHandler {
 
   buscarPagos(): RequestHandler {
     return async (_req, res) => {
-      const filtros: BuscarPagoQuery = res.locals.query;
+      const filtros: BuscarPagosQuery = res.locals.query;
       const pagos = await this.service.buscar(filtros);
       res.status(200).json(pagos);
     };

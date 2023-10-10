@@ -22,7 +22,7 @@ export const habilitarEstablecimientoSchema = z.object({
   habilitado: z.boolean(),
 });
 
-export const searchEstablecimientoQuerySchema = z.object({
+export const buscarEstablecimientoQuerySchema = z.object({
   nombre: z.string().optional(),
   provincia: z.string().optional(),
   localidad: z.string().optional(),
@@ -125,10 +125,10 @@ export class EstablecimientoHandler {
     };
   }
 
-  searchEstablecimiento(): RequestHandler {
+  buscarEstablecimiento(): RequestHandler {
     return async (_req, res) => {
       const query = res.locals.query;
-      const result = await this.service.getConsulta(query);
+      const result = await this.service.buscar(query);
       res.status(200).json(result);
     };
   }

@@ -63,7 +63,6 @@ export type Disponibilidad = {
   disciplina: string;
   dias: Dia[];
   idCancha: number;
-  cancha?: Cancha;
 };
 
 export type Dia =

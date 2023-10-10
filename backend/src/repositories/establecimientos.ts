@@ -9,7 +9,7 @@ export interface EstablecimientoRepository {
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
-  search(filtro: Busqueda): Promise<Establecimiento[]>;
+  buscar(filtro: Busqueda): Promise<Establecimiento[]>;
   getEstablecimientosByDisciplina(
     disciplina: string
   ): Promise<Establecimiento[]>;
@@ -194,7 +194,7 @@ export class PrismaEstablecimientoRepository
     return dispDB.map((d) => toEst(d.cancha.establecimiento));
   }
 
-  async search(filtros: Busqueda): Promise<Establecimiento[]> {
+  async buscar(filtros: Busqueda): Promise<Establecimiento[]> {
     const estsDB = await this.prisma.establecimiento.findMany({
       where: {
         AND: [

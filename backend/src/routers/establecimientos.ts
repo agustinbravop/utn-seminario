@@ -6,7 +6,7 @@ import {
   crearEstablecimientoSchema,
   habilitarEstablecimientoSchema,
   modificarEstablecimientoSchema,
-  searchEstablecimientoQuerySchema,
+  buscarEstablecimientoQuerySchema,
 } from "../handlers/establecimientos.js";
 import {
   validateBody,
@@ -24,8 +24,8 @@ export function establecimientosRouter(
 
   router.get(
     "/",
-    validateQueryParams(searchEstablecimientoQuerySchema),
-    handler.searchEstablecimiento()
+    validateQueryParams(buscarEstablecimientoQuerySchema),
+    handler.buscarEstablecimiento()
   );
   router.get("/jugador", handler.getAllEstablecimientos());
   router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
