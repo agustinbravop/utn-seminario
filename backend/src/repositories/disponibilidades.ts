@@ -1,10 +1,13 @@
 import { DIAS, Dia, Disponibilidad } from "../models/disponibilidad.js";
+import { BuscarDisponibilidadesQuery } from "../services/disponibilidades.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, dia, disciplina, disponibilidad } from "@prisma/client";
 
 export interface DisponibilidadRepository {
-  getByCanchaID(idDisp: number): Promise<Disponibilidad[]>;
+  getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
+  getByAdminID(idAdmin: number): Promise<Disponibilidad[]>;
   getByID(idDisp: number): Promise<Disponibilidad>;
+  buscar(filtros: BuscarDisponibilidadesQuery): Promise<Disponibilidad[]>;
   crear(disp: Disponibilidad): Promise<Disponibilidad>;
   modificar(dispUpdate: Disponibilidad): Promise<Disponibilidad>;
   eliminar(idDisp: number): Promise<Disponibilidad>;
@@ -17,6 +20,7 @@ export class PrismaDisponibilidadRepository
   private include = {
     disciplina: true,
     dias: true,
+    cancha: true,
   };
 
   constructor(prismaClient: PrismaClient) {
@@ -36,6 +40,19 @@ export class PrismaDisponibilidadRepository
     }
   }
 
+  async getByAdminID(idAdmin: number) {
+    try {
+      const canchas = await this.prisma.disponibilidad.findMany({
+        where: { cancha: { establecimiento: { idAdministrador: idAdmin } } },
+        orderBy: [{ horaInicio: "asc" }],
+        include: this.include,
+      });
+      return canchas.map((c) => toDisp(c));
+    } catch {
+      throw new InternalServerError("Error al listar las disponibilidades");
+    }
+  }
+
   async getByID(idDisp: number) {
     return awaitQuery(
       this.prisma.disponibilidad.findUnique({
@@ -45,6 +62,34 @@ export class PrismaDisponibilidadRepository
       `No existe disponibilidad con id ${idDisp}`,
       "Error al intentar obtener la disponibilidad"
     );
+  }
+
+  async buscar(filtros: BuscarDisponibilidadesQuery) {
+    try {
+      const disps = await this.prisma.disponibilidad.findMany({
+        where: {
+          idDisciplina: filtros.disciplina,
+          cancha: {
+            id: filtros.idCancha,
+            idEstablecimiento: filtros.idEst,
+          },
+          ...(filtros.fechaDisponible
+            ? {
+                // Solo trae disponibilidades no reservadas en la `fechaDisponible`.
+                reservas: {
+                  none: {
+                    fechaReservada: filtros.fechaDisponible,
+                  },
+                },
+              }
+            : {}),
+        },
+        include: this.include,
+      });
+      return disps.map((d) => toDisp(d));
+    } catch {
+      throw new InternalServerError("Error al buscar las disponibilidades");
+    }
   }
 
   async crear(disp: Disponibilidad) {

@@ -6,7 +6,7 @@ import { DisponibilidadRepository } from "../repositories/disponibilidades";
 import { PagoRepository } from "../repositories/pagos";
 import { ReservaRepository } from "../repositories/reservas";
 import { ConflictError, InternalServerError } from "../utils/apierrors";
-import { getDayOfWeek } from "../utils/dates";
+import { getDiaDeSemana } from "../utils/dates";
 
 export type CrearReserva = {
   fechaReservada: Date;
@@ -161,7 +161,7 @@ export class ReservaServiceImpl implements ReservaService {
 
   /** Lanza error al intentar reservar una disponibilidad en un día de la semana no habilitado. */
   private async validarDiaDeSemana(res: CrearReserva, disp: Disponibilidad) {
-    const dia = getDayOfWeek(res.fechaReservada);
+    const dia = getDiaDeSemana(res.fechaReservada);
     if (!disp.dias.includes(dia)) {
       throw new ConflictError(
         `La disponibilidad de ${disp.horaInicio} a ${disp.horaFin} solo está disponible los días ${disp.dias}`
