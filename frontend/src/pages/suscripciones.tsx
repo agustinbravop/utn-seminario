@@ -28,7 +28,7 @@ export default function SuscripcionesPage() {
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
     .map((s, idx) => ({ icono: ICONOS_SUSCRIPCIONES[idx], ...s }));
-    
+
   cards = suscripciones?.map((s) => {
     return (
       <Card bg="light" key={s.id} color="dark" width="14rem">

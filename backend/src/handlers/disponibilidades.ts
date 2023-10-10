@@ -19,6 +19,8 @@ export const modificarDisponibilidadSchema = disponibilidadSchema;
 export const buscarDisponibilidadesQuerySchema = z.object({
   idCancha: z.coerce.number().int().optional(),
   idEst: z.coerce.number().int().optional(),
+  disciplina: z.string().optional(),
+  fechaDisponible: z.coerce.date().optional(),
 });
 
 export class DisponibilidadHandler {

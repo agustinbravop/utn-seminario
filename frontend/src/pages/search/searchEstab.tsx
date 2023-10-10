@@ -1,5 +1,8 @@
 import EstablecimientoJugador from "@/components/EstablecimientoJugador/EstablecimientoJugador";
-import { useBuscarEstablecimientos } from "@/utils/api";
+import {
+  BusquedaEstablecimientos,
+  useBuscarEstablecimientos,
+} from "@/utils/api";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   HStack,
@@ -14,7 +17,6 @@ import { useWatch } from "react-hook-form";
 import { DISCIPLINAS, QuestionImage } from "@/utils/consts";
 import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 import { InputControl, SelectControl } from "@/components/forms";
-import { Busqueda } from "@/models";
 import { FormProvider } from "react-hook-form";
 import DateControl from "@/components/forms/DateControl";
 import { useEffect } from "react";
@@ -24,7 +26,7 @@ export default function SearchEstab() {
   const { jugador } = useCurrentJugador();
   const provincias = useProvincias();
 
-  const methods = useYupForm<Busqueda>({
+  const methods = useYupForm<BusquedaEstablecimientos>({
     defaultValues: {
       localidad: jugador.localidad,
       provincia: jugador.provincia,

@@ -68,16 +68,27 @@ export class PrismaDisponibilidadRepository
     try {
       const disps = await this.prisma.disponibilidad.findMany({
         where: {
+          idDisciplina: filtros.disciplina,
           cancha: {
             id: filtros.idCancha,
             idEstablecimiento: filtros.idEst,
           },
+          ...(filtros.fechaDisponible
+            ? {
+                // Solo trae disponibilidades no reservadas en la `fechaDisponible`.
+                reservas: {
+                  none: {
+                    fechaReservada: filtros.fechaDisponible,
+                  },
+                },
+              }
+            : {}),
         },
         include: this.include,
       });
       return disps.map((d) => toDisp(d));
     } catch {
-      throw new InternalServerError("Error interno al obtener los pagos");
+      throw new InternalServerError("Error al buscar las disponibilidades");
     }
   }
 

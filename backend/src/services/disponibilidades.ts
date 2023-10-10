@@ -6,6 +6,9 @@ import { horaADecimal } from "../utils/dates.js";
 export type BuscarDisponibilidadesQuery = {
   idCancha?: number;
   idEst?: number;
+  disciplina?: string;
+  /** No trae las disponibilidades ya reservadas para esa fecha. */
+  fechaDisponible?: Date;
 };
 
 export interface DisponibilidadService {

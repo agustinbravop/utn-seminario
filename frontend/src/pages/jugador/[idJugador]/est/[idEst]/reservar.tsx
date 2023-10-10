@@ -17,7 +17,10 @@ export default function ReservarEstablecimiento() {
   const { idEst } = useParams();
 
   const { data: est } = useEstablecimientoByID(Number(idEst));
-  const { data: disps } = useBuscarDisponibilidades({ idEst: Number(idEst) });
+  const { data: disps } = useBuscarDisponibilidades({
+    idEst: Number(idEst),
+    fechaDisponible: "2023-10-12", // TODO: parametrizar filtro de fecha disponible
+  });
   const disciplinas = useMemo(
     () => [...new Set(disps?.map((c) => c.disciplina))],
     [disps]

@@ -42,6 +42,8 @@ export function useDisponibilidadByID(
 export type BuscarDisponibilidadesFiltros = {
   idCancha?: number;
   idEst?: number;
+  disciplina?: string;
+  fechaDisponible?: string;
 };
 
 export type BuscarDisponibilidadResult = Disponibilidad & {
