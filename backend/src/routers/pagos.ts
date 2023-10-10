@@ -3,7 +3,7 @@ import {
   validateIDParams,
   validateQueryParams,
 } from "../middlewares/validation";
-import { PagoHandler, buscarPagoQuerySchema } from "../handlers/pagos.js";
+import { PagoHandler, buscarPagosQuerySchema } from "../handlers/pagos.js";
 
 export function pagosRouter(handler: PagoHandler): Router {
   const router = express.Router();
@@ -11,7 +11,7 @@ export function pagosRouter(handler: PagoHandler): Router {
   router.get("/:idPago", validateIDParams("idPago"), handler.getPagoByID());
   router.get(
     "/",
-    validateQueryParams(buscarPagoQuerySchema),
+    validateQueryParams(buscarPagosQuerySchema),
     handler.buscarPagos()
   );
 

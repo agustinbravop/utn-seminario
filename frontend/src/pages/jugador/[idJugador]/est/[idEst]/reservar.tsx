@@ -1,36 +1,29 @@
 import { useParams } from "react-router";
 import { Heading, Select, Text } from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api";
-import { useCanchasByEstablecimientoID } from "@/utils/api";
+import {
+  BuscarDisponibilidadResult,
+  useBuscarDisponibilidades,
+  useEstablecimientoByID,
+} from "@/utils/api";
 import { DIAS_ABBR } from "@/utils/consts";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { useState, useEffect, useMemo } from "react";
-import { Cancha, Disponibilidad } from "@/models";
 import { createColumnHelper } from "@tanstack/react-table";
-import { DisponibilidadesTablePlayer } from "@/components/DisponibilidadesTablePlayer/DisponibilidadesTablePlayer";
+import { TablaDisponibilidadesReservables } from "@/components/TablaDisponibilidadesReservables/TablaDisponibilidadesReservables";
 import { ordenarDias } from "@/utils/dias";
+import { horaADecimal } from "@/utils/dates";
 
-type Columnas = Disponibilidad;
-
-// TODO: falta filtrar por disponibilidades ya ocupadas en la fecha dada.
-/** Genera las filas de disponibilidades que se muestran en la tabla para reservar. */
-function construirDisponibilidades(canchas: Cancha[]) {
-  return canchas
-    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c })))
-    .flat()
-    .sort(
-      (a, b) =>
-        Number(a.horaInicio.split(":")[0]) - Number(b.horaInicio.split(":")[0])
-    );
-}
 export default function ReservarEstablecimiento() {
   const { idEst } = useParams();
 
   const { data: est } = useEstablecimientoByID(Number(idEst));
-  const { data: canchas } = useCanchasByEstablecimientoID(Number(idEst));
+  const { data: disps } = useBuscarDisponibilidades({
+    idEst: Number(idEst),
+    fechaDisponible: "2023-10-12", // TODO: parametrizar filtro de fecha disponible
+  });
   const disciplinas = useMemo(
-    () => [...new Set(canchas?.map((c) => c.disciplinas).flat())],
-    [canchas]
+    () => [...new Set(disps?.map((c) => c.disciplina))],
+    [disps]
   );
   const [disciplina, setDisciplina] = useState(disciplinas[0] ?? "");
 
@@ -38,18 +31,16 @@ export default function ReservarEstablecimiento() {
     setDisciplina(disciplinas[0] ?? "");
   }, [disciplinas, setDisciplina]);
 
+  if (!est || !disps) {
+    return <LoadingSpinner />;
+  }
+
   const handleDisciplinaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDisciplina(e.target.value);
   };
 
-  if (!est || !canchas) {
-    return <LoadingSpinner />;
-  }
-
-  const disponibilidades = construirDisponibilidades(canchas);
-
   //Funcion para filtrar tabla
-  const columnHelper = createColumnHelper<Columnas>();
+  const columnHelper = createColumnHelper<BuscarDisponibilidadResult>();
 
   //Columnas que se van a poder ordenar
   const columns = [
@@ -103,7 +94,12 @@ export default function ReservarEstablecimiento() {
       </Select>
       <Heading size="md">Horarios disponibles</Heading>
       <Text>Seleccione un horario a reservar.</Text>
-      <DisponibilidadesTablePlayer columns={columns} data={disponibilidades} />
+      <TablaDisponibilidadesReservables
+        columns={columns}
+        data={disps.sort(
+          (a, b) => horaADecimal(a.horaInicio) - horaADecimal(b.horaInicio)
+        )}
+      />
     </>
   );
 }

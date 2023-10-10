@@ -26,7 +26,7 @@ function convertDateToUTC(date: Date) {
 /**
  * Toma una fecha y devuelve qué `Dia` de la semana cae ('Domingo', 'Lunes', etc).
  */
-export function getDayOfWeek(date: Date): Dia {
+export function getDiaDeSemana(date: Date): Dia {
   return dias[convertDateToUTC(date).getDay()];
 }
 

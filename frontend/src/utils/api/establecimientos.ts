@@ -1,5 +1,5 @@
 import { API_URL, del, patchFormData, put, post, patch } from ".";
-import { Busqueda, Establecimiento } from "@/models";
+import { Establecimiento } from "@/models";
 import {
   useApiQuery,
   UseApiMutationOptions,
@@ -11,6 +11,14 @@ import queryString from "query-string";
 export type CrearEstablecimiento = Omit<Establecimiento, "id" | "urlImagen">;
 
 export type ModificarEstablecimiento = Omit<Establecimiento, "urlImagen">;
+
+export type BusquedaEstablecimientos = {
+  nombre?: string | undefined;
+  provincia?: string | undefined;
+  localidad?: string | undefined;
+  disciplina?: string | undefined;
+  fecha?: string | undefined;
+};
 
 function modificarImagen(est: Establecimiento, imagen?: File) {
   if (!imagen) {
@@ -47,17 +55,14 @@ export function useEstablecimientosByAdminID(
   );
 }
 
-//PROVISIONAL
 export function useBuscarEstablecimientos(
-  queryParams: Busqueda,
+  queryParams: BusquedaEstablecimientos,
   options?: UseApiQueryOptions<Establecimiento[]>
 ) {
   return useApiQuery(
     ["establecimientos", "search", queryParams],
     new URL(
-      `${API_URL}/establecimientos/ests/search?${queryString.stringify(
-        queryParams
-      )}`
+      `${API_URL}/establecimientos?${queryString.stringify(queryParams)}`
     ),
     { ...options, initialData: [] }
   );

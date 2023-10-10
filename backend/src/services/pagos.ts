@@ -1,7 +1,7 @@
 import { Pago } from "../models/pago";
 import { PagoRepository } from "../repositories/pagos";
 
-export type BuscarPagoQuery = {
+export type BuscarPagosQuery = {
   idCancha?: number;
   idEst?: number;
   fechaDesde?: string;
@@ -10,7 +10,7 @@ export type BuscarPagoQuery = {
 
 export interface PagoService {
   getByID(idRes: number): Promise<Pago>;
-  buscar(filtros: BuscarPagoQuery): Promise<Pago[]>;
+  buscar(filtros: BuscarPagosQuery): Promise<Pago[]>;
 }
 
 export class PagoServiceImpl implements PagoService {
@@ -22,7 +22,7 @@ export class PagoServiceImpl implements PagoService {
   async getByID(idPago: number) {
     return await this.repo.getByID(idPago);
   }
-  async buscar(filtros: BuscarPagoQuery) {
+  async buscar(filtros: BuscarPagosQuery) {
     return await this.repo.buscar(filtros);
   }
 }

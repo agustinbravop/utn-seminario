@@ -10,17 +10,17 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import FormReservarDisponibilidad from "@/pages/jugador/[idJugador]/est/[idEst]/canchas/[idCancha]/_formReservar";
-import { Disponibilidad } from "@/models";
+import { BuscarDisponibilidadResult } from "@/utils/api";
 
-export type DataTableProps<Data extends object> = {
-  data: Data[];
-  columns: ColumnDef<Data, any>[];
+export type TablaDisponibilidadesReservablesProps = {
+  data: BuscarDisponibilidadResult[];
+  columns: ColumnDef<BuscarDisponibilidadResult, any>[];
 };
 
-export function DisponibilidadesTablePlayer({
+export function TablaDisponibilidadesReservables({
   data,
   columns,
-}: DataTableProps<Disponibilidad>) {
+}: TablaDisponibilidadesReservablesProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     columns,
