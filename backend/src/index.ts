@@ -15,3 +15,17 @@ app.use("/", createRouter(prismaClient));
 app.listen(process.env.PORT || 3000, () => {
   console.info("Servidor desplegado en el puerto " + process.env.PORT || 3000);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
