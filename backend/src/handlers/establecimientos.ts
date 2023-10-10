@@ -22,6 +22,14 @@ export const habilitarEstablecimientoSchema = z.object({
   habilitado: z.boolean(),
 });
 
+export const searchEstablecimientoQuerySchema = z.object({
+  nombre: z.string().optional(),
+  provincia: z.string().optional(),
+  localidad: z.string().optional(),
+  disciplina: z.string().optional(),
+  fecha: z.coerce.date().optional(),
+});
+
 export class EstablecimientoHandler {
   private service: EstablecimientoService;
   constructor(service: EstablecimientoService) {
@@ -117,9 +125,9 @@ export class EstablecimientoHandler {
     };
   }
 
-  getEstablecimientoSearch(): RequestHandler {
-    return async (req, res) => {
-      const query = req.query;
+  searchEstablecimiento(): RequestHandler {
+    return async (_req, res) => {
+      const query = res.locals.query;
       const result = await this.service.getConsulta(query);
       res.status(200).json(result);
     };

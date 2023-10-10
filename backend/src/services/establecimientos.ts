@@ -9,6 +9,14 @@ import { subirImagen } from "../utils/imagenes.js";
 import { AdministradorService } from "./administrador.js";
 import { CanchaService } from "./canchas.js";
 
+export type Busqueda = {
+  nombre?: string;
+  provincia?: string;
+  localidad?: string;
+  disciplina?: string;
+  fecha?: Date;
+};
+
 export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
@@ -24,14 +32,6 @@ export interface EstablecimientoService {
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
 }
-
-type Busqueda = {
-  nombre?: string;
-  provincia?: string;
-  localidad?: string;
-  disciplina?: string;
-  fecha?: string;
-};
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
@@ -131,26 +131,15 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
   }
 
   async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {
-    let estabFilter = await this.repo.getEstabsByFiltro(consulta);
-
-    if (consulta.disciplina) {
-      const estabDisciplina = await this.repo.getEstablecimientosByDisciplina(
-        consulta.disciplina
-      );
-      estabFilter = estabFilter.filter((e) =>
-        estabDisciplina.find(({ id }) => id === e.id)
-      );
-    }
+    let ests = await this.repo.search(consulta);
 
     if (consulta.fecha) {
-      const estabDisponibles = await this.repo.getEstabDispByDate(
+      const estabDisponibles = await this.repo.getByFechaDisponible(
         consulta.fecha
       );
-      return estabFilter.filter((e) =>
-        estabDisponibles.find(({ id }) => id === e.id)
-      );
+      return ests.filter((e) => estabDisponibles.find(({ id }) => id === e.id));
     }
 
-    return estabFilter;
+    return ests;
   }
 }

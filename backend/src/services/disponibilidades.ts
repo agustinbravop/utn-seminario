@@ -5,6 +5,7 @@ import { horaADecimal } from "../utils/dates.js";
 
 export interface DisponibilidadService {
   getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
+  getByAdminID(idAdmin: number): Promise<Disponibilidad[]>;
   getByID(idDisp: number): Promise<Disponibilidad>;
   crear(disp: Disponibilidad): Promise<Disponibilidad>;
   modificar(disp: Disponibilidad): Promise<Disponibilidad>;
@@ -20,6 +21,10 @@ export class DisponibilidadServiceimpl implements DisponibilidadService {
 
   async getByCanchaID(idCancha: number) {
     return await this.repo.getByCanchaID(idCancha);
+  }
+
+  async getByAdminID(idAdmin: number) {
+    return await this.repo.getByAdminID(idAdmin);
   }
 
   async getByID(idDisp: number) {

@@ -55,9 +55,7 @@ export function useBuscarEstablecimientos(
   return useApiQuery(
     ["establecimientos", "search", queryParams],
     new URL(
-      `${API_URL}/establecimientos/ests/search?${queryString.stringify(
-        queryParams
-      )}`
+      `${API_URL}/establecimientos?${queryString.stringify(queryParams)}`
     ),
     { ...options, initialData: [] }
   );

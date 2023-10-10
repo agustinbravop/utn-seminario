@@ -6,8 +6,13 @@ import {
   crearEstablecimientoSchema,
   habilitarEstablecimientoSchema,
   modificarEstablecimientoSchema,
+  searchEstablecimientoQuerySchema,
 } from "../handlers/establecimientos.js";
-import { validateBody, validateIDParams } from "../middlewares/validation.js";
+import {
+  validateBody,
+  validateIDParams,
+  validateQueryParams,
+} from "../middlewares/validation.js";
 import { AuthHandler } from "../handlers/auth.js";
 
 export function establecimientosRouter(
@@ -16,14 +21,23 @@ export function establecimientosRouter(
   upload: multer.Multer
 ): Router {
   const router = express.Router();
-  //PROVISIONAL
+
+  router.get(
+    "/",
+    validateQueryParams(searchEstablecimientoQuerySchema),
+    handler.searchEstablecimiento()
+  );
   router.get("/jugador", handler.getAllEstablecimientos());
   router.get("/byAdmin/:idAdmin", handler.getEstablecimientosByAdminID());
   router.get(
     "/byAdmin/deleted/:idAdmin",
     handler.getEstablecimientosEliminadosByAdminID()
   );
-  router.get("/:idEst", handler.getEstablecimientoByID());
+  router.get(
+    "/:idEst",
+    validateIDParams("idEst"),
+    handler.getEstablecimientoByID()
+  );
   router.get(
     "/byAdmin/:idAdmin",
     validateIDParams("idAdmin"),
@@ -37,12 +51,6 @@ export function establecimientosRouter(
     handler.postEstablecimiento()
   );
 
-  router.get(
-    "/:idEst",
-    handler.getEstablecimientoByID(),
-    validateIDParams("idEst")
-  );
-  router.get("/ests/search", handler.getEstablecimientoSearch());
   router.put(
     "/:idEst",
     authMiddle.isAdmin(),

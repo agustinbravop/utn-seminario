@@ -4,6 +4,7 @@ import {
   Disponibilidad,
   disponibilidadSchema,
 } from "../models/disponibilidad.js";
+import { ForbiddenError } from "../utils/apierrors";
 
 export const crearDisponibilidadSchema = disponibilidadSchema.omit({
   id: true,
@@ -64,6 +65,27 @@ export class DisponibilidadHandler {
 
       const dispEliminada = await this.service.eliminar(idDisp);
       res.status(200).json(dispEliminada);
+    };
+  }
+
+  /**
+   * Valida que el param `idDisp` corresponda a una disponibilidad del usuario con el JWT.
+   * Este middleware **asume que el JWT del administrador ya fue autenticado.**
+   *
+   * Sirve para evitar que un administrador modifique una disponibilidad que no le pertenece.
+   */
+  validateAdminOwnsDisponibilidad(): RequestHandler {
+    return async (req, res, next) => {
+      const idDisp = Number(req.params.idDisp);
+      const disps = await this.service.getByAdminID(res.locals.idAdmin);
+
+      if (!disps.find((d) => d.id === idDisp)) {
+        throw new ForbiddenError(
+          "No puede alterar disponibilidades de otro administrador"
+        );
+      }
+
+      next();
     };
   }
 }

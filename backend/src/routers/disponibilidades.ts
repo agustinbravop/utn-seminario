@@ -1,7 +1,6 @@
 import express from "express";
 import { Router } from "express";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
-import { EstablecimientoHandler } from "../handlers/establecimientos.js";
 import {
   DisponibilidadHandler,
   crearDisponibilidadSchema,
@@ -11,41 +10,30 @@ import { AuthHandler } from "../handlers/auth.js";
 
 export function disponibilidadesRouter(
   handler: DisponibilidadHandler,
-  estHandler: EstablecimientoHandler,
   authMiddle: AuthHandler
 ): Router {
   const router = express.Router();
 
-  router.get(
-    "/:idEst/canchas/:idCancha/disponibilidades",
-    handler.getDisponibilidadesByCanchaID()
-  );
   router.post(
-    "/:idEst/canchas/:idCancha/disponibilidades",
+    "/",
     validateBody(crearDisponibilidadSchema),
     handler.postDisponibilidad()
   );
 
-  router.use(
-    "/:idEst/canchas/:idCancha/disponibilidades/:idDisp",
-    validateIDParams("idEst", "idCancha", "idDisp")
-  );
-  router.get(
-    "/:idEst/canchas/:idCancha/disponibilidades/:idDisp",
-    handler.getDisponibilidadByID()
-  );
+  router.use("/:idDisp", validateIDParams("idDisp"));
+  router.get("/:idDisp", handler.getDisponibilidadByID());
 
   router.put(
-    "/:idEst/canchas/:idCancha/disponibilidades/:idDisp",
+    "/:idDisp",
     authMiddle.isAdmin(),
-    estHandler.validateAdminOwnsEstablecimiento(),
+    handler.validateAdminOwnsDisponibilidad(),
     validateBody(modificarDisponibilidadSchema),
     handler.putDisponibilidad()
   );
   router.delete(
-    "/:idEst/canchas/:idCancha/disponibilidades/:idDisp",
+    "/:idDisp",
     authMiddle.isAdmin(),
-    estHandler.validateAdminOwnsEstablecimiento(),
+    handler.validateAdminOwnsDisponibilidad(),
     handler.deleteDisponibilidad()
   );
 

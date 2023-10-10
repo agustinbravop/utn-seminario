@@ -28,14 +28,12 @@ export function useDisponibilidadesByCanchaID(
 }
 
 export function useDisponibilidadByID(
-  idEst: number,
-  idCancha: number,
   idDisp: number,
   options?: UseApiQueryOptions<Disponibilidad>
 ) {
   return useApiQuery(
     ["disponibilidades", idDisp],
-    `${API_URL}/establecimientos/${idEst}/canchas/${idCancha}/disponibilidades/${idDisp}`,
+    `${API_URL}/disponibilidades/${idDisp}`,
     options
   );
 }
@@ -47,10 +45,7 @@ export function useCrearDisponibilidad(
     ...options,
     invalidateOnSuccess: (d) => ["canchas", d.idCancha, "disponibilidades"],
     mutationFn: ({ idEst, ...disp }) =>
-      post<Disponibilidad>(
-        `${API_URL}/establecimientos/${idEst}/canchas/${disp.idCancha}/disponibilidades`,
-        disp
-      ),
+      post<Disponibilidad>(`${API_URL}/disponibilidades`, disp),
   });
 }
 
@@ -61,10 +56,7 @@ export function useModificarDisponibilidad(
     ...options,
     invalidateOnSuccess: (d) => ["canchas", d.idCancha, "disponibilidades"],
     mutationFn: ({ idEst, ...disp }) =>
-      put<Disponibilidad>(
-        `${API_URL}/establecimientos/${idEst}/canchas/${disp.idCancha}/disponibilidades/${disp.id}`,
-        disp
-      ),
+      put<Disponibilidad>(`${API_URL}/disponibilidades/${disp.id}`, disp),
   });
 }
 
@@ -77,9 +69,6 @@ export function useEliminarDisponibilidad(
   return useApiMutation({
     ...options,
     invalidateOnSuccess: (d) => ["canchas", d.idCancha, "disponibilidades"],
-    mutationFn: ({ idEst, idCancha, idDisp }) =>
-      del(
-        `${API_URL}/establecimientos/${idEst}/canchas/${idCancha}/disponibilidades/${idDisp}`
-      ),
+    mutationFn: ({ idDisp }) => del(`${API_URL}/disponibilidades/${idDisp}`),
   });
 }

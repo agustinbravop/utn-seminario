@@ -3,7 +3,8 @@ import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, dia, disciplina, disponibilidad } from "@prisma/client";
 
 export interface DisponibilidadRepository {
-  getByCanchaID(idDisp: number): Promise<Disponibilidad[]>;
+  getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
+  getByAdminID(idAdmin: number): Promise<Disponibilidad[]>;
   getByID(idDisp: number): Promise<Disponibilidad>;
   crear(disp: Disponibilidad): Promise<Disponibilidad>;
   modificar(dispUpdate: Disponibilidad): Promise<Disponibilidad>;
@@ -27,6 +28,19 @@ export class PrismaDisponibilidadRepository
     try {
       const canchas = await this.prisma.disponibilidad.findMany({
         where: { idCancha: idCancha },
+        orderBy: [{ horaInicio: "asc" }],
+        include: this.include,
+      });
+      return canchas.map((c) => toDisp(c));
+    } catch {
+      throw new InternalServerError("Error al listar las disponibilidades");
+    }
+  }
+
+  async getByAdminID(idAdmin: number) {
+    try {
+      const canchas = await this.prisma.disponibilidad.findMany({
+        where: { cancha: { establecimiento: { idAdministrador: idAdmin } } },
         orderBy: [{ horaInicio: "asc" }],
         include: this.include,
       });
@@ -126,6 +140,7 @@ export function toDisp(disp: disponibilidadDB): Disponibilidad {
     disciplina: disp.disciplina.disciplina,
     precioSenia: disp.precioSenia ?? undefined,
     dias: disp.dias.map((dia) => dia.dia) as Dia[],
+  
   };
 }
 
