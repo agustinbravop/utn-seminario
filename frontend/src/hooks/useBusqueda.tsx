@@ -38,7 +38,6 @@ export function BusquedaProvider({ children }: BusquedaProviderProps) {
     fecha: useMemo(() => formatearFecha(new Date()), []),
     provincia: jugador.provincia,
   });
-  console.log(jugador)
 
   const setFiltro = useMemo(
     () => (filtro: keyof BusquedaFiltros, valor?: string | number) => {

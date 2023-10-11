@@ -5,6 +5,8 @@ import { disponibilidadDB, toDisp } from "./disponibilidades.js";
 import { BuscarReservaQuery, CrearReserva } from "../services/reservas.js";
 import Decimal from "decimal.js";
 
+type CrearReservaParam = CrearReserva & { precio: Decimal; senia?: Decimal };
+
 export interface ReservaRepository {
   getReservasByEstablecimientoID(idEst: number): Promise<Reserva[]>;
   getReservasByDisponibilidadID(idDisp: number): Promise<Reserva[]>;
@@ -12,7 +14,7 @@ export interface ReservaRepository {
   getReservasByCanchaID(idCancha: number): Promise<Reserva[]>;
   getReservaByID(id: number): Promise<Reserva>;
   buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
-  crearReserva(res: CrearReserva & { precio: Decimal }): Promise<Reserva>;
+  crearReserva(res: CrearReservaParam): Promise<Reserva>;
   existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean>;
   updateReserva(res: Reserva): Promise<Reserva>;
 }
@@ -162,13 +164,14 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
-  async crearReserva(res: CrearReserva & { precio: Decimal }) {
+  async crearReserva(res: CrearReservaParam) {
     try {
       const dbRes = await this.prisma.reserva.create({
         data: {
           id: undefined,
           fechaReservada: res.fechaReservada,
           precio: res.precio,
+          senia: res.senia,
           jugador: { connect: { id: res.idJugador } },
           disponibilidad: { connect: { id: res.idDisponibilidad } },
         },
@@ -216,6 +219,7 @@ function toRes(res: ReservaDB): Reserva {
   return {
     ...res,
     jugador,
+    senia: res.senia ?? undefined,
     disponibilidad: toDisp(res.disponibilidad),
     pagoReserva: res.pagoReserva ?? undefined,
     pagoSenia: res.pagoSenia ?? undefined,

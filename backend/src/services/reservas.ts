@@ -131,6 +131,7 @@ export class ReservaServiceImpl implements ReservaService {
     return await this.repo.crearReserva({
       ...crearReserva,
       precio: disp.precioReserva,
+      senia: disp.precioSenia,
     });
   }
 

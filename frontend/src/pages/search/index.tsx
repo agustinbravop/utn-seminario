@@ -26,7 +26,6 @@ import { useBusqueda } from "@/hooks/useBusqueda";
 export default function BuscarEstablecimientosPage() {
   const provincias = useProvincias();
   const { filtros, updateFiltros, setFiltro } = useBusqueda();
-  console.log(filtros);
   const methods = useYupForm<BusquedaEstablecimientos>({
     defaultValues: filtros,
   });

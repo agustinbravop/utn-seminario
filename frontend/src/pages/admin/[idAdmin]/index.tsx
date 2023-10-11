@@ -41,7 +41,7 @@ interface EstablecimientosListProps {
 function EstablecimientosList({ data }: EstablecimientosListProps) {
   if (data && data.length > 0) {
     return (
-      <HStack display="flex" flexWrap="wrap" justifyContent="left">
+      <HStack flexWrap="wrap" justify="center" align="center" m="auto">
         {data.map((est) => (
           <EstablecimientoCard key={est.id} establecimiento={est} />
         ))}

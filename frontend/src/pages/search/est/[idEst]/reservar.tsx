@@ -29,7 +29,6 @@ export default function ReservarEstablecimientoPage() {
   const { idEst } = useParams();
 
   const { filtros, setFiltro } = useBusqueda();
-  console.log(filtros);
   const { data: est } = useEstablecimientoByID(Number(idEst));
   const { data: disps } = useBuscarDisponibilidades({
     idEst: Number(idEst),

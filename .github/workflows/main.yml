@@ -18,9 +18,9 @@ jobs:
           fetch-depth: 0
 
       - name: Prettify code
-      # Ref: https://github.com/marketplace/actions/prettier-action
+        # Ref: https://github.com/marketplace/actions/prettier-action
         uses: creyD/prettier_action@v4.3
         with:
           # Prettier CLI options: https://prettier.io/docs/en/cli
-          prettier_options: --write . --config ./.prettierrc.json --ignore-path frontend/.prettierignore --ignore-path backend/.prettierignore 
+          prettier_options: --write . --config ./.prettierrc.json --ignore-path frontend/.prettierignore --ignore-path backend/.prettierignore
           same_commit: True

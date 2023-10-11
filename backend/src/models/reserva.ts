@@ -9,6 +9,7 @@ export type Reserva = z.infer<typeof reservaSchema>;
 export const reservaSchema = z.object({
   id: z.number().int().positive(),
   precio: decimalSchema,
+  senia: decimalSchema.optional(),
   fechaReservada: z.date(),
   fechaCreada: z.date(),
   jugador: jugadorSchema,

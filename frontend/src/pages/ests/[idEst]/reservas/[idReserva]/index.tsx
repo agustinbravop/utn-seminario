@@ -85,6 +85,11 @@ export default function ReservaInfoPage() {
     );
   }
 
+  let precioAPagar = reserva.precio;
+  if (reserva.senia && reserva.pagoSenia) {
+    precioAPagar = reserva.precio - reserva.senia;
+  }
+
   return (
     <>
       <Card m="auto" height="60%" width="38%" mt="5%">
@@ -104,15 +109,19 @@ export default function ReservaInfoPage() {
               </Text>
             </Box>
             <Box>
-              <Heading size="xs"> Horario </Heading>
+              <Heading size="xs">Horario</Heading>
               <Text fontSize="sm">
                 {reserva.disponibilidad.horaInicio} -
                 {reserva.disponibilidad.horaFin} hs
               </Text>
             </Box>
             <Box>
-              <Heading size="xs"> Precio </Heading>
+              <Heading size="xs">Precio total</Heading>
               <Text fontSize="sm"> ${reserva.precio} </Text>
+            </Box>
+            <Box>
+              <Heading size="xs">Seña</Heading>
+              <Text fontSize="sm"> ${reserva.senia ?? "Sin seña"} </Text>
             </Box>
             <Box>
               <Heading size="xs">Disciplina</Heading>
@@ -144,7 +153,7 @@ export default function ReservaInfoPage() {
               reserva.disponibilidad.precioSenia && (
                 <ConfirmSubmitButton
                   header="Seña"
-                  body="¿Está seguro que desea efectuar la seña?"
+                  body={`¿Desea registrar la seña de $${reserva.senia}?`}
                   onSubmit={() => mutate(reserva)}
                 >
                   Señar
@@ -154,7 +163,7 @@ export default function ReservaInfoPage() {
             {!reserva.idPagoReserva && (
               <ConfirmSubmitButton
                 header="Pago"
-                body="¿Está seguro que desea efectuar el pago?"
+                body={`¿Desea registrar el pago de $${precioAPagar}?`}
                 onSubmit={() => mutatePago(reserva)}
               >
                 Pagar
