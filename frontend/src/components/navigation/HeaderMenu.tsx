@@ -103,7 +103,7 @@ function JugadorNav({
   const usuario = useBreakpointValue({ base: "", sm: jugador.usuario });
   return (
     <>
-      <Link to={`/jugador/${jugador.id}`}>
+      <Link to={`/search`}>
         <LogoImage />
       </Link>
       <Menu>

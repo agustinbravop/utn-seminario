@@ -24,17 +24,17 @@ export type Path =
   | `/ests/:idEst/informes`
   | `/ests/:idEst/reservas`
   | `/ests/:idEst/reservas/:idReserva`
-  | `/jugador/:idJugador`
-  | `/jugador/:idJugador/est/:idEst`
-  | `/jugador/:idJugador/est/:idEst/canchas`
-  | `/jugador/:idJugador/est/:idEst/canchas/:idCancha`
-  | `/jugador/:idJugador/est/:idEst/reservar`
   | `/jugador/:idJugador/perfil`
   | `/jugador/:idJugador/perfil/cambiarClave`
   | `/jugador/:idJugador/perfil/editar`
   | `/jugador/:idJugador/reservas`
   | `/login`
   | `/register`
+  | `/search`
+  | `/search/est/:idEst`
+  | `/search/est/:idEst/canchas`
+  | `/search/est/:idEst/canchas/:idCancha`
+  | `/search/est/:idEst/reservar`
   | `/subscribe`
   | `/suscripciones`
 
@@ -58,15 +58,14 @@ export type Params = {
   '/ests/:idEst/informes': { idEst: string }
   '/ests/:idEst/reservas': { idEst: string }
   '/ests/:idEst/reservas/:idReserva': { idEst: string; idReserva: string }
-  '/jugador/:idJugador': { idJugador: string }
-  '/jugador/:idJugador/est/:idEst': { idJugador: string; idEst: string }
-  '/jugador/:idJugador/est/:idEst/canchas': { idJugador: string; idEst: string }
-  '/jugador/:idJugador/est/:idEst/canchas/:idCancha': { idJugador: string; idEst: string; idCancha: string }
-  '/jugador/:idJugador/est/:idEst/reservar': { idJugador: string; idEst: string }
   '/jugador/:idJugador/perfil': { idJugador: string }
   '/jugador/:idJugador/perfil/cambiarClave': { idJugador: string }
   '/jugador/:idJugador/perfil/editar': { idJugador: string }
   '/jugador/:idJugador/reservas': { idJugador: string }
+  '/search/est/:idEst': { idEst: string }
+  '/search/est/:idEst/canchas': { idEst: string }
+  '/search/est/:idEst/canchas/:idCancha': { idEst: string; idCancha: string }
+  '/search/est/:idEst/reservar': { idEst: string }
 }
 
 export type ModalPath = never

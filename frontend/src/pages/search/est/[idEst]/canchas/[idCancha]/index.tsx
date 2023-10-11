@@ -31,9 +31,7 @@ import { ordenarDias } from "@/utils/dias";
 import { useBusqueda } from "@/hooks";
 
 export default function VistaJugadorCancha() {
-  const { idEst, idCancha } = useParams(
-    "/jugador/:idJugador/est/:idEst/canchas/:idCancha"
-  );
+  const { idEst, idCancha } = useParams("/search/est/:idEst/canchas/:idCancha");
   const { filtros, setFiltro } = useBusqueda();
 
   const { data: cancha } = useCanchaByID(Number(idEst), Number(idCancha));

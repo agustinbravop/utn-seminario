@@ -9,7 +9,7 @@ import {
   getSortedRowModel,
   createColumnHelper,
 } from "@tanstack/react-table";
-import FormReservarDisponibilidad from "@/pages/jugador/[idJugador]/est/[idEst]/canchas/[idCancha]/_formReservar";
+import FormReservarDisponibilidad from "@/pages/search/est/[idEst]/canchas/[idCancha]/_formReservar";
 import { BuscarDisponibilidadResult } from "@/utils/api";
 import { ordenarDias } from "@/utils/dias";
 import { DIAS_ABBR } from "@/utils/constants";
