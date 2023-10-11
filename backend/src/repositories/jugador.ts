@@ -55,7 +55,7 @@ export class PrismaJugadorRepository implements JugadorRepository {
                 },
               }
             : { disconnect: true },
-          localidad: jugador.localidad
+          localidad: jugador.localidad || jugador.provincia
             ? {
                 connectOrCreate: {
                   where: {
