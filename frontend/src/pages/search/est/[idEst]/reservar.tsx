@@ -77,7 +77,7 @@ export default function ReservarEstablecimientoPage() {
       </HStack>
 
       <Heading size="md">Horarios disponibles</Heading>
-      <Text>Seleccione un horario a reservar.</Text>
+      <Text mb="1em">Seleccione un horario a reservar.</Text>
       <TablaDisponibilidadesReservables data={disponibilidadesFiltradas} />
     </>
   );
