@@ -1,4 +1,4 @@
-import { MdPlace } from "react-icons/md";
+import { MdAttachMoney, MdPlace } from "react-icons/md";
 import { LuClock5 } from "react-icons/lu";
 import { PhoneIcon, CalendarIcon } from "@chakra-ui/icons";
 import {
@@ -72,6 +72,19 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             <Text>
               <PhoneIcon boxSize={4} mr="2" alignSelf="start" />
               {reserva.disponibilidad.cancha.establecimiento.telefono}
+            </Text>
+            <Text>
+              <Icon
+                as={MdAttachMoney}
+                fontSize="1.2em"
+                verticalAlign="-0.15em"
+              />
+              {reserva.precio}
+              {reserva.senia && (
+                <span style={{ color: "gray" }}>
+                  {` (Seña: $${reserva.senia})`}
+                </span>
+              )}
             </Text>
           </VStack>
 

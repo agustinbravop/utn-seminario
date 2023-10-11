@@ -6,6 +6,7 @@ import { ReservaCard } from "@/components/display";
 export default function JugadorReservasPage() {
   const { jugador } = useCurrentJugador();
   const { data: reservas } = useReservasByJugadorID(jugador.id);
+  console.log(reservas);
   return (
     <>
       <Heading pb="10px" size="lg" textAlign="center">

@@ -94,6 +94,7 @@ export type Reserva = {
   fechaReservada: string;
   fechaCreada: string;
   precio: number;
+  senia?: number;
   idPagoReserva: number;
   pagoReserva: Pago;
   idPagoSenia: number;
