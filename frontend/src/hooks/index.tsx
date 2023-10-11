@@ -6,3 +6,4 @@ export { useYupForm, type UseYupFormProps } from "./useYupForm";
 // Contexts.
 export { CurrentAdminProvider, useCurrentAdmin } from "./useCurrentAdmin";
 export { CurrentJugadorProvider, useCurrentJugador } from "./useCurrentJugador";
+export { BusquedaProvider, useBusqueda } from "./useBusqueda";

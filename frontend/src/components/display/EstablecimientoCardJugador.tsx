@@ -57,6 +57,7 @@ export default function EstablecimientoCardJugador({
               {establecimiento.direccion}
             </Text>
             <Text mb="0" fontSize="sm">
+              {/* TODO: hacer variable al $1800 */}
               Desde <strong> $1800 </strong>
             </Text>
           </VStack>

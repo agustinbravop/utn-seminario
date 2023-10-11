@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { formatearFecha } from "@/utils/dates";
-import { useCurrentJugador, useYupForm } from "@/hooks";
+import { useYupForm } from "@/hooks";
 import { useWatch } from "react-hook-form";
 import { DISCIPLINAS, QuestionImage } from "@/utils/constants";
 import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
@@ -21,31 +21,31 @@ import { FormProvider } from "react-hook-form";
 import DateControl from "@/components/forms/DateControl";
 import { useEffect } from "react";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
+import { useBusqueda } from "@/hooks/useBusqueda";
 
 export default function BuscarEstablecimientosPage() {
-  const { jugador } = useCurrentJugador();
   const provincias = useProvincias();
-
+  const { filtros, updateFiltros, setFiltro } = useBusqueda();
+  console.log(filtros);
   const methods = useYupForm<BusquedaEstablecimientos>({
-    defaultValues: {
-      localidad: jugador.localidad,
-      provincia: jugador.provincia,
-      disciplina: jugador.disciplina,
-      fecha: formatearFecha(new Date()),
-    },
+    defaultValues: filtros,
   });
-
   const values = useWatch({ control: methods.control });
+  useEffect(() => {
+    updateFiltros(values);
+  }, [values, updateFiltros]);
+
   const { data: ests, isFetchedAfterMount } = useBuscarEstablecimientos({
     ...values,
   });
   const { data: localidades } = useLocalidadesByProvincia(values.provincia);
   useEffect(() => {
-    // Evitar que la localidad quede desincronizada con los Select de la interfaz.
+    // Evita que la localidad quede desincronizada con los Select de la interfaz.
     if (!localidades.includes(values.localidad ?? "")) {
       methods.setValue("localidad", undefined);
+      setFiltro("localidad", "");
     }
-  }, [values.localidad, localidades, methods]);
+  }, [values.localidad, localidades, methods, setFiltro]);
 
   return (
     <>
@@ -127,6 +127,7 @@ export default function BuscarEstablecimientosPage() {
           />
         </VStack>
       </FormProvider>
+
       <HStack flexWrap="wrap" justifyContent="center" pt="20px" w="330">
         {ests.length > 0 ? (
           ests.map((est) => (

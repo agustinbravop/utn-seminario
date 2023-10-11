@@ -5,23 +5,58 @@ import {
   useReactTable,
   flexRender,
   getCoreRowModel,
-  ColumnDef,
   SortingState,
   getSortedRowModel,
+  createColumnHelper,
 } from "@tanstack/react-table";
 import FormReservarDisponibilidad from "@/pages/jugador/[idJugador]/est/[idEst]/canchas/[idCancha]/_formReservar";
 import { BuscarDisponibilidadResult } from "@/utils/api";
+import { ordenarDias } from "@/utils/dias";
+import { DIAS_ABBR } from "@/utils/constants";
 
 export type TablaDisponibilidadesReservablesProps = {
   data: BuscarDisponibilidadResult[];
-  columns: ColumnDef<BuscarDisponibilidadResult, any>[];
 };
 
 export default function TablaDisponibilidadesReservables({
   data,
-  columns,
 }: TablaDisponibilidadesReservablesProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  //Funcion para filtrar tabla
+  const columnHelper = createColumnHelper<BuscarDisponibilidadResult>();
+
+  //Columnas que se van a poder ordenar
+  const columns = [
+    columnHelper.accessor("horaInicio", {
+      cell: (info) => info.getValue(),
+      header: "Inicio",
+    }),
+    columnHelper.accessor("horaFin", {
+      cell: (info) => info.getValue(),
+      header: "Fin",
+    }),
+    columnHelper.accessor("precioReserva", {
+      cell: (info) => "$" + info.getValue(),
+      header: "Precio",
+    }),
+    columnHelper.accessor("precioSenia", {
+      cell: (info) => (info.getValue() ? "$" + info.getValue() : "Sin seña"),
+      header: "Seña",
+    }),
+    columnHelper.accessor("dias", {
+      cell: (info) =>
+        ordenarDias(info.getValue())
+          .map((dia) => DIAS_ABBR[dia])
+          .join(", "),
+      header: "Dias",
+    }),
+    columnHelper.accessor("cancha.nombre", {
+      cell: (info) => info.getValue(),
+      header: "Cancha",
+    }),
+  ];
+
   const table = useReactTable({
     columns,
     data,
