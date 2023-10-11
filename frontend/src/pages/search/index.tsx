@@ -11,7 +11,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { formatearFecha } from "@/utils/dates";
+import { formatFecha } from "@/utils/dates";
 import { useYupForm } from "@/hooks";
 import { useWatch } from "react-hook-form";
 import { DISCIPLINAS, QuestionImage } from "@/utils/constants";
@@ -133,7 +133,7 @@ export default function BuscarEstablecimientosPage() {
             <EstablecimientoJugador
               key={est.id}
               establecimiento={est}
-              date={values.fecha ?? formatearFecha(new Date())}
+              date={values.fecha ?? formatFecha(new Date())}
             />
           ))
         ) : isFetchedAfterMount ? (

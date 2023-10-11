@@ -17,7 +17,7 @@ import {
   useSeniarReserva,
 } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
-import { formatearISOFecha } from "@/utils/dates";
+import { formatISOFecha } from "@/utils/dates";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { CircleIcon } from "@/components/media-and-icons";
 import { useNavigate } from "react-router";
@@ -105,7 +105,7 @@ export default function ReservaInfoPage() {
             <Box>
               <Heading size="xs">Fecha</Heading>
               <Text fontSize="sm">
-                {formatearISOFecha(reserva.fechaReservada)}
+                {formatISOFecha(reserva.fechaReservada)}
               </Text>
             </Box>
             <Box>

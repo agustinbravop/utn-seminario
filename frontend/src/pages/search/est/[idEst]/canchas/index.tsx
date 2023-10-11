@@ -4,7 +4,7 @@ import { useEstablecimientoByID } from "@/utils/api";
 import { useCanchasByEstablecimientoID } from "@/utils/api";
 import { CanchaJugador } from "@/components/display";
 import { useLocation } from "react-router";
-import { formatearFecha } from "@/utils/dates";
+import { formatFecha } from "@/utils/dates";
 
 export default function VistaJugador() {
   const { idEst } = useParams();
@@ -13,7 +13,7 @@ export default function VistaJugador() {
 
   const location = useLocation();
   const dateParam = new URLSearchParams(location.search).get("date");
-  const date = formatearFecha(dateParam ? new Date(dateParam) : new Date());
+  const date = formatFecha(dateParam ? new Date(dateParam) : new Date());
 
   return (
     <>

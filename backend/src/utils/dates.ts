@@ -12,7 +12,7 @@ const dias: Dia[] = [
 ];
 
 /** Convierte una fecha `Date` a otra fecha `Date` en UTC (Universal Coordinated Time).  */
-function convertDateToUTC(date: Date) {
+function convertDateToUTC(date: Date): Date {
   return new Date(
     date.getUTCFullYear(),
     date.getUTCMonth(),

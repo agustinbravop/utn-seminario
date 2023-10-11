@@ -3,7 +3,7 @@ import DateControl from "@/components/forms/DateControl";
 import { useYupForm } from "@/hooks";
 import { Disponibilidad } from "@/models";
 import { CrearReserva, useCrearReserva } from "@/utils/api";
-import { formatearFecha } from "@/utils/dates";
+import { formatFecha } from "@/utils/dates";
 import {
   useDisclosure,
   useToast,
@@ -63,7 +63,7 @@ export default function FormReservarDisponibilidad({
     validationSchema,
     defaultValues: {
       idDisponibilidad: disp.id,
-      fechaReservada: date || formatearFecha(new Date()),
+      fechaReservada: date || formatFecha(new Date()),
     },
   });
 

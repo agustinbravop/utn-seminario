@@ -1,4 +1,4 @@
-import { formatearFecha } from "@/utils/dates";
+import { formatFecha } from "@/utils/dates";
 import { useContext, createContext, useState, useMemo } from "react";
 import { useCurrentJugador } from ".";
 
@@ -35,7 +35,7 @@ const BusquedaContext = createContext<IBusquedaContext | undefined>(undefined);
 export function BusquedaProvider({ children }: BusquedaProviderProps) {
   const { jugador } = useCurrentJugador();
   const [filtros, updateFiltros] = useState<BusquedaFiltros>({
-    fecha: useMemo(() => formatearFecha(new Date()), []),
+    fecha: useMemo(() => formatFecha(new Date()), []),
     provincia: jugador.provincia,
   });
 
