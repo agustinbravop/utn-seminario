@@ -1,11 +1,14 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { CurrentAdminProvider } from "./hooks/useCurrentAdmin";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "./themes";
-import { CurrentJugadorProvider } from "./hooks/useCurrentJugador";
 import toastOptions from "./themes/toastOptions";
+import {
+  CurrentAdminProvider,
+  CurrentJugadorProvider,
+  BusquedaProvider,
+} from "./hooks";
 
 const queryClient = new QueryClient();
 
@@ -15,7 +18,9 @@ ReactDOM.createRoot(root).render(
     <QueryClientProvider client={queryClient}>
       <CurrentAdminProvider>
         <CurrentJugadorProvider>
-          <App />
+          <BusquedaProvider>
+            <App />
+          </BusquedaProvider>
         </CurrentJugadorProvider>
       </CurrentAdminProvider>
     </QueryClientProvider>

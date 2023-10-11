@@ -40,7 +40,7 @@ const validationSchema = Yup.object({
   imagen: Yup.mixed<File>().optional(),
 });
 
-function NewEstab() {
+function NuevoEstablecimientoPage() {
   const { admin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
@@ -168,4 +168,4 @@ function NewEstab() {
   );
 }
 
-export default NewEstab;
+export default NuevoEstablecimientoPage;

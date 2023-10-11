@@ -19,10 +19,10 @@ import {
   useHabilitarCancha,
 } from "@/utils/api";
 import { useParams } from "@/router";
-import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { GrSchedules } from "react-icons/gr";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { ConfirmSubmitButton } from "@/components/forms";
 import { CanchaMenu } from "@/components/navigation";
 

@@ -22,7 +22,7 @@ import { useNavigate } from "react-router";
 import { useCurrentJugador, useYupForm } from "@/hooks";
 import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 import { useEffect } from "react";
-import { DISCIPLINAS } from "@/utils/consts";
+import { DISCIPLINAS } from "@/utils/constants";
 
 const validationSchema = Yup.object({
   id: Yup.number(),

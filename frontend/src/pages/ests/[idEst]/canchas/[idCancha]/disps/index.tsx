@@ -12,7 +12,7 @@ import {
 import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 import FormDisp from "./_FormDisp";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import {
   useCrearDisponibilidad,
   useDisponibilidadesByCanchaID,

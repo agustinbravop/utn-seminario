@@ -1,8 +1,8 @@
 import { Heading } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "../../utils/api/establecimientos";
 import { useParams } from "react-router";
-import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-import Alerta from "../Alerta/Alerta";
+import LoadingSpinner from "../feedback/LoadingSpinner";
+import Alerta from "../feedback/Alerta";
 import { useCanchaByID } from "@/utils/api";
 
 export default function CanchaMenu() {

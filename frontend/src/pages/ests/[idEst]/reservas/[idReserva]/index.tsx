@@ -18,8 +18,8 @@ import {
 } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
 import { formatearISOFecha } from "@/utils/dates";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
+import { CircleIcon } from "@/components/media-and-icons";
 import { useNavigate } from "react-router";
 
 export default function ReservaInfoPage() {

@@ -3,7 +3,7 @@ import {
   useEliminarEstablecimiento,
   useEstablecimientosByAdminID,
 } from "@/utils/api";
-import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 import { useState } from "react";
 import {
   Button,

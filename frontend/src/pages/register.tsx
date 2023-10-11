@@ -15,7 +15,7 @@ import { RegistrarJugador, useRegistrarJugador } from "@/utils/api";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { DISCIPLINAS } from "@/utils/consts";
+import { DISCIPLINAS } from "@/utils/constants";
 import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 
 const validationSchema = Yup.object({

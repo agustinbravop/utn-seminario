@@ -25,7 +25,7 @@ import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
 import { formatearFecha, formatearISOFecha } from "@/utils/dates";
 import { useState } from "react";
-import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
+import { CircleIcon } from "@/components/media-and-icons";
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");

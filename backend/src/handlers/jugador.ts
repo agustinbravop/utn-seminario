@@ -20,10 +20,10 @@ export class JugadorHandler {
   }
 
   patchJugador(): RequestHandler {
-    return async (req, res) => {
+    return async (_req, res) => {
       const jugador: Jugador = {
         ...res.locals.body,
-        id: Number(req.params["idJugador"]),
+        id: Number(res.locals.idJugador),
       };
       const jugadorActualizado = await this.service.modificar(jugador);
       res.status(200).json(jugadorActualizado);
