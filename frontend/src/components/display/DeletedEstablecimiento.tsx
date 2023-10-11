@@ -13,7 +13,7 @@ import { MdPlace } from "react-icons/md";
 import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Box } from "@chakra-ui/react";
-import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 import { useModificarEstablecimiento } from "@/utils/api";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useQueryClient } from "@tanstack/react-query";
@@ -45,7 +45,7 @@ export default function DeletedEstablecimiento({
     },
     onError: () => {
       toast({
-        title: "Error al recuperarel establecimiento",
+        title: "Error al recuperar el establecimiento",
         description: `Intente de nuevo.`,
         status: "error",
       });

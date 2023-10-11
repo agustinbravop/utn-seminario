@@ -1,33 +1,18 @@
-import CheckboxGroupControl from "./CheckboxGroupControl";
-import CheckboxSingleControl from "./CheckboxSingleControl";
-import InputControl from "./InputControl";
-import NumberInputControl from "./NumberInputControl";
-import PasswordControl from "./PasswordControl";
-import PinInputControl from "./PinInputControl";
-import RadioGroupControl from "./RadioGroupControl";
-import SelectControl from "./SelectControl";
-import SliderControl from "./SliderControl";
-import SubmitButton from "./SubmitButton";
-import ConfirmSubmitButton from "./ConfirmSubmitButton";
-import SwitchControl from "./SwitchControl";
-import TextareaControl from "./TextareaControl";
-import BaseFormControl from "./BaseFormControl";
-import ImageControl from "./ImageControl";
-
-export {
-  CheckboxGroupControl,
-  CheckboxSingleControl,
-  InputControl,
-  NumberInputControl,
-  PasswordControl,
-  PinInputControl,
-  RadioGroupControl,
-  SelectControl,
-  SliderControl,
-  SubmitButton,
-  ConfirmSubmitButton,
-  SwitchControl,
-  TextareaControl,
-  BaseFormControl,
-  ImageControl,
-};
+export { default as BaseFormControl } from "./BaseFormControl";
+export { default as CheckboxGroupControl } from "./CheckboxGroupControl";
+export { default as CheckboxSingleControl } from "./CheckboxSingleControl";
+export { default as ConfirmSubmitButton } from "./ConfirmSubmitButton";
+export { default as DateControl } from "./DateControl";
+export { default as HorarioControl } from "./HorarioControl";
+export { default as ImageControl } from "./ImageControl";
+export { default as InputControl } from "./InputControl";
+export { default as NumberInputControl } from "./NumberInputControl";
+export { default as PasswordControl } from "./PasswordControl";
+export { default as PaymentForm } from "./PaymentForm";
+export { default as PinInputControl } from "./PinInputControl";
+export { default as RadioGroupControl } from "./RadioGroupControl";
+export { default as SelectControl } from "./SelectControl";
+export { default as SliderControl } from "./SliderControl";
+export { default as SubmitButton } from "./SubmitButton";
+export { default as SwitchControl } from "./SwitchControl";
+export { default as TextareaControl } from "./TextareaControl";

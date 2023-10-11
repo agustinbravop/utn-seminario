@@ -9,14 +9,14 @@ import {
 } from "@chakra-ui/react";
 import { Cancha } from "@/models/index";
 import { Link } from "react-router-dom";
-import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons";
 
 type estabProps = {
   cancha: Cancha;
 };
 
-export default function Court({ cancha }: estabProps) {
+export default function CanchaCard({ cancha }: estabProps) {
   return (
     <Link to={`${cancha.id}`}>
       <Card

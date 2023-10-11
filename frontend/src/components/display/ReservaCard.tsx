@@ -17,7 +17,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Reserva } from "@/models";
-import { CircleIcon } from "../CircleIcon/CircleIcon";
+import { CircleIcon } from "../media-and-icons";
 import { formatearISO } from "@/utils/dates";
 
 interface ReservaCardProps extends CardProps {

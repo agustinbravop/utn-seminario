@@ -1,8 +1,8 @@
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { EstablecimientoMenu } from "@/components/navigation";
 import { useParams } from "@/router";
 import { useInformePagosPorCancha } from "@/utils/api";
-import { FallbackImage } from "@/utils/consts";
+import { FallbackImage } from "@/utils/constants";
 import { formatearISOFecha } from "@/utils/dates";
 import {
   Box,

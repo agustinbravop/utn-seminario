@@ -3,7 +3,7 @@ import "react-credit-cards/es/styles-compiled.css";
 import { useState } from "react";
 import { Box, HStack, VStack } from "@chakra-ui/react";
 import { Control, useWatch } from "react-hook-form";
-import { InputControl } from "../forms";
+import { InputControl } from ".";
 
 interface PaymentFormProps {
   control?: Control<any, any>;

@@ -5,11 +5,11 @@ import {
   useBuscarDisponibilidades,
   useEstablecimientoByID,
 } from "@/utils/api";
-import { DIAS_ABBR } from "@/utils/consts";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { DIAS_ABBR } from "@/utils/constants";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { useState, useEffect, useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { TablaDisponibilidadesReservables } from "@/components/TablaDisponibilidadesReservables/TablaDisponibilidadesReservables";
+import { TablaDisponibilidadesReservables } from "@/components/display";
 import { ordenarDias } from "@/utils/dias";
 import { horaADecimal } from "@/utils/dates";
 

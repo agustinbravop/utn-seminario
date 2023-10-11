@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
-import { LogoImage } from "@/utils/consts";
+import { LogoImage } from "@/utils/constants";
 
 export default function HeaderMenu() {
   const { admin, isAdmin, logout: adminLogout } = useCurrentAdmin();

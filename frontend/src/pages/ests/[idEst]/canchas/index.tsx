@@ -9,16 +9,16 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import Courts from "@/components/Courts/Courts";
 import { useCanchasByEstablecimientoID } from "@/utils/api";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
-import Alerta from "@/components/Alerta/Alerta";
+import Alerta from "@/components/feedback/Alerta";
 import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { EstablecimientoMenu } from "@/components/navigation";
-import { QuestionImage } from "@/utils/consts";
+import { QuestionImage } from "@/utils/constants";
+import CanchaCard from "@/components/display/CanchaCard";
 
 export default function EstablecimientoCanchasPage() {
   const { idEst } = useParams();
@@ -73,7 +73,11 @@ export default function EstablecimientoCanchasPage() {
           </Text>
         </VStack>
       ) : (
-        <Courts canchas={canchas} />
+        <HStack display="flex" flexWrap="wrap" gap={8} justifyContent="center">
+          {canchas.map((cancha, index) => (
+            <CanchaCard key={index} cancha={cancha} />
+          ))}
+        </HStack>
       )}
     </>
   );

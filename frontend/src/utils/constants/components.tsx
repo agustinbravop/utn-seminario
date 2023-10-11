@@ -28,7 +28,7 @@ export function LogoImage(props: ImageProps) {
   );
 }
 
-/** Imagen ilustrativa para indicar resultados no encontrados o falta información. */
+/** Imagen ilustrativa para indicar resultados no encontrados o información faltante. */
 export function QuestionImage(props: ImageProps) {
   return (
     <Image

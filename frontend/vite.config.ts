@@ -8,7 +8,7 @@ export default defineConfig({
     react({
       include: "**/*.tsx",
     }),
-    // File system based routing: https://github.com/oedotme/generouted/tree/main
+    // File system based routing: https://github.com/oedotme/generouted
     generouted(),
   ],
   resolve: { alias: { "@": "/src" } },

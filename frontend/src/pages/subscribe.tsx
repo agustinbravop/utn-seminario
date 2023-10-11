@@ -1,4 +1,4 @@
-import PaymentForm from "@/components/PaymentForm/PaymentForm";
+import PaymentForm from "@/components/forms/PaymentForm";
 import { useLocation, useNavigate } from "react-router";
 import { RegistrarAdmin, useRegistrarAdmin } from "@/utils/api";
 import * as Yup from "yup";

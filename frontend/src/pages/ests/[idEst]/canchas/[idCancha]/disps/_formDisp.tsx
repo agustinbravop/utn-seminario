@@ -20,7 +20,7 @@ import { DefaultValues, FormProvider } from "react-hook-form";
 import { GrAddCircle } from "react-icons/gr";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
-import { DIAS, DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/consts";
+import { DIAS, DISCIPLINAS, DURACION_RESERVA, HORAS } from "@/utils/constants";
 import { EditIcon } from "@chakra-ui/icons";
 import HorarioControl from "@/components/forms/HorarioControl";
 

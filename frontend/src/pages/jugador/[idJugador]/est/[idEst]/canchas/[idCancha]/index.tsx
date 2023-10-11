@@ -23,9 +23,9 @@ import { useBuscarDisponibilidades, useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 
 import React, { useState, useEffect } from "react";
-import { DIAS_ABBR, FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
+import { DIAS_ABBR, FALLBACK_IMAGE_SRC } from "@/utils/constants";
 import { useEstablecimientoByID } from "@/utils/api";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import FormReservarDisponibilidad from "./_formReservar";
 import { ordenarDias } from "@/utils/dias";
 

@@ -1,4 +1,4 @@
-import { HORAS, MINUTOS } from "@/utils/consts";
+import { HORAS, MINUTOS } from "@/utils/constants";
 import { HStack, Select, Text } from "@chakra-ui/react";
 import { BaseFormControl } from ".";
 import { useController } from "react-hook-form";

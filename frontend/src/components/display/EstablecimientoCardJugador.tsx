@@ -8,22 +8,25 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { MdPlace } from "react-icons/md";
-import { Cancha } from "@/models/index";
+import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
-import { FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 
-type CanchaCardProps = {
-  cancha: Cancha;
+type EstablecimientoCardProps = {
+  establecimiento: Establecimiento;
   date: string;
 };
 
-export default function CanchaJugador({ cancha, date }: CanchaCardProps) {
+export default function EstablecimientoCardJugador({
+  establecimiento,
+  date,
+}: EstablecimientoCardProps) {
   return (
-    <Link to={`${cancha.id}?date=${date}`}>
+    <Link to={`est/${establecimiento.id}?date=${date}`}>
       <Card
         width="360px"
-        height="220px"
+        height="240px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -31,12 +34,12 @@ export default function CanchaJugador({ cancha, date }: CanchaCardProps) {
         <Box width="360px" height="125px">
           <Image
             src={
-              !(cancha?.urlImagen === null)
-                ? cancha?.urlImagen
+              !(establecimiento?.urlImagen === null)
+                ? establecimiento?.urlImagen
                 : FALLBACK_IMAGE_SRC
             }
             borderRadius="lg"
-            alt={`Imagen del establecimiento ${cancha.nombre}`}
+            alt={`Imagen del establecimiento ${establecimiento.nombre}`}
             objectFit="cover"
             height="100%"
             width="93%"
@@ -47,10 +50,14 @@ export default function CanchaJugador({ cancha, date }: CanchaCardProps) {
         <CardBody height="100%">
           <VStack spacing="0" textAlign="start">
             <Heading fontSize="15px" mb="10px">
-              {cancha.nombre}
+              {establecimiento.nombre}
             </Heading>
             <Text mb="2" fontSize="sm">
-              <Icon as={MdPlace} boxSize={4} mr="2" /> {cancha.descripcion}
+              <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
+              {establecimiento.direccion}
+            </Text>
+            <Text mb="0" fontSize="sm">
+              Desde <strong> $1800 </strong>
             </Text>
           </VStack>
         </CardBody>

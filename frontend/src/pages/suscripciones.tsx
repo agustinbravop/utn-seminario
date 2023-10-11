@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useSuscripciones } from "@/utils/api";
 import { Link } from "react-router-dom";
-import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { ICONOS_SUSCRIPCIONES } from "@/utils/constants";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 
 export default function SuscripcionesPage() {
   const { data, isLoading, isError } = useSuscripciones();

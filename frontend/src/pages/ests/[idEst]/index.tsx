@@ -20,8 +20,8 @@ import {
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { ConfirmSubmitButton } from "@/components/forms";
 import { EstablecimientoMenu } from "@/components/navigation";
 

@@ -12,7 +12,7 @@ import { PhoneIcon } from "@chakra-ui/icons";
 import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
-import { FALLBACK_IMAGE_SRC } from "@/utils/consts";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;

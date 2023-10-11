@@ -17,7 +17,7 @@ export type TablaDisponibilidadesReservablesProps = {
   columns: ColumnDef<BuscarDisponibilidadResult, any>[];
 };
 
-export function TablaDisponibilidadesReservables({
+export default function TablaDisponibilidadesReservables({
   data,
   columns,
 }: TablaDisponibilidadesReservablesProps) {
