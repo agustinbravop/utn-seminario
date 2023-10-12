@@ -94,6 +94,7 @@ export default function InputControl(props: InputControlProps) {
         {children ?? (
           <Input
             {...field}
+            value={field.value ?? ""}
             id={name}
             type={type}
             placeholder={placeholder ?? " "} // Si es "" (string vacío) el floating label no flota
