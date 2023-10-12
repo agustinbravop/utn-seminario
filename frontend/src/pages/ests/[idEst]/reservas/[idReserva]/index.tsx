@@ -3,6 +3,8 @@ import {
   Button,
   Card,
   CardBody,
+  Grid,
+  GridItem,
   HStack,
   Heading,
   Stack,
@@ -21,6 +23,7 @@ import { formatISOFecha } from "@/utils/dates";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { CircleIcon } from "@/components/media-and-icons";
 import { useNavigate } from "react-router";
+import { pagoRestante } from "@/utils/reservas";
 
 export default function ReservaInfoPage() {
   const { idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -98,35 +101,44 @@ export default function ReservaInfoPage() {
             Datos de la reserva
           </Heading>
           <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
-            <Box>
-              <Heading size="xs">Estado</Heading>
-              <Text fontSize="sm"> {estado} </Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Fecha</Heading>
-              <Text fontSize="sm">
-                {formatISOFecha(reserva.fechaReservada)}
-              </Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Horario</Heading>
-              <Text fontSize="sm">
-                {reserva.disponibilidad.horaInicio} -
-                {reserva.disponibilidad.horaFin} hs
-              </Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Precio total</Heading>
-              <Text fontSize="sm"> ${reserva.precio} </Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Seña</Heading>
-              <Text fontSize="sm"> ${reserva.senia ?? "Sin seña"} </Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Disciplina</Heading>
-              <Text fontSize="sm"> {reserva.disponibilidad.disciplina} </Text>
-            </Box>
+            <Grid gridTemplateColumns="1fr 1fr" rowGap="0.5em">
+              <GridItem>
+                <Heading size="xs">Fecha</Heading>
+                <Text fontSize="sm">
+                  {formatISOFecha(reserva.fechaReservada)}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Horario</Heading>
+                <Text fontSize="sm">
+                  {reserva.disponibilidad.horaInicio}
+                  {" - "}
+                  {reserva.disponibilidad.horaFin} hs
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Estado</Heading>
+                <Text fontSize="sm"> {estado} </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Disciplina</Heading>
+                <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Precio total</Heading>
+                <Text fontSize="sm">${reserva.precio}</Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Seña</Heading>
+                <Text fontSize="sm">
+                  {reserva.senia ? `$${reserva.senia}` : "-"}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Pago restante</Heading>
+                <Text fontSize="sm">${pagoRestante(reserva)}</Text>
+              </GridItem>
+            </Grid>
           </Stack>
 
           <Heading size="md" mt="1.5rem">

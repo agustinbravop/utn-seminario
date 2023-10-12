@@ -26,6 +26,7 @@ import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
 import { formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { CircleIcon } from "@/components/media-and-icons";
+import { floatingLabelActiveStyles } from "@/themes/components";
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -135,14 +136,13 @@ export default function EstablecimientoReservasPage() {
             value={filtroNombre}
             onChange={(e) => setFiltroNombre(e.target.value)}
           />
-          <FormLabel>Jugador</FormLabel>
+          <FormLabel sx={{ ...floatingLabelActiveStyles }}>Jugador</FormLabel>
         </FormControl>
         <FormControl variant="floating" width="auto">
           <Input
             type="date"
             placeholder="Fecha"
             value={filtroFecha}
-            defaultValue={formatFecha(new Date())}
             onChange={(e) => setFiltroFecha(e.target.value)}
           />
           <FormLabel>Fecha</FormLabel>
@@ -151,7 +151,7 @@ export default function EstablecimientoReservasPage() {
         <FormControl variant="floating" width="auto">
           <Select
             width="auto"
-            placeholder="Estado de pago..."
+            placeholder="Todos"
             onChange={(e) => setFiltroEstado(e.target.value)}
           >
             {["Pagado", "Señado", "No Pagado"].map((pago, i) => (
@@ -170,7 +170,7 @@ export default function EstablecimientoReservasPage() {
               <Th
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Cancha")}
-                style={{ cursor: "pointer" }}
+                cursor="pointer"
               >
                 Cancha{" "}
                 {ordenColumna === "Cancha" && (
@@ -186,7 +186,7 @@ export default function EstablecimientoReservasPage() {
               <Th
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Fecha")}
-                style={{ cursor: "pointer" }}
+                cursor="pointer"
               >
                 Fecha{" "}
                 {ordenColumna === "Fecha" && (
@@ -202,7 +202,7 @@ export default function EstablecimientoReservasPage() {
               <Th
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Jugador")}
-                style={{ cursor: "pointer" }}
+                cursor="pointer"
               >
                 Jugador{" "}
                 {ordenColumna === "Jugador" && (
@@ -218,6 +218,7 @@ export default function EstablecimientoReservasPage() {
               <Th
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Estado")}
+                cursor="pointer"
               >
                 Estado{" "}
                 {ordenColumna === "Estado" && (
@@ -274,7 +275,7 @@ export default function EstablecimientoReservasPage() {
                     <PlusSquareIcon
                       w={5}
                       h={5}
-                      style={{ cursor: "pointer" }}
+                      cursor="pointer"
                       onClick={() => navigate(`${r.id}`)}
                     />
                   </Td>
