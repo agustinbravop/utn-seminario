@@ -148,6 +148,10 @@ export class PrismaReservaRepository implements ReservaRepository {
             gte: filtros.fechaCreadaDesde,
             lte: filtros.fechaCreadaHasta,
           },
+          fechaReservada: {
+            gte: filtros.fechaReservadaDesde,
+            lte: filtros.fechaReservadaHasta,
+          },
           disponibilidad: {
             cancha: {
               id: filtros.idCancha,

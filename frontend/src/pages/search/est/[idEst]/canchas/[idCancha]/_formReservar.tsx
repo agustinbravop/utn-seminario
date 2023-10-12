@@ -1,9 +1,9 @@
 import { SubmitButton } from "@/components/forms";
 import DateControl from "@/components/forms/DateControl";
-import { useYupForm } from "@/hooks";
+import { useBusqueda, useYupForm } from "@/hooks";
 import { Disponibilidad } from "@/models";
 import { CrearReserva, useCrearReserva } from "@/utils/api";
-import { formatearFecha } from "@/utils/dates";
+import { formatFecha } from "@/utils/dates";
 import {
   useDisclosure,
   useToast,
@@ -41,6 +41,7 @@ export default function FormReservarDisponibilidad({
   const toast = useToast();
   const searchParams = new URLSearchParams(window.location.href);
   const date = searchParams.get("date")!;
+  const { filtros } = useBusqueda();
 
   const { mutate, isLoading } = useCrearReserva({
     onSuccess: () => {
@@ -63,7 +64,7 @@ export default function FormReservarDisponibilidad({
     validationSchema,
     defaultValues: {
       idDisponibilidad: disp.id,
-      fechaReservada: date || formatearFecha(new Date()),
+      fechaReservada: filtros.fecha || date || formatFecha(new Date()),
     },
   });
 

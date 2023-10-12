@@ -17,11 +17,11 @@ export function handleApiErrors(): ErrorRequestHandler {
   return (err: Error, req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof ApiError) {
       logError(err, req, res);
-      res.status(err.status).json(err);
+      res.status(err.status).json(err.toJson());
     } else {
       const e = new InternalServerError(`Error desconocido: ${err.message}`);
       logError(e, req, res);
-      res.status(e.status).json(e);
+      res.status(e.status).json(e.toJson());
     }
   };
 }

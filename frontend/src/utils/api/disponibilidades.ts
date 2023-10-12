@@ -22,7 +22,7 @@ export function useDisponibilidadesByCanchaID(
   options?: UseApiQueryOptions<Disponibilidad[]>
 ) {
   return useApiQuery(
-    ["canchas", idCancha, "disponibilidades"],
+    ["disponibilidades", "byCancha", idCancha],
     `${API_URL}/establecimientos/${idEst}/canchas/${idCancha}/disponibilidades`,
     { ...options, initialData: [] }
   );

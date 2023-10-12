@@ -12,8 +12,10 @@ export type IngresosPorCanchaQuery = {
 type IngresosPorCancha = Establecimiento & {
   canchas: (Cancha & {
     reservas: Reserva[];
+    estimado: number;
     total: number;
   })[];
+  estimado: number;
   total: number;
 };
 

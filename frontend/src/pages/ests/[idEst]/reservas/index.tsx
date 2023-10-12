@@ -23,7 +23,7 @@ import {
 import { useNavigate } from "react-router";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
-import { formatearFecha, formatearISOFecha } from "@/utils/dates";
+import { formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { CircleIcon } from "@/components/media-and-icons";
 
@@ -85,7 +85,7 @@ export default function EstablecimientoReservasPage() {
   });
 
   const [filtroNombre, setFiltroNombre] = useState("");
-  const [filtroFecha, setFiltroFecha] = useState(formatearFecha(new Date()));
+  const [filtroFecha, setFiltroFecha] = useState(formatFecha(new Date()));
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
@@ -101,7 +101,7 @@ export default function EstablecimientoReservasPage() {
       .includes(filtroNombre.toLowerCase());
     const fechaCoincide =
       filtroFecha === "" ||
-      formatearISOFecha(r.fechaReservada) === formatearISOFecha(filtroFecha);
+      formatISOFecha(r.fechaReservada) === formatISOFecha(filtroFecha);
 
     var estadoCoincide = false;
     if (filtroEstado === estado && estado === "Pagado") {
@@ -142,7 +142,7 @@ export default function EstablecimientoReservasPage() {
             type="date"
             placeholder="Fecha"
             value={filtroFecha}
-            defaultValue={formatearFecha(new Date())}
+            defaultValue={formatFecha(new Date())}
             onChange={(e) => setFiltroFecha(e.target.value)}
           />
           <FormLabel>Fecha</FormLabel>
@@ -265,9 +265,7 @@ export default function EstablecimientoReservasPage() {
               return (
                 <Tr key={r.id}>
                   <Td textAlign="center">{r.disponibilidad.cancha?.nombre}</Td>
-                  <Td textAlign="center">
-                    {formatearISOFecha(r.fechaReservada)}
-                  </Td>
+                  <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
                   <Td textAlign="center">
                     {r.jugador.nombre} {r.jugador.apellido}
                   </Td>

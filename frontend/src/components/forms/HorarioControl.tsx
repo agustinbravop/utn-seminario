@@ -20,7 +20,7 @@ interface HorarioControlProps extends SelectControlProps {
 export default function HorarioControl(props: HorarioControlProps) {
   const { name, control, horas = HORAS, minutos = MINUTOS, ...rest } = props;
   const {
-    field: { onChange, value, ...restField },
+    field: { onChange, value, onBlur },
   } = useController({ name, control });
   const [hora, setHora] = useState(value?.split(":")[0] ?? "hh");
   const [minuto, setMinuto] = useState(value?.split(":")[1] ?? "mm");
@@ -35,7 +35,7 @@ export default function HorarioControl(props: HorarioControlProps) {
   };
 
   return (
-    <BaseFormControl control={control} {...rest} {...restField}>
+    <BaseFormControl control={control} {...rest} onBlur={onBlur} name={name}>
       <HStack>
         <Select
           maxW="max-content"
