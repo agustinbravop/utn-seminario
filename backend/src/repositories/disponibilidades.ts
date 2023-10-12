@@ -2,6 +2,7 @@ import { DIAS, Dia, Disponibilidad } from "../models/disponibilidad.js";
 import { BuscarDisponibilidadesQuery } from "../services/disponibilidades.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, dia, disciplina, disponibilidad } from "@prisma/client";
+import { getDiaDeSemana } from "../utils/dates.js";
 
 export interface DisponibilidadRepository {
   getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
@@ -77,9 +78,11 @@ export class PrismaDisponibilidadRepository
             ? {
                 // Solo trae disponibilidades no reservadas en la `fechaDisponible`.
                 reservas: {
-                  none: {
-                    fechaReservada: filtros.fechaDisponible,
-                  },
+                  none: { fechaReservada: filtros.fechaDisponible },
+                },
+                // Solo trae disponibilidades válidas para el día de `fechaDisponible`.
+                dias: {
+                  some: { dia: getDiaDeSemana(filtros.fechaDisponible) },
                 },
               }
             : {}),
