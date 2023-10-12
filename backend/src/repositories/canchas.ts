@@ -1,9 +1,5 @@
 import { Cancha } from "../models/cancha.js";
-import {
-  BadRequestError,
-  InternalServerError,
-  NotFoundError,
-} from "../utils/apierrors.js";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import {
   PrismaClient,
   cancha,
@@ -98,8 +94,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
 
   async crear(cancha: Cancha) {
     try {
-      validarDisponibilidades(cancha);
-      const { id } = await this.prisma.cancha.create({
+      const dbCancha = await this.prisma.cancha.create({
         data: {
           nombre: cancha.nombre,
           descripcion: cancha.descripcion,
@@ -111,14 +106,7 @@ export class PrismaCanchaRepository implements CanchaRepository {
         include: this.include,
       });
 
-      // Creo las disponibilidades por separado, por limitaciones de Prisma
-      await Promise.all(
-        cancha.disponibilidades.map(async (disp) => {
-          await this.dispRepository.crear(disp);
-        })
-      );
-
-      return await this.getByID(id);
+      return toCancha(dbCancha);
     } catch {
       throw new InternalServerError(
         "Error interno al intentar cargar la cancha"
@@ -187,60 +175,6 @@ function toCancha(cancha: canchaDB): Cancha {
     ],
     disponibilidades: cancha.disponibilidades.map((d) => toDisp(d)),
   };
-}
-
-function validarDisponibilidades(cancha: Cancha): void {
-  const disp = cancha.disponibilidades.filter(
-    (disp) => Number(disp.horaFin) <= Number(disp.horaInicio)
-  );
-  //Valida que la hora de finalizacion no sea menor que la hora de inicio
-  if (disp.length >= 1) {
-    throw new BadRequestError(
-      "La hora de finalización no puede ser menor que la hora de inicio."
-    );
-  }
-
-  //Valida que el precio de la seña no supere el precio de la reserva
-  cancha.disponibilidades.filter((elemento) => {
-    if (
-      elemento.precioSenia !== undefined &&
-      Number(elemento.precioSenia) > Number(elemento.precioReserva)
-    ) {
-      throw new BadRequestError(
-        "El valor de la seña no puede ser mayor que el precio de la reserva."
-      );
-    }
-  });
-
-  var dict = {};
-  var Lista = new Array();
-
-  cancha.disponibilidades.map((elemento) => {
-    elemento.dias.map((dia) => {
-      dict = {
-        dia: dia,
-        horaInicio: elemento.horaInicio,
-        horaFinal: elemento.horaFin,
-      };
-
-      Lista.push(dict);
-    });
-  });
-  //Verifica que dos o mas disponibilidades no esten solapadas en los horarios
-  for (var i = 0; i < Lista.length; i++) {
-    for (var j = i + 1; j < Lista.length; j++) {
-      if (Lista[i].dia == Lista[j].dia) {
-        if (
-          Lista[j].horaI >= Lista[i].horaI &&
-          Lista[j].horaI < Lista[i].horaF
-        ) {
-          throw new BadRequestError(
-            "Error en el registro de disponibilidades. Intente de nuevo"
-          );
-        }
-      }
-    }
-  }
 }
 
 async function awaitQuery(
