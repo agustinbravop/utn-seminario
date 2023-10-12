@@ -172,7 +172,8 @@ export function toDisp(disp: disponibilidadDB): Disponibilidad {
   return {
     ...disp,
     disciplina: disp.disciplina.disciplina,
-    precioSenia: disp.precioSenia ?? undefined,
+    precioReserva: disp.precioReserva.toNumber(),
+    precioSenia: disp.precioSenia?.toNumber() ?? undefined,
     dias: disp.dias.map((dia) => dia.dia) as Dia[],
   };
 }

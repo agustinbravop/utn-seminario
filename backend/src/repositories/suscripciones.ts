@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, suscripcion } from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Suscripcion } from "../models/suscripcion.js";
 
@@ -22,7 +22,7 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
         },
       });
       if (suscripcion) {
-        return suscripcion;
+        return toSuscripcion(suscripcion);
       }
     } catch (e) {
       throw new InternalServerError("Error al buscar la suscripcion");
@@ -33,9 +33,15 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
   async getAllSuscripciones() {
     try {
       const suscripciones = await this.prisma.suscripcion.findMany();
-      return suscripciones;
+      return suscripciones.map((s) => toSuscripcion(s));
     } catch (e) {
       throw new InternalServerError("No se pudo obtener las suscripciones");
     }
   }
+}
+
+export type suscripcionDB = suscripcion;
+
+export function toSuscripcion(suscripcion: suscripcionDB): Suscripcion {
+  return { ...suscripcion, costoMensual: suscripcion.costoMensual.toNumber() };
 }

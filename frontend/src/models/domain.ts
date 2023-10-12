@@ -95,10 +95,10 @@ export type Reserva = {
   fechaCreada: string;
   precio: number;
   senia?: number;
-  idPagoReserva: number;
-  pagoReserva: Pago;
-  idPagoSenia: number;
-  pagoSenia: Pago;
+  idPagoReserva?: number;
+  pagoReserva?: Pago;
+  idPagoSenia?: number;
+  pagoSenia?: Pago;
   jugador: Jugador;
   disponibilidad: Disponibilidad & {
     cancha: Cancha & { establecimiento: Establecimiento };

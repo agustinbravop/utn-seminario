@@ -50,7 +50,7 @@ export default function RegisterPage() {
     methods.resetField("localidad");
   }, [provincia, methods]);
 
-  const { mutate, isLoading, isError } = useRegistrarJugador({
+  const { mutate, isLoading, isError, error } = useRegistrarJugador({
     onSuccess: () => {
       toast({
         title: "Cuenta registrada correctamente.",
@@ -59,9 +59,9 @@ export default function RegisterPage() {
       });
       navigate("/login");
     },
-    onError: () => {
+    onError: (err) => {
       toast({
-        title: "Error al registrar su cuenta.",
+        title: err.conflictMsg("Error al registrarse. Intente de nuevo"),
         description: `Intente de nuevo.`,
         status: "error",
       });
@@ -143,7 +143,7 @@ export default function RegisterPage() {
             <Heading size="md">Preferencias</Heading>
             <Text alignSelf="start">
               Estos datos opcionales nos facilitan mostrarte las canchas que más
-              te puedan interesar.
+              te podrían interesar.
             </Text>
           </Box>
           <HStack>
@@ -186,7 +186,7 @@ export default function RegisterPage() {
           <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
           {isError && (
             <Alert status="error" margin="20px">
-              Error al intentar registrarse. Intente de nuevo.
+              {error.conflictMsg("Error al registrar la cuenta.")}
             </Alert>
           )}
           <Text>

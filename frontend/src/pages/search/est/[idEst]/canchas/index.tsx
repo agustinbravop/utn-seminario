@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { Box, HStack, Heading } from "@chakra-ui/react";
 import { useEstablecimientoByID } from "@/utils/api";
 import { useCanchasByEstablecimientoID } from "@/utils/api";
-import { CanchaJugador } from "@/components/display";
+import { CanchaCardJugador } from "@/components/display";
 import { useLocation } from "react-router";
 import { formatFecha } from "@/utils/dates";
 
@@ -25,7 +25,7 @@ export default function VistaJugador() {
         <Heading>Canchas</Heading>
         <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
           {canchas.data.map((c, index) => (
-            <CanchaJugador key={index} cancha={c} date={date} />
+            <CanchaCardJugador key={index} cancha={c} date={date} />
           ))}
         </HStack>
       </Box>

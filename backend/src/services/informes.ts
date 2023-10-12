@@ -58,12 +58,12 @@ export class InformeServiceImpl implements InformeService {
       });
 
       const potencial = reservas.reduce((acum, r) => {
-        return acum + r.precio.toNumber();
+        return acum + r.precio;
       }, 0);
 
       const total = reservas.reduce((acum, r) => {
-        const senia = r.pagoSenia?.monto.toNumber() ?? 0;
-        const monto = r.pagoReserva?.monto.toNumber() ?? 0;
+        const senia = r.pagoSenia?.monto ?? 0;
+        const monto = r.pagoReserva?.monto ?? 0;
         return acum + senia + monto;
       }, 0);
 

@@ -76,7 +76,7 @@ export class PrismaPagoRepository implements PagoRepository {
           },
         },
       });
-      return pagoDB;
+      return toPago(pagoDB);
     } catch {
       throw new InternalServerError("Error al crear el pago");
     }
@@ -85,8 +85,8 @@ export class PrismaPagoRepository implements PagoRepository {
 
 type PagoDB = pago;
 
-function toPago(pago: PagoDB): Pago {
-  return { ...pago };
+export function toPago(pago: PagoDB): Pago {
+  return { ...pago, monto: pago.monto.toNumber() };
 }
 
 async function awaitQuery(

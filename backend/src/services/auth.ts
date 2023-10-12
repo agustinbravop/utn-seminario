@@ -183,6 +183,13 @@ export class AuthServiceImpl implements AuthService {
   private async validarUnicidad(correo: string, usuario: string) {
     try {
       await this.repo.getUsuarioYClave(correo);
+    } catch (e) {
+      if (!(e instanceof NotFoundError)) {
+        // Hubo otro tipo de error.
+        throw e;
+      }
+    }
+    try {
       await this.repo.getUsuarioYClave(usuario);
     } catch (e) {
       if (e instanceof NotFoundError) {

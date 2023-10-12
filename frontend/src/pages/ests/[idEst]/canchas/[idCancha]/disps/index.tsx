@@ -9,7 +9,6 @@ import {
   TableContainer,
   chakra,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 import FormDisp from "./_FormDisp";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
@@ -45,7 +44,6 @@ function calcularMinutosReserva(disp: Disponibilidad) {
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
-  const { data } = useCanchaByID(Number(idEst), Number(idCancha));
   const { data: disponibilidades, isLoading } = useDisponibilidadesByCanchaID(
     Number(idEst),
     Number(idCancha)
@@ -102,7 +100,7 @@ export default function CanchaInfoPage() {
       if (!toast.isActive("idSuccess")) {
         toast({
           id: "idSuccess",
-          title: `Disponibilidad de ${disp.horaInicio} a ${disp.horaFin} creada.`,
+          title: `Disponibilidades de ${disp.horaInicio} a ${disp.horaFin} creada.`,
           description: "Se registró exitosamente.",
           status: "success",
         });
@@ -124,20 +122,20 @@ export default function CanchaInfoPage() {
     onSuccess: () => {
       toast({
         title: "Disponibilidad modificada.",
-        description: `El cambio se guardó exitosamente.`,
+        description: "El cambio se guardó exitosamente.",
         status: "success",
       });
     },
     onError: (e) => {
       toast({
         title: e.conflictMsg("Error al modificar la disponibilidad."),
-        description: `Intente de nuevo.`,
+        description: "Intente de nuevo.",
         status: "error",
       });
     },
   });
 
-  if (!data || isLoading) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 

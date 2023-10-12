@@ -78,7 +78,7 @@ export default function SubscribePage() {
     },
   });
 
-  const { mutate, isLoading, isError } = useRegistrarAdmin({
+  const { mutate, isLoading, isError, error } = useRegistrarAdmin({
     onSuccess: () => {
       toast({
         title: "Cuenta registrada correctamente.",
@@ -87,9 +87,9 @@ export default function SubscribePage() {
       });
       navigate("/login");
     },
-    onError: () => {
+    onError: (err) => {
       toast({
-        title: "Error al registrar su cuenta.",
+        title: err.conflictMsg("Error al registrar la cuenta."),
         description: `Intente de nuevo.`,
         status: "error",
       });
@@ -97,80 +97,78 @@ export default function SubscribePage() {
   });
 
   return (
-    <>
-      <Box m="50px">
-        <FormProvider {...methods}>
-          <Heading size="md">Tarjeta de crédito</Heading>
-          <Text>
-            Se le facturará una cuota cada 30 días, desde el momento en el que
-            se registra su cuenta. Se puede dar de baja en cualquier momento.
-          </Text>
-          <PaymentForm />
+    <Box m="50px">
+      <FormProvider {...methods}>
+        <Heading size="md">Tarjeta de crédito</Heading>
+        <Text>
+          Se le facturará una cuota cada 30 días, desde el momento en el que se
+          registra su cuenta. Se puede dar de baja en cualquier momento.
+        </Text>
+        <PaymentForm />
 
-          <Heading size="md">Cuenta</Heading>
-          <Text> Ingrese sus datos. Los usará para iniciar sesión.</Text>
+        <Heading size="md">Cuenta</Heading>
+        <Text> Ingrese sus datos. Los usará para iniciar sesión.</Text>
 
-          <VStack
-            as="form"
-            onSubmit={methods.handleSubmit((values) => mutate(values))}
-            spacing="4"
-            width="400px"
-            justifyContent="center"
-            margin="auto"
-            my="20px"
-          >
-            <HStack>
-              <InputControl
-                label="Nombre"
-                placeholder="Nombre"
-                name="nombre"
-                isRequired
-              />
-              <InputControl
-                label="Apellido"
-                placeholder="Apellido"
-                name="apellido"
-                isRequired
-              />
-            </HStack>
-            <HStack>
-              <InputControl
-                label="Nombre de usuario"
-                placeholder="usuario"
-                name="usuario"
-                isRequired
-              />
-              <InputControl
-                label="Teléfono"
-                placeholder="..."
-                name="telefono"
-                type="tel"
-                isRequired
-              />
-            </HStack>
+        <VStack
+          as="form"
+          onSubmit={methods.handleSubmit((values) => mutate(values))}
+          spacing="4"
+          width="400px"
+          justifyContent="center"
+          margin="auto"
+          my="20px"
+        >
+          <HStack>
             <InputControl
-              label="Correo electrónico"
-              placeholder="abc@ejemplo.com"
-              name="correo"
-              type="email"
+              label="Nombre"
+              placeholder="Nombre"
+              name="nombre"
               isRequired
             />
-            <PasswordControl
-              label="Contraseña"
-              placeholder=" "
-              name="clave"
+            <InputControl
+              label="Apellido"
+              placeholder="Apellido"
+              name="apellido"
               isRequired
             />
+          </HStack>
+          <HStack>
+            <InputControl
+              label="Nombre de usuario"
+              placeholder="usuario"
+              name="usuario"
+              isRequired
+            />
+            <InputControl
+              label="Teléfono"
+              placeholder="..."
+              name="telefono"
+              type="tel"
+              isRequired
+            />
+          </HStack>
+          <InputControl
+            label="Correo electrónico"
+            placeholder="abc@ejemplo.com"
+            name="correo"
+            type="email"
+            isRequired
+          />
+          <PasswordControl
+            label="Contraseña"
+            placeholder=" "
+            name="clave"
+            isRequired
+          />
 
-            <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
-            {isError && (
-              <Alert status="error">
-                Error al intentar registrar su cuenta. Intente de nuevo
-              </Alert>
-            )}
-          </VStack>
-        </FormProvider>
-      </Box>
-    </>
+          <SubmitButton isLoading={isLoading}>Registrarse</SubmitButton>
+          {isError && (
+            <Alert status="error">
+              {error.conflictMsg("Error al registrar la cuenta.")}
+            </Alert>
+          )}
+        </VStack>
+      </FormProvider>
+    </Box>
   );
 }

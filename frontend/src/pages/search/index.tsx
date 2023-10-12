@@ -1,4 +1,4 @@
-import { EstablecimientoJugador } from "@/components/display";
+import { EstablecimientoCardJugador } from "@/components/display";
 import {
   BusquedaEstablecimientos,
   useBuscarEstablecimientos,
@@ -130,7 +130,7 @@ export default function BuscarEstablecimientosPage() {
       <HStack flexWrap="wrap" justifyContent="center" pt="20px" w="330">
         {ests.length > 0 ? (
           ests.map((est) => (
-            <EstablecimientoJugador
+            <EstablecimientoCardJugador
               key={est.id}
               establecimiento={est}
               date={values.fecha ?? formatFecha(new Date())}
