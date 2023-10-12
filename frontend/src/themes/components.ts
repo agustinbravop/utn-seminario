@@ -5,6 +5,7 @@ export const floatingLabelStyles = {
   position: "absolute",
   backgroundColor: "white",
   pointerEvents: "none",
+  fontWeight: "normal",
   mx: 3,
   px: 1,
   my: 2,
@@ -13,7 +14,6 @@ export const floatingLabelStyles = {
 
 export const floatingLabelActiveStyles = {
   transform: "scale(0.85) translateY(-24px)",
-  fontWeight: "normal",
   ...floatingLabelStyles,
 };
 
@@ -39,12 +39,10 @@ const components = {
     variants: {
       floating: {
         container: {
-          _focusWithin: {
-            label: floatingLabelActiveStyles,
-          },
+          label: floatingLabelStyles,
+          _focusWithin: { label: floatingLabelActiveStyles },
           "input:not(:placeholder-shown) + label, .chakra-select__wrapper + label, textarea:not(:placeholder-shown) ~ label":
             floatingLabelActiveStyles,
-          label: floatingLabelStyles,
         },
       },
     },

@@ -26,7 +26,7 @@ export default function LoginPage() {
     defaultValues: { correoOUsuario: "", clave: "" },
   });
 
-  const { mutate, isLoading, isError } = useLogin({
+  const { mutate, isLoading, isError, error } = useLogin({
     onSuccess: (user) => {
       if (user.admin) {
         navigate(`/admin/${user.admin.id}`);
@@ -73,8 +73,12 @@ export default function LoginPage() {
           />
           <SubmitButton isLoading={isLoading}>Iniciar Sesión</SubmitButton>
           {isError && (
-            <Alert status="error" margin="20px">
-              Error al intentar iniciar sesión. Contraseña o usuario incorrecto.
+            <Alert status="error">
+              {error.status === 401
+                ? "La contraseña ingresada es incorrecta."
+                : error.status === 404
+                ? "Ese correo o usuario no está registrado."
+                : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
             </Alert>
           )}
           <Text>
