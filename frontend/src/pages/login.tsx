@@ -31,7 +31,7 @@ export default function LoginPage() {
       if (user.admin) {
         navigate(`/admin/${user.admin.id}`);
       } else {
-        navigate(`/jugador/${user.jugador.id}`);
+        navigate(`/search`);
       }
     },
   });

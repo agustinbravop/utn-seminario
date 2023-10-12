@@ -246,6 +246,7 @@ export class PrismaEstablecimientoRepository
               : {}),
           },
         ],
+        habilitado: filtros.habilitado,
         eliminado: false,
       },
       include: {

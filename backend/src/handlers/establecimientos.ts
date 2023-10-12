@@ -28,6 +28,7 @@ export const buscarEstablecimientoQuerySchema = z.object({
   localidad: z.string().optional(),
   disciplina: z.string().optional(),
   fecha: z.coerce.date().optional(),
+  habilitado: z.coerce.boolean().optional().default(true).catch(true),
 });
 
 export class EstablecimientoHandler {
