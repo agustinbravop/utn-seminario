@@ -1,5 +1,4 @@
 import { Cancha } from "../models/cancha.js";
-import { Dia } from "../models/disponibilidad.js";
 import {
   BadRequestError,
   InternalServerError,
@@ -12,7 +11,7 @@ import {
   disciplina,
   disponibilidad,
 } from "@prisma/client";
-import { DisponibilidadRepository } from "./disponibilidades.js";
+import { DisponibilidadRepository, toDisp } from "./disponibilidades.js";
 import { Establecimiento } from "../models/establecimiento.js";
 import { toEst } from "./establecimientos.js";
 
@@ -186,12 +185,7 @@ function toCancha(cancha: canchaDB): Cancha {
     disciplinas: [
       ...new Set(cancha.disponibilidades.map((d) => d.disciplina.disciplina)),
     ],
-    disponibilidades: cancha.disponibilidades.map((d) => ({
-      ...d,
-      disciplina: d.disciplina.disciplina,
-      precioSenia: d.precioSenia ?? undefined,
-      dias: d.dias.map((dia) => dia.dia) as Dia[],
-    })),
+    disponibilidades: cancha.disponibilidades.map((d) => toDisp(d)),
   };
 }
 
@@ -202,18 +196,18 @@ function validarDisponibilidades(cancha: Cancha): void {
   //Valida que la hora de finalizacion no sea menor que la hora de inicio
   if (disp.length >= 1) {
     throw new BadRequestError(
-      "La hora de finalizacion no puede ser menor que la hora de inicio. Intente de nuevo"
+      "La hora de finalización no puede ser menor que la hora de inicio."
     );
   }
 
   //Valida que el precio de la seña no supere el precio de la reserva
   cancha.disponibilidades.filter((elemento) => {
     if (
-      elemento.precioSenia?.valueOf() !== "undefined" &&
+      elemento.precioSenia !== undefined &&
       Number(elemento.precioSenia) > Number(elemento.precioReserva)
     ) {
       throw new BadRequestError(
-        "Error el precio de la seña no puede ser mayor que el precio de la reserva. Intenta de nuevo"
+        "El valor de la seña no puede ser mayor que el precio de la reserva."
       );
     }
   });

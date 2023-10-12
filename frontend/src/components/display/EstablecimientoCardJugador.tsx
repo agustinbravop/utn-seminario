@@ -26,7 +26,6 @@ export default function EstablecimientoCardJugador({
   const { data: disps } = useBuscarDisponibilidades({
     idEst: establecimiento.id,
   });
-  console.log(disps);
 
   return (
     <Link to={`est/${establecimiento.id}?date=${date}`}>

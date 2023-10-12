@@ -13,6 +13,7 @@ import {
 import { Rol, Usuario } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
 import { toJugador } from "./jugador.js";
+import { toSuscripcion } from "./suscripciones.js";
 
 export type AdministradorConClave = {
   admin: Administrador;
@@ -60,7 +61,7 @@ export class PrismaAuthRepository implements AuthRepository {
 
   async getJugadorYClave(correoOUsuario: string) {
     try {
-      console.log(correoOUsuario)
+      console.log(correoOUsuario);
       const j = await this.prisma.jugador.findFirstOrThrow({
         where: {
           OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
@@ -243,5 +244,5 @@ export function toAdmin({
   idTarjeta,
   ...admin
 }: administradorDB): Administrador {
-  return admin;
+  return { ...admin, suscripcion: toSuscripcion(admin.suscripcion) };
 }
