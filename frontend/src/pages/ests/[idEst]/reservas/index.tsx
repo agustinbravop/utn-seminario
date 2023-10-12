@@ -12,7 +12,6 @@ import {
   Input,
   FormControl,
   FormLabel,
-  Box,
   Select,
 } from "@chakra-ui/react";
 import {
@@ -25,8 +24,8 @@ import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
 import { formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
-import { CircleIcon } from "@/components/media-and-icons";
 import { floatingLabelActiveStyles } from "@/themes/components";
+import { ReservaEstado } from "@/components/display";
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -92,10 +91,10 @@ export default function EstablecimientoReservasPage() {
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
     const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
     const estado = r.idPagoReserva
-      ? "Pagado"
+      ? "Pagada"
       : r.idPagoSenia
-      ? "Señado"
-      : "No Pagado";
+      ? "Señada"
+      : "No pagada";
 
     const nombreIncluido = nombreJugador
       .toLowerCase()
@@ -105,11 +104,11 @@ export default function EstablecimientoReservasPage() {
       formatISOFecha(r.fechaReservada) === formatISOFecha(filtroFecha);
 
     var estadoCoincide = false;
-    if (filtroEstado === estado && estado === "Pagado") {
+    if (filtroEstado === estado && estado === "Pagada") {
       estadoCoincide = true;
-    } else if (filtroEstado === estado && filtroEstado === "No Pagado") {
+    } else if (filtroEstado === estado && filtroEstado === "No pagada") {
       estadoCoincide = true;
-    } else if (filtroEstado === estado && filtroEstado === "Señado") {
+    } else if (filtroEstado === estado && filtroEstado === "Señada") {
       estadoCoincide = true;
     } else if (filtroEstado === "") {
       return nombreIncluido && fechaCoincide;
@@ -154,7 +153,7 @@ export default function EstablecimientoReservasPage() {
             placeholder="Todos"
             onChange={(e) => setFiltroEstado(e.target.value)}
           >
-            {["Pagado", "Señado", "No Pagado"].map((pago, i) => (
+            {["Pagada", "Señada", "No Pagada"].map((pago, i) => (
               <option key={i} value={pago}>
                 {pago}
               </option>
@@ -236,33 +235,6 @@ export default function EstablecimientoReservasPage() {
           </Thead>
           <Tbody>
             {reservasFiltradas.map((r) => {
-              let estado = (
-                <HStack width="100%" display="flex" justifyContent="center">
-                  <Box ml="10%" width="40%">
-                    No Pagado
-                  </Box>
-                  <CircleIcon color="Red" width="40%" />
-                </HStack>
-              );
-              if (r.idPagoReserva) {
-                estado = (
-                  <HStack width="100%" display="flex" justifyContent="center">
-                    <Box ml="10%" width="40%">
-                      Pagado
-                    </Box>
-                    <CircleIcon color="Green" width="40%" />
-                  </HStack>
-                );
-              } else if (r.idPagoSenia) {
-                estado = (
-                  <HStack width="100%" display="flex" justifyContent="center">
-                    <Box ml="10%" width="40%">
-                      Señado
-                    </Box>
-                    <CircleIcon color="orange" width="40%" />
-                  </HStack>
-                );
-              }
               return (
                 <Tr key={r.id}>
                   <Td textAlign="center">{r.disponibilidad.cancha?.nombre}</Td>
@@ -270,7 +242,9 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">
                     {r.jugador.nombre} {r.jugador.apellido}
                   </Td>
-                  <Td textAlign="center">{estado}</Td>
+                  <Td textAlign="center">
+                    <ReservaEstado res={r} />
+                  </Td>
                   <Td textAlign="center">
                     <PlusSquareIcon
                       w={5}

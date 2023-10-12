@@ -9,6 +9,5 @@ import { Reserva } from "@/models";
 export function pagoRestante(res: Reserva): number {
   const seniaPagada = res.pagoSenia?.monto ?? 0;
   const precioPagado = res.pagoReserva?.monto ?? 0;
-  console.log(seniaPagada, precioPagado);
   return res.precio - precioPagado - seniaPagada;
 }

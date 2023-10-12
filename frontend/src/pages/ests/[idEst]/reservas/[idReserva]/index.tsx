@@ -21,9 +21,9 @@ import {
 import { ConfirmSubmitButton } from "@/components/forms";
 import { formatISOFecha } from "@/utils/dates";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
-import { CircleIcon } from "@/components/media-and-icons";
 import { useNavigate } from "react-router";
 import { pagoRestante } from "@/utils/reservas";
+import ReservaEstado from "@/components/display/ReservaEstado";
 
 export default function ReservaInfoPage() {
   const { idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -69,25 +69,6 @@ export default function ReservaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  let estado = (
-    <Text>
-      No pagado <CircleIcon color="Red" />
-    </Text>
-  );
-  if (reserva.idPagoReserva) {
-    estado = (
-      <Text>
-        Pagado <CircleIcon color="Green" />
-      </Text>
-    );
-  } else if (reserva.idPagoSenia) {
-    estado = (
-      <Text>
-        Señado <CircleIcon color="orange" />
-      </Text>
-    );
-  }
-
   let precioAPagar = reserva.precio;
   if (reserva.senia && reserva.pagoSenia) {
     precioAPagar = reserva.precio - reserva.senia;
@@ -118,7 +99,9 @@ export default function ReservaInfoPage() {
               </GridItem>
               <GridItem>
                 <Heading size="xs">Estado</Heading>
-                <Text fontSize="sm"> {estado} </Text>
+                <Text fontSize="sm">
+                  <ReservaEstado res={reserva} />
+                </Text>
               </GridItem>
               <GridItem>
                 <Heading size="xs">Disciplina</Heading>
