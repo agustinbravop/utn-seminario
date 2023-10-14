@@ -10,17 +10,13 @@ export default function JugadorReservasPage() {
   console.log(reservas)
   const [estado, setEstado] = useState(true);
   
-  function isFechaFutura(fecha: string) {
+  function isFechaFutura(fecha: string, horaFin: string) {
     const reservaDate = new Date(fecha);
+    const [hora, minutos] = horaFin.split(":");
+    reservaDate.setHours(Number(hora), Number(minutos), 0, 0)
     const currentDate = new Date();
     return (
-      reservaDate.getUTCFullYear() > currentDate.getUTCFullYear() ||
-      (reservaDate.getUTCFullYear() === currentDate.getUTCFullYear() &&
-        reservaDate.getUTCMonth() > currentDate.getUTCMonth()) ||
-      (reservaDate.getUTCFullYear() === currentDate.getUTCFullYear() &&
-        reservaDate.getUTCMonth() === currentDate.getUTCMonth() &&
-        reservaDate.getUTCDate() >= currentDate.getUTCDate())
-    );
+      reservaDate >= currentDate)
   }
 
   function handleSwitchChange() {
@@ -37,7 +33,7 @@ export default function JugadorReservasPage() {
       </Box>
       <HStack wrap="wrap" align="center" justify="center">
       {reservas
-      .filter((reserva) => !estado || isFechaFutura(reserva.fechaReservada) )
+      .filter((reserva) => !estado || isFechaFutura(reserva.fechaReservada, reserva.disponibilidad.horaFin) )
       .map((reserva) => (
         <ReservaCard key={reserva.id} reserva={reserva} />
   ))}

@@ -131,7 +131,7 @@ export default function EstablecimientoReservasPage() {
         <FormControl variant="floating" width="auto">
           <Input
             type="text"
-            placeholder="Jugador"
+            placeholder="Nombre"
             value={filtroNombre}
             onChange={(e) => setFiltroNombre(e.target.value)}
           />

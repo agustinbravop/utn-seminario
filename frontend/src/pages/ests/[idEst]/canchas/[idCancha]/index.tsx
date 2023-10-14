@@ -111,6 +111,7 @@ export default function CanchaInfoPage() {
                 <Switch
                   isChecked={cancha.habilitada}
                   onChange={handleSwitchChange}
+                  colorScheme="blackAlpha"
                 />
               </HStack>
               <Text fontSize="sm">
