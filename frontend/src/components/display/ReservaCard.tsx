@@ -106,7 +106,7 @@ function ReservaCardTags({ reserva }: { reserva: Reserva }) {
       mb={3}
     >
       <Tag size="sm" variant="subtle" colorScheme="blue">
-        <TagLeftIcon as={LuClock5} boxSize={4} />
+        <TagLeftIcon as={LuClock5} boxSize={3} />
         <TagLabel>
           {reserva.disponibilidad.horaInicio}
           {"- "}
@@ -114,7 +114,7 @@ function ReservaCardTags({ reserva }: { reserva: Reserva }) {
         </TagLabel>
       </Tag>
       <Tag size="sm" variant="subtle" colorScheme="gray">
-        <TagLeftIcon as={CalendarIcon} boxSize={4} />
+        <TagLeftIcon as={CalendarIcon} boxSize={3} />
         <TagLabel>{formatISO(reserva.fechaReservada)}</TagLabel>
       </Tag>
       <Tag size="sm" variant="subtle" colorScheme="purple">
