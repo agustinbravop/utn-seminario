@@ -1,8 +1,11 @@
 import { useReservasByJugadorID } from "@/utils/api";
-import { Box, HStack, Heading, Switch } from "@chakra-ui/react";
+import { Box, HStack, Heading, Switch, Text } from "@chakra-ui/react";
 import { useCurrentJugador } from "@/hooks";
 import { ReservaCard } from "@/components/display";
 import { useState } from "react";
+import { horaADecimal } from "@/utils/dates";
+import { Reserva } from "@/models";
+
 
 export default function JugadorReservasPage() {
   const { jugador } = useCurrentJugador();
@@ -23,16 +26,55 @@ export default function JugadorReservasPage() {
     setEstado(!estado)
   }
 
+  const [ordenAscendente, setOrdenAscendente] = useState(true);
+
+  function handleOrdenChange() {
+    setOrdenAscendente(!ordenAscendente)
+  }
+
+
+    function filtrarReservas(res: Reserva[]) {
+      if (ordenAscendente) {
+        return res.sort((a, b) => {
+          const fechaHoraA = new Date(a.fechaReservada);
+          const fechaHoraB = new Date(b.fechaReservada);
+          const horaDecimalA = horaADecimal(a.disponibilidad.horaInicio);
+          const horaDecimalB = horaADecimal(b.disponibilidad.horaInicio);
+          const fechaHoraEnNumeroA = fechaHoraA.getTime() * 10000 + horaDecimalA;
+          const fechaHoraEnNumeroB = fechaHoraB.getTime() * 10000 + horaDecimalB;
+          return fechaHoraEnNumeroA - fechaHoraEnNumeroB;
+        });
+      } else {
+        return res.sort((a, b) => {
+          const fechaHoraA = new Date(a.fechaReservada);
+          const fechaHoraB = new Date(b.fechaReservada);
+    
+          const horaDecimalA = horaADecimal(a.disponibilidad.horaInicio);
+          const horaDecimalB = horaADecimal(b.disponibilidad.horaInicio);
+    
+          const fechaHoraEnNumeroA = fechaHoraA.getTime() * 10000 + horaDecimalA;
+          const fechaHoraEnNumeroB = fechaHoraB.getTime() * 10000 + horaDecimalB;
+    
+          return fechaHoraEnNumeroB - fechaHoraEnNumeroA;
+        });
+      }
+    }
+
+    const reservasFiltradas = filtrarReservas(reservas);
+
   return (
     <>
       <Heading pb="25px" size="lg" textAlign="center">
         Mis Reservas 
       </Heading>
-      <Box mx="10%" mb="17px" justifyContent="center">
-        <Switch isChecked={estado}  onChange={handleSwitchChange} colorScheme="blackAlpha"  > Resevas activas</Switch>
+      <Box mx="10%" mb="17px" justifyContent="center" display="flex" alignItems="flex-end">
+        <Text mr="4px">Reservas Activas</Text>
+         <Switch isChecked={estado}  onChange={handleSwitchChange} colorScheme="blackAlpha"> </Switch>
+         <Text mr="4px">Ordenar</Text>
+         <Switch isChecked={ordenAscendente}  onChange={handleOrdenChange} colorScheme="blackAlpha"> </Switch>
       </Box>
       <HStack wrap="wrap" align="center" justify="center">
-      {reservas
+      {reservasFiltradas
       .filter((reserva) => !estado || isFechaFutura(reserva.fechaReservada, reserva.disponibilidad.horaFin) )
       .map((reserva) => (
         <ReservaCard key={reserva.id} reserva={reserva} />
