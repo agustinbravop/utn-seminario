@@ -18,14 +18,14 @@ export default function FormEliminarDisp({
     onSuccess: () => {
       toast({
         title: "Disponibilidad eliminada.",
-        description: `Disponibilidad eliminada exitosamente.`,
+        description: "Disponibilidad eliminada exitosamente.",
         status: "success",
       });
     },
     onError: () => {
       toast({
-        title: "Error al eliminar la cancha",
-        description: `Intente de nuevo.`,
+        title: "Error al eliminar la disponibilidad",
+        description: "Intente de nuevo.",
         status: "error",
       });
     },

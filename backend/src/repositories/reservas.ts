@@ -3,9 +3,9 @@ import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, jugador, pago, reserva } from "@prisma/client";
 import { disponibilidadDB, toDisp } from "./disponibilidades.js";
 import { BuscarReservaQuery, CrearReserva } from "../services/reservas.js";
-import Decimal from "decimal.js";
+import { toPago } from "./pagos.js";
 
-type CrearReservaParam = CrearReserva & { precio: Decimal; senia?: Decimal };
+type CrearReservaParam = CrearReserva & { precio: number; senia?: number };
 
 export interface ReservaRepository {
   getReservasByEstablecimientoID(idEst: number): Promise<Reserva[]>;
@@ -148,6 +148,10 @@ export class PrismaReservaRepository implements ReservaRepository {
             gte: filtros.fechaCreadaDesde,
             lte: filtros.fechaCreadaHasta,
           },
+          fechaReservada: {
+            gte: filtros.fechaReservadaDesde,
+            lte: filtros.fechaReservadaHasta,
+          },
           disponibilidad: {
             cancha: {
               id: filtros.idCancha,
@@ -219,10 +223,11 @@ function toRes(res: ReservaDB): Reserva {
   return {
     ...res,
     jugador,
-    senia: res.senia ?? undefined,
+    senia: res.senia?.toNumber() ?? undefined,
+    precio: res.precio.toNumber(),
+    pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
+    pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
     disponibilidad: toDisp(res.disponibilidad),
-    pagoReserva: res.pagoReserva ?? undefined,
-    pagoSenia: res.pagoSenia ?? undefined,
   };
 }
 

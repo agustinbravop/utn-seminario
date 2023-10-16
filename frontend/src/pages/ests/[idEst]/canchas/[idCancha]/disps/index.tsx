@@ -9,7 +9,6 @@ import {
   TableContainer,
   chakra,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 import FormDisp from "./_FormDisp";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
@@ -45,7 +44,6 @@ function calcularMinutosReserva(disp: Disponibilidad) {
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
-  const { data } = useCanchaByID(Number(idEst), Number(idCancha));
   const { data: disponibilidades, isLoading } = useDisponibilidadesByCanchaID(
     Number(idEst),
     Number(idCancha)
@@ -54,10 +52,6 @@ export default function CanchaInfoPage() {
   const columnHelper = createColumnHelper<Disponibilidad>();
   //Columnas que se van a poder ordenar
   const columns = [
-    columnHelper.accessor("disciplina", {
-      cell: (info) => info.getValue(),
-      header: "Disciplina",
-    }),
     columnHelper.accessor("horaInicio", {
       cell: (info) => info.getValue(),
       header: "Inicio",
@@ -66,13 +60,21 @@ export default function CanchaInfoPage() {
       cell: (info) => info.getValue(),
       header: "Fin",
     }),
+    columnHelper.accessor("disciplina", {
+      cell: (info) => info.getValue(),
+      header: "Disciplina",
+    }),
     columnHelper.accessor("precioReserva", {
       cell: (info) => "$" + info.getValue(),
       header: "Precio",
     }),
+    columnHelper.accessor("precioSenia", {
+      cell: (info) => (info.getValue() ? "$" + info.getValue() : "-"),
+      header: "Seña",
+    }),
     columnHelper.accessor("dias", {
-      cell: (info) => info.getValue().sort().join(" - "),
-      header: "Dias",
+      cell: (info) => info.getValue().sort().join(", "),
+      header: "Días",
     }),
   ];
 
@@ -80,7 +82,9 @@ export default function CanchaInfoPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     columns: columns,
-    data: disponibilidades,
+    data: disponibilidades.sort(
+      (a, b) => horaADecimal(a.horaInicio) - horaADecimal(b.horaInicio)
+    ),
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -92,19 +96,25 @@ export default function CanchaInfoPage() {
   const toast = useToast();
 
   const { mutate: mutateCrear } = useCrearDisponibilidad({
-    onSuccess: () => {
-      toast({
-        title: "Disponibilidad creada.",
-        description: `Se registró exitosamente.`,
-        status: "success",
-      });
+    onSuccess: (disp) => {
+      if (!toast.isActive("idSuccess")) {
+        toast({
+          id: "idSuccess",
+          title: `Disponibilidades de ${disp.horaInicio} a ${disp.horaFin} creada.`,
+          description: "Se registró exitosamente.",
+          status: "success",
+        });
+      }
     },
-    onError: (e) => {
-      toast({
-        title: e.conflictMsg("Error al crear la disponibilidad."),
-        description: `Intente de nuevo.`,
-        status: "error",
-      });
+    onError: (e, vars) => {
+      if (!toast.isActive("idError")) {
+        toast({
+          id: "idError",
+          title: e.conflictMsg("Error al intentar crear."),
+          description: `No se pudo crear la disponibilidad de ${vars.horaInicio} a ${vars.horaFin}.`,
+          status: "error",
+        });
+      }
     },
   });
 
@@ -112,38 +122,38 @@ export default function CanchaInfoPage() {
     onSuccess: () => {
       toast({
         title: "Disponibilidad modificada.",
-        description: `El cambio se guardó exitosamente.`,
+        description: "El cambio se guardó exitosamente.",
         status: "success",
       });
     },
     onError: (e) => {
       toast({
         title: e.conflictMsg("Error al modificar la disponibilidad."),
-        description: `Intente de nuevo.`,
+        description: "Intente de nuevo.",
         status: "error",
       });
     },
   });
 
-  if (!data || isLoading) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
   const handleCrearDisponibilidad = (disp: DisponibilidadForm) => {
     const fin = horaADecimal(disp.horaFin);
     const horasReserva = disp.minutosReserva / 60;
-    const dispInicio = horaADecimal(disp.horaInicio);
+    const inicio = horaADecimal(disp.horaInicio);
 
-    let dispFin = dispInicio + horasReserva;
-    while (dispFin <= fin) {
+    let dispInicio = inicio;
+    while (dispInicio + horasReserva <= fin) {
       mutateCrear({
         ...disp,
         horaInicio: decimalAHora(dispInicio),
-        horaFin: decimalAHora(dispFin),
+        horaFin: decimalAHora(dispInicio + horasReserva),
         idEst: Number(idEst),
         idCancha: Number(idCancha),
       });
-      dispFin += horasReserva;
+      dispInicio += horasReserva;
     }
   };
 

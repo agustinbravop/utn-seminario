@@ -1,4 +1,4 @@
-import { EstablecimientoJugador } from "@/components/display";
+import { EstablecimientoCardJugador } from "@/components/display";
 import {
   BusquedaEstablecimientos,
   useBuscarEstablecimientos,
@@ -11,7 +11,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { formatearFecha } from "@/utils/dates";
+import { formatFecha } from "@/utils/dates";
 import { useYupForm } from "@/hooks";
 import { useWatch } from "react-hook-form";
 import { DISCIPLINAS, QuestionImage } from "@/utils/constants";
@@ -130,10 +130,10 @@ export default function BuscarEstablecimientosPage() {
       <HStack flexWrap="wrap" justifyContent="center" pt="20px" w="330">
         {ests.length > 0 ? (
           ests.map((est) => (
-            <EstablecimientoJugador
+            <EstablecimientoCardJugador
               key={est.id}
               establecimiento={est}
-              date={values.fecha ?? formatearFecha(new Date())}
+              date={values.fecha ?? formatFecha(new Date())}
             />
           ))
         ) : isFetchedAfterMount ? (

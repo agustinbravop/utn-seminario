@@ -158,13 +158,27 @@ export default function FormDisp({
             <HStack py="10px">
               <CheckboxGroupControl name="dias">
                 <HStack>
-                  <Checkbox value="Lunes">Lunes</Checkbox>
-                  <Checkbox value="Martes">Martes</Checkbox>
-                  <Checkbox value="Miércoles">Miércoles</Checkbox>
-                  <Checkbox value="Jueves">Jueves</Checkbox>
-                  <Checkbox value="Viernes">Viernes</Checkbox>
-                  <Checkbox value="Sábado">Sábado</Checkbox>
-                  <Checkbox value="Domingo">Domingo</Checkbox>
+                  <Checkbox id="dias.Lunes" value="Lunes">
+                    Lunes
+                  </Checkbox>
+                  <Checkbox id="dias.Martes" value="Martes">
+                    Martes
+                  </Checkbox>
+                  <Checkbox id="dias.Miércoles" value="Miércoles">
+                    Miércoles
+                  </Checkbox>
+                  <Checkbox id="dias.Jueves" value="Jueves">
+                    Jueves
+                  </Checkbox>
+                  <Checkbox id="dias.Viernes" value="Viernes">
+                    Viernes
+                  </Checkbox>
+                  <Checkbox id="dias.Sábado" value="Sábado">
+                    Sábado
+                  </Checkbox>
+                  <Checkbox id="dias.Domingo" value="Domingo">
+                    Domingo
+                  </Checkbox>
                 </HStack>
               </CheckboxGroupControl>
             </HStack>

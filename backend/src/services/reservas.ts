@@ -19,6 +19,8 @@ export type BuscarReservaQuery = {
   idEst?: number;
   fechaCreadaDesde?: string;
   fechaCreadaHasta?: string;
+  fechaReservadaDesde?: string;
+  fechaReservadaHasta?: string;
 };
 
 export interface ReservaService {

@@ -15,6 +15,7 @@ export type Busqueda = {
   localidad?: string;
   disciplina?: string;
   fecha?: Date;
+  habilitado: boolean;
 };
 
 export interface EstablecimientoService {

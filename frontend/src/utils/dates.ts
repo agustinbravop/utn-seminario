@@ -28,7 +28,7 @@ export function decimalAHora(n: number | undefined) {
 /**
  * Toma un objeto `Date` y devuelve la fecha como un string en formato `aaaa-MM-dd`.
  */
-export function formatearFecha(fecha: Date) {
+export function formatFecha(fecha: Date) {
   // Obtiene el día, el mes y el año de la fecha parseada
   const dia = fecha.getDate().toString().padStart(2, "0");
   const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
@@ -37,18 +37,30 @@ export function formatearFecha(fecha: Date) {
   return `${anio}-${mes}-${dia}`;
 }
 
+/** Convierte una fecha `Date` a otra fecha `Date` en UTC (Universal Coordinated Time).  */
+function convertDateToUTC(date: Date) {
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
+  );
+}
+
 /**
  * Toma un string de una fecha en formato ISO y devuelve solo la fecha (sin la hora) en formato local.
  * Usar esta función para mostrar la fecha al usuario de manera amigable.
  */
-export function formatearISOFecha(iso: string) {
-  return new Date(iso).toLocaleDateString("es-ar");
+export function formatISOFecha(iso: string) {
+  return convertDateToUTC(new Date(iso)).toLocaleDateString("es-ar");
 }
 
 /**
  * Toma un string de una fecha en formato ISO y devuelve la fecha y hora en formato local.
  * Usar esta función para mostrar la fecha al usuario de manera amigable.
  */
-export function formatearISO(iso: string) {
-  return new Date(iso).toLocaleString("es-ar");
+export function formatISO(iso: string) {
+  return convertDateToUTC(new Date(iso)).toLocaleString("es-ar");
 }

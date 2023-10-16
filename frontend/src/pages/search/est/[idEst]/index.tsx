@@ -39,7 +39,8 @@ export default function EstablecimientoJugadorPage() {
           style={{ marginTop: "10px", marginBottom: "1rem" }}
           width="100%"
           display="flex"
-          flexDirection={{ base: "column", md: "row" }} // Cambio de dirección en dispositivos móviles
+          flexDirection={{ base: "column", md: "row" }}
+          // Cambio de dirección en dispositivos móviles
         >
           <CardHeader>
             <Box>

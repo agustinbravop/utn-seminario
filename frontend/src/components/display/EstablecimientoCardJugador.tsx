@@ -12,6 +12,7 @@ import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
+import { useBuscarDisponibilidades } from "@/utils/api";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
@@ -22,6 +23,10 @@ export default function EstablecimientoCardJugador({
   establecimiento,
   date,
 }: EstablecimientoCardProps) {
+  const { data: disps } = useBuscarDisponibilidades({
+    idEst: establecimiento.id,
+  });
+
   return (
     <Link to={`est/${establecimiento.id}?date=${date}`}>
       <Card
@@ -58,7 +63,15 @@ export default function EstablecimientoCardJugador({
             </Text>
             <Text mb="0" fontSize="sm">
               {/* TODO: hacer variable al $1800 */}
-              Desde <strong> $1800 </strong>
+              Desde{" "}
+              <strong>
+                $
+                {disps.reduce(
+                  (acum, disp) =>
+                    disp.precioReserva < acum ? disp.precioReserva : acum,
+                  Number.MAX_VALUE
+                )}
+              </strong>
             </Text>
           </VStack>
         </CardBody>
