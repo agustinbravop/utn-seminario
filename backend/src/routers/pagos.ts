@@ -5,6 +5,7 @@ import {
 } from "../middlewares/validation";
 import { PagoHandler, buscarPagosQuerySchema } from "../handlers/pagos.js";
 
+
 export function pagosRouter(handler: PagoHandler): Router {
   const router = express.Router();
 
@@ -14,6 +15,10 @@ export function pagosRouter(handler: PagoHandler): Router {
     validateQueryParams(buscarPagosQuerySchema),
     handler.buscarPagos()
   );
+
+  router.post("/process_payment", handler.crearPago())
+
+    
 
   return router;
 }
