@@ -2,11 +2,14 @@ import { RequestHandler } from "express";
 import { BuscarPagosQuery, PagoService } from "../services/pagos.js";
 import { z } from "zod";
 import { MercadoPagoConfig, Payment } from "mercadopago";
+import mercadopago from "mercadopago";
+
 const client = new MercadoPagoConfig({
   accessToken:
     "TEST-6924020176251309-101511-a0fb4ec9e56f8f56e00ccb2ca7137a32-1158801954",
 });
 const payments = new Payment(client);
+
 
 export const buscarPagosQuerySchema = z.object({
   idCancha: z.coerce.number().int().optional(),
@@ -44,30 +47,24 @@ export class PagoHandler {
     };
   }
 
+
   crearPago(): RequestHandler {
     return async (req, res) => {
-      console.log(req.body.transaction_amount)
-      payments
-        .create(
-          {
-            transaction_amount: 100,
-            token: req.body.token,
-            description: req.body.description,
-            installments: req.body.installments,
-            payment_method_id: req.body.paymentMethodId,
-            issuer_id: req.body.issuer,
-            payer: {
-              email: req.body.email,
-              identification: {
-                type: req.body.identificationType,
-                number: req.body.number,
-              },
-            },
-            idempotencyKey: "a"
-          },
-        )
-        .then((result) => console.log(result))
-        .catch((error) => console.log(error));
+      console.log(req.body)
+      const paymentData = req.body
+      
+      
+      // Crea el pago
+      payments.create(paymentData)
+        .then(p => {
+          console.log('Pago creado con éxito.');
+          console.log('ID del pago:', p.id);
+          console.log('Redirige al usuario a la siguiente URL:');
+          console.log(p.payer);
+        })
+        .catch(function(error) {
+          console.error('No se pudo crear el pago. Detalles:', error);
+        });
     };
   }
 }
