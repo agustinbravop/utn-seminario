@@ -15,6 +15,8 @@ export interface BusquedaFiltros {
   provincia?: string;
   /** Busca disponibilidades en esa localidad. Requiere un valor en `provincia`. */
   localidad?: string;
+  /** Busca disponibilidades de canchas habilitadas (o deshabilitadas). */
+  habilitada?: boolean;
 }
 
 interface IBusquedaContext {
@@ -37,6 +39,7 @@ export function BusquedaProvider({ children }: BusquedaProviderProps) {
   const [filtros, updateFiltros] = useState<BusquedaFiltros>({
     fecha: useMemo(() => formatFecha(new Date()), []),
     provincia: jugador.provincia,
+    habilitada: true
   });
 
   const setFiltro = useMemo(

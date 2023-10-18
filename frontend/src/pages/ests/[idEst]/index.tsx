@@ -106,7 +106,6 @@ export default function EstablecimientoInfoPage() {
                   <Switch
                     isChecked={est.habilitado}
                     onChange={handleSwitchChange}
-                    colorScheme="blackAlpha"
                   />
                 </HStack>
                 <Text fontSize="sm">
