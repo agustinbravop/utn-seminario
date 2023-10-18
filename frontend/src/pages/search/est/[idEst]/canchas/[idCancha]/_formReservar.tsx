@@ -89,7 +89,7 @@ export default function FormReservarDisponibilidad({
               <VStack>
                 <Center flexDirection="column">
                   <Heading size="sm">Fecha a reservar</Heading>
-                  <DateControl name="fechaReservada" />
+                  <DateControl isDisabled name="fechaReservada" />
                 </Center>
                 <HStack
                   justify="space-evenly"
