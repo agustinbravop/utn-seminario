@@ -81,7 +81,7 @@ export function usePagarReserva(
 export function useCrearReserva(options?: UseApiMutationOptions<CrearReserva>) {
   return useApiMutation({
     ...options,
-    invalidateOnSuccess: () => ["reservas"],
+    invalidateManyOnSuccess: [["reservas"], ["disponibilidades"]],
     mutationFn: (reserva) => post<Reserva>(`${API_URL}/reservas`, reserva),
   });
 }
