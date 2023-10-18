@@ -32,21 +32,21 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
           <CardHeader borderRadius="6px" backgroundColor="green.100">
             <HStack justifyContent="center">
               <CircleIcon color="green" />
-              <Text> Pagada </Text>
+              <Text>Pagada</Text>
             </HStack>
           </CardHeader>
         ) : reserva.idPagoSenia ? (
           <CardHeader borderRadius="6px" backgroundColor="orange.100">
             <HStack justifyContent="center">
               <CircleIcon color="orange" />
-              <Text> Señada </Text>
+              <Text>Señada</Text>
             </HStack>
           </CardHeader>
         ) : (
-          <CardHeader backgroundColor="red.200" borderRadius="6px">
+          <CardHeader backgroundColor="gray.300" borderRadius="6px">
             <HStack justifyContent="center">
               <CircleIcon color="red" />
-              <Text> No pagada</Text>
+              <Text>No pagada</Text>
             </HStack>
           </CardHeader>
         )}
@@ -88,38 +88,32 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             </Text>
           </VStack>
 
-          <ReservaCardTags reserva={reserva} />
+          <Stack
+            direction={{ base: "column", sm: "row" }}
+            spacing={2}
+            align="center"
+            justifyContent="center"
+            fontSize={{ base: "15px", md: "17px", lg: "15px" }}
+            mb={3}
+          >
+            <Tag size="sm" variant="subtle" colorScheme="gray">
+              <TagLeftIcon as={CalendarIcon} boxSize={3} />
+              <TagLabel>{formatISO(reserva.fechaReservada)}</TagLabel>
+            </Tag>
+            <Tag size="sm" variant="subtle" colorScheme="blue">
+              <TagLeftIcon as={LuClock5} boxSize={3} />
+              <TagLabel>
+                {reserva.disponibilidad.horaInicio}
+                {" - "}
+                {reserva.disponibilidad.horaFin}
+              </TagLabel>
+            </Tag>
+            <Tag size="sm" variant="subtle" colorScheme="purple">
+              <TagLabel>{reserva.disponibilidad.disciplina}</TagLabel>
+            </Tag>
+          </Stack>
         </CardBody>
       </Card>
     </>
-  );
-}
-
-function ReservaCardTags({ reserva }: { reserva: Reserva }) {
-  return (
-    <Stack
-      direction={{ base: "column", sm: "row" }}
-      spacing={2}
-      align="center"
-      justifyContent="center"
-      fontSize={{ base: "15px", md: "17px", lg: "15px" }}
-      mb={3}
-    >
-      <Tag size="sm" variant="subtle" colorScheme="gray">
-        <TagLeftIcon as={CalendarIcon} boxSize={3} />
-        <TagLabel>{formatISO(reserva.fechaReservada)}</TagLabel>
-      </Tag>
-      <Tag size="sm" variant="subtle" colorScheme="blue">
-        <TagLeftIcon as={LuClock5} boxSize={3} />
-        <TagLabel>
-          {reserva.disponibilidad.horaInicio}
-          {"- "}
-          {reserva.disponibilidad.horaFin}
-        </TagLabel>
-      </Tag>
-      <Tag size="sm" variant="subtle" colorScheme="purple">
-        <TagLabel> {reserva.disponibilidad.disciplina} </TagLabel>
-      </Tag>
-    </Stack>
   );
 }

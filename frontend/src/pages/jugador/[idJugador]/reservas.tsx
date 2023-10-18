@@ -1,34 +1,37 @@
 import { useReservasByJugadorID } from "@/utils/api";
-import { Box, HStack, Heading, Select, Switch, Text } from "@chakra-ui/react";
+import {
+  HStack,
+  Heading,
+  Select,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useCurrentJugador } from "@/hooks";
 import { ReservaCard } from "@/components/display";
 import { useState } from "react";
 import { horaADecimal } from "@/utils/dates";
 import { Reserva } from "@/models";
+import { QuestionImage } from "@/utils/constants";
+
+function isReservaActiva(reserva: Reserva) {
+  const reservaDate = new Date(reserva.fechaReservada);
+  const [hora, minutos] = reserva.disponibilidad.horaFin.split(":");
+  reservaDate.setHours(Number(hora), Number(minutos), 0, 0);
+  const currentDate = new Date();
+  return reservaDate >= currentDate;
+}
 
 export default function JugadorReservasPage() {
   const { jugador } = useCurrentJugador();
   const { data: reservas } = useReservasByJugadorID(jugador.id);
-
-  function isFechaFutura(fecha: string, horaFin: string) {
-    const reservaDate = new Date(fecha);
-    const [hora, minutos] = horaFin.split(":");
-    reservaDate.setHours(Number(hora), Number(minutos), 0, 0);
-    const currentDate = new Date();
-    return reservaDate >= currentDate;
-  }
-
-  const [activas, setActivas] = useState(true);
-
-  function handleActivasChange() {
-    setActivas(!activas);
-  }
   const [ordenAscendente, setOrdenAscendente] = useState(true);
 
-  function handleOrdenChange() {
-    setOrdenAscendente(!ordenAscendente);
-  }
-  function filtrarReservas(res: Reserva[]) {
+  function ordenarReservas(res: Reserva[]) {
     if (ordenAscendente) {
       return res.sort((a, b) => {
         const fechaHoraA = new Date(a.fechaReservada);
@@ -52,8 +55,8 @@ export default function JugadorReservasPage() {
     }
   }
 
-  const [selectedValue, setSelectedValue] = useState("");
-  const handleSelectChange = (event: any) => {
+  const [selectedValue, setSelectedValue] = useState("Más recientes");
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = event.target.value;
     if (selectedOption === "Más recientes") {
       setOrdenAscendente(false);
@@ -62,7 +65,10 @@ export default function JugadorReservasPage() {
     }
     setSelectedValue(selectedOption);
   };
-  const reservasFiltradas = filtrarReservas(reservas);
+  const reservasOrdenadas = ordenarReservas(reservas);
+  const reservasActivas = reservasOrdenadas.filter((reserva) =>
+    isReservaActiva(reserva)
+  );
 
   return (
     <>
@@ -72,43 +78,53 @@ export default function JugadorReservasPage() {
       <HStack
         mx="10%"
         mb="17px"
-        justifyContent="center"
+        justifyContent="flex-start"
         alignItems="center"
         display="flex"
         spacing="10px"
       >
-        <Text mr="4px">Reservas Activas</Text>
-        <Switch
-          isChecked={activas}
-          onChange={handleActivasChange}
-          colorScheme="blackAlpha"
-        >
-          {" "}
-        </Switch>
+        <Text>Ordenar por:</Text>
         <Select
-          placeholder="Ordenar"
           value={selectedValue}
           onChange={handleSelectChange}
           width="170px"
         >
-          <option value="Más recientes"> Más recientes</option>
-          <option value="Más antiguas"> Más antiguas </option>
+          <option value="Más recientes">Más recientes</option>
+          <option value="Más antiguas">Más antiguas</option>
         </Select>
       </HStack>
-      <HStack wrap="wrap" align="center" justify="center">
-        {reservasFiltradas
-          .filter(
-            (reserva) =>
-              !activas ||
-              isFechaFutura(
-                reserva.fechaReservada,
-                reserva.disponibilidad.horaFin
-              )
-          )
-          .map((reserva) => (
-            <ReservaCard key={reserva.id} reserva={reserva} />
-          ))}
-      </HStack>
+      <Tabs mx="5vw">
+        <TabList>
+          <Tab>Reservas Activas</Tab>
+          <Tab>Historial</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
+            {reservasActivas.length > 0 ? (
+              reservasActivas.map((reserva) => (
+                <ReservaCard key={reserva.id} reserva={reserva} />
+              ))
+            ) : (
+              <VStack>
+                <QuestionImage />
+                <Text>No hay reservas activas por jugar.</Text>
+              </VStack>
+            )}
+          </TabPanel>
+          <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
+            {reservasOrdenadas.length > 0 ? (
+              reservasOrdenadas.map((reserva) => (
+                <ReservaCard key={reserva.id} reserva={reserva} />
+              ))
+            ) : (
+              <VStack>
+                <QuestionImage />
+                <Text>Todavía no ha realizado reservas.</Text>
+              </VStack>
+            )}
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </>
   );
 }
