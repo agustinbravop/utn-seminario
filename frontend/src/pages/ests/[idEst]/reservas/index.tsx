@@ -94,7 +94,7 @@ export default function EstablecimientoReservasPage() {
       ? "Pagada"
       : r.idPagoSenia
       ? "Señada"
-      : "No pagada";
+      : "No Pagada";
 
     const nombreIncluido = nombreJugador
       .toLowerCase()
@@ -106,7 +106,7 @@ export default function EstablecimientoReservasPage() {
     var estadoCoincide = false;
     if (filtroEstado === estado && estado === "Pagada") {
       estadoCoincide = true;
-    } else if (filtroEstado === estado && filtroEstado === "No pagada") {
+    } else if (filtroEstado === estado && filtroEstado === "No Pagada") {
       estadoCoincide = true;
     } else if (filtroEstado === estado && filtroEstado === "Señada") {
       estadoCoincide = true;
