@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Button, ButtonProps, Image, SlideFade } from "@chakra-ui/react";
+import { Box, Button, ButtonProps, Image, keyframes } from "@chakra-ui/react";
 
 function CarouselButton(props: ButtonProps) {
   return (
@@ -16,6 +16,8 @@ function CarouselButton(props: ButtonProps) {
       cursor="pointer"
       color="rgb(253, 253, 253)"
       transform="translate(0, -50%)"
+      _active={{ backgroundColor: "brand.400" }}
+      _hover={{ backgroundColor: "brand.400" }}
       {...props}
     />
   );
@@ -36,13 +38,21 @@ interface CarouselProps {
   showButtons?: boolean;
 }
 
+const fadeIn = `${keyframes({
+  "0%": {
+    opacity: "50%",
+  },
+  "100%": {
+    opacity: "100%",
+  },
+})} 500ms ease-out`;
+
 export default function Carousel({
   images,
   autoPlay = true,
   showButtons = true,
 }: CarouselProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [loaded, setLoaded] = useState(false);
 
   if (!showButtons) {
     autoPlay = true;
@@ -50,12 +60,13 @@ export default function Carousel({
 
   const selectNewImage = useCallback(
     (offset: number) => {
-      setLoaded(false);
       let nextIndex = (selectedIndex + offset) % images.length;
       setSelectedIndex(nextIndex);
     },
     [selectedIndex, images.length]
   );
+
+  const isImageVisible = (imgSrc: string) => images[selectedIndex] === imgSrc;
 
   useEffect(() => {
     if (autoPlay) {
@@ -67,18 +78,23 @@ export default function Carousel({
   }, [autoPlay, images, selectNewImage]);
 
   return (
-    <Box position={"relative" /* para position="absolute" en CarouselButton */}>
-      <SlideFade in={loaded}>
+    <Box
+      position={"relative" /* para position="absolute" en CarouselButton */}
+      width={{ base: "90vw", md: "60vw" }}
+    >
+      {images.map((imgSrc, idx) => (
         <Image
+          key={idx}
           height="420px"
-          width="90vw"
+          width="100%"
           borderRadius="12px"
           objectFit="cover"
-          src={images[selectedIndex]}
+          src={imgSrc}
           alt="Cancha de deportes"
-          onLoad={() => setLoaded(true)}
+          display={isImageVisible(imgSrc) ? "block" : "none"}
+          animation={fadeIn}
         />
-      </SlideFade>
+      ))}
       {showButtons && (
         <>
           <CarouselButton onClick={() => selectNewImage(-1)} left="10px">
