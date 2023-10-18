@@ -9,6 +9,8 @@ export type BuscarDisponibilidadesQuery = {
   disciplina?: string;
   /** No trae las disponibilidades ya reservadas para esa fecha. */
   fechaDisponible?: Date;
+  /** Solo trae disponibilidades de canchas habilitadas. */
+  habilitada?: boolean;
 };
 
 export interface DisponibilidadService {

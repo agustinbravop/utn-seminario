@@ -71,6 +71,8 @@ export class PrismaDisponibilidadRepository
         where: {
           idDisciplina: filtros.disciplina,
           cancha: {
+            habilitada: filtros.habilitada,
+            establecimiento: { habilitado: filtros.habilitada },
             id: filtros.idCancha,
             idEstablecimiento: filtros.idEst,
           },
