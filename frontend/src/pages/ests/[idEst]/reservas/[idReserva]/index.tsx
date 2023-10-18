@@ -129,13 +129,13 @@ export default function ReservaInfoPage() {
           </Heading>
 
           <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
-            <Box ml="3" >
+            <Box ml="3">
               <Heading size="xs">Nombre y Apellido</Heading>
               <Text fontSize="sm">
                 {reserva.jugador.nombre} {reserva.jugador.apellido}
               </Text>
             </Box>
-            <Box ml="3" >
+            <Box ml="3">
               <Heading size="xs"> Teléfono </Heading>
               <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
             </Box>

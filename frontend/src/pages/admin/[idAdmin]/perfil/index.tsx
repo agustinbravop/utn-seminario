@@ -57,7 +57,13 @@ export default function AdminPerfilPage() {
             <Text fontSize="sm">{admin?.suscripcion.nombre}</Text>
           </Box>
         </Stack>
-        <HStack width="100%" mt="20px" display="flex" wrap="wrap" justifyContent="center">
+        <HStack
+          width="100%"
+          mt="20px"
+          display="flex"
+          wrap="wrap"
+          justifyContent="center"
+        >
           <Link to="editar">
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>
@@ -74,4 +80,3 @@ export default function AdminPerfilPage() {
     </Card>
   );
 }
-

@@ -105,7 +105,7 @@ function ReservaCardTags({ reserva }: { reserva: Reserva }) {
       fontSize={{ base: "15px", md: "17px", lg: "15px" }}
       mb={3}
     >
-       <Tag size="sm" variant="subtle" colorScheme="gray">
+      <Tag size="sm" variant="subtle" colorScheme="gray">
         <TagLeftIcon as={CalendarIcon} boxSize={3} />
         <TagLabel>{formatISO(reserva.fechaReservada)}</TagLabel>
       </Tag>
