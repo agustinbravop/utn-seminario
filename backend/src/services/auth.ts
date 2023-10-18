@@ -102,6 +102,7 @@ export class AuthServiceImpl implements AuthService {
       id = usuario.jugador.id;
       payload = { jugador: usuario.jugador, roles: [Rol.Jugador] };
     }
+    console.log(payload)
 
     const token = await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })

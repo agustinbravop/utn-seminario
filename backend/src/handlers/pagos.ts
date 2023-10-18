@@ -10,7 +10,6 @@ const client = new MercadoPagoConfig({
 });
 const payments = new Payment(client);
 
-
 export const buscarPagosQuerySchema = z.object({
   idCancha: z.coerce.number().int().optional(),
   idEst: z.coerce.number().int().optional(),
@@ -47,23 +46,27 @@ export class PagoHandler {
     };
   }
 
-
   crearPago(): RequestHandler {
     return async (req, res) => {
-      console.log(req.body)
-      const paymentData = req.body
-      
-      
+      const paymentData = req.body;
+
+      // Luego, crea un nuevo objeto con "transaction_amount" como una cadena
+      const newPaymentData = {
+        ...paymentData,
+        description: "Esta es una reserva",
+      };
+      console.log(newPaymentData)
       // Crea el pago
-      payments.create(paymentData)
-        .then(p => {
-          console.log('Pago creado con éxito.');
-          console.log('ID del pago:', p.id);
-          console.log('Redirige al usuario a la siguiente URL:');
+      payments
+        .create(newPaymentData)
+        .then((p) => {
+          console.log("Pago creado con éxito.");
+          console.log("ID del pago:", p.id);
+          console.log("Redirige al usuario a la siguiente URL:");
           console.log(p.payer);
         })
-        .catch(function(error) {
-          console.error('No se pudo crear el pago. Detalles:', error);
+        .catch(error => {
+          console.error("No se pudo crear el pago. Detalles:", error);
         });
     };
   }

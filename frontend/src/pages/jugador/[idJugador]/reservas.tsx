@@ -12,7 +12,7 @@ export default function JugadorReservasPage() {
   initMercadoPago("TEST-17f590c3-e4d6-4647-96d2-a52ba3f69b2e");
 
   const initialization = {
-    amount: 100,
+    amount: 150,
   };
 
   const onSubmit = async (formData: any) => {

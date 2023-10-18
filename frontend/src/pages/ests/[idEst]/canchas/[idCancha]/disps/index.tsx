@@ -31,6 +31,7 @@ import {
 } from "@tanstack/react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useState } from "react";
+import { ordenarDias } from "@/utils/dias";
 
 /**
  * Deriva el valor del campo 'minutosReserva' del DisponibilidadForm
@@ -73,7 +74,7 @@ export default function CanchaInfoPage() {
       header: "Seña",
     }),
     columnHelper.accessor("dias", {
-      cell: (info) => info.getValue().sort().join(", "),
+      cell: (info) => ordenarDias(info.getValue()).join(", "),
       header: "Días",
     }),
   ];
