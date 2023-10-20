@@ -1,4 +1,6 @@
-export const floatingLabelStyles = {
+import { tooltipTheme } from "./tooltip";
+
+const floatingLabelStyles = {
   top: 0,
   left: 0,
   zIndex: 2,
@@ -47,6 +49,7 @@ const components = {
       },
     },
   },
+  Tooltip: tooltipTheme,
 };
 
 export default components;

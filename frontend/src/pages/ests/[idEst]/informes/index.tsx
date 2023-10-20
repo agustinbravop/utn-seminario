@@ -62,10 +62,10 @@ export default function EstablecimientoReservasPage() {
         <LoadingSpinner />
       ) : (
         <Box mx="16%">
-          <StatGroup width="550px" gap="40px" ml="20px">
+          <StatGroup width="fit-content" gap="40px" ml="20px">
             <Stat>
               <StatLabel>
-                <Tooltip label="Dinero que se espera recibir al terminar el período, si todas las reservas son pagadas">
+                <Tooltip label="Dinero que se espera recibir al terminar este período de tiempo, si todas las reservas son pagadas">
                   Total estimado
                 </Tooltip>
               </StatLabel>
@@ -91,7 +91,7 @@ export default function EstablecimientoReservasPage() {
             </Stat>
             <Stat>
               <StatLabel>
-                <Tooltip label="Cantidad de reservas en el persíodo de tiempo">
+                <Tooltip label="Cantidad de reservas que el establecimiento recibió en este período de tiempo">
                   Reservas recibidas
                 </Tooltip>
               </StatLabel>

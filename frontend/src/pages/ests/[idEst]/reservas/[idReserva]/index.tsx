@@ -76,7 +76,7 @@ export default function ReservaInfoPage() {
 
   return (
     <>
-      <Card m="auto" height="60%" width="36%" mt="5%">
+      <Card m="auto" height="60%" maxW="400px" mt="5%">
         <CardBody m="15px">
           <Heading as="h3" size="lg" textAlign="center">
             Datos de la reserva
