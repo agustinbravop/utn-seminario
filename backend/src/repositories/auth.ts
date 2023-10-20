@@ -61,7 +61,6 @@ export class PrismaAuthRepository implements AuthRepository {
 
   async getJugadorYClave(correoOUsuario: string) {
     try {
-      console.log(correoOUsuario);
       const j = await this.prisma.jugador.findFirstOrThrow({
         where: {
           OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],

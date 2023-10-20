@@ -71,19 +71,17 @@ export class PrismaDisponibilidadRepository
         where: {
           idDisciplina: filtros.disciplina,
           cancha: {
+            habilitada: filtros.habilitada,
+            establecimiento: { habilitado: filtros.habilitada },
             id: filtros.idCancha,
             idEstablecimiento: filtros.idEst,
           },
-          ...(filtros.fechaDisponible
+          ...(filtros.fecha
             ? {
-                // Solo trae disponibilidades no reservadas en la `fechaDisponible`.
-                reservas: {
-                  none: { fechaReservada: filtros.fechaDisponible },
-                },
-                // Solo trae disponibilidades válidas para el día de `fechaDisponible`.
-                dias: {
-                  some: { dia: getDiaDeSemana(filtros.fechaDisponible) },
-                },
+                // Solo trae disponibilidades no reservadas en la `filtros.fecha`.
+                reservas: { none: { fechaReservada: filtros.fecha } },
+                // Solo trae disponibilidades válidas para el día de `filtros.fecha`.
+                dias: { some: { dia: getDiaDeSemana(filtros.fecha) } },
               }
             : {}),
         },

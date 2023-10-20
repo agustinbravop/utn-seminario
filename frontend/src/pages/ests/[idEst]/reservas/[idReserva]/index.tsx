@@ -76,15 +76,15 @@ export default function ReservaInfoPage() {
 
   return (
     <>
-      <Card m="auto" height="60%" width="38%" mt="5%">
+      <Card m="auto" height="60%" width="36%" mt="5%">
         <CardBody m="15px">
           <Heading as="h3" size="lg" textAlign="center">
             Datos de la reserva
           </Heading>
-          <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
-            <Grid gridTemplateColumns="1fr 1fr" rowGap="0.5em">
+          <Stack divider={<StackDivider />} spacing="4.5" pt="20px">
+            <Grid gridTemplateColumns="1.8fr 1fr" rowGap="1.0em" pl="3">
               <GridItem>
-                <Heading size="xs">Fecha</Heading>
+                <Heading size="xs">Fecha de juego</Heading>
                 <Text fontSize="sm">
                   {formatISOFecha(reserva.fechaReservada)}
                 </Text>
@@ -125,17 +125,17 @@ export default function ReservaInfoPage() {
           </Stack>
 
           <Heading size="md" mt="1.5rem">
-            Jugador
+            Información del jugador
           </Heading>
 
           <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
-            <Box>
+            <Box ml="3">
               <Heading size="xs">Nombre y Apellido</Heading>
               <Text fontSize="sm">
                 {reserva.jugador.nombre} {reserva.jugador.apellido}
               </Text>
             </Box>
-            <Box>
+            <Box ml="3">
               <Heading size="xs"> Teléfono </Heading>
               <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
             </Box>

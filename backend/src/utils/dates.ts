@@ -11,6 +11,13 @@ const dias: Dia[] = [
   Dia.Sabado,
 ];
 
+/**
+ * Toma una fecha y devuelve qué `Dia` de la semana cae ('Domingo', 'Lunes', etc).
+ */
+export function getDiaDeSemana(date: Date): Dia {
+  return dias[convertDateToUTC(date).getDay()];
+}
+
 /** Convierte una fecha `Date` a otra fecha `Date` en UTC (Universal Coordinated Time).  */
 function convertDateToUTC(date: Date): Date {
   return new Date(
@@ -21,13 +28,6 @@ function convertDateToUTC(date: Date): Date {
     date.getUTCMinutes(),
     date.getUTCSeconds()
   );
-}
-
-/**
- * Toma una fecha y devuelve qué `Dia` de la semana cae ('Domingo', 'Lunes', etc).
- */
-export function getDiaDeSemana(date: Date): Dia {
-  return dias[convertDateToUTC(date).getDay()];
 }
 
 /**
@@ -49,4 +49,30 @@ export function decimalAHora(n: number) {
   const entero = Math.trunc(n);
   const minutos = String((n - entero) * 60);
   return `${entero}:${minutos.padEnd(2, "0")}`;
+}
+
+/**
+ * Pone la hora de `date` al máximo para que sea la mayor fecha de ese día.
+ * Esto sirve para usarla como límite superior de un rango de fechas.
+ */
+export function setMidnight(date: Date) {
+  date.setUTCHours(23, 59, 59, 999);
+  return date;
+}
+
+/**
+ * Setea la hora y minuto de un `Date`. Esta función muta al objeto original.
+ * El string `hora` debe tener formato `hh:mm`.
+ */
+export function setHora(date: Date, hora: string) {
+  date.setUTCHours(Number(hora.split(":")[0]), Number(hora.split(":")[1]));
+  return date;
+}
+
+/** Devuelve la hora UTC actual en formato `hh:mm`. */
+export function getHoraActual() {
+  const date = new Date();
+  const hh = String(date.getUTCHours());
+  const mm = String(date.getUTCMinutes()).padStart(2, "0");
+  return `${hh}:${mm}`;
 }

@@ -36,6 +36,21 @@ export default function TablaDisponibilidadesReservables({
       cell: (info) => info.getValue(),
       header: "Fin",
     }),
+    columnHelper.accessor("disciplina", {
+      cell: (info) => info.getValue(),
+      header: "Disciplina",
+    }),
+    columnHelper.accessor("dias", {
+      cell: (info) =>
+        ordenarDias(info.getValue())
+          .map((dia) => DIAS_ABBR[dia])
+          .join(", "),
+      header: "Días",
+    }),
+    columnHelper.accessor("cancha.nombre", {
+      cell: (info) => info.getValue(),
+      header: "Cancha",
+    }),
     columnHelper.accessor("precioReserva", {
       cell: (info) => "$" + info.getValue(),
       header: "Precio",
@@ -43,17 +58,6 @@ export default function TablaDisponibilidadesReservables({
     columnHelper.accessor("precioSenia", {
       cell: (info) => (info.getValue() ? "$" + info.getValue() : "Sin seña"),
       header: "Seña",
-    }),
-    columnHelper.accessor("dias", {
-      cell: (info) =>
-        ordenarDias(info.getValue())
-          .map((dia) => DIAS_ABBR[dia])
-          .join(", "),
-      header: "Dias",
-    }),
-    columnHelper.accessor("cancha.nombre", {
-      cell: (info) => info.getValue(),
-      header: "Cancha",
     }),
   ];
 
