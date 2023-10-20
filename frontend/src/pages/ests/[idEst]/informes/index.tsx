@@ -33,33 +33,6 @@ export default function EstablecimientoReservasPage() {
     fechaDesde: fechaDesde || undefined,
     fechaHasta: fechaHasta || undefined,
   });
-  console.log(informe);
-
-  const ingresosStat = (label: string, ingresos: number) => {
-    return (
-      <Stat>
-        <StatLabel>{label}</StatLabel>
-        <StatNumber>${ingresos}</StatNumber>
-        <StatHelpText>
-          {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
-          {fechaHasta && formatISOFecha(fechaHasta)}
-        </StatHelpText>
-      </Stat>
-    );
-  };
-
-  const reservasStat = (label: string, reservas: number) => {
-    return (
-      <Stat>
-        <StatLabel>{label}</StatLabel>
-        <StatNumber>{reservas}</StatNumber>
-        <StatHelpText>
-          {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
-          {fechaHasta && formatISOFecha(fechaHasta)}
-        </StatHelpText>
-      </Stat>
-    );
-  };
 
   return (
     <>
@@ -88,45 +61,54 @@ export default function EstablecimientoReservasPage() {
       {!informe ? (
         <LoadingSpinner />
       ) : (
-        <Box mx="12%">
-          <StatGroup width="450px" gap="40px" m="20px auto">
-            <Tooltip label="Dinero que se espera recibir al terminar el período, si todas las reservas son pagadas">
-              <Stat>
-                <StatLabel>Total estimado</StatLabel>
-                <StatNumber>${informe.estimado}</StatNumber>
-                <StatHelpText>
-                  {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
-                  {fechaHasta && formatISOFecha(fechaHasta)}
-                </StatHelpText>
-              </Stat>
-            </Tooltip>
-            <Tooltip label="Cantidad de inero recibido por el establecimiento hasta ahora">
-              <Stat>
-                <StatLabel>Total ingresado</StatLabel>
-                <StatNumber>${informe.total}</StatNumber>
-                <StatHelpText>
-                  {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
-                  {fechaHasta && formatISOFecha(fechaHasta)}
-                </StatHelpText>
-              </Stat>
-            </Tooltip>
-            <Tooltip label="Cantidad de reservas a ser usadas en el período de tiempo">
-              <Stat>
-                <StatLabel>Reservas recibidas</StatLabel>
-                <StatNumber>
-                  {informe.canchas.reduce(
-                    (acum, c) => acum + c.reservas.length,
-                    0
-                  )}
-                </StatNumber>
-                <StatHelpText>
-                  {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
-                  {fechaHasta && formatISOFecha(fechaHasta)}
-                </StatHelpText>
-              </Stat>
-            </Tooltip>
+        <Box mx="16%">
+          <StatGroup width="550px" gap="40px" ml="20px">
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Dinero que se espera recibir al terminar el período, si todas las reservas son pagadas">
+                  Total estimado
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>${informe.estimado}</StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)}
+                {" - "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Dinero recibido por el establecimiento hasta ahora">
+                  Total ingresado
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>${informe.total}</StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)}
+                {" - "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Cantidad de reservas en el persíodo de tiempo">
+                  Reservas recibidas
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>
+                {informe.canchas.reduce(
+                  (acum, c) => acum + c.reservas.length,
+                  0
+                )}
+              </StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
           </StatGroup>
-          <Heading size="lg" mb="0.5em" ml="2em">
+
+          <Heading size="lg" my="0.5em" ml="2em">
             Por cancha
           </Heading>
           <HStack wrap="wrap" justify="center">
@@ -141,10 +123,19 @@ export default function EstablecimientoReservasPage() {
                 />
                 <CardBody>
                   <Heading size="md">{cancha.nombre}</Heading>
-                  <StatGroup>
-                    {ingresosStat("Estimado", informe.estimado)}
-                    {ingresosStat("Ingresos", cancha.total)}
-                    {reservasStat("Reservas", cancha.reservas.length)}
+                  <StatGroup mt="0.5em">
+                    <Stat>
+                      <StatLabel>Estimado</StatLabel>
+                      <StatNumber>${cancha.estimado}</StatNumber>
+                    </Stat>
+                    <Stat>
+                      <StatLabel>Ingresado</StatLabel>
+                      <StatNumber>${cancha.total}</StatNumber>
+                    </Stat>
+                    <Stat>
+                      <StatLabel>Reservas</StatLabel>
+                      <StatNumber>{cancha.reservas.length}</StatNumber>
+                    </Stat>
                   </StatGroup>
                 </CardBody>
               </Card>

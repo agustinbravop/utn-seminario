@@ -43,12 +43,14 @@ interface FormDispProps {
   onSubmit: (disp: DisponibilidadForm) => void;
   resetValues: DefaultValues<DisponibilidadForm>;
   variant: "crear" | "modificar";
+  isLoading?: boolean;
 }
 
 export default function FormDisp({
   onSubmit,
   resetValues,
   variant,
+  isLoading,
 }: FormDispProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -187,7 +189,7 @@ export default function FormDisp({
             <Button colorScheme="gray" mr={3} onClick={onClose}>
               Cancelar
             </Button>
-            <SubmitButton>Aceptar</SubmitButton>
+            <SubmitButton isLoading={isLoading}>Aceptar</SubmitButton>
           </ModalFooter>
         </ModalContent>
       </Modal>

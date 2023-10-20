@@ -96,45 +96,49 @@ export default function CanchaInfoPage() {
 
   const toast = useToast();
 
-  const { mutate: mutateCrear } = useCrearDisponibilidad({
-    onSuccess: (disp) => {
-      if (!toast.isActive("idSuccess")) {
+  const { mutate: mutateCrear, isLoading: crearLoading } =
+    useCrearDisponibilidad({
+      onSuccess: (_, form) => {
+        if (!toast.isActive("idSuccess")) {
+          toast({
+            id: "idSuccess",
+            title: `Disponibilidades de ${form.horaInicio} a ${form.horaFin} creadas.`,
+            description: "Cada disponibilidad es una reserva posible.",
+            status: "success",
+          });
+        }
+      },
+      onError: (e, vars) => {
+        if (!toast.isActive("idError")) {
+          toast({
+            id: "idError",
+            title: e.conflictMsg(
+              `Error al crear disponibilidades de ${vars.horaInicio} a ${vars.horaFin}.`
+            ),
+            description: "Intente de nuevo.",
+            status: "error",
+          });
+        }
+      },
+    });
+
+  const { mutate: mutateModificar, isLoading: modificarLoading } =
+    useModificarDisponibilidad({
+      onSuccess: () => {
         toast({
-          id: "idSuccess",
-          title: `Disponibilidades de ${disp.horaInicio} a ${disp.horaFin} creada.`,
-          description: "Se registró exitosamente.",
+          title: "Disponibilidad modificada.",
+          description: "El cambio se guardó exitosamente.",
           status: "success",
         });
-      }
-    },
-    onError: (e, vars) => {
-      if (!toast.isActive("idError")) {
+      },
+      onError: (e) => {
         toast({
-          id: "idError",
-          title: e.conflictMsg("Error al intentar crear."),
-          description: `No se pudo crear la disponibilidad de ${vars.horaInicio} a ${vars.horaFin}.`,
+          title: e.conflictMsg("Error al modificar la disponibilidad."),
+          description: "Intente de nuevo.",
           status: "error",
         });
-      }
-    },
-  });
-
-  const { mutate: mutateModificar } = useModificarDisponibilidad({
-    onSuccess: () => {
-      toast({
-        title: "Disponibilidad modificada.",
-        description: "El cambio se guardó exitosamente.",
-        status: "success",
-      });
-    },
-    onError: (e) => {
-      toast({
-        title: e.conflictMsg("Error al modificar la disponibilidad."),
-        description: "Intente de nuevo.",
-        status: "error",
-      });
-    },
-  });
+      },
+    });
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -171,6 +175,7 @@ export default function CanchaInfoPage() {
         variant="crear"
         onSubmit={handleCrearDisponibilidad}
         resetValues={{ idCancha: Number(idCancha) }}
+        isLoading={crearLoading}
       />
       <TableContainer pt="15px" pb="20px" mr="100px">
         <Table size="sm">
@@ -229,6 +234,7 @@ export default function CanchaInfoPage() {
                       ...row.original,
                       minutosReserva: calcularMinutosReserva(row.original),
                     }}
+                    isLoading={modificarLoading}
                   />
                   <FormEliminarDisp idDisp={row.original.id} />
                 </Td>

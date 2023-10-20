@@ -14,59 +14,35 @@ import {
 import { useCurrentJugador } from "@/hooks";
 import { ReservaCard } from "@/components/display";
 import { useState } from "react";
-import { horaADecimal } from "@/utils/dates";
 import { Reserva } from "@/models";
-import { QuestionImage } from "@/utils/constants";
+import { DISCIPLINAS, QuestionImage } from "@/utils/constants";
+import { fechaHoraReservada, isReservaActiva } from "@/utils/reservas";
 
-function isReservaActiva(reserva: Reserva) {
-  const reservaDate = new Date(reserva.fechaReservada);
-  const [hora, minutos] = reserva.disponibilidad.horaFin.split(":");
-  reservaDate.setHours(Number(hora), Number(minutos), 0, 0);
-  const currentDate = new Date();
-  return reservaDate >= currentDate;
+function reservaCompare(a: Reserva, b: Reserva) {
+  return Number(fechaHoraReservada(a)) - Number(fechaHoraReservada(b));
 }
 
 export default function JugadorReservasPage() {
   const { jugador } = useCurrentJugador();
   const { data: reservas } = useReservasByJugadorID(jugador.id);
-  const [ordenAscendente, setOrdenAscendente] = useState(true);
+  const [orden, setOrden] = useState(true);
+  const [disciplina, setDisciplina] = useState("");
 
   function ordenarReservas(res: Reserva[]) {
-    if (ordenAscendente) {
-      return res.sort((a, b) => {
-        const fechaHoraA = new Date(a.fechaReservada);
-        const fechaHoraB = new Date(b.fechaReservada);
-        const horaDecimalA = horaADecimal(a.disponibilidad.horaInicio);
-        const horaDecimalB = horaADecimal(b.disponibilidad.horaInicio);
-        const fechaHoraEnNumeroA = fechaHoraA.getTime() * 10000 + horaDecimalA;
-        const fechaHoraEnNumeroB = fechaHoraB.getTime() * 10000 + horaDecimalB;
-        return fechaHoraEnNumeroA - fechaHoraEnNumeroB;
-      });
+    if (orden) {
+      return res.sort((a, b) => reservaCompare(b, a));
     } else {
-      return res.sort((a, b) => {
-        const fechaHoraA = new Date(a.fechaReservada);
-        const fechaHoraB = new Date(b.fechaReservada);
-        const horaDecimalA = horaADecimal(a.disponibilidad.horaInicio);
-        const horaDecimalB = horaADecimal(b.disponibilidad.horaInicio);
-        const fechaHoraEnNumeroA = fechaHoraA.getTime() * 10000 + horaDecimalA;
-        const fechaHoraEnNumeroB = fechaHoraB.getTime() * 10000 + horaDecimalB;
-        return fechaHoraEnNumeroB - fechaHoraEnNumeroA;
-      });
+      return res.sort((a, b) => reservaCompare(a, b));
     }
   }
 
-  const [selectedValue, setSelectedValue] = useState("Más recientes");
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOption = event.target.value;
-    if (selectedOption === "Más recientes") {
-      setOrdenAscendente(false);
-    } else {
-      setOrdenAscendente(true);
-    }
-    setSelectedValue(selectedOption);
-  };
-  const reservasOrdenadas = ordenarReservas(reservas);
-  const reservasActivas = reservasOrdenadas.filter((reserva) =>
+  let reservasFiltradas = ordenarReservas(reservas);
+  if (disciplina) {
+    reservasFiltradas = reservasFiltradas.filter(
+      (r) => r.disponibilidad.disciplina === disciplina
+    );
+  }
+  const reservasActivas = reservasFiltradas.filter((reserva) =>
     isReservaActiva(reserva)
   );
 
@@ -85,12 +61,26 @@ export default function JugadorReservasPage() {
       >
         <Text>Ordenar por:</Text>
         <Select
-          value={selectedValue}
-          onChange={handleSelectChange}
-          width="170px"
+          onChange={(e) => setOrden(e.target.value === "Más recientes")}
+          width="fit-content"
         >
-          <option value="Más recientes">Más recientes</option>
+          <option defaultChecked value="Más recientes">
+            Más recientes
+          </option>
           <option value="Más antiguas">Más antiguas</option>
+        </Select>
+        <Select
+          width="fit-content"
+          onChange={(e) => setDisciplina(e.target.value)}
+        >
+          <option defaultChecked value="">
+            Disciplina
+          </option>
+          {DISCIPLINAS.map((dis) => (
+            <option key={dis} value={dis}>
+              {dis}
+            </option>
+          ))}
         </Select>
       </HStack>
       <Tabs mx="5vw">
@@ -112,8 +102,8 @@ export default function JugadorReservasPage() {
             )}
           </TabPanel>
           <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
-            {reservasOrdenadas.length > 0 ? (
-              reservasOrdenadas.map((reserva) => (
+            {reservasFiltradas.length > 0 ? (
+              reservasFiltradas.map((reserva) => (
                 <ReservaCard key={reserva.id} reserva={reserva} />
               ))
             ) : (
