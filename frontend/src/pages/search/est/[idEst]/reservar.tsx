@@ -32,7 +32,7 @@ export default function ReservarEstablecimientoPage() {
   const { data: est } = useEstablecimientoByID(Number(idEst));
   const { data: disps } = useBuscarDisponibilidades({
     idEst: Number(idEst),
-    fechaDisponible: filtros.fecha,
+    ...filtros,
   });
   const disciplinas = useMemo(
     () => [...new Set(disps?.map((c) => c.disciplina))],

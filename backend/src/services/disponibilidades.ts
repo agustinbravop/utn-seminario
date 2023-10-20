@@ -8,7 +8,7 @@ export type BuscarDisponibilidadesQuery = {
   idEst?: number;
   disciplina?: string;
   /** No trae las disponibilidades ya reservadas para esa fecha. */
-  fechaDisponible?: Date;
+  fecha?: Date;
   /** Solo trae disponibilidades de canchas habilitadas. */
   habilitada?: boolean;
 };

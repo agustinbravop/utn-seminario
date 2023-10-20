@@ -260,10 +260,6 @@ export class PrismaEstablecimientoRepository
   //REVISAR
   /** Devuelve los establecimientos con al menos una disponibilidad libre en la fecha dada. */
   async getByFechaDisponible(fecha: Date): Promise<Establecimiento[]> {
-    // Obtener el día de la semana correspondiente a la fecha
-    const diaSemana = getDiaDeSemana(fecha);
-
-    // Obtener los establecimientos que cumplen con los criterios
     const estabs = await this.prisma.establecimiento.findMany({
       where: {
         canchas: {
@@ -271,19 +267,14 @@ export class PrismaEstablecimientoRepository
             disponibilidades: {
               some: {
                 dias: {
+                  // Verificar si el día de la semana está incluido en el array de día.
                   some: {
-                    dia: {
-                      equals: diaSemana,
-                      mode: "insensitive",
-                    },
-                  }, // Verificar si el día de la semana está incluido en el array de día.
+                    dia: { equals: getDiaDeSemana(fecha), mode: "insensitive" },
+                  },
                 },
                 AND: {
-                  reservas: {
-                    none: {
-                      fechaReservada: fecha.toISOString(), // No debe haber reservas para esta fecha
-                    },
-                  },
+                  // No debe haber reservas para esta fecha
+                  reservas: { none: { fechaReservada: fecha } },
                 },
               },
             },

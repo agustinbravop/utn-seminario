@@ -38,7 +38,7 @@ export default function VistaJugadorCancha() {
   const { data: est } = useEstablecimientoByID(Number(idEst));
   const { data: disponibilidades } = useBuscarDisponibilidades({
     idCancha: cancha?.id,
-    disciplina: filtros.disciplina,
+    ...filtros,
   });
 
   if (!cancha || !disponibilidades) {
@@ -125,10 +125,11 @@ export default function VistaJugadorCancha() {
                 <Table variant="simple" size="sm">
                   <Thead>
                     <Tr>
-                      <Th>horario</Th>
-                      <Th>precio</Th>
-                      <Th>seña</Th>
-                      <Th>dias</Th>
+                      <Th>Horario</Th>
+                      <Th>Disciplina</Th>
+                      <Th>Días</Th>
+                      <Th>Seña</Th>
+                      <Th>Precio</Th>
                       <Th></Th>
                     </Tr>
                   </Thead>
@@ -138,14 +139,15 @@ export default function VistaJugadorCancha() {
                         <Td>
                           {d.horaInicio}-{d.horaFin}hs
                         </Td>
-                        <Td>${d.precioReserva} </Td>
-                        <Td>
-                          {d.precioSenia ? `$${d.precioSenia}` : "Sin seña"}
-                        </Td>
+                        <Td>{d.disciplina}</Td>
                         <Td>
                           {ordenarDias(d.dias)
                             .map((dia) => DIAS_ABBR[dia])
-                            .join(" - ")}
+                            .join(", ")}
+                        </Td>
+                        <Td>${d.precioReserva}</Td>
+                        <Td>
+                          {d.precioSenia ? `$${d.precioSenia}` : "Sin seña"}
                         </Td>
                         <Td>
                           <FormReservarDisponibilidad disp={d} />

@@ -43,7 +43,7 @@ export type BuscarDisponibilidadesFiltros = {
   idCancha?: number;
   idEst?: number;
   disciplina?: string;
-  fechaDisponible?: string;
+  fecha?: string;
 };
 
 export type BuscarDisponibilidadResult = Disponibilidad & {

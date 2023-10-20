@@ -3,6 +3,7 @@ import { ApiError, InternalServerError } from "../utils/apierrors.js";
 
 function logError(error: ApiError, req: Request, res: Response) {
   console.error("⛔ ApiError:", error);
+  console.error("⛔ Body recibido:", req.body);
   console.error("⛔ Body validado:", res.locals.body);
   console.error("⛔ URI:", req.url);
 }

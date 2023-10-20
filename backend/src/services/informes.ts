@@ -1,14 +1,15 @@
 import { Cancha } from "../models/cancha";
 import { Establecimiento } from "../models/establecimiento";
 import { Reserva } from "../models/reserva";
+import { setMidnight } from "../utils/dates";
 import { CanchaService } from "./canchas";
 import { EstablecimientoService } from "./establecimientos";
 import { ReservaService } from "./reservas";
 
 export type PagosPorCanchaQuery = {
   idEst: number;
-  fechaDesde?: string;
-  fechaHasta?: string;
+  fechaDesde?: Date;
+  fechaHasta?: Date;
 };
 
 type IngresosPorCancha = Establecimiento & {
@@ -54,10 +55,12 @@ export class InformeServiceImpl implements InformeService {
       let reservas = await this.reservaService.buscar({
         idCancha: c.id,
         fechaCreadaDesde: query.fechaDesde,
-        fechaCreadaHasta: query.fechaHasta,
+        fechaCreadaHasta: query.fechaHasta
+          ? setMidnight(query.fechaHasta)
+          : undefined,
       });
 
-      const potencial = reservas.reduce((acum, r) => {
+      const estimado = reservas.reduce((acum, r) => {
         return acum + r.precio;
       }, 0);
 
@@ -67,7 +70,6 @@ export class InformeServiceImpl implements InformeService {
         return acum + senia + monto;
       }, 0);
 
-      const estimado = potencial - total;
       res.canchas.push({ ...c, reservas, total, estimado });
       res.total += total;
       res.estimado += estimado;

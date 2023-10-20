@@ -39,7 +39,7 @@ export function BusquedaProvider({ children }: BusquedaProviderProps) {
   const [filtros, updateFiltros] = useState<BusquedaFiltros>({
     fecha: useMemo(() => formatFecha(new Date()), []),
     provincia: jugador.provincia,
-    habilitada: true
+    habilitada: true,
   });
 
   const setFiltro = useMemo(

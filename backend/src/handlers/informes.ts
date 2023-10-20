@@ -4,14 +4,8 @@ import { InformeService, PagosPorCanchaQuery } from "../services/informes.js";
 
 export const informePagosPorCanchaQuerySchema = z.object({
   idEst: z.coerce.number().int(),
-  fechaDesde: z.coerce
-    .string()
-    .optional()
-    .transform((data) => data && new Date(data).toISOString()),
-  fechaHasta: z.coerce
-    .string()
-    .optional()
-    .transform((data) => data && new Date(data).toISOString()),
+  fechaDesde: z.coerce.date().optional(),
+  fechaHasta: z.coerce.date().optional(),
 });
 
 export class InformeHandler {
