@@ -10,13 +10,18 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { FormProvider, useWatch } from "react-hook-form";
-import { InputControl, SubmitButton, SelectControl } from "@/components/forms";
+import {
+  InputControl,
+  SubmitButton,
+  SelectControl,
+  SelectLocalidadControl,
+  SelectProvinciaControl,
+} from "@/components/forms";
 import { RegistrarJugador, useRegistrarJugador } from "@/utils/api";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { DISCIPLINAS } from "@/utils/constants";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 
 const validationSchema = Yup.object({
   nombre: Yup.string().required("Obligatorio"),
@@ -42,10 +47,7 @@ export default function RegisterPage() {
     validationSchema,
   });
 
-  const { data: provincias } = useProvincias();
-
   const provincia = useWatch({ name: "provincia", control: methods.control });
-  const { data: localidades } = useLocalidadesByProvincia(provincia);
   useEffect(() => {
     methods.resetField("localidad");
   }, [provincia, methods]);
@@ -147,30 +149,12 @@ export default function RegisterPage() {
             </Text>
           </Box>
           <HStack>
-            <SelectControl
-              name="provincia"
-              label="Provincia"
-              placeholder="Provincia"
-              children={provincias?.sort().map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            />
-            <SelectControl
+            <SelectProvinciaControl name="provincia" label="Provincia" />
+            <SelectLocalidadControl
               name="localidad"
               label="Localidad"
-              placeholder="Localidad"
-            >
-              {localidades.sort().map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-              <option key="Otra" value="Otra">
-                Otra
-              </option>
-            </SelectControl>
+              provincia={provincia}
+            />
           </HStack>
           <SelectControl
             placeholder="Seleccionar disciplina "

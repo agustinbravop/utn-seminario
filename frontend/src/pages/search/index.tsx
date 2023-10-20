@@ -15,16 +15,17 @@ import { formatFecha } from "@/utils/dates";
 import { useYupForm } from "@/hooks";
 import { useWatch } from "react-hook-form";
 import { DISCIPLINAS, QuestionImage } from "@/utils/constants";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
+import { useLocalidadesByProvincia } from "@/utils/api";
 import { InputControl, SelectControl } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import DateControl from "@/components/forms/DateControl";
 import { useEffect } from "react";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { useBusqueda } from "@/hooks/useBusqueda";
+import SelectProvinciaControl from "@/components/forms/SelectProvinciaControl";
+import SelectLocalidadControl from "@/components/forms/SelectLocalidadControl";
 
 export default function BuscarEstablecimientosPage() {
-  const provincias = useProvincias();
   const { filtros, updateFiltros, setFiltro } = useBusqueda();
   const methods = useYupForm<BusquedaEstablecimientos>({
     defaultValues: filtros,
@@ -33,7 +34,6 @@ export default function BuscarEstablecimientosPage() {
   useEffect(() => {
     updateFiltros(values);
   }, [values, updateFiltros]);
-
   const { data: ests, isFetchedAfterMount } = useBuscarEstablecimientos({
     ...values,
   });
@@ -62,34 +62,20 @@ export default function BuscarEstablecimientosPage() {
           borderRadius="10px"
         >
           <HStack spacing="0.3rem">
-            <SelectControl
+            <SelectProvinciaControl
               name="provincia"
               borderRadius="10px"
               bg="white"
-              placeholder="Provincia"
               mr="0px"
-            >
-              {provincias.data?.sort().map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            </SelectControl>
-            <SelectControl
+            />
+            <SelectLocalidadControl
               name="localidad"
               bg="white"
               borderRadius="10px"
               ml="0px"
-              placeholder="Localidad"
               value={values.localidad}
-            >
-              {localidades.sort().map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-              <option key="Otra">Otra</option>
-            </SelectControl>
+              provincia={values.provincia}
+            />
           </HStack>
           <SelectControl
             borderRadius="10px"

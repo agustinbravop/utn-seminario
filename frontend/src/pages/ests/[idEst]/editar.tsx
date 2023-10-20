@@ -13,13 +13,16 @@ import {
   useModificarEstablecimiento,
 } from "@/utils/api";
 import * as Yup from "yup";
-import { FormProvider } from "react-hook-form";
+import { FormProvider, useWatch } from "react-hook-form";
 import {
   ImageControl,
   InputControl,
   ConfirmSubmitButton,
+  SelectProvinciaControl,
+  SelectLocalidadControl,
 } from "@/components/forms";
 import { useYupForm } from "@/hooks/useYupForm";
+import { useEffect } from "react";
 
 type FormState = ModificarEstablecimiento & {
   imagen: File | undefined;
@@ -70,6 +73,11 @@ export default function EstablecimientoEditarPage() {
     },
   });
 
+  const provincia = useWatch({ name: "provincia", control: methods.control });
+  useEffect(() => {
+    methods.resetField("localidad");
+  }, [provincia, methods]);
+
   return (
     <div>
       <Heading textAlign="center" mt="40px" pb="60px">
@@ -97,17 +105,16 @@ export default function EstablecimientoEditarPage() {
             isRequired
           />
           <HStack>
-            <InputControl
-              name="localidad"
-              label="Localidad"
-              placeholder="Localidad"
-              isRequired
-            />
-            <InputControl
+            <SelectProvinciaControl
               name="provincia"
               label="Provincia"
-              placeholder="Provincia"
               isRequired
+            />
+            <SelectLocalidadControl
+              name="localidad"
+              label="Localidad"
+              isRequired
+              provincia={provincia}
             />
           </HStack>
           <InputControl

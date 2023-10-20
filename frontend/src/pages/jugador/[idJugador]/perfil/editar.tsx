@@ -17,10 +17,11 @@ import {
   InputControl,
   ConfirmSubmitButton,
   SelectControl,
+  SelectLocalidadControl,
+  SelectProvinciaControl,
 } from "@/components/forms";
 import { useNavigate } from "react-router";
 import { useCurrentJugador, useYupForm } from "@/hooks";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 import { useEffect } from "react";
 import { DISCIPLINAS } from "@/utils/constants";
 
@@ -40,7 +41,6 @@ export default function JugadorEditarPerfilPage() {
   const navigate = useNavigate();
 
   const { jugador } = useCurrentJugador();
-  const { data: provincias } = useProvincias();
 
   const methods = useYupForm({ validationSchema, resetValues: jugador });
   const { mutate, isLoading } = useModificarJugador({
@@ -62,7 +62,6 @@ export default function JugadorEditarPerfilPage() {
   });
 
   const provincia = useWatch({ name: "provincia", control: methods.control });
-  const { data: localidades } = useLocalidadesByProvincia(provincia);
   useEffect(() => {
     methods.resetField("localidad", { defaultValue: jugador.localidad });
   }, [provincia, methods, jugador]);
@@ -99,33 +98,15 @@ export default function JugadorEditarPerfilPage() {
             </Box>
             <Box>
               <Heading size="xs">Provincia</Heading>
-              <SelectControl
-                name="provincia"
-                placeholder="Provincia"
-                isRequired
-                children={provincias?.sort().map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              />
+              <SelectProvinciaControl name="provincia" isRequired />
             </Box>
             <Box>
               <Heading size="xs">Localidad</Heading>
-              <SelectControl
+              <SelectLocalidadControl
                 name="localidad"
-                placeholder="Localidad"
                 isRequired
-              >
-                {localidades.sort().map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-                <option key="Otra" value="Otra">
-                  Otra
-                </option>
-              </SelectControl>
+                provincia={provincia}
+              />
             </Box>
             <Box>
               <Heading size="xs">Disciplina</Heading>
