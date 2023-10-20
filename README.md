@@ -42,7 +42,7 @@ PORT=3001
 
 ```
 npm install
-npx run build
+npm run build
 ```
 
 4. Levantar el servidor:
