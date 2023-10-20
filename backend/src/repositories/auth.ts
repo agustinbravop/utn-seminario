@@ -138,43 +138,46 @@ export class PrismaAuthRepository implements AuthRepository {
     }
   }
 
-  async crearJugador(jugador: Jugador, clave: string) {
+  async crearJugador(jug: Jugador, clave: string) {
     try {
       const dbJugador = await this.prisma.jugador.create({
         data: {
-          nombre: jugador.nombre,
-          telefono: jugador.telefono,
-          apellido: jugador.apellido,
-          correo: jugador.correo,
-          usuario: jugador.usuario,
+          nombre: jug.nombre,
+          telefono: jug.telefono,
+          apellido: jug.apellido,
+          correo: jug.correo,
+          usuario: jug.usuario,
           clave: clave,
-          disciplina: jugador.disciplina
+          disciplina: jug.disciplina
             ? {
                 connectOrCreate: {
-                  where: { disciplina: jugador.disciplina },
-                  create: { disciplina: jugador.disciplina },
+                  where: { disciplina: jug.disciplina },
+                  create: { disciplina: jug.disciplina },
                 },
               }
             : {},
-          localidad: {
-            connectOrCreate: {
-              where: {
-                nombre_idProvincia: {
-                  nombre: jugador.localidad ?? " ",
-                  idProvincia: jugador.provincia ?? " ",
-                },
-              },
-              create: {
-                nombre: jugador.localidad ?? " ",
-                provincia: {
+          localidad:
+            jug.provincia || jug.localidad
+              ? {
                   connectOrCreate: {
-                    where: { provincia: jugador.provincia ?? " " },
-                    create: { provincia: jugador.provincia ?? " " },
+                    where: {
+                      nombre_idProvincia: {
+                        nombre: jug.localidad ?? "",
+                        idProvincia: jug.provincia ?? "",
+                      },
+                    },
+                    create: {
+                      nombre: jug.localidad ?? "",
+                      provincia: {
+                        connectOrCreate: {
+                          where: { provincia: jug.provincia },
+                          create: { provincia: jug.provincia ?? "" },
+                        },
+                      },
+                    },
                   },
-                },
-              },
-            },
-          },
+                }
+              : {},
         },
         include: { disciplina: true, localidad: true },
       });

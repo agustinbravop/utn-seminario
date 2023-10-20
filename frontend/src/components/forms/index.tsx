@@ -16,3 +16,5 @@ export { default as SliderControl } from "./SliderControl";
 export { default as SubmitButton } from "./SubmitButton";
 export { default as SwitchControl } from "./SwitchControl";
 export { default as TextareaControl } from "./TextareaControl";
+export { default as SelectLocalidadControl } from "./SelectLocalidadControl";
+export { default as SelectProvinciaControl } from "./SelectProvinciaControl";
