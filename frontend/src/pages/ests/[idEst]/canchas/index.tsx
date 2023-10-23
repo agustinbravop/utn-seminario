@@ -7,9 +7,10 @@ import {
   InputGroup,
   InputRightElement,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import Courts from "@/components/Courts/Courts";
-import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { useCanchasByEstablecimientoID } from "@/utils/api";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { GrAddCircle } from "react-icons/gr";
 import Alerta from "@/components/Alerta/Alerta";
@@ -17,19 +18,15 @@ import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { EstablecimientoMenu } from "@/components/navigation";
+import { QuestionImage } from "@/utils/consts";
 
 export default function EstablecimientoCanchasPage() {
   const { idEst } = useParams();
-  const { data, isLoading, isError } = useCanchasByEstablecimientoID(
-    Number(idEst)
-  );
-
   const [filtro, setFiltro] = useState("");
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiltro(e.target.value);
-  };
+  const { data, isLoading, isFetchedAfterMount, isError } =
+    useCanchasByEstablecimientoID(Number(idEst));
 
-  const canchasFiltradas = data.filter((cancha) =>
+  const canchas = data.filter((cancha) =>
     cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
@@ -46,17 +43,11 @@ export default function EstablecimientoCanchasPage() {
             placeholder="Nombre de la cancha"
             size="md"
             width="100%"
-            onChange={handleChange}
+            onChange={(e) => setFiltro(e.target.value)}
             value={filtro}
           />
         </InputGroup>
-        <HStack
-          marginLeft="auto"
-          display="flex"
-          alignContent="column"
-          spacing={5}
-          align="center"
-        >
+        <HStack ml="auto" spacing={5}>
           <Text mb="0">
             {data?.length} cancha{data?.length === 1 || "s"}
           </Text>
@@ -65,17 +56,25 @@ export default function EstablecimientoCanchasPage() {
           </Link>
         </HStack>
       </HStack>
-      <HStack marginLeft="16%" marginRight="16%">
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : isError ? (
-          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
-        ) : canchasFiltradas && canchasFiltradas.length > 0 ? (
-          <Courts canchas={(filtro ? canchasFiltradas : data) || []} />
-        ) : (
-          <Text textAlign="center">No se encontraron canchas</Text>
-        )}
-      </HStack>
+      {isError ? (
+        <Alerta
+          mensaje="Error inesperado. No podemos listar las canchas"
+          status="error"
+        />
+      ) : isLoading ? (
+        <LoadingSpinner />
+      ) : canchas.length === 0 && isFetchedAfterMount ? (
+        <VStack m="auto">
+          <QuestionImage />
+          <Text>
+            {filtro
+              ? "No hay canchas con ese nombre."
+              : "Este establecimiento no tiene canchas."}
+          </Text>
+        </VStack>
+      ) : (
+        <Courts canchas={canchas} />
+      )}
     </>
   );
 }

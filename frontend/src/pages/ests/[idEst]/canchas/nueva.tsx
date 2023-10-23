@@ -1,7 +1,7 @@
 import { Disponibilidad } from "@/models";
 import { useNavigate, useParams } from "react-router";
 import { Button, Heading, HStack, useToast, VStack } from "@chakra-ui/react";
-import { CrearCancha, useCrearCancha } from "@/utils/api/canchas";
+import { CrearCancha, useCrearCancha } from "@/utils/api";
 import { ImageControl, InputControl, SubmitButton } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
 import * as Yup from "yup";
@@ -56,7 +56,7 @@ export default function CanchaNuevaPage() {
 
   return (
     <>
-      <Heading textAlign="center" mt="40px" paddingBottom="60px">
+      <Heading textAlign="center" mt="40px" pb="60px">
         Nueva cancha
       </Heading>
 

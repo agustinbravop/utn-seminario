@@ -69,15 +69,11 @@ export class CanchaServiceImpl implements CanchaService {
   async habilitar(idCancha: number, habilitada: boolean) {
     const cancha = await this.repo.getByID(idCancha);
     if (habilitada === cancha.habilitada) {
-      console.log("Coincidencia");
-
       return cancha;
     }
 
     if (habilitada) {
       const est = await this.repo.getEstablecimiento(cancha.id);
-      console.log(est);
-
       if (!est.habilitado) {
         throw new ConflictError(
           "No se puede habilitar la cancha de un establecimiento deshabilitado"

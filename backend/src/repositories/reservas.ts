@@ -1,19 +1,20 @@
 import { Reserva } from "../models/reserva.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
-import { PrismaClient, jugador, reserva } from "@prisma/client";
+import { PrismaClient, jugador, pago, reserva } from "@prisma/client";
 import { disponibilidadDB, toDisp } from "./disponibilidades.js";
-import { CrearReserva } from "../services/reservas.js";
+import { BuscarReservaQuery, CrearReserva } from "../services/reservas.js";
 import Decimal from "decimal.js";
 
 export interface ReservaRepository {
   getReservasByEstablecimientoID(idEst: number): Promise<Reserva[]>;
   getReservasByDisponibilidadID(idDisp: number): Promise<Reserva[]>;
   getReservasByJugadorID(idJugador: number): Promise<Reserva[]>;
+  getReservasByCanchaID(idCancha: number): Promise<Reserva[]>;
   getReservaByID(id: number): Promise<Reserva>;
+  buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
   crearReserva(res: CrearReserva & { precio: Decimal }): Promise<Reserva>;
   existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean>;
-  getReservaActiva(idEst:number):Promise<Reserva[]>; 
-  updatePagarSenia(reserva:Reserva & {senia:Decimal}):Promise<Reserva>; 
+  updateReserva(res: Reserva): Promise<Reserva>;
 }
 
 export class PrismaReservaRepository implements ReservaRepository {
@@ -24,23 +25,46 @@ export class PrismaReservaRepository implements ReservaRepository {
       include: {
         disciplina: true,
         dias: true,
+        cancha: {
+          include: {
+            establecimiento: true,
+          },
+        },
       },
     },
+    pagoReserva: true,
+    pagoSenia: true,
   };
 
-  private includeReserva={ 
-    jugador:true,
-    disponibilidad:{ 
-      include:{ 
-        disciplina:true, 
-        dias:true, 
-        cancha:true
-      },
-    },
-  };
+
 
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
+  }
+
+  async updateReserva(res: Reserva): Promise<Reserva> {
+    try {
+      const nuevaReserva = await this.prisma.reserva.update({
+        where: { id: res.id },
+        data: {
+          fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
+          fechaReservada: res.fechaReservada,
+          precio: res.precio,
+          jugador: { connect: { id: res.jugador.id } },
+          disponibilidad: { connect: { id: res.disponibilidad.id } },
+          pagoReserva: res.pagoReserva
+            ? { connect: { id: res.pagoReserva.id } }
+            : undefined,
+          pagoSenia: res.pagoSenia
+            ? { connect: { id: res.pagoSenia.id } }
+            : undefined,
+        },
+        include: this.include,
+      });
+      return toRes(nuevaReserva);
+    } catch (error) {
+      throw new InternalServerError("Error al intentar actualizar la reserva");
+    }
   }
 
   async getReservasByDisponibilidadID(idDisp: number) {
@@ -73,6 +97,21 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
+  async getReservasByCanchaID(idCancha: number) {
+    try {
+      const reservas = await this.prisma.reserva.findMany({
+        where: { disponibilidad: { idCancha: idCancha } },
+        orderBy: [{ fechaReservada: "asc" }],
+        include: this.include,
+      });
+      return reservas.map((r) => toRes(r));
+    } catch {
+      throw new InternalServerError(
+        `Error al listar las reservas del jugador con id ${idCancha}`
+      );
+    }
+  }
+
   async getReservasByEstablecimientoID(idEst: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
@@ -99,6 +138,30 @@ export class PrismaReservaRepository implements ReservaRepository {
       `No existe reserva con id ${id}`,
       "Error al intentar obtener la reserva"
     );
+  }
+
+  async buscar(filtros: BuscarReservaQuery) {
+    try {
+      const reservas = await this.prisma.reserva.findMany({
+        where: {
+          fechaCreada: {
+            gte: filtros.fechaCreadaDesde,
+            lte: filtros.fechaCreadaHasta,
+          },
+          disponibilidad: {
+            cancha: {
+              id: filtros.idCancha,
+              idEstablecimiento: filtros.idEst,
+            },
+          },
+        },
+        include: this.include,
+      });
+      return reservas.map((p) => toRes(p));
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerError("Error interno al obtener los pagos");
+    }
   }
 
   async crearReserva(res: CrearReserva & { precio: Decimal }) {
@@ -142,28 +205,7 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
-  async getReservaActiva(idEst:number):Promise<Reserva[]>
-  { 
-    const fechaActual=new Date(); 
-    const reserva_activa=await this.prisma.reserva.findMany({ 
-      where: { 
-        AND: 
-        [{ 
-          disponibilidad:{cancha:{establecimiento:{id:idEst}}},
-          fechaReservada: fechaActual
-        }, 
-        
-      ]
-      },
-      orderBy:[{fechaReservada:"asc"}],
-      include:this.includeReserva,
-    }); 
-    
-    if (reserva_activa.length==0) throw new InternalServerError("No existen Reservas activa por el momento"); 
-    return reserva_activa.map((res)=>toRes(res)); 
-
-  }
-
+  
   async updatePagarSenia(reserva:Reserva & {senia:Decimal}):Promise<reserva>
   { 
     const reserva_actualizada =await this.prisma.reserva.update({ 
@@ -183,26 +225,34 @@ export class PrismaReservaRepository implements ReservaRepository {
 
 }
 
-type reservaDB = reserva & {
+type ReservaDB = reserva & {
   jugador: jugador;
   disponibilidad: disponibilidadDB;
+  pagoReserva: pago | null;
+  pagoSenia?: pago | null;
 };
 
-function toRes(res: reservaDB): Reserva {
+function toRes(res: ReservaDB): Reserva {
   const { clave, ...jugador } = res.jugador;
-  return { ...res, jugador, disponibilidad: toDisp(res.disponibilidad) };
+  return {
+    ...res,
+    jugador,
+    disponibilidad: toDisp(res.disponibilidad),
+    pagoReserva: res.pagoReserva ?? undefined,
+    pagoSenia: res.pagoSenia ?? undefined,
+  };
 }
 
 async function awaitQuery(
-  promise: Promise<reservaDB | null>,
+  promise: Promise<ReservaDB | null>,
   notFoundMsg: string,
   errorMsg: string
 ): Promise<Reserva> {
   try {
-    const cancha = await promise;
+    const reservaDB = await promise;
 
-    if (cancha) {
-      return toRes(cancha);
+    if (reservaDB) {
+      return toRes(reservaDB);
     }
   } catch {
     throw new InternalServerError(errorMsg);

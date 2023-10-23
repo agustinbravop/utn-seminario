@@ -1,29 +1,21 @@
 import { useParams } from "react-router";
-import {
-  Heading,
-  Select,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
-import { useCanchasByEstablecimientoID } from "@/utils/api/canchas";
+import { Heading, Select, Text } from "@chakra-ui/react";
+import { useEstablecimientoByID } from "@/utils/api";
+import { useCanchasByEstablecimientoID } from "@/utils/api";
 import { DIAS_ABBR } from "@/utils/consts";
-import FormReservarDisponibilidad from "./canchas/[idCancha]/_formReservar";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { useState, useEffect } from "react";
-import { Cancha } from "@/models";
+import { useState, useEffect, useMemo } from "react";
+import { Cancha, Disponibilidad } from "@/models";
+import { createColumnHelper } from "@tanstack/react-table";
+import { DisponibilidadesTablePlayer } from "@/components/DisponibilidadesTablePlayer/DisponibilidadesTablePlayer";
+
+type Columnas = Disponibilidad;
 
 // TODO: falta filtrar por disponibilidades ya ocupadas en la fecha dada.
 /** Genera las filas de disponibilidades que se muestran en la tabla para reservar. */
 function construirDisponibilidades(canchas: Cancha[]) {
   return canchas
-    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c.nombre })))
+    .map((c) => c.disponibilidades.map((d) => ({ ...d, cancha: c })))
     .flat()
     .sort(
       (a, b) =>
@@ -35,7 +27,10 @@ export default function ReservarEstablecimiento() {
 
   const { data: est } = useEstablecimientoByID(Number(idEst));
   const { data: canchas } = useCanchasByEstablecimientoID(Number(idEst));
-  const disciplinas = [...new Set(canchas?.map((c) => c.disciplinas).flat())];
+  const disciplinas = useMemo(
+    () => [...new Set(canchas?.map((c) => c.disciplinas).flat())],
+    [canchas]
+  );
   const [disciplina, setDisciplina] = useState(disciplinas[0] ?? "");
 
   useEffect(() => {
@@ -50,8 +45,42 @@ export default function ReservarEstablecimiento() {
     return <LoadingSpinner />;
   }
 
-  // Se determina las filas de la tabla de disponibilidades para reservar.
   const disponibilidades = construirDisponibilidades(canchas);
+
+  //Funcion para filtrar tabla
+  const columnHelper = createColumnHelper<Columnas>();
+
+  //Columnas que se van a poder ordenar
+  const columns = [
+    columnHelper.accessor("horaInicio", {
+      cell: (info) => info.getValue(),
+      header: "Inicio",
+    }),
+    columnHelper.accessor("horaFin", {
+      cell: (info) => info.getValue(),
+      header: "Fin",
+    }),
+    columnHelper.accessor("precioReserva", {
+      cell: (info) => "$" + info.getValue(),
+      header: "Precio",
+    }),
+    columnHelper.accessor("precioSenia", {
+      cell: (info) => (info.getValue() ? "$" + info.getValue() : "Sin seña"),
+      header: "Seña",
+    }),
+    columnHelper.accessor("dias", {
+      cell: (info) =>
+        info
+          .getValue()
+          .map((d) => DIAS_ABBR[d])
+          .join(", "),
+      header: "Dias",
+    }),
+    columnHelper.accessor("cancha.nombre", {
+      cell: (info) => info.getValue(),
+      header: "Cancha",
+    }),
+  ];
 
   return (
     <>
@@ -74,39 +103,7 @@ export default function ReservarEstablecimiento() {
       </Select>
       <Heading size="md">Horarios disponibles</Heading>
       <Text>Seleccione un horario a reservar.</Text>
-      <TableContainer paddingTop="15px" paddingBottom="20px">
-        <Table variant="striped" size="sm">
-          <Thead>
-            <Tr>
-              <Th>horario</Th>
-              <Th>precio</Th>
-              <Th>seña</Th>
-              <Th>dias</Th>
-              <Th>cancha</Th>
-              <Th></Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {disponibilidades.map(
-              (d) =>
-                d.disciplina === disciplina && (
-                  <Tr key={d.id}>
-                    <Td>
-                      {d.horaInicio}-{d.horaFin}hs
-                    </Td>
-                    <Td>${d.precioReserva} </Td>
-                    <Td>{d.precioSenia ? `$${d.precioSenia}` : "Sin seña"}</Td>
-                    <Td>{d.dias.map((dia) => DIAS_ABBR[dia]).join(", ")}</Td>
-                    <Td>{d.cancha}</Td>
-                    <Td>
-                      <FormReservarDisponibilidad disp={d} />
-                    </Td>
-                  </Tr>
-                )
-            )}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <DisponibilidadesTablePlayer columns={columns} data={disponibilidades} />
     </>
   );
 }

@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { z } from "zod";
 import { CrearReserva, ReservaService } from "../services/reservas.js";
 import { BadRequestError } from "../utils/apierrors.js";
+import { Reserva } from "../models/reserva.js";
 
 export const crearReservaSchema = z.object({
   idDisponibilidad: z.number().positive().int(),
@@ -65,11 +66,29 @@ export class ReservaHandler {
     };
   }
 
-  getReservaActiva():RequestHandler { 
-    return async (req, res) => { 
-      const idEst=Number(req.params['idEst']); 
-      const reservas=await this.service.getReservaActiva(idEst); 
-      res.status(200).json(reservas); 
-    }
+  seniarReserva(): RequestHandler {
+    return async (_req, res) => {
+      const reserva: Reserva = {
+        id: Number(_req.params["idRes"]),
+        pagoSenia: _req.body.idPagoSenia,
+        pagoReserva: _req.body.idPagoReserva,
+        ..._req.body,
+      };
+      const reservaUpdated = await this.service.pagarSenia(reserva);
+      res.status(201).json(reservaUpdated);
+    };
+  }
+
+  pagarReserva(): RequestHandler {
+    return async (_req, res) => {
+      const reserva: Reserva = {
+        id: Number(_req.params["idRes"]),
+        pagoSenia: _req.body.idPagoSenia,
+        pagoReserva: _req.body.idPagoReserva,
+        ..._req.body,
+      };
+      const reservaUpdated = await this.service.pagarReserva(reserva);
+      res.status(201).json(reservaUpdated);
+    };
   }
 }

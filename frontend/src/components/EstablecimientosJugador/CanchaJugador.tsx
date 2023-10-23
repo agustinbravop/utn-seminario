@@ -46,10 +46,10 @@ export default function CanchaJugador({ cancha, date }: CanchaCardProps) {
         </Box>
         <CardBody height="100%">
           <VStack spacing="0" textAlign="start">
-            <Heading fontSize="15px" marginBottom="10px">
+            <Heading fontSize="15px" mb="10px">
               {cancha.nombre}
             </Heading>
-            <Text marginBottom="2" fontSize="sm">
+            <Text mb="2" fontSize="sm">
               <Icon as={MdPlace} boxSize={4} mr="2" /> {cancha.descripcion}
             </Text>
           </VStack>

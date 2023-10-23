@@ -2,7 +2,7 @@ import { PrismaClient, disciplina, jugador, localidad } from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Jugador } from "../models/jugador.js";
 
-type jugadorDB = jugador & {
+type JugadorDB = jugador & {
   localidad: localidad | null;
   disciplina: disciplina | null;
 };
@@ -12,7 +12,7 @@ type jugadorDB = jugador & {
  * @param jugador una entidad jugador de Prisma.
  * @returns un objeto Jugador del dominio.
  */
-export function toJugador({ clave, ...jugador }: jugadorDB): Jugador {
+export function toJugador({ clave, ...jugador }: JugadorDB): Jugador {
   return {
     ...jugador,
     disciplina: jugador.idDisciplina ?? undefined,
@@ -94,7 +94,7 @@ export class PrismaJugadorRepository implements JugadorRepository {
 }
 
 async function awaitQuery(
-  promise: Promise<jugadorDB | null>,
+  promise: Promise<JugadorDB | null>,
   notFoundMsg: string,
   errorMsg: string
 ): Promise<Jugador> {

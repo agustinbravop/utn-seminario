@@ -341,7 +341,7 @@ async function awaitQuery(
     if (estDB) {
       return toEst(estDB);
     }
-  } catch (e) {
+  } catch {
     throw new InternalServerError(errorMsg);
   }
 

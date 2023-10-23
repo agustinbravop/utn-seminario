@@ -19,14 +19,15 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api/canchas";
+import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 
 import React, { useState, useEffect } from "react";
 import { DIAS_ABBR, FALLBACK_IMAGE_SRC } from "@/utils/consts/consts";
-import { useEstablecimientoByID } from "@/utils/api/establecimientos";
+import { useEstablecimientoByID } from "@/utils/api";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import FormReservarDisponibilidad from "./_formReservar";
+import { ordenarDias } from "@/utils/dias";
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams(
@@ -80,7 +81,7 @@ export default function VistaJugadorCancha() {
               />
             </Box>
           </CardHeader>
-          <CardBody marginTop="0px" flex="1">
+          <CardBody mt="0px" flex="1">
             <Stack divider={<StackDivider />} spacing="1">
               <Box>
                 <Heading size="xs" margin="0">
@@ -118,7 +119,7 @@ export default function VistaJugadorCancha() {
                     </option>
                   ))}
                 </Select>
-                <TableContainer paddingTop="15px" paddingBottom="20px">
+                <TableContainer pt="15px" pb="20px">
                   <Table variant="simple" size="sm">
                     <Thead>
                       <Tr>
@@ -144,7 +145,7 @@ export default function VistaJugadorCancha() {
                                   : "Sin seña"}
                               </Td>
                               <Td>
-                                {d.dias
+                                {ordenarDias(d.dias)
                                   .map((dia) => DIAS_ABBR[dia])
                                   .join(" - ")}
                               </Td>

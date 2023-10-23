@@ -12,7 +12,7 @@ export const ICONOS_SUSCRIPCIONES = [
 
 /** Imagen a mostrar cuando la imagen original falla o no carga. */
 export function FallbackImage(props: ImageProps) {
-  return <Image fallbackSrc={FALLBACK_IMAGE_SRC} {...props} />;
+  return <Image fallbackSrc={FALLBACK_IMAGE_SRC} fit="cover" {...props} />;
 }
 
 /** El logo de la app. */

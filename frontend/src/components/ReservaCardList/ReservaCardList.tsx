@@ -1,15 +1,21 @@
+import { useReservasByJugadorID } from "@/utils/api";
 import ReservaCard from "../ReservaCard/ReservaCard";
-import { Heading } from "@chakra-ui/react";
+import { Heading, VStack } from "@chakra-ui/react";
+import { useCurrentJugador } from "@/hooks";
 
 export default function ReservaCardList() {
-  //TODO: Agregar a CardList los props para que resiva una reserva y muestre los datos
-
+  const { jugador } = useCurrentJugador();
+  const { data: reservas } = useReservasByJugadorID(jugador.id);
   return (
     <>
       <Heading pb="10px" size="lg" textAlign="center">
         Reservas Activas
       </Heading>
-      <ReservaCard />
+      <VStack>
+        {reservas.map((reserva) => (
+          <ReservaCard key={reserva.id} reserva={reserva} />
+        ))}
+      </VStack>
     </>
   );
 }

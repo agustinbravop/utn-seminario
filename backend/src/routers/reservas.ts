@@ -24,13 +24,31 @@ export function reservasRouter(
     handler.getReserva()
   );
 
-  router.get("/Activas/:idEst", handler.getReservaActiva())
+  
 
   router.post(
     "/",
     authMiddle.isJugador(),
     validateBody(crearReservaSchema),
     handler.postReserva()
+  );
+
+  router.patch(
+    "/:idRes", //validateIDParams("idRes"),
+    //Solo el admin seña por ahora, el metodo de
+    //pago hardcodeado es "Efectivo" por ahora
+    authMiddle.isAdmin(),
+    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
+    handler.seniarReserva()
+  );
+
+  router.patch(
+    "/pagar/:idRes", //validateIDParams("idRes"),
+    //Solo el admin seña por ahora, el metodo de
+    //pago hardcodeado es "Efectivo" por ahora
+    authMiddle.isAdmin(),
+    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
+    handler.pagarReserva()
   );
 
   return router;

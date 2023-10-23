@@ -1,6 +1,6 @@
 import PaymentForm from "@/components/PaymentForm/PaymentForm";
 import { useLocation, useNavigate } from "react-router";
-import { RegistrarAdmin, useRegistrarAdmin } from "@/utils/api/auth";
+import { RegistrarAdmin, useRegistrarAdmin } from "@/utils/api";
 import * as Yup from "yup";
 import {
   HStack,

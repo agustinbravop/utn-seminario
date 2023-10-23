@@ -1,4 +1,4 @@
-import { Alert, Heading, Text, useToast } from "@chakra-ui/react";
+import { Heading, Text, useToast } from "@chakra-ui/react";
 import {
   Table,
   Thead,
@@ -7,20 +7,31 @@ import {
   Th,
   Td,
   TableContainer,
+  chakra,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api/canchas";
+import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
-import FormDisponibilidad from "./_formDisp";
+import FormDisp from "./_FormDisp";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import {
   useCrearDisponibilidad,
   useDisponibilidadesByCanchaID,
   useModificarDisponibilidad,
-} from "@/utils/api/disponibilidades";
-import FormDeleteDisponibilidad from "./_formEliminar";
+} from "@/utils/api";
+import FormEliminarDisp from "./_FormEliminarDisp";
 import { Disponibilidad, DisponibilidadForm } from "@/models";
 import { decimalAHora, horaADecimal } from "@/utils/dates";
 import { CanchaMenu } from "@/components/navigation";
+import {
+  createColumnHelper,
+  useReactTable,
+  flexRender,
+  getCoreRowModel,
+  SortingState,
+  getSortedRowModel,
+} from "@tanstack/react-table";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { useState } from "react";
 
 /**
  * Deriva el valor del campo 'minutosReserva' del DisponibilidadForm
@@ -39,9 +50,63 @@ export default function CanchaInfoPage() {
     Number(idEst),
     Number(idCancha)
   );
+
+  const columnHelper = createColumnHelper<Disponibilidad>();
+  //Columnas que se van a poder ordenar
+  const columns = [
+    columnHelper.accessor("disciplina", {
+      cell: (info) => info.getValue(),
+      header: "Disciplina",
+    }),
+    columnHelper.accessor("horaInicio", {
+      cell: (info) => info.getValue(),
+      header: "Inicio",
+    }),
+    columnHelper.accessor("horaFin", {
+      cell: (info) => info.getValue(),
+      header: "Fin",
+    }),
+    columnHelper.accessor("precioReserva", {
+      cell: (info) => "$" + info.getValue(),
+      header: "Precio",
+    }),
+    columnHelper.accessor("dias", {
+      cell: (info) => info.getValue().sort().join(" - "),
+      header: "Dias",
+    }),
+  ];
+
+  //Para la tabla ordenada
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const table = useReactTable({
+    columns: columns,
+    data: disponibilidades,
+    getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+  });
+
   const toast = useToast();
 
-  const { mutate: mutateCrear, isError } = useCrearDisponibilidad();
+  const { mutate: mutateCrear } = useCrearDisponibilidad({
+    onSuccess: () => {
+      toast({
+        title: "Disponibilidad creada.",
+        description: `Se registró exitosamente.`,
+        status: "success",
+      });
+    },
+    onError: (e) => {
+      toast({
+        title: e.conflictMsg("Error al crear la disponibilidad."),
+        description: `Intente de nuevo.`,
+        status: "error",
+      });
+    },
+  });
 
   const { mutate: mutateModificar } = useModificarDisponibilidad({
     onSuccess: () => {
@@ -51,9 +116,9 @@ export default function CanchaInfoPage() {
         status: "success",
       });
     },
-    onError: () => {
+    onError: (e) => {
       toast({
-        title: "Error al modificar la disponibilidad.",
+        title: e.conflictMsg("Error al modificar la disponibilidad."),
         description: `Intente de nuevo.`,
         status: "error",
       });
@@ -67,9 +132,10 @@ export default function CanchaInfoPage() {
   const handleCrearDisponibilidad = (disp: DisponibilidadForm) => {
     const fin = horaADecimal(disp.horaFin);
     const horasReserva = disp.minutosReserva / 60;
-    let dispInicio = horaADecimal(disp.horaInicio);
-    while (dispInicio < fin) {
-      const dispFin = dispInicio + horasReserva;
+    const dispInicio = horaADecimal(disp.horaInicio);
+
+    let dispFin = dispInicio + horasReserva;
+    while (dispFin <= fin) {
       mutateCrear({
         ...disp,
         horaInicio: decimalAHora(dispInicio),
@@ -77,7 +143,7 @@ export default function CanchaInfoPage() {
         idEst: Number(idEst),
         idCancha: Number(idCancha),
       });
-      dispInicio += horasReserva;
+      dispFin += horasReserva;
     }
   };
 
@@ -90,53 +156,70 @@ export default function CanchaInfoPage() {
         Las reservas que sus clientes vayan a realizar, ocuparán una
         disponibilidad en la fecha reservada.
       </Text>
-      <FormDisponibilidad
+      <FormDisp
         variant="crear"
         onSubmit={handleCrearDisponibilidad}
         resetValues={{ idCancha: Number(idCancha) }}
       />
-      {isError && (
-        <Alert status="error" margin="20px">
-          Hubo un error inesperado al intentar crear la disponibilidad. Intente
-          de nuevo.
-        </Alert>
-      )}
       <TableContainer pt="15px" pb="20px" mr="100px">
         <Table size="sm">
           <Thead>
-            <Tr>
-              <Th>Disciplina</Th>
-              <Th>Horario</Th>
-              <Th>Precio</Th>
-              <Th>Días</Th>
-              <Th>Acciones</Th>
-            </Tr>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  const meta: any = header.column.columnDef.meta;
+                  return (
+                    <Th
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                      isNumeric={meta?.isNumeric}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+
+                      <chakra.span pl="4">
+                        {header.column.getIsSorted() ? (
+                          header.column.getIsSorted() === "desc" ? (
+                            <TriangleDownIcon aria-label="sorted descending" />
+                          ) : (
+                            <TriangleUpIcon aria-label="sorted ascending" />
+                          )
+                        ) : null}
+                      </chakra.span>
+                    </Th>
+                  );
+                })}
+                <Th>Acciones</Th>
+              </Tr>
+            ))}
           </Thead>
           <Tbody>
-            {disponibilidades.map((d) => (
-              <Tr key={d.id}>
-                <Td> {d.disciplina} </Td>
-                <Td>
-                  {d.horaInicio} - {d.horaFin}
-                </Td>
-                <Td> ${d.precioReserva} </Td>
-                <Td>{d.dias.sort().join(" - ")}</Td>
+            {table.getRowModel().rows.map((row) => (
+              <Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <Td key={cell.id}>
+                    {cell.id !== "reserva" &&
+                      flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Td>
+                ))}
                 <Td display="flex" gap="10px" p="0.2em">
-                  <FormDisponibilidad
+                  <FormDisp
                     variant="modificar"
                     onSubmit={(disp) =>
                       mutateModificar({
                         ...disp,
                         idEst: Number(idEst),
-                        id: d.id,
+                        id: row.original.id,
                       })
                     }
                     resetValues={{
-                      ...d,
-                      minutosReserva: calcularMinutosReserva(d),
+                      ...row.original,
+                      minutosReserva: calcularMinutosReserva(row.original),
                     }}
                   />
-                  <FormDeleteDisponibilidad idDisp={d.id} />
+                  <FormEliminarDisp idDisp={row.original.id} />
                 </Td>
               </Tr>
             ))}

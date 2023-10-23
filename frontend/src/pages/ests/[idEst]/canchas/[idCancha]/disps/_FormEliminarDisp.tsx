@@ -1,6 +1,6 @@
 import { ConfirmSubmitButton } from "@/components/forms";
 import { useParams } from "@/router";
-import { useEliminarDisponibilidad } from "@/utils/api/disponibilidades";
+import { useEliminarDisponibilidad } from "@/utils/api";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
 
@@ -8,7 +8,7 @@ interface FormDeleteDisponibilidadProps {
   idDisp: number;
 }
 
-export default function FormDeleteDisponibilidad({
+export default function FormEliminarDisp({
   idDisp,
 }: FormDeleteDisponibilidadProps) {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha/disps");

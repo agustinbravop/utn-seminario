@@ -16,7 +16,7 @@ import {
   useEliminarEstablecimiento,
   useEstablecimientoByID,
   useHabilitarEstablecimiento,
-} from "@/utils/api/establecimientos";
+} from "@/utils/api";
 import { Image } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";

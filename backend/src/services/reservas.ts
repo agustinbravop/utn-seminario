@@ -1,9 +1,11 @@
+import Decimal from "decimal.js";
 import { Disponibilidad } from "../models/disponibilidad";
 import { Reserva } from "../models/reserva";
 import { CanchaRepository } from "../repositories/canchas";
 import { DisponibilidadRepository } from "../repositories/disponibilidades";
+import { PagoRepository } from "../repositories/pagos";
 import { ReservaRepository } from "../repositories/reservas";
-import { ConflictError } from "../utils/apierrors";
+import { ConflictError, InternalServerError } from "../utils/apierrors";
 import { getDayOfWeek } from "../utils/dates";
 
 export type CrearReserva = {
@@ -12,29 +14,86 @@ export type CrearReserva = {
   idDisponibilidad: number;
 };
 
+export type BuscarReservaQuery = {
+  idCancha?: number;
+  idEst?: number;
+  fechaCreadaDesde?: string;
+  fechaCreadaHasta?: string;
+};
+
 export interface ReservaService {
   getByEstablecimientoID(idEst: number): Promise<Reserva[]>;
   getByDisponibilidadID(idDisp: number): Promise<Reserva[]>;
   getByJugadorID(idJugador: number): Promise<Reserva[]>;
+  getByCanchaID(idCancha: number): Promise<Reserva[]>;
   getByID(idRes: number): Promise<Reserva>;
+  buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
   crear(res: CrearReserva): Promise<Reserva>;
-  getReservaActiva(idEst:number):Promise<Reserva[]>; 
-  
+  pagarSenia(res: Reserva): Promise<Reserva>;
+  pagarReserva(res: Reserva): Promise<Reserva>;
+
 }
 
 export class ReservaServiceImpl implements ReservaService {
   private repo: ReservaRepository;
   private canchaRepository: CanchaRepository;
   private dispRepository: DisponibilidadRepository;
+  private pagoRepo: PagoRepository;
 
   constructor(
     repository: ReservaRepository,
     canchaRepository: CanchaRepository,
-    dispRepository: DisponibilidadRepository
+    dispRepository: DisponibilidadRepository,
+    pagoRepo: PagoRepository
   ) {
     this.repo = repository;
     this.canchaRepository = canchaRepository;
     this.dispRepository = dispRepository;
+    this.pagoRepo = pagoRepo;
+  }
+
+  async pagarSenia(res: Reserva): Promise<Reserva> {
+    if (!res.disponibilidad.precioSenia) {
+      throw new Error(
+        `La disponibilidad ${res.disponibilidad.id} no admite señas`
+      );
+    }
+    if (res.pagoSenia) {
+      throw new Error("Reserva con seña existente");
+    }
+    try {
+      const pago = await this.pagoRepo.crear(
+        new Decimal(res.disponibilidad.precioSenia), //???
+        "Efectivo"
+      );
+      res.pagoSenia = pago;
+      return await this.repo.updateReserva(res);
+    } catch (e) {
+      throw new InternalServerError("Error al registrar el pago de la seña");
+    }
+  }
+
+  async pagarReserva(res: Reserva): Promise<Reserva> {
+    if (res.pagoReserva) {
+      throw new Error("Reserva con pago existente");
+    }
+    try {
+      var monto = new Decimal(0);
+      if (res.pagoSenia) {
+        const precioDecimal = new Decimal(res.precio);
+        const pagoSeniaDecimal = new Decimal(
+          res.disponibilidad.precioSenia ? res.disponibilidad.precioSenia : 0
+        );
+        monto = precioDecimal.minus(pagoSeniaDecimal);
+      } else {
+        monto = new Decimal(res.precio);
+      }
+      const pago = await this.pagoRepo.crear(monto, "Efectivo");
+      res.pagoReserva = pago;
+      return await this.repo.updateReserva(res);
+    } catch (e) {
+      throw new InternalServerError("Error al registrar el pago de la reserva");
+    }
   }
 
   async getByEstablecimientoID(idEst: number) {
@@ -45,6 +104,10 @@ export class ReservaServiceImpl implements ReservaService {
     return await this.repo.getReservasByDisponibilidadID(idDisp);
   }
 
+  async getByCanchaID(idCancha: number) {
+    return await this.repo.getReservasByCanchaID(idCancha);
+  }
+
   async getByJugadorID(idJugador: number) {
     return await this.repo.getReservasByJugadorID(idJugador);
   }
@@ -53,11 +116,15 @@ export class ReservaServiceImpl implements ReservaService {
     return await this.repo.getReservaByID(idRes);
   }
 
+  async buscar(filtros: BuscarReservaQuery) {
+    return await this.repo.buscar(filtros);
+  }
+
   async crear(crearReserva: CrearReserva) {
     await this.validarCanchaHabilitada(crearReserva);
     await this.validarDisponibilidadLibre(crearReserva);
 
-    const disp = await this.dispRepository.getDisponibilidadByID(
+    const disp = await this.dispRepository.getByID(
       crearReserva.idDisponibilidad
     );
     await this.validarDiaDeSemana(crearReserva, disp);
@@ -75,7 +142,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     if (!cancha.habilitada || cancha.eliminada) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} es de una cancha deshabilitada o eliminada`
+        `La disponibilidad es de una cancha deshabilitada o eliminada`
       );
     }
   }
@@ -88,7 +155,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     if (yaFueReservada) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} ya fue reservada en la fecha ${res.fechaReservada}`
+        `La disponibilidad ya fue reservada en la fecha ${res.fechaReservada}`
       );
     }
   }
@@ -98,13 +165,11 @@ export class ReservaServiceImpl implements ReservaService {
     const dia = getDayOfWeek(res.fechaReservada);
     if (!disp.dias.includes(dia)) {
       throw new ConflictError(
-        `La disponibilidad ${res.idDisponibilidad} solo está disponible los días ${disp.dias}`
+        `La disponibilidad de ${disp.horaInicio} a ${disp.horaFin} solo está disponible los días ${disp.dias}`
       );
     }
   }
 
-  async  getReservaActiva(idEst: number): Promise<Reserva[]> {
-      return await this.repo.getReservaActiva(idEst); 
-  }
+ 
   
 }

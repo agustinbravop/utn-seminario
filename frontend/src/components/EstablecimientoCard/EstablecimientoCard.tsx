@@ -46,10 +46,10 @@ export default function EstablecimientoCard({
         </Box>
         <CardBody height="300px">
           <VStack spacing="0">
-            <Heading size="md" marginBottom="10px">
+            <Heading size="md" mb="10px">
               {establecimiento.nombre}
             </Heading>
-            <Text marginBottom="0">
+            <Text mb="0">
               <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
               {establecimiento.direccion}
             </Text>

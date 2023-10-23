@@ -26,7 +26,7 @@ export default function EstablecimientoMenu() {
 
   return (
     <>
-      <Heading textAlign="center" paddingBottom="7" mt="40px">
+      <Heading textAlign="center" pb="7" mt="40px">
         {est.nombre}
       </Heading>
 
@@ -34,6 +34,7 @@ export default function EstablecimientoMenu() {
         <LinkButton to={`/ests/${est.id}`}>Información</LinkButton>
         <LinkButton to={`/ests/${est.id}/canchas`}>Canchas</LinkButton>
         <LinkButton to={`/ests/${est.id}/reservas`}>Reservas</LinkButton>
+        <LinkButton to={`/ests/${est.id}/informes`}>Informes</LinkButton>
       </HStack>
     </>
   );

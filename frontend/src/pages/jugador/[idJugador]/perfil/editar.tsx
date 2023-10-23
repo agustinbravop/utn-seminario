@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useModificarJugador } from "@/utils/api/auth";
+import { useModificarJugador } from "@/utils/api";
 import { FormProvider, useWatch } from "react-hook-form";
 import {
   InputControl,
@@ -20,7 +20,7 @@ import {
 } from "@/components/forms";
 import { useNavigate } from "react-router";
 import { useCurrentJugador, useYupForm } from "@/hooks";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api/geo";
+import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 import { useEffect } from "react";
 import { DISCIPLINAS } from "@/utils/consts";
 
@@ -74,14 +74,9 @@ export default function JugadorEditarPerfilPage() {
           Editar Perfil
         </Heading>
       </CardHeader>
-      <CardBody marginTop="28px">
+      <CardBody mt="28px">
         <FormProvider {...methods}>
-          <Stack
-            divider={<StackDivider />}
-            spacing="2.5"
-            marginTop="-2rem"
-            as="form"
-          >
+          <Stack divider={<StackDivider />} spacing="2.5" mt="-2rem" as="form">
             <Box>
               <Heading size="xs">Nombre</Heading>
               <InputControl isRequired name="nombre" />

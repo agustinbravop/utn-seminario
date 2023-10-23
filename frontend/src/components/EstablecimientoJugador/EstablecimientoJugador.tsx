@@ -51,14 +51,14 @@ export default function EstablecimientoJugador({
         </Box>
         <CardBody height="100%">
           <VStack spacing="0" textAlign="start">
-            <Heading fontSize="15px" marginBottom="10px">
+            <Heading fontSize="15px" mb="10px">
               {establecimiento.nombre}
             </Heading>
-            <Text marginBottom="2" fontSize="sm">
+            <Text mb="2" fontSize="sm">
               <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
               {establecimiento.direccion}
             </Text>
-            <Text marginBottom="0" fontSize="sm">
+            <Text mb="0" fontSize="sm">
               Desde <strong> $1800 </strong>
             </Text>
           </VStack>
