@@ -9,14 +9,15 @@ import {
   TabPanels,
   Tabs,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { useCurrentJugador } from "@/hooks";
 import { ReservaCard } from "@/components/display";
 import { useState } from "react";
 import { Reserva } from "@/models";
-import { DISCIPLINAS, QuestionImage } from "@/utils/constants";
+import { DISCIPLINAS } from "@/utils/constants";
 import { fechaHoraReservada, isReservaActiva } from "@/utils/reservas";
+import { LoadingSpinner } from "@/components/feedback";
+import { QuestionAlert } from "@/components/media-and-icons";
 
 function reservaCompare(a: Reserva, b: Reserva) {
   return Number(fechaHoraReservada(a)) - Number(fechaHoraReservada(b));
@@ -24,7 +25,9 @@ function reservaCompare(a: Reserva, b: Reserva) {
 
 export default function JugadorReservasPage() {
   const { jugador } = useCurrentJugador();
-  const { data: reservas } = useReservasByJugadorID(jugador.id);
+  const { data: reservas, isFetchedAfterMount } = useReservasByJugadorID(
+    jugador.id
+  );
   const [orden, setOrden] = useState(true);
   const [disciplina, setDisciplina] = useState("");
 
@@ -90,27 +93,25 @@ export default function JugadorReservasPage() {
         </TabList>
         <TabPanels>
           <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
-            {reservasActivas.length > 0 ? (
+            {!isFetchedAfterMount ? (
+              <LoadingSpinner />
+            ) : reservasActivas.length > 0 ? (
               reservasActivas.map((reserva) => (
                 <ReservaCard key={reserva.id} reserva={reserva} />
               ))
             ) : (
-              <VStack>
-                <QuestionImage />
-                <Text>No hay reservas activas por jugar.</Text>
-              </VStack>
+              <QuestionAlert>No hay reservas activas por jugar.</QuestionAlert>
             )}
           </TabPanel>
           <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
-            {reservasFiltradas.length > 0 ? (
+            {!isFetchedAfterMount ? (
+              <LoadingSpinner />
+            ) : reservasFiltradas.length > 0 ? (
               reservasFiltradas.map((reserva) => (
                 <ReservaCard key={reserva.id} reserva={reserva} />
               ))
             ) : (
-              <VStack>
-                <QuestionImage />
-                <Text>Todavía no ha realizado reservas.</Text>
-              </VStack>
+              <QuestionAlert>Todavía no ha realizado reservas.</QuestionAlert>
             )}
           </TabPanel>
         </TabPanels>
