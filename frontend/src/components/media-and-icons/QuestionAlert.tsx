@@ -1,15 +1,18 @@
 import { QuestionImage } from "@/utils/constants";
-import { StackProps, VStack } from "@chakra-ui/react";
+import { StackProps, Text, VStack } from "@chakra-ui/react";
 
 interface QuestionAlertProps extends StackProps {
   children?: React.ReactNode;
 }
 
-export default function QuestionAlert({ children, ...props }: QuestionAlertProps) {
+export default function QuestionAlert({
+  children,
+  ...props
+}: QuestionAlertProps) {
   return (
     <VStack {...props}>
       <QuestionImage />
-      {children}
+      {typeof children === "string" ? <Text>{children}</Text> : children}
     </VStack>
   );
 }

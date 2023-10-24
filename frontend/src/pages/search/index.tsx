@@ -118,7 +118,9 @@ export default function BuscarEstablecimientosPage() {
             />
           ))
         ) : isFetchedAfterMount ? (
-          <QuestionAlert>No se encontraron establecimientos.</QuestionAlert>
+          <QuestionAlert>
+            No se encontraron establecimientos con esos filtros.
+          </QuestionAlert>
         ) : (
           <LoadingSpinner />
         )}
