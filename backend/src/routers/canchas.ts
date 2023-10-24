@@ -10,10 +10,12 @@ import multer from "multer";
 import { validateBody, validateIDParams } from "../middlewares/validation.js";
 import { EstablecimientoHandler } from "../handlers/establecimientos.js";
 import { AuthHandler } from "../handlers/auth.js";
+import { DisponibilidadHandler } from "../handlers/disponibilidades.js";
 
 export function canchasRouter(
   handler: CanchaHandler,
   estHandler: EstablecimientoHandler,
+  dispHandler: DisponibilidadHandler,
   authMiddle: AuthHandler,
   upload: multer.Multer
 ): Router {
@@ -33,6 +35,11 @@ export function canchasRouter(
     validateIDParams("idEst", "idCancha")
   );
   router.get("/:idEst/canchas/:idCancha", handler.getCanchaByID());
+  router.get(
+    "/:idEst/canchas/:idCancha/disponibilidades",
+    dispHandler.getDisponibilidadesByCanchaID()
+  );
+
   router.put(
     "/:idEst/canchas/:idCancha",
     authMiddle.isAdmin(),

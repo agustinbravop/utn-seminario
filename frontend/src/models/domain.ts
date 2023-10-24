@@ -63,7 +63,6 @@ export type Disponibilidad = {
   disciplina: string;
   dias: Dia[];
   idCancha: number;
-  cancha?: Cancha;
 };
 
 export type Dia =
@@ -90,23 +89,16 @@ export type Tarjeta = {
   vencimiento: string;
 };
 
-export type Busqueda = {
-  nombre?: string | undefined;
-  provincia?: string | undefined;
-  localidad?: string | undefined;
-  disciplina?: string | undefined;
-  fecha?: string | undefined;
-};
-
 export type Reserva = {
   id: number;
   fechaReservada: string;
   fechaCreada: string;
   precio: number;
-  idPagoReserva: number;
-  pagoReserva: Pago;
-  idPagoSenia: number;
-  pagoSenia: Pago;
+  senia?: number;
+  idPagoReserva?: number;
+  pagoReserva?: Pago;
+  idPagoSenia?: number;
+  pagoSenia?: Pago;
   jugador: Jugador;
   disponibilidad: Disponibilidad & {
     cancha: Cancha & { establecimiento: Establecimiento };

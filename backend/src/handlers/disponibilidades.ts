@@ -1,15 +1,28 @@
 import { RequestHandler } from "express";
-import { DisponibilidadService } from "../services/disponibilidades";
+import {
+  BuscarDisponibilidadesQuery,
+  DisponibilidadService,
+} from "../services/disponibilidades";
 import {
   Disponibilidad,
   disponibilidadSchema,
 } from "../models/disponibilidad.js";
+import { ForbiddenError } from "../utils/apierrors";
+import { z } from "zod";
 
 export const crearDisponibilidadSchema = disponibilidadSchema.omit({
   id: true,
 });
 
 export const modificarDisponibilidadSchema = disponibilidadSchema;
+
+export const buscarDisponibilidadesQuerySchema = z.object({
+  idCancha: z.coerce.number().int().optional(),
+  idEst: z.coerce.number().int().optional(),
+  disciplina: z.string().optional(),
+  fecha: z.coerce.date().optional(),
+  habilitada: z.coerce.boolean().optional(),
+});
 
 export class DisponibilidadHandler {
   private service: DisponibilidadService;
@@ -34,6 +47,14 @@ export class DisponibilidadHandler {
       const disponibilidad = await this.service.getByID(idDisp);
 
       res.status(200).json(disponibilidad);
+    };
+  }
+
+  buscarDisponibilidades(): RequestHandler {
+    return async (_req, res) => {
+      const filtros: BuscarDisponibilidadesQuery = res.locals.query;
+      const disps = await this.service.buscar(filtros);
+      res.status(200).json(disps);
     };
   }
 
@@ -64,6 +85,27 @@ export class DisponibilidadHandler {
 
       const dispEliminada = await this.service.eliminar(idDisp);
       res.status(200).json(dispEliminada);
+    };
+  }
+
+  /**
+   * Valida que el param `idDisp` corresponda a una disponibilidad del usuario con el JWT.
+   * Este middleware **asume que el JWT del administrador ya fue autenticado.**
+   *
+   * Sirve para evitar que un administrador modifique una disponibilidad que no le pertenece.
+   */
+  validateAdminOwnsDisponibilidad(): RequestHandler {
+    return async (req, res, next) => {
+      const idDisp = Number(req.params.idDisp);
+      const disps = await this.service.getByAdminID(res.locals.idAdmin);
+
+      if (!disps.find((d) => d.id === idDisp)) {
+        throw new ForbiddenError(
+          "No puede alterar disponibilidades de otro administrador"
+        );
+      }
+
+      next();
     };
   }
 }

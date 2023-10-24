@@ -14,13 +14,13 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import {
   ImageControl,
   InputControl,
-  SelectControl,
+  SelectLocalidadControl,
+  SelectProvinciaControl,
   SubmitButton,
 } from "@/components/forms";
 import { useEffect } from "react";
 import { FormProvider, useWatch } from "react-hook-form";
 import { useYupForm } from "@/hooks/useYupForm";
-import { useLocalidadesByProvincia, useProvincias } from "@/utils/api";
 
 type FormState = CrearEstablecimiento & {
   imagen: File | undefined;
@@ -40,16 +40,14 @@ const validationSchema = Yup.object({
   imagen: Yup.mixed<File>().optional(),
 });
 
-function NewEstab() {
+function NuevoEstablecimientoPage() {
   const { admin } = useCurrentAdmin();
   const navigate = useNavigate();
   const toast = useToast();
 
   const methods = useYupForm<FormState>({
     validationSchema,
-    defaultValues: {
-      idAdministrador: Number(admin?.id),
-    },
+    defaultValues: { idAdministrador: Number(admin?.id) },
   });
 
   const { mutate, isLoading, isError } = useCrearEstablecimiento({
@@ -70,9 +68,7 @@ function NewEstab() {
     },
   });
 
-  const { data: provincias } = useProvincias();
   const provincia = useWatch({ name: "provincia", control: methods.control });
-  const { data: localidades } = useLocalidadesByProvincia(provincia);
   useEffect(() => {
     methods.resetField("localidad");
   }, [provincia, methods]);
@@ -112,32 +108,17 @@ function NewEstab() {
               isRequired
             />
             <HStack>
-              <SelectControl
+              <SelectProvinciaControl
                 name="provincia"
                 label="Provincia"
-                placeholder="Provincia"
                 isRequired
-                children={provincias?.sort().map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
               />
-              <SelectControl
+              <SelectLocalidadControl
                 name="localidad"
                 label="Localidad"
-                placeholder="Localidad"
                 isRequired
-              >
-                {localidades.sort().map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-                <option key="Otra" value="Otra">
-                  Otra
-                </option>
-              </SelectControl>
+                provincia={provincia}
+              />
             </HStack>
             <InputControl
               name="telefono"
@@ -168,4 +149,4 @@ function NewEstab() {
   );
 }
 
-export default NewEstab;
+export default NuevoEstablecimientoPage;

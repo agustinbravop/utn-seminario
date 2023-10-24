@@ -30,6 +30,7 @@ export interface UseApiMutationOptions<
     variables: TVariables,
     context: TContext | undefined
   ) => QueryKey;
+  invalidateManyOnSuccess?: QueryKey[];
 }
 
 /**
@@ -56,6 +57,12 @@ export function useApiMutation<
         queryClient.invalidateQueries({
           queryKey: options.invalidateOnSuccess(data, variables, context),
         });
+      }
+
+      if (options.invalidateManyOnSuccess) {
+        options.invalidateManyOnSuccess.forEach((queryKey) =>
+          queryClient.invalidateQueries({ queryKey })
+        );
       }
 
       // Se llama al `onSuccess()` callback pasado por parámetro.

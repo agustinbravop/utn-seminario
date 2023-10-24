@@ -1,9 +1,9 @@
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { EstablecimientoMenu } from "@/components/navigation";
 import { useParams } from "@/router";
 import { useInformePagosPorCancha } from "@/utils/api";
-import { FallbackImage } from "@/utils/consts";
-import { formatearISOFecha } from "@/utils/dates";
+import { FallbackImage } from "@/utils/constants";
+import { formatFecha, formatISOFecha } from "@/utils/dates";
 import {
   Box,
   Card,
@@ -19,45 +19,20 @@ import {
   StatHelpText,
   StatLabel,
   StatNumber,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/informes");
-  const [fechaDesde, setFechaDesde] = useState<string>("");
-  const [fechaHasta, setFechaHasta] = useState<string>("");
+  const [fechaDesde, setFechaDesde] = useState<string>(formatFecha(new Date()));
+  const [fechaHasta, setFechaHasta] = useState<string>(formatFecha(new Date()));
 
   const { data: informe } = useInformePagosPorCancha({
     idEst: Number(idEst),
     fechaDesde: fechaDesde || undefined,
     fechaHasta: fechaHasta || undefined,
   });
-
-  const ingresosStat = (label: string, ingresos: number) => {
-    return (
-      <Stat>
-        <StatLabel>{label}</StatLabel>
-        <StatNumber>${ingresos}</StatNumber>
-        <StatHelpText>
-          {fechaDesde && formatearISOFecha(fechaDesde)} -{" "}
-          {fechaHasta && formatearISOFecha(fechaHasta)}
-        </StatHelpText>
-      </Stat>
-    );
-  };
-
-  const reservasStat = (label: string, reservas: number) => {
-    return (
-      <Stat>
-        <StatLabel>{label}</StatLabel>
-        <StatNumber>{reservas}</StatNumber>
-        <StatHelpText>
-          {fechaDesde && formatearISOFecha(fechaDesde)} -{" "}
-          {fechaHasta && formatearISOFecha(fechaHasta)}
-        </StatHelpText>
-      </Stat>
-    );
-  };
 
   return (
     <>
@@ -86,15 +61,54 @@ export default function EstablecimientoReservasPage() {
       {!informe ? (
         <LoadingSpinner />
       ) : (
-        <Box mx="12%">
-          <StatGroup width="380px" gap="40px" m="20px auto">
-            {ingresosStat("Ingreso total", informe.total)}
-            {reservasStat(
-              "Reservas recibidas",
-              informe.canchas.reduce((acum, c) => acum + c.reservas.length, 0)
-            )}
+        <Box mx="16%">
+          <StatGroup width="fit-content" gap="40px" ml="20px">
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Dinero que se espera recibir al terminar este período de tiempo, si todas las reservas son pagadas">
+                  Total estimado
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>${informe.estimado}</StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)}
+                {" - "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Dinero recibido por el establecimiento hasta ahora">
+                  Total ingresado
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>${informe.total}</StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)}
+                {" - "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Cantidad de reservas que el establecimiento recibió en este período de tiempo">
+                  Reservas recibidas
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>
+                {informe.canchas.reduce(
+                  (acum, c) => acum + c.reservas.length,
+                  0
+                )}
+              </StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
           </StatGroup>
-          <Heading size="lg" mb="0.5em" ml="2em">
+
+          <Heading size="lg" my="0.5em" ml="2em">
             Por cancha
           </Heading>
           <HStack wrap="wrap" justify="center">
@@ -102,16 +116,26 @@ export default function EstablecimientoReservasPage() {
               <Card key={cancha.id} width="400px" borderRadius="10px">
                 <Image
                   src={cancha.urlImagen}
-                  fallback={<FallbackImage height="50px" />}
-                  height="50px"
+                  fallback={<FallbackImage height="125px" />}
+                  height="125px"
                   fit="cover"
                   borderRadius="10px 10px 0 0"
                 />
                 <CardBody>
                   <Heading size="md">{cancha.nombre}</Heading>
-                  <StatGroup>
-                    {ingresosStat("Ingresos", cancha.total)}
-                    {reservasStat("Reservas", cancha.reservas.length)}
+                  <StatGroup mt="0.5em">
+                    <Stat>
+                      <StatLabel>Estimado</StatLabel>
+                      <StatNumber>${cancha.estimado}</StatNumber>
+                    </Stat>
+                    <Stat>
+                      <StatLabel>Ingresado</StatLabel>
+                      <StatNumber>${cancha.total}</StatNumber>
+                    </Stat>
+                    <Stat>
+                      <StatLabel>Reservas</StatLabel>
+                      <StatNumber>{cancha.reservas.length}</StatNumber>
+                    </Stat>
                   </StatGroup>
                 </CardBody>
               </Card>

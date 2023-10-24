@@ -1,21 +1,22 @@
 import { PrismaClient, establecimiento, localidad } from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Establecimiento } from "../models/establecimiento.js";
+import { getDiaDeSemana } from "../utils/dates.js";
+import { Busqueda } from "../services/establecimientos.js";
 
 export interface EstablecimientoRepository {
   crear(est: Establecimiento): Promise<Establecimiento>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEstablecimiento: number): Promise<Establecimiento>;
-  getEstabsByFiltro(filtro: Busqueda): Promise<Establecimiento[]>;
+  buscar(filtro: Busqueda): Promise<Establecimiento[]>;
   getEstablecimientosByDisciplina(
     disciplina: string
   ): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
-  getEstabDispByDate(fecha: string): Promise<Establecimiento[]>;
-  verifEstabSinReserva(idEst: number): Promise<boolean>;
+  getByFechaDisponible(fecha: Date): Promise<Establecimiento[]>;
 }
 
 export class PrismaEstablecimientoRepository
@@ -193,30 +194,39 @@ export class PrismaEstablecimientoRepository
     return dispDB.map((d) => toEst(d.cancha.establecimiento));
   }
 
-  async getEstabsByFiltro(params: Busqueda): Promise<Establecimiento[]> {
+  async buscar(filtros: Busqueda): Promise<Establecimiento[]> {
     const estsDB = await this.prisma.establecimiento.findMany({
       where: {
         AND: [
           {
-            ...(params.nombre
+            ...(filtros.nombre
               ? {
                   nombre: {
-                    contains: params.nombre,
+                    contains: filtros.nombre,
                     mode: "insensitive", // Hace que la búsqueda sea insensible a mayúsculas y minúsculas.
                   },
                 }
               : {}),
           },
           {
-            ...(params.localidad
+            canchas: {
+              some: {
+                disponibilidades: {
+                  some: { idDisciplina: filtros.disciplina },
+                },
+              },
+            },
+          },
+          {
+            ...(filtros.localidad
               ? {
                   localidad: {
                     nombre: {
-                      equals: params.localidad,
+                      equals: filtros.localidad,
                       mode: "insensitive",
                     },
                     idProvincia: {
-                      equals: params.provincia,
+                      equals: filtros.provincia,
                       mode: "insensitive",
                     },
                   },
@@ -224,11 +234,11 @@ export class PrismaEstablecimientoRepository
               : {}),
           },
           {
-            ...(params.provincia
+            ...(filtros.provincia
               ? {
                   localidad: {
                     idProvincia: {
-                      equals: params.provincia,
+                      equals: filtros.provincia,
                       mode: "insensitive",
                     },
                   },
@@ -236,6 +246,7 @@ export class PrismaEstablecimientoRepository
               : {}),
           },
         ],
+        habilitado: filtros.habilitado,
         eliminado: false,
       },
       include: {
@@ -247,22 +258,8 @@ export class PrismaEstablecimientoRepository
   }
 
   //REVISAR
-  //Me devuelve los estabs que tienen al menos 1 disponibilidad libre en una cierta fecha
-  async getEstabDispByDate(fecha: string): Promise<Establecimiento[]> {
-    const diasSemana = [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sábado",
-    ];
-    // Obtener el día de la semana correspondiente a la fecha
-    const fechaObj = new Date(fecha);
-    const diaSemana = diasSemana[fechaObj.getDay()]; // Obtener el nombre del día de la semana
-
-    // Obtener los establecimientos que cumplen con los criterios
+  /** Devuelve los establecimientos con al menos una disponibilidad libre en la fecha dada. */
+  async getByFechaDisponible(fecha: Date): Promise<Establecimiento[]> {
     const estabs = await this.prisma.establecimiento.findMany({
       where: {
         canchas: {
@@ -270,19 +267,14 @@ export class PrismaEstablecimientoRepository
             disponibilidades: {
               some: {
                 dias: {
+                  // Verificar si el día de la semana está incluido en el array de día.
                   some: {
-                    dia: {
-                      equals: diaSemana,
-                      mode: "insensitive",
-                    },
-                  }, // Verificar si el día de la semana está incluido en el array de día.
+                    dia: { equals: getDiaDeSemana(fecha), mode: "insensitive" },
+                  },
                 },
                 AND: {
-                  reservas: {
-                    none: {
-                      fechaReservada: fechaObj.toISOString(), // No debe haber reservas para esta fecha
-                    },
-                  },
+                  // No debe haber reservas para esta fecha
+                  reservas: { none: { fechaReservada: fecha } },
                 },
               },
             },
@@ -294,29 +286,7 @@ export class PrismaEstablecimientoRepository
 
     return estabs.map((ests) => toEst(ests));
   }
-
-  async verifEstabSinReserva(idEst: number): Promise<boolean> {
-    const cantReservas = await this.prisma.reserva.count({
-      where: {
-        disponibilidad: {
-          cancha: {
-            idEstablecimiento: idEst,
-          },
-        },
-      },
-    });
-
-    return cantReservas === 0;
-  }
 }
-
-type Busqueda = {
-  nombre?: string;
-  provincia?: string;
-  localidad?: string;
-  disciplina?: string;
-  fecha?: string;
-};
 
 type establecimientoDB = establecimiento & {
   localidad: localidad;

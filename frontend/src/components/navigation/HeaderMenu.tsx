@@ -6,6 +6,7 @@ import {
   Icon,
   MenuItem,
   MenuList,
+  Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { AiOutlineUser } from "react-icons/ai";
@@ -20,7 +21,7 @@ import {
 } from "@chakra-ui/icons";
 import { Administrador, Jugador } from "@/models";
 import { useCurrentJugador } from "@/hooks/useCurrentJugador";
-import { LogoImage } from "@/utils/consts";
+import { LogoImage } from "@/utils/constants";
 
 export default function HeaderMenu() {
   const { admin, isAdmin, logout: adminLogout } = useCurrentAdmin();
@@ -103,7 +104,7 @@ function JugadorNav({
   const usuario = useBreakpointValue({ base: "", sm: jugador.usuario });
   return (
     <>
-      <Link to={`/jugador/${jugador.id}`}>
+      <Link to={`/search`}>
         <LogoImage />
       </Link>
       <Menu>
@@ -164,9 +165,11 @@ function UnregisteredNav() {
     sm: (
       <HStack>
         <Link to="/suscripciones">
-          <Button variant="ghost" size="sm">
-            Suscripciones
-          </Button>
+          <Tooltip label="Promocione su establecimiento en PlayFinder">
+            <Button variant="ghost" size="sm">
+              Suscripciones
+            </Button>
+          </Tooltip>
         </Link>
         <Link to="/login">
           <Button variant="outline" size="sm">

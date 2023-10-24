@@ -9,10 +9,9 @@ import {
   TableContainer,
   chakra,
 } from "@chakra-ui/react";
-import { useCanchaByID } from "@/utils/api";
 import { useParams } from "@/router";
 import FormDisp from "./_FormDisp";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import {
   useCrearDisponibilidad,
   useDisponibilidadesByCanchaID,
@@ -32,6 +31,7 @@ import {
 } from "@tanstack/react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useState } from "react";
+import { ordenarDias } from "@/utils/dias";
 
 /**
  * Deriva el valor del campo 'minutosReserva' del DisponibilidadForm
@@ -45,7 +45,6 @@ function calcularMinutosReserva(disp: Disponibilidad) {
 
 export default function CanchaInfoPage() {
   const { idEst, idCancha } = useParams("/ests/:idEst/canchas/:idCancha");
-  const { data } = useCanchaByID(Number(idEst), Number(idCancha));
   const { data: disponibilidades, isLoading } = useDisponibilidadesByCanchaID(
     Number(idEst),
     Number(idCancha)
@@ -54,10 +53,6 @@ export default function CanchaInfoPage() {
   const columnHelper = createColumnHelper<Disponibilidad>();
   //Columnas que se van a poder ordenar
   const columns = [
-    columnHelper.accessor("disciplina", {
-      cell: (info) => info.getValue(),
-      header: "Disciplina",
-    }),
     columnHelper.accessor("horaInicio", {
       cell: (info) => info.getValue(),
       header: "Inicio",
@@ -66,13 +61,21 @@ export default function CanchaInfoPage() {
       cell: (info) => info.getValue(),
       header: "Fin",
     }),
+    columnHelper.accessor("disciplina", {
+      cell: (info) => info.getValue(),
+      header: "Disciplina",
+    }),
     columnHelper.accessor("precioReserva", {
       cell: (info) => "$" + info.getValue(),
       header: "Precio",
     }),
+    columnHelper.accessor("precioSenia", {
+      cell: (info) => (info.getValue() ? "$" + info.getValue() : "-"),
+      header: "Seña",
+    }),
     columnHelper.accessor("dias", {
-      cell: (info) => info.getValue().sort().join(" - "),
-      header: "Dias",
+      cell: (info) => ordenarDias(info.getValue()).join(", "),
+      header: "Días",
     }),
   ];
 
@@ -80,7 +83,9 @@ export default function CanchaInfoPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     columns: columns,
-    data: disponibilidades,
+    data: disponibilidades.sort(
+      (a, b) => horaADecimal(a.horaInicio) - horaADecimal(b.horaInicio)
+    ),
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -91,59 +96,69 @@ export default function CanchaInfoPage() {
 
   const toast = useToast();
 
-  const { mutate: mutateCrear } = useCrearDisponibilidad({
-    onSuccess: () => {
-      toast({
-        title: "Disponibilidad creada.",
-        description: `Se registró exitosamente.`,
-        status: "success",
-      });
-    },
-    onError: (e) => {
-      toast({
-        title: e.conflictMsg("Error al crear la disponibilidad."),
-        description: `Intente de nuevo.`,
-        status: "error",
-      });
-    },
-  });
+  const { mutate: mutateCrear, isLoading: crearLoading } =
+    useCrearDisponibilidad({
+      onSuccess: (_, form) => {
+        if (!toast.isActive("idSuccess")) {
+          toast({
+            id: "idSuccess",
+            title: `Disponibilidades de ${form.horaInicio} a ${form.horaFin} creadas.`,
+            description: "Cada disponibilidad es una reserva posible.",
+            status: "success",
+          });
+        }
+      },
+      onError: (e, vars) => {
+        if (!toast.isActive("idError")) {
+          toast({
+            id: "idError",
+            title: e.conflictMsg(
+              `Error al crear disponibilidades de ${vars.horaInicio} a ${vars.horaFin}.`
+            ),
+            description: "Intente de nuevo.",
+            status: "error",
+          });
+        }
+      },
+    });
 
-  const { mutate: mutateModificar } = useModificarDisponibilidad({
-    onSuccess: () => {
-      toast({
-        title: "Disponibilidad modificada.",
-        description: `El cambio se guardó exitosamente.`,
-        status: "success",
-      });
-    },
-    onError: (e) => {
-      toast({
-        title: e.conflictMsg("Error al modificar la disponibilidad."),
-        description: `Intente de nuevo.`,
-        status: "error",
-      });
-    },
-  });
+  const { mutate: mutateModificar, isLoading: modificarLoading } =
+    useModificarDisponibilidad({
+      onSuccess: () => {
+        toast({
+          title: "Disponibilidad modificada.",
+          description: "El cambio se guardó exitosamente.",
+          status: "success",
+        });
+      },
+      onError: (e) => {
+        toast({
+          title: e.conflictMsg("Error al modificar la disponibilidad."),
+          description: "Intente de nuevo.",
+          status: "error",
+        });
+      },
+    });
 
-  if (!data || isLoading) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
   const handleCrearDisponibilidad = (disp: DisponibilidadForm) => {
     const fin = horaADecimal(disp.horaFin);
     const horasReserva = disp.minutosReserva / 60;
-    const dispInicio = horaADecimal(disp.horaInicio);
+    const inicio = horaADecimal(disp.horaInicio);
 
-    let dispFin = dispInicio + horasReserva;
-    while (dispFin <= fin) {
+    let dispInicio = inicio;
+    while (dispInicio + horasReserva <= fin) {
       mutateCrear({
         ...disp,
         horaInicio: decimalAHora(dispInicio),
-        horaFin: decimalAHora(dispFin),
+        horaFin: decimalAHora(dispInicio + horasReserva),
         idEst: Number(idEst),
         idCancha: Number(idCancha),
       });
-      dispFin += horasReserva;
+      dispInicio += horasReserva;
     }
   };
 
@@ -160,6 +175,7 @@ export default function CanchaInfoPage() {
         variant="crear"
         onSubmit={handleCrearDisponibilidad}
         resetValues={{ idCancha: Number(idCancha) }}
+        isLoading={crearLoading}
       />
       <TableContainer pt="15px" pb="20px" mr="100px">
         <Table size="sm">
@@ -218,6 +234,7 @@ export default function CanchaInfoPage() {
                       ...row.original,
                       minutosReserva: calcularMinutosReserva(row.original),
                     }}
+                    isLoading={modificarLoading}
                   />
                   <FormEliminarDisp idDisp={row.original.id} />
                 </Td>

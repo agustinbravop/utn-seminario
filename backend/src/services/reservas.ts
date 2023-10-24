@@ -6,7 +6,7 @@ import { DisponibilidadRepository } from "../repositories/disponibilidades";
 import { PagoRepository } from "../repositories/pagos";
 import { ReservaRepository } from "../repositories/reservas";
 import { ConflictError, InternalServerError } from "../utils/apierrors";
-import { getDayOfWeek } from "../utils/dates";
+import { getDiaDeSemana, setHora } from "../utils/dates";
 
 export type CrearReserva = {
   fechaReservada: Date;
@@ -17,8 +17,10 @@ export type CrearReserva = {
 export type BuscarReservaQuery = {
   idCancha?: number;
   idEst?: number;
-  fechaCreadaDesde?: string;
-  fechaCreadaHasta?: string;
+  fechaCreadaDesde?: Date;
+  fechaCreadaHasta?: Date;
+  fechaReservadaDesde?: Date;
+  fechaReservadaHasta?: Date;
 };
 
 export interface ReservaService {
@@ -128,14 +130,16 @@ export class ReservaServiceImpl implements ReservaService {
       crearReserva.idDisponibilidad
     );
     await this.validarDiaDeSemana(crearReserva, disp);
+    this.validarFechaReservada(crearReserva, disp);
 
     return await this.repo.crearReserva({
       ...crearReserva,
       precio: disp.precioReserva,
+      senia: disp.precioSenia,
     });
   }
 
-  /** Lanza error al intentar reservar una cancha deshabilitada o eliminada. */
+  /** Lanza un error al intentar reservar una cancha deshabilitada o eliminada. */
   private async validarCanchaHabilitada(res: CrearReserva) {
     const cancha = await this.canchaRepository.getByDisponibilidadID(
       res.idDisponibilidad
@@ -147,7 +151,7 @@ export class ReservaServiceImpl implements ReservaService {
     }
   }
 
-  /** Lanza error al intentar reservar una disponibilidad ya reservada en la fecha dada. */
+  /** Lanza un error al intentar reservar una disponibilidad ya reservada en la fecha dada. */
   private async validarDisponibilidadLibre(res: CrearReserva) {
     const yaFueReservada = await this.repo.existsReservaByDate(
       res.idDisponibilidad,
@@ -160,9 +164,19 @@ export class ReservaServiceImpl implements ReservaService {
     }
   }
 
-  /** Lanza error al intentar reservar una disponibilidad en un día de la semana no habilitado. */
+  /**
+   * Lanza un error al intentar reservar en una fecha pasada (previa a la actual).
+   * Pone la horaInicio de la disponibilidad como horario de la fechaReservada.
+   */
+  private validarFechaReservada(res: CrearReserva, disp: Disponibilidad) {
+    if (setHora(res.fechaReservada, disp.horaInicio) < new Date()) {
+      throw new ConflictError("No se puede reservar una fecha pasada");
+    }
+  }
+
+  /** Lanza un error al intentar reservar una disponibilidad en un día de la semana no habilitado. */
   private async validarDiaDeSemana(res: CrearReserva, disp: Disponibilidad) {
-    const dia = getDayOfWeek(res.fechaReservada);
+    const dia = getDiaDeSemana(res.fechaReservada);
     if (!disp.dias.includes(dia)) {
       throw new ConflictError(
         `La disponibilidad de ${disp.horaInicio} a ${disp.horaFin} solo está disponible los días ${disp.dias}`

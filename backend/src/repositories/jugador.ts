@@ -55,27 +55,28 @@ export class PrismaJugadorRepository implements JugadorRepository {
                 },
               }
             : { disconnect: true },
-          localidad: jugador.localidad
-            ? {
-                connectOrCreate: {
-                  where: {
-                    nombre_idProvincia: {
-                      nombre: jugador.localidad ?? "",
-                      idProvincia: jugador.provincia ?? "",
+          localidad:
+            jugador.localidad || jugador.provincia
+              ? {
+                  connectOrCreate: {
+                    where: {
+                      nombre_idProvincia: {
+                        nombre: jugador.localidad ?? "",
+                        idProvincia: jugador.provincia ?? "",
+                      },
                     },
-                  },
-                  create: {
-                    nombre: jugador.localidad ?? "",
-                    provincia: {
-                      connectOrCreate: {
-                        where: { provincia: jugador.provincia },
-                        create: { provincia: jugador.provincia ?? "" },
+                    create: {
+                      nombre: jugador.localidad ?? "",
+                      provincia: {
+                        connectOrCreate: {
+                          where: { provincia: jugador.provincia },
+                          create: { provincia: jugador.provincia ?? "" },
+                        },
                       },
                     },
                   },
-                },
-              }
-            : { disconnect: true },
+                }
+              : { disconnect: true },
         },
         include: this.include,
       }),

@@ -2,7 +2,7 @@ import { Button, HStack, Image, Text } from "@chakra-ui/react";
 import NotFoundPageIllustrationSvg from "@/assets/not_found_page_illustration.svg";
 import { useNavigate } from "@/router";
 
-// `NotFoundPage` es tratado por el generouted plugin, si no encuentra una página correspondiente a la url.
+/** El plugin generouted muestra esta página si la url no corresponde a ninguna página. */
 export default function NotFoundPage() {
   const navigate = useNavigate();
 

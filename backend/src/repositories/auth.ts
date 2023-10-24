@@ -13,6 +13,7 @@ import {
 import { Rol, Usuario } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
 import { toJugador } from "./jugador.js";
+import { toSuscripcion } from "./suscripciones.js";
 
 export type AdministradorConClave = {
   admin: Administrador;
@@ -48,10 +49,7 @@ export class PrismaAuthRepository implements AuthRepository {
     try {
       const a = await this.prisma.administrador.findFirstOrThrow({
         where: {
-          OR: [
-            { correo: { equals: correoOUsuario } },
-            { usuario: { equals: correoOUsuario } },
-          ],
+          OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
         include: { suscripcion: true, tarjeta: true },
       });
@@ -65,10 +63,7 @@ export class PrismaAuthRepository implements AuthRepository {
     try {
       const j = await this.prisma.jugador.findFirstOrThrow({
         where: {
-          OR: [
-            { correo: { equals: correoOUsuario } },
-            { usuario: { equals: correoOUsuario } },
-          ],
+          OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
         include: {disciplina: true, localidad: true },
       });
@@ -101,10 +96,7 @@ export class PrismaAuthRepository implements AuthRepository {
     try {
       const dbAdmin = await this.prisma.administrador.findFirst({
         where: {
-          OR: [
-            { correo: { equals: correoOUsuario } },
-            { usuario: { equals: correoOUsuario } },
-          ],
+          OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
       });
       if (dbAdmin) {
@@ -113,10 +105,7 @@ export class PrismaAuthRepository implements AuthRepository {
 
       const dbJugador = await this.prisma.jugador.findFirst({
         where: {
-          OR: [
-            { correo: { equals: correoOUsuario } },
-            { usuario: { equals: correoOUsuario } },
-          ],
+          OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
       });
       if (dbJugador) {
@@ -149,43 +138,46 @@ export class PrismaAuthRepository implements AuthRepository {
     }
   }
 
-  async crearJugador(jugador: Jugador, clave: string) {
+  async crearJugador(jug: Jugador, clave: string) {
     try {
       const dbJugador = await this.prisma.jugador.create({
         data: {
-          nombre: jugador.nombre,
-          telefono: jugador.telefono,
-          apellido: jugador.apellido,
-          correo: jugador.correo,
-          usuario: jugador.usuario,
+          nombre: jug.nombre,
+          telefono: jug.telefono,
+          apellido: jug.apellido,
+          correo: jug.correo,
+          usuario: jug.usuario,
           clave: clave,
-          disciplina: jugador.disciplina
+          disciplina: jug.disciplina
             ? {
                 connectOrCreate: {
-                  where: { disciplina: jugador.disciplina },
-                  create: { disciplina: jugador.disciplina },
+                  where: { disciplina: jug.disciplina },
+                  create: { disciplina: jug.disciplina },
                 },
               }
             : {},
-          localidad: {
-            connectOrCreate: {
-              where: {
-                nombre_idProvincia: {
-                  nombre: jugador.localidad ?? " ",
-                  idProvincia: jugador.provincia ?? " ",
-                },
-              },
-              create: {
-                nombre: jugador.localidad ?? " ",
-                provincia: {
+          localidad:
+            jug.provincia || jug.localidad
+              ? {
                   connectOrCreate: {
-                    where: { provincia: jugador.provincia ?? " " },
-                    create: { provincia: jugador.provincia ?? " " },
+                    where: {
+                      nombre_idProvincia: {
+                        nombre: jug.localidad ?? "",
+                        idProvincia: jug.provincia ?? "",
+                      },
+                    },
+                    create: {
+                      nombre: jug.localidad ?? "",
+                      provincia: {
+                        connectOrCreate: {
+                          where: { provincia: jug.provincia },
+                          create: { provincia: jug.provincia ?? "" },
+                        },
+                      },
+                    },
                   },
-                },
-              },
-            },
-          },
+                }
+              : {},
         },
         include: { disciplina: true, localidad: true },
       });
@@ -254,5 +246,6 @@ export function toAdmin({
   idTarjeta,
   ...admin
 }: administradorDB): Administrador {
-  return admin;
+
+  return { ...admin, suscripcion: toSuscripcion(admin.suscripcion) };
 }

@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/button";
 import { Box, Heading, Text, Stack, VStack } from "@chakra-ui/layout";
-import Carousel from "@/components/Carousel/Carousel";
+import Carousel from "@/components/media-and-icons/Carousel";
 import { Link } from "@/router";
 import { Container } from "@chakra-ui/react";
 

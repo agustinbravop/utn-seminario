@@ -1,11 +1,11 @@
 import { Box, Heading, Image, Text } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import HeaderMenu from "@/components/navigation/HeaderMenu";
+import { HeaderMenu } from "@/components/navigation";
 import { Modals } from "@generouted/react-router";
 import ErrorPageIllustrationSvg from "@/assets/error_page_illustration.svg";
 
-// `Catch` es tratado por el generouted plugin, si hay algún error al cargar la página.
-export const Catch = () => {
+/** El plugin generouted muestra este componente si hubo algún error al cargar la página. */
+export function Catch() {
   return (
     <Box as="main" m="40px">
       <Heading m="1em auto" textAlign="center">
@@ -24,8 +24,9 @@ export const Catch = () => {
       />
     </Box>
   );
-};
+}
 
+/** Layout común para toda las páginas. */
 export default function RootLayout() {
   return (
     <>

@@ -1,5 +1,5 @@
 import { Dia } from "@/models";
-import { DIAS } from "./consts";
+import { DIAS } from "./constants";
 
 /**
  * Ordena un arreglo de `Dia`s según el orden de la semana, de Lunes a Domingo.

@@ -10,7 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useSuscripciones } from "@/utils/api";
 import { Link } from "react-router-dom";
-import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
+import { ICONOS_SUSCRIPCIONES } from "@/utils/constants";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 
 export default function SuscripcionesPage() {
   const { data, isLoading, isError } = useSuscripciones();
@@ -18,7 +19,7 @@ export default function SuscripcionesPage() {
   let cards;
   // TODO: mejorar con un LoadingIcon o un ErrorSign o algo
   if (isLoading) {
-    cards = <p>Cargando!</p>;
+    cards = <LoadingSpinner />;
   }
   if (isError) {
     cards = <p>error!</p>;
@@ -27,6 +28,7 @@ export default function SuscripcionesPage() {
   const suscripciones = data
     ?.sort((s1, s2) => s1.costoMensual - s2.costoMensual)
     .map((s, idx) => ({ icono: ICONOS_SUSCRIPCIONES[idx], ...s }));
+
   cards = suscripciones?.map((s) => {
     return (
       <Card bg="light" key={s.id} color="dark" width="14rem">

@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
@@ -27,7 +26,6 @@ model administrador {
 }
 
 model cancha {
-
   id          Int     @id @default(autoincrement()) @map("idCancha")
   nombre      String  @db.VarChar
   descripcion String  @db.VarChar
@@ -48,22 +46,22 @@ model disciplina {
 }
 
 model disponibilidad {
-  id            Int      @id @default(autoincrement()) @map("idDisponibilidad")
-  horaInicio    String   @db.Char(5)
-  horaFin       String   @db.Char(5)
-  precioReserva Decimal  @db.Decimal
-  precioSenia   Decimal? @db.Decimal
-  idCancha     Int        @map("cancha")
-  cancha       cancha     @relation(fields: [idCancha], references: [id])
-  idDisciplina String     @map("disciplina") @db.VarChar
-  disciplina   disciplina @relation(fields: [idDisciplina], references: [disciplina])
-  dias         dia[]
-  reservas     reserva[]
+  id            Int        @id @default(autoincrement()) @map("idDisponibilidad")
+  horaInicio    String     @db.Char(5)
+  horaFin       String     @db.Char(5)
+  precioReserva Decimal    @db.Decimal
+  precioSenia   Decimal?   @db.Decimal
+  idCancha      Int        @map("cancha")
+  cancha        cancha     @relation(fields: [idCancha], references: [id])
+  idDisciplina  String     @map("disciplina") @db.VarChar
+  disciplina    disciplina @relation(fields: [idDisciplina], references: [disciplina])
+  dias          dia[]
+  reservas      reserva[]
 }
 
 model dia {
-  dia String @id
-  disponibilidad disponibilidad[] 
+  dia            String           @id
+  disponibilidad disponibilidad[]
 }
 
 model establecimiento {
@@ -120,12 +118,12 @@ model jugador {
   nombre   String @db.VarChar
   apellido String @db.VarChar
   telefono String @db.VarChar
-  
-  idLocalidad     Int?
-  localidad       localidad?      @relation(fields: [idLocalidad], references: [id])
-  idDisciplina    String?         @map("disciplina") @db.VarChar
-  disciplina      disciplina?     @relation(fields: [idDisciplina], references: [disciplina])
-  reservas        reserva[]
+
+  idLocalidad  Int?
+  localidad    localidad?  @relation(fields: [idLocalidad], references: [id])
+  idDisciplina String?     @map("disciplina") @db.VarChar
+  disciplina   disciplina? @relation(fields: [idDisciplina], references: [disciplina])
+  reservas     reserva[]
 }
 
 model pago {
@@ -163,6 +161,7 @@ model reserva {
   fechaCreada    DateTime @default(now()) // Fecha en la que se creó la reserva.
   fechaReservada DateTime @db.Date // Fecha en la que el jugador va a ocupar la disponibilidad reservada.
   precio         Decimal  @db.Decimal
+  senia          Decimal? @db.Decimal
 
   idDisponibilidad Int
   disponibilidad   disponibilidad @relation(fields: [idDisponibilidad], references: [id], onDelete: NoAction, onUpdate: NoAction)

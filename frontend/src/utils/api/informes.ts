@@ -12,8 +12,10 @@ export type IngresosPorCanchaQuery = {
 type IngresosPorCancha = Establecimiento & {
   canchas: (Cancha & {
     reservas: Reserva[];
+    estimado: number;
     total: number;
   })[];
+  estimado: number;
   total: number;
 };
 
@@ -21,8 +23,6 @@ export function useInformePagosPorCancha(
   query: IngresosPorCanchaQuery,
   options?: UseApiQueryOptions<IngresosPorCancha>
 ) {
-  console.log(query);
-
   return useApiQuery(
     ["informes", "pagosPorCancha", query],
     new URL(

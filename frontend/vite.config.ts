@@ -8,15 +8,8 @@ export default defineConfig({
     react({
       include: "**/*.tsx",
     }),
-    // File system based routing: https://github.com/oedotme/generouted/tree/main
-    generouted(),
+    // File system based routing: https://github.com/oedotme/generouted
+    generouted({ format: true }),
   ],
   resolve: { alias: { "@": "/src" } },
-  server: {
-    // Posible workaround para los problemas que tenemos de Hot Module Reload.
-    // Es posible que no sea la solución correcta, y que solo sea un "placebo".
-    watch: {
-      usePolling: true,
-    },
-  },
 });

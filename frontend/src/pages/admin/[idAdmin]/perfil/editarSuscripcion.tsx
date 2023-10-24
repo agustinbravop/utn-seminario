@@ -17,9 +17,9 @@ import { useCambiarSuscripcion } from "@/utils/api";
 import { useState } from "react";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useEstablecimientosByAdminID } from "@/utils/api";
-import { ICONOS_SUSCRIPCIONES } from "@/utils/consts";
+import { ICONOS_SUSCRIPCIONES } from "@/utils/constants";
 import { ConfirmSubmitButton } from "@/components/forms";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 
 export default function SuscripcionesPage() {
   const toast = useToast();

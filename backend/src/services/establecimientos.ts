@@ -9,12 +9,21 @@ import { subirImagen } from "../utils/imagenes.js";
 import { AdministradorService } from "./administrador.js";
 import { CanchaService } from "./canchas.js";
 
+export type Busqueda = {
+  nombre?: string;
+  provincia?: string;
+  localidad?: string;
+  disciplina?: string;
+  fecha?: Date;
+  habilitado: boolean;
+};
+
 export interface EstablecimientoService {
   crear(establecimiento: Establecimiento): Promise<Establecimiento>;
   getDeletedByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByAdminID(idAdmin: number): Promise<Establecimiento[]>;
   getByID(idEst: number): Promise<Establecimiento>;
-  getConsulta(consulta: Busqueda): Promise<Establecimiento[]>;
+  buscar(consulta: Busqueda): Promise<Establecimiento[]>;
   modificar(est: Establecimiento): Promise<Establecimiento>;
   habilitar(idEst: number, habilitado: boolean): Promise<Establecimiento>;
   modificarImagen(
@@ -24,14 +33,6 @@ export interface EstablecimientoService {
   eliminar(idEst: number): Promise<Establecimiento>;
   getAll(): Promise<Establecimiento[]>;
 }
-
-type Busqueda = {
-  nombre?: string;
-  provincia?: string;
-  localidad?: string;
-  disciplina?: string;
-  fecha?: string;
-};
 
 export class EstablecimientoServiceImpl implements EstablecimientoService {
   private repo: EstablecimientoRepository;
@@ -130,27 +131,16 @@ export class EstablecimientoServiceImpl implements EstablecimientoService {
     return await this.repo.modificar({ ...est, habilitado });
   }
 
-  async getConsulta(consulta: Busqueda): Promise<Establecimiento[]> {
-    let estabFilter = await this.repo.getEstabsByFiltro(consulta);
-
-    if (consulta.disciplina) {
-      const estabDisciplina = await this.repo.getEstablecimientosByDisciplina(
-        consulta.disciplina
-      );
-      estabFilter = estabFilter.filter((e) =>
-        estabDisciplina.find(({ id }) => id === e.id)
-      );
-    }
+  async buscar(consulta: Busqueda): Promise<Establecimiento[]> {
+    let ests = await this.repo.buscar(consulta);
 
     if (consulta.fecha) {
-      const estabDisponibles = await this.repo.getEstabDispByDate(
+      const estabDisponibles = await this.repo.getByFechaDisponible(
         consulta.fecha
       );
-      return estabFilter.filter((e) =>
-        estabDisponibles.find(({ id }) => id === e.id)
-      );
+      return ests.filter((e) => estabDisponibles.find(({ id }) => id === e.id));
     }
 
-    return estabFilter;
+    return ests;
   }
 }

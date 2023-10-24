@@ -3,6 +3,8 @@ import {
   Button,
   Card,
   CardBody,
+  Grid,
+  GridItem,
   HStack,
   Heading,
   Stack,
@@ -17,10 +19,11 @@ import {
   useSeniarReserva,
 } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
-import { formatearISOFecha } from "@/utils/dates";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { CircleIcon } from "@/components/CircleIcon/CircleIcon";
+import { formatISOFecha } from "@/utils/dates";
+import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { useNavigate } from "react-router";
+import { pagoRestante } from "@/utils/reservas";
+import ReservaEstado from "@/components/display/ReservaEstado";
 
 export default function ReservaInfoPage() {
   const { idReserva } = useParams("/ests/:idEst/reservas/:idReserva");
@@ -66,85 +69,86 @@ export default function ReservaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  let estado = (
-    <Text>
-      No pagado <CircleIcon color="Red" />
-    </Text>
-  );
-  if (reserva.idPagoReserva) {
-    estado = (
-      <Text>
-        Pagado <CircleIcon color="Green" />
-      </Text>
-    );
-  } else if (reserva.idPagoSenia) {
-    estado = (
-      <Text>
-        Señado <CircleIcon color="orange" />
-      </Text>
-    );
+  let precioAPagar = reserva.precio;
+  if (reserva.senia && reserva.pagoSenia) {
+    precioAPagar = reserva.precio - reserva.senia;
   }
 
   return (
     <>
-      <Card m="auto" height="60%" width="38%" mt="5%">
+      <Card m="auto" height="60%" maxW="400px" mt="5%">
         <CardBody m="15px">
           <Heading as="h3" size="lg" textAlign="center">
             Datos de la reserva
           </Heading>
-          <Stack divider={<StackDivider />} spacing="2.5" pt="10px">
-            <Box>
-              <Heading size="xs">Estado</Heading>
-              <Text fontSize="sm"> {estado} </Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Fecha</Heading>
-              <Text fontSize="sm">
-                {formatearISOFecha(reserva.fechaReservada)}
-              </Text>
-            </Box>
-            <Box>
-              <Heading size="xs"> Horario </Heading>
-              <Text fontSize="sm">
-                {reserva.disponibilidad.horaInicio} -
-                {reserva.disponibilidad.horaFin} hs
-              </Text>
-            </Box>
-            <Box>
-              <Heading size="xs"> Precio </Heading>
-              <Text fontSize="sm"> ${reserva.precio} </Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Disciplina</Heading>
-              <Text fontSize="sm"> {reserva.disponibilidad.disciplina} </Text>
-            </Box>
+          <Stack divider={<StackDivider />} spacing="4.5" pt="20px">
+            <Grid gridTemplateColumns="1.8fr 1fr" rowGap="1.0em" pl="3">
+              <GridItem>
+                <Heading size="xs">Fecha de juego</Heading>
+                <Text fontSize="sm">
+                  {formatISOFecha(reserva.fechaReservada)}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Horario</Heading>
+                <Text fontSize="sm">
+                  {reserva.disponibilidad.horaInicio}
+                  {" - "}
+                  {reserva.disponibilidad.horaFin} hs
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Estado</Heading>
+                <Text fontSize="sm">
+                  <ReservaEstado res={reserva} />
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Disciplina</Heading>
+                <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Precio total</Heading>
+                <Text fontSize="sm">${reserva.precio}</Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Seña</Heading>
+                <Text fontSize="sm">
+                  {reserva.senia ? `$${reserva.senia}` : "-"}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Pago restante</Heading>
+                <Text fontSize="sm">${pagoRestante(reserva)}</Text>
+              </GridItem>
+            </Grid>
           </Stack>
 
           <Heading size="md" mt="1.5rem">
-            Jugador
+            Información del jugador
           </Heading>
 
           <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
-            <Box>
+            <Box ml="3">
               <Heading size="xs">Nombre y Apellido</Heading>
               <Text fontSize="sm">
                 {reserva.jugador.nombre} {reserva.jugador.apellido}
               </Text>
             </Box>
-            <Box>
+            <Box ml="3">
               <Heading size="xs"> Teléfono </Heading>
               <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
             </Box>
           </Stack>
 
           <HStack justifyContent="center" spacing="20px" pt="30px">
-            <Button onClick={() => navigate(-1)}>Retroceder</Button>
+            <Button onClick={() => navigate(-1)}>Volver</Button>
             {!reserva.idPagoSenia &&
               !reserva.idPagoReserva &&
               reserva.disponibilidad.precioSenia && (
                 <ConfirmSubmitButton
                   header="Seña"
-                  body="¿Está seguro que desea efectuar la seña?"
+                  body={`¿Desea registrar la seña de $${reserva.senia}?`}
                   onSubmit={() => mutate(reserva)}
                 >
                   Señar
@@ -154,7 +158,7 @@ export default function ReservaInfoPage() {
             {!reserva.idPagoReserva && (
               <ConfirmSubmitButton
                 header="Pago"
-                body="¿Está seguro que desea efectuar el pago?"
+                body={`¿Desea registrar el pago de $${precioAPagar}?`}
                 onSubmit={() => mutatePago(reserva)}
               >
                 Pagar

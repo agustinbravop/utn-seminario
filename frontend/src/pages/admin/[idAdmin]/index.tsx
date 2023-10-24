@@ -1,4 +1,7 @@
-import EstablecimientoCardList from "@/components/EstablecimientoCardList/EstablecimientoCardList";
+import {
+  DeletedEstablecimiento,
+  EstablecimientoCard,
+} from "@/components/display";
 import {
   Button,
   HStack,
@@ -21,15 +24,13 @@ import { Establecimiento } from "@/models";
 import { GrAddCircle } from "react-icons/gr";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { useState } from "react";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import Alerta from "@/components/Alerta/Alerta";
+import { Alerta, LoadingSpinner } from "@/components/feedback";
 import { DeleteIcon, SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import {
   useEstablecimientosByAdminID,
   useEstablecimientosEliminadosByAdminID,
 } from "@/utils/api";
-import DeletedEstablecimientoList from "@/components/DeletedEstablecimientoList/DeletedEstablecimientoList";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -39,14 +40,76 @@ interface EstablecimientosListProps {
 
 function EstablecimientosList({ data }: EstablecimientosListProps) {
   if (data && data.length > 0) {
-    return <EstablecimientoCardList establecimientos={data} />;
+    return (
+      <HStack flexWrap="wrap" justify="center" align="center" m="auto">
+        {data.map((est) => (
+          <EstablecimientoCard key={est.id} establecimiento={est} />
+        ))}
+      </HStack>
+    );
   } else {
     return <Text textAlign="center">No se encontraron establecimientos</Text>;
   }
 }
 
-export default function EstablecimientosPage() {
+interface EstablecimientosEliminadosModalProps {
+  idAdmin: number;
+  establecimientosActuales: number;
+}
+
+function EstablecimientosEliminadosModal({
+  idAdmin,
+  establecimientosActuales,
+}: EstablecimientosEliminadosModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    data: estsEliminados,
+    isLoading,
+    isError,
+  } = useEstablecimientosEliminadosByAdminID(idAdmin);
+
+  return (
+    <>
+      <Button onClick={onOpen}>
+        <Icon as={DeleteIcon} />
+      </Button>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Establecimientos Eliminados</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {isLoading ? (
+              <LoadingSpinner />
+            ) : isError ? (
+              <Alerta mensaje="Ha ocurrido un error" status="error" />
+            ) : estsEliminados.length === 0 ? (
+              <Text>No hay establecimientos en la papelera</Text>
+            ) : (
+              <HStack display="flex" flexWrap="wrap" justifyContent="left">
+                {estsEliminados.map((est) => (
+                  <DeletedEstablecimiento
+                    key={est.id}
+                    establecimiento={est}
+                    establecimientosActuales={establecimientosActuales}
+                    onRecuperar={onClose}
+                  />
+                ))}
+              </HStack>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="brand" mr={3} onClick={onClose}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
+export default function EstablecimientosPage() {
   const { admin } = useCurrentAdmin();
 
   const [filtro, setFiltro] = useState("");
@@ -54,13 +117,13 @@ export default function EstablecimientosPage() {
     setFiltro(e.target.value);
   };
 
-  const { data, isLoading, isError } = useEstablecimientosByAdminID(
-    Number(admin.id)
-  );
+  const {
+    data: establecimientos,
+    isLoading,
+    isError,
+  } = useEstablecimientosByAdminID(Number(admin.id));
 
-  const methods = useEstablecimientosEliminadosByAdminID(Number(admin.id));
-
-  const establecimientosFiltrados = data.filter((establecimiento) =>
+  const establecimientosFiltrados = establecimientos.filter((establecimiento) =>
     establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
@@ -84,21 +147,23 @@ export default function EstablecimientosPage() {
         </InputGroup>
         <HStack ml="auto" spacing={4}>
           <Text mb="0">
-            {data.length} / {admin.suscripcion.limiteEstablecimientos}{" "}
-            establecimiento{data?.length === 1 || "s"}
+            {establecimientos.length} /{" "}
+            {admin.suscripcion.limiteEstablecimientos} establecimiento
+            {establecimientos.length === 1 || "s"}
           </Text>
           <Link
             to={
-              data.length < admin.suscripcion.limiteEstablecimientos
+              establecimientos.length < admin.suscripcion.limiteEstablecimientos
                 ? "nuevoEstablecimiento"
                 : "mejorarSuscripcion"
             }
           >
             <Button leftIcon={<Icon as={GrAddCircle} />}>Agregar</Button>
           </Link>
-          <Button onClick={onOpen}>
-            <Icon as={DeleteIcon} />
-          </Button>
+          <EstablecimientosEliminadosModal
+            establecimientosActuales={establecimientos.length}
+            idAdmin={admin.id}
+          />
         </HStack>
       </HStack>
       <HStack ml="16%" mr="16%">
@@ -108,42 +173,12 @@ export default function EstablecimientosPage() {
           <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
         ) : (
           <EstablecimientosList
-            data={filtro ? establecimientosFiltrados : data}
+            data={filtro ? establecimientosFiltrados : establecimientos}
             isLoading={isLoading}
             isError={isError}
           />
         )}
       </HStack>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="2xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Establecimientos Eliminados</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {methods.isLoading ? (
-              <LoadingSpinner />
-            ) : methods.isError ? (
-              <Alerta
-                mensaje="Ha ocurrido un error inesperado"
-                status="error"
-              />
-            ) : methods.data.length === 0 ? (
-              <Text>No hay establecimientos en la papelera</Text>
-            ) : (
-              <DeletedEstablecimientoList
-                establecimientos={methods.data}
-                establecimientosActuales={data?.length}
-                onRecuperar={onClose}
-              />
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="brand" mr={3} onClick={onClose}>
-              Cerrar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </>
   );
 }

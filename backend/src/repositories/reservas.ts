@@ -3,7 +3,9 @@ import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, jugador, pago, reserva } from "@prisma/client";
 import { disponibilidadDB, toDisp } from "./disponibilidades.js";
 import { BuscarReservaQuery, CrearReserva } from "../services/reservas.js";
-import Decimal from "decimal.js";
+import { toPago } from "./pagos.js";
+
+type CrearReservaParam = CrearReserva & { precio: number; senia?: number };
 
 export interface ReservaRepository {
   getReservasByEstablecimientoID(idEst: number): Promise<Reserva[]>;
@@ -12,7 +14,7 @@ export interface ReservaRepository {
   getReservasByCanchaID(idCancha: number): Promise<Reserva[]>;
   getReservaByID(id: number): Promise<Reserva>;
   buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
-  crearReserva(res: CrearReserva & { precio: Decimal }): Promise<Reserva>;
+  crearReserva(res: CrearReservaParam): Promise<Reserva>;
   existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean>;
   updateReserva(res: Reserva): Promise<Reserva>;
 }
@@ -35,8 +37,6 @@ export class PrismaReservaRepository implements ReservaRepository {
     pagoReserva: true,
     pagoSenia: true,
   };
-
-
 
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
@@ -148,6 +148,10 @@ export class PrismaReservaRepository implements ReservaRepository {
             gte: filtros.fechaCreadaDesde,
             lte: filtros.fechaCreadaHasta,
           },
+          fechaReservada: {
+            gte: filtros.fechaReservadaDesde,
+            lte: filtros.fechaReservadaHasta,
+          },
           disponibilidad: {
             cancha: {
               id: filtros.idCancha,
@@ -164,13 +168,15 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
-  async crearReserva(res: CrearReserva & { precio: Decimal }) {
+  async crearReserva(res: CrearReservaParam) 
+  {
     try {
       const dbRes = await this.prisma.reserva.create({
         data: {
           id: undefined,
           fechaReservada: res.fechaReservada,
           precio: res.precio,
+          senia: res.senia,
           jugador: { connect: { id: res.idJugador } },
           disponibilidad: { connect: { id: res.idDisponibilidad } },
         },
@@ -182,6 +188,7 @@ export class PrismaReservaRepository implements ReservaRepository {
       throw new InternalServerError("No se pudo crear la reserva");
     }
   }
+  
 
   /**
    * Devuelve si una reserva de cierta disponibilidad en cierta fecha ya existe.
@@ -204,25 +211,6 @@ export class PrismaReservaRepository implements ReservaRepository {
       throw new InternalServerError("Error al consultar la reserva en la DB");
     }
   }
-
-  
-  async updatePagarSenia(reserva:Reserva & {senia:Decimal}):Promise<reserva>
-  { 
-    const reserva_actualizada =await this.prisma.reserva.update({ 
-      where: { 
-        id:reserva.id
-      }, 
-      data: {
-      pagoSenia: { 
-        create:{ 
-          id:undefined, monto:reserva.senia, idMetodoDePago:"Efectivo",fechaPago:new Date(),
-        },
-      }
-      }
-    });
-    return reserva_actualizada; 
-  }
-
 }
 
 type ReservaDB = reserva & {
@@ -237,9 +225,11 @@ function toRes(res: ReservaDB): Reserva {
   return {
     ...res,
     jugador,
+    senia: res.senia?.toNumber() ?? undefined,
+    precio: res.precio.toNumber(),
+    pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
+    pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
     disponibilidad: toDisp(res.disponibilidad),
-    pagoReserva: res.pagoReserva ?? undefined,
-    pagoSenia: res.pagoSenia ?? undefined,
   };
 }
 

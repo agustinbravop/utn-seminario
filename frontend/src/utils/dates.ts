@@ -22,34 +22,51 @@ export function decimalAHora(n: number | undefined) {
   }
   const entero = Math.trunc(n);
   const minutos = String(Math.round((n - entero) * 60));
-  return `${entero}:${minutos.padStart(2, "0")}`;
+  return `${String(entero).padStart(2, "0")}:${minutos.padStart(2, "0")}`;
 }
 
 /**
  * Toma un objeto `Date` y devuelve la fecha como un string en formato `aaaa-MM-dd`.
  */
-export function formatearFecha(fecha: Date) {
+export function formatFecha(fecha: Date) {
   // Obtiene el día, el mes y el año de la fecha parseada
   const dia = fecha.getDate().toString().padStart(2, "0");
   const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
   const anio = fecha.getFullYear();
 
-  // Formatea la fecha en "aaaa-MM-dd"
   return `${anio}-${mes}-${dia}`;
+}
+
+/** Convierte una fecha en formato ISO a un objecto `Date` en UTC (Universal Coordinated Time).  */
+export function toUTCDate(isoDate: string) {
+  const date = new Date(isoDate);
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
+  );
 }
 
 /**
  * Toma un string de una fecha en formato ISO y devuelve solo la fecha (sin la hora) en formato local.
  * Usar esta función para mostrar la fecha al usuario de manera amigable.
  */
-export function formatearISOFecha(iso: string) {
-  return new Date(iso).toLocaleDateString("es-ar");
+export function formatISOFecha(iso: string) {
+  return toUTCDate(iso).toLocaleDateString("es-ar");
 }
 
 /**
  * Toma un string de una fecha en formato ISO y devuelve la fecha y hora en formato local.
  * Usar esta función para mostrar la fecha al usuario de manera amigable.
  */
-export function formatearISO(iso: string) {
-  return new Date(iso).toLocaleString("es-ar");
+
+export function formatISO(iso: string) {
+  const date = toUTCDate(iso);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${day}/${month}/${year}`;
 }
