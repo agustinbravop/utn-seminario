@@ -52,7 +52,7 @@ export function toUTCDate(isoDate: string) {
 
 /**
  * Toma un string de una fecha en formato ISO y devuelve solo la fecha (sin la hora) en formato local.
- * Usar esta función para mostrar la fecha al usuario de manera amigable.
+ * Usar esta función para mostrar la fecha al usuario de manera amigable y localizada.
  */
 export function formatISOFecha(iso: string) {
   return toUTCDate(iso).toLocaleDateString("es-ar");
@@ -60,13 +60,9 @@ export function formatISOFecha(iso: string) {
 
 /**
  * Toma un string de una fecha en formato ISO y devuelve la fecha y hora en formato local.
- * Usar esta función para mostrar la fecha al usuario de manera amigable.
+ * Usar esta función para mostrar la fecha y hora al usuario de manera amigable y localizada.
  */
 
 export function formatISO(iso: string) {
-  const date = toUTCDate(iso);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
+  return toUTCDate(iso).toLocaleString("es-ar");
 }

@@ -4,17 +4,11 @@ import {
   useBuscarEstablecimientos,
 } from "@/utils/api";
 import { SearchIcon } from "@chakra-ui/icons";
-import {
-  HStack,
-  Heading,
-  InputRightElement,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { HStack, Heading, InputRightElement, VStack } from "@chakra-ui/react";
 import { formatFecha } from "@/utils/dates";
 import { useYupForm } from "@/hooks";
 import { useWatch } from "react-hook-form";
-import { DISCIPLINAS, QuestionImage } from "@/utils/constants";
+import { DISCIPLINAS } from "@/utils/constants";
 import { useLocalidadesByProvincia } from "@/utils/api";
 import { InputControl, SelectControl } from "@/components/forms";
 import { FormProvider } from "react-hook-form";
@@ -24,6 +18,7 @@ import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { useBusqueda } from "@/hooks/useBusqueda";
 import SelectProvinciaControl from "@/components/forms/SelectProvinciaControl";
 import SelectLocalidadControl from "@/components/forms/SelectLocalidadControl";
+import { QuestionAlert } from "@/components/media-and-icons";
 
 export default function BuscarEstablecimientosPage() {
   const { filtros, updateFiltros, setFiltro } = useBusqueda();
@@ -123,10 +118,9 @@ export default function BuscarEstablecimientosPage() {
             />
           ))
         ) : isFetchedAfterMount ? (
-          <VStack>
-            <QuestionImage />
-            <Text>No se encontraron establecimientos.</Text>
-          </VStack>
+          <QuestionAlert>
+            No se encontraron establecimientos con esos filtros.
+          </QuestionAlert>
         ) : (
           <LoadingSpinner />
         )}
