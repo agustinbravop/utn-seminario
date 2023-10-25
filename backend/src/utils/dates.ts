@@ -15,11 +15,11 @@ const dias: Dia[] = [
  * Toma una fecha y devuelve qué `Dia` de la semana cae ('Domingo', 'Lunes', etc).
  */
 export function getDiaDeSemana(date: Date): Dia {
-  return dias[convertDateToUTC(date).getDay()];
+  return dias[toUTC(date).getDay()];
 }
 
 /** Convierte una fecha `Date` a otra fecha `Date` en UTC (Universal Coordinated Time).  */
-function convertDateToUTC(date: Date): Date {
+export function toUTC(date: Date): Date {
   return new Date(
     date.getUTCFullYear(),
     date.getUTCMonth(),

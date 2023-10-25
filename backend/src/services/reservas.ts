@@ -6,7 +6,7 @@ import { DisponibilidadRepository } from "../repositories/disponibilidades";
 import { PagoRepository } from "../repositories/pagos";
 import { ReservaRepository } from "../repositories/reservas";
 import { ConflictError, InternalServerError } from "../utils/apierrors";
-import { getDiaDeSemana, setHora } from "../utils/dates";
+import { getDiaDeSemana, setHora, toUTC } from "../utils/dates";
 
 export type CrearReserva = {
   fechaReservada: Date;
@@ -168,7 +168,8 @@ export class ReservaServiceImpl implements ReservaService {
    * Pone la horaInicio de la disponibilidad como horario de la fechaReservada.
    */
   private validarFechaReservada(res: CrearReserva, disp: Disponibilidad) {
-    if (setHora(res.fechaReservada, disp.horaInicio) < new Date()) {
+    const fechaReservada = toUTC(setHora(res.fechaReservada, disp.horaInicio));
+    if (fechaReservada < new Date()) {
       throw new ConflictError("No se puede reservar una fecha pasada");
     }
   }
