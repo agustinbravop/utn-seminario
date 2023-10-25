@@ -43,7 +43,8 @@ export default function SuscripcionesPage() {
             {s.limiteEstablecimientos} establecimiento
             {s.limiteEstablecimientos === 1 ? "" : "s"}
           </Text>
-          <Link to={`/subscribe?idSuscripcion=${s.id}`}>
+          {/* Link de la suscripcion Startup (la mas basica) */}
+          <Link to={`https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=2c9380848b2a4561018b46804ce91427`}>
             <Button
               mt="10px"
               type="button"

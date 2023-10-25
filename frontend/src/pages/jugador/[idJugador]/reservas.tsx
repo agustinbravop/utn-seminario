@@ -1,9 +1,17 @@
 import { useReservasByJugadorID } from "@/utils/api";
-import { Box, Card, CardBody, CardHeader, HStack, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
+  HStack,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import { useCurrentJugador } from "@/hooks";
 import { ReservaCard } from "@/components/display";
 import { initMercadoPago } from "@mercadopago/sdk-react";
-import { CardPayment } from "@mercadopago/sdk-react";
+import { CardPayment, StatusScreen, Wallet } from "@mercadopago/sdk-react";
 
 export default function JugadorReservasPage() {
   /*
@@ -13,12 +21,19 @@ export default function JugadorReservasPage() {
 
   const initialization = {
     amount: 150,
+    paymentId: "0001",
+  };
+  const customization = {
+    backUrls: {
+      error: "<http://localhost:5173/error",
+      return: "<http://localhost:5173/homepage",
+    },
   };
 
   const onSubmit = async (formData: any) => {
     // callback llamado al hacer clic en el botón enviar datos
-    console.log("Info del form: " + formData.body)
-    
+    console.log("Info del form: " + formData.body);
+
     return new Promise((resolve, reject) => {
       fetch("http://localhost:3001/pagos/process_payment", {
         method: "POST",
@@ -37,7 +52,6 @@ export default function JugadorReservasPage() {
           reject(e)
         );
     });
-    
   };
 
   const onError = async (e: any) => {
@@ -65,22 +79,6 @@ export default function JugadorReservasPage() {
           <ReservaCard key={reserva.id} reserva={reserva} />
         ))}
       </HStack>
-      <Text>Prueba MP</Text>
-      <Box maxW='800px' ml='20%'>
-        <Card>
-          <CardHeader fontSize='25px' textAlign='center'>
-            Formulario de Pago
-          </CardHeader>
-          <CardBody>
-          <CardPayment
-            initialization={initialization}
-            onSubmit={onSubmit}
-            onReady={onReady}
-            onError={onError}
-          />
-          </CardBody>
-        </Card>
-      </Box>
     </>
   );
 }

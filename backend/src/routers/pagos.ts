@@ -9,6 +9,7 @@ import { PagoHandler, buscarPagosQuerySchema } from "../handlers/pagos.js";
 export function pagosRouter(handler: PagoHandler): Router {
   const router = express.Router();
 
+  router.get("/subscription", handler.getSubLink())
   router.get("/:idPago", validateIDParams("idPago"), handler.getPagoByID());
   router.get(
     "/",
@@ -16,9 +17,6 @@ export function pagosRouter(handler: PagoHandler): Router {
     handler.buscarPagos()
   );
 
-  router.post("/process_payment", handler.crearPago())
-
-    
 
   return router;
 }
