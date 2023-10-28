@@ -7,7 +7,6 @@ import {
   InputGroup,
   InputRightElement,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { useCanchasByEstablecimientoID } from "@/utils/api";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
@@ -17,8 +16,8 @@ import { useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 import { EstablecimientoMenu } from "@/components/navigation";
-import { QuestionImage } from "@/utils/constants";
 import CanchaCard from "@/components/display/CanchaCard";
+import { QuestionAlert } from "@/components/media-and-icons";
 
 export default function EstablecimientoCanchasPage() {
   const { idEst } = useParams();
@@ -64,14 +63,11 @@ export default function EstablecimientoCanchasPage() {
       ) : isLoading ? (
         <LoadingSpinner />
       ) : canchas.length === 0 && isFetchedAfterMount ? (
-        <VStack m="auto">
-          <QuestionImage />
-          <Text>
-            {filtro
-              ? "No hay canchas con ese nombre."
-              : "Este establecimiento no tiene canchas."}
-          </Text>
-        </VStack>
+        <QuestionAlert m="auto">
+          {filtro
+            ? "No hay canchas con ese nombre."
+            : "Este establecimiento no tiene canchas."}
+        </QuestionAlert>
       ) : (
         <HStack display="flex" flexWrap="wrap" gap={8} justifyContent="center">
           {canchas.map((cancha, index) => (

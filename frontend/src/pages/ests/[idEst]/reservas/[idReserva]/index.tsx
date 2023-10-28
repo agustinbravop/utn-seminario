@@ -19,7 +19,7 @@ import {
   useSeniarReserva,
 } from "@/utils/api/reservas";
 import { ConfirmSubmitButton } from "@/components/forms";
-import { formatISOFecha } from "@/utils/dates";
+import { formatISO, formatISOFecha } from "@/utils/dates";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { useNavigate } from "react-router";
 import { pagoRestante } from "@/utils/reservas";
@@ -98,14 +98,22 @@ export default function ReservaInfoPage() {
                 </Text>
               </GridItem>
               <GridItem>
+                <Heading size="xs">Fecha de creación</Heading>
+                <Text fontSize="sm">{formatISO(reserva.fechaCreada)}</Text>
+              </GridItem>
+              <GridItem>
+                <Heading size="xs">Disciplina</Heading>
+                <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
+              </GridItem>
+              <GridItem>
                 <Heading size="xs">Estado</Heading>
                 <Text fontSize="sm">
                   <ReservaEstado res={reserva} />
                 </Text>
               </GridItem>
               <GridItem>
-                <Heading size="xs">Disciplina</Heading>
-                <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
+                <Heading size="xs">Pago restante</Heading>
+                <Text fontSize="sm">${pagoRestante(reserva)}</Text>
               </GridItem>
               <GridItem>
                 <Heading size="xs">Precio total</Heading>
@@ -116,10 +124,6 @@ export default function ReservaInfoPage() {
                 <Text fontSize="sm">
                   {reserva.senia ? `$${reserva.senia}` : "-"}
                 </Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Pago restante</Heading>
-                <Text fontSize="sm">${pagoRestante(reserva)}</Text>
               </GridItem>
             </Grid>
           </Stack>

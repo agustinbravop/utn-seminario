@@ -57,6 +57,12 @@ export default function EstablecimientoReservasPage() {
       return ordenAscendente
         ? a.fechaReservada.localeCompare(b.fechaReservada)
         : b.fechaReservada.localeCompare(a.fechaReservada);
+    } else if (ordenColumna === "HoraInicio") {
+      return ordenAscendente
+        ? a.disponibilidad.horaInicio.localeCompare(b.disponibilidad.horaInicio)
+        : b.disponibilidad.horaInicio.localeCompare(
+            a.disponibilidad.horaInicio
+          );
     } else if (ordenColumna === "Jugador") {
       const nombreA = `${a.jugador.nombre} ${a.jugador.apellido}`;
       const nombreB = `${b.jugador.nombre} ${b.jugador.apellido}`;
@@ -187,8 +193,24 @@ export default function EstablecimientoReservasPage() {
                 onClick={() => handleOrdenarColumna("Fecha")}
                 cursor="pointer"
               >
-                Fecha{" "}
+                Fecha reservada{" "}
                 {ordenColumna === "Fecha" && (
+                  <>
+                    {ordenAscendente ? (
+                      <TriangleUpIcon color="blue.500" />
+                    ) : (
+                      <TriangleDownIcon color="blue.500" />
+                    )}
+                  </>
+                )}
+              </Th>
+              <Th
+                textAlign="center"
+                onClick={() => handleOrdenarColumna("HoraInicio")}
+                cursor="pointer"
+              >
+                Hora inicio{" "}
+                {ordenColumna === "HoraInicio" && (
                   <>
                     {ordenAscendente ? (
                       <TriangleUpIcon color="blue.500" />
@@ -239,6 +261,7 @@ export default function EstablecimientoReservasPage() {
                 <Tr key={r.id}>
                   <Td textAlign="center">{r.disponibilidad.cancha?.nombre}</Td>
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
+                  <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
                     {r.jugador.nombre} {r.jugador.apellido}
                   </Td>
