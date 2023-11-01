@@ -40,9 +40,9 @@ export default function JugadorReservasPage() {
 
   function ordenarReservas(res: Reserva[]) {
     if (orden === "Más recientes") {
-      return res.sort((a, b) => reservaCompare(a, b));
-    } else {
       return res.sort((a, b) => reservaCompare(b, a));
+    } else {
+      return res.sort((a, b) => reservaCompare(a, b));
     }
   }
 
@@ -55,6 +55,7 @@ export default function JugadorReservasPage() {
   const reservasActivas = reservasFiltradas.filter((reserva) =>
     isReservaActiva(reserva)
   );
+  const historial = reservasFiltradas.filter((res) => !isReservaActiva(res));
 
   return (
     <>
@@ -111,8 +112,8 @@ export default function JugadorReservasPage() {
           <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
             {!isFetchedAfterMount ? (
               <LoadingSpinner />
-            ) : reservasFiltradas.length > 0 ? (
-              reservasFiltradas.map((reserva) => (
+            ) : historial.length > 0 ? (
+              historial.map((reserva) => (
                 <ReservaCard key={reserva.id} reserva={reserva} />
               ))
             ) : (

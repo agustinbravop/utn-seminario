@@ -3,13 +3,11 @@ import {
   Button,
   Card,
   CardBody,
-  Grid,
-  GridItem,
   HStack,
   Heading,
-  Stack,
   StackDivider,
   Text,
+  VStack,
   useToast,
 } from "@chakra-ui/react";
 import { useParams } from "@/router";
@@ -75,102 +73,130 @@ export default function ReservaInfoPage() {
   }
 
   return (
-    <>
-      <Card m="auto" height="60%" maxW="400px" mt="5%">
-        <CardBody m="15px">
-          <Heading as="h3" size="lg" textAlign="center">
-            Datos de la reserva
-          </Heading>
-          <Stack divider={<StackDivider />} spacing="4.5" pt="20px">
-            <Grid gridTemplateColumns="1.8fr 1fr" rowGap="1.0em" pl="3">
-              <GridItem>
-                <Heading size="xs">Fecha de juego</Heading>
-                <Text fontSize="sm">
-                  {formatISOFecha(reserva.fechaReservada)}
-                </Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Horario</Heading>
-                <Text fontSize="sm">
-                  {reserva.disponibilidad.horaInicio}
-                  {" - "}
-                  {reserva.disponibilidad.horaFin} hs
-                </Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Fecha de creación</Heading>
-                <Text fontSize="sm">{formatISO(reserva.fechaCreada)}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Disciplina</Heading>
-                <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Estado</Heading>
-                <Text fontSize="sm">
-                  <ReservaEstado res={reserva} />
-                </Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Pago restante</Heading>
-                <Text fontSize="sm">${pagoRestante(reserva)}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Precio total</Heading>
-                <Text fontSize="sm">${reserva.precio}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Seña</Heading>
-                <Text fontSize="sm">
-                  {reserva.senia ? `$${reserva.senia}` : "-"}
-                </Text>
-              </GridItem>
-            </Grid>
-          </Stack>
-
-          <Heading size="md" mt="1.5rem">
-            Información del jugador
-          </Heading>
-
-          <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
-            <Box ml="3">
-              <Heading size="xs">Nombre y Apellido</Heading>
+    <Card m="auto" height="60%" maxW="450px" mt="5%">
+      <CardBody m="15px">
+        <Heading as="h3" size="lg" textAlign="center">
+          Datos de la reserva
+        </Heading>
+        <VStack divider={<StackDivider />} mt="20px">
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Fecha reservada para jugar</Heading>
               <Text fontSize="sm">
-                {reserva.jugador.nombre} {reserva.jugador.apellido}
+                {formatISOFecha(reserva.fechaReservada)}
               </Text>
             </Box>
-            <Box ml="3">
-              <Heading size="xs"> Teléfono </Heading>
-              <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
+            <Box flex="1">
+              <Heading size="xs">Horario</Heading>
+              <Text fontSize="sm">
+                {reserva.disponibilidad.horaInicio}
+                {" - "}
+                {reserva.disponibilidad.horaFin} hs
+              </Text>
             </Box>
-          </Stack>
+          </HStack>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Fecha de creación</Heading>
+              <Text fontSize="sm">{formatISO(reserva.fechaCreada)}</Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Disciplina</Heading>
+              <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
+            </Box>
+          </HStack>
+        </VStack>
 
-          <HStack justifyContent="center" spacing="20px" pt="30px">
-            <Button onClick={() => navigate(-1)}>Volver</Button>
-            {!reserva.idPagoSenia &&
-              !reserva.idPagoReserva &&
-              reserva.disponibilidad.precioSenia && (
-                <ConfirmSubmitButton
-                  header="Seña"
-                  body={`¿Desea registrar la seña de $${reserva.senia}?`}
-                  onSubmit={() => mutate(reserva)}
-                >
-                  Señar
-                </ConfirmSubmitButton>
-              )}
+        <Heading size="md" mt="35px" mb="15px">
+          Estado del pago
+        </Heading>
+        <VStack divider={<StackDivider />}>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Estado</Heading>
+              <Text fontSize="sm">
+                <ReservaEstado res={reserva} />
+              </Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Pago restante</Heading>
+              <Text fontSize="sm">${pagoRestante(reserva)}</Text>
+            </Box>
+          </HStack>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Precio total</Heading>
+              <Text fontSize="sm">${reserva.precio}</Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Seña</Heading>
+              <Text fontSize="sm">
+                {reserva.senia ? `$${reserva.senia}` : "-"}
+              </Text>
+            </Box>
+          </HStack>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Fecha del pago</Heading>
+              <Text fontSize="sm">
+                {reserva.pagoReserva
+                  ? formatISO(reserva.pagoReserva.fechaPago)
+                  : "Falta pagar"}
+              </Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Fecha de la seña</Heading>
+              <Text fontSize="sm">
+                {reserva.pagoSenia
+                  ? formatISO(reserva.pagoSenia.fechaPago)
+                  : "Falta señar"}
+              </Text>
+            </Box>
+          </HStack>
+        </VStack>
 
-            {!reserva.idPagoReserva && (
+        <Heading size="md" mt="35px">
+          Información del jugador
+        </Heading>
+
+        <HStack mt="15px">
+          <Box flex="1">
+            <Heading size="xs">Nombre y Apellido</Heading>
+            <Text fontSize="sm">
+              {reserva.jugador.nombre} {reserva.jugador.apellido}
+            </Text>
+          </Box>
+          <Box flex="1">
+            <Heading size="xs">Teléfono</Heading>
+            <Text fontSize="sm">{reserva.jugador.telefono}</Text>
+          </Box>
+        </HStack>
+
+        <HStack justifyContent="center" spacing="20px" pt="30px">
+          <Button onClick={() => navigate(-1)}>Volver</Button>
+          {!reserva.idPagoSenia &&
+            !reserva.idPagoReserva &&
+            reserva.disponibilidad.precioSenia && (
               <ConfirmSubmitButton
-                header="Pago"
-                body={`¿Desea registrar el pago de $${precioAPagar}?`}
-                onSubmit={() => mutatePago(reserva)}
+                header="Seña"
+                body={`¿Desea registrar la seña de $${reserva.senia}?`}
+                onSubmit={() => mutate(reserva)}
               >
-                Pagar
+                Señar
               </ConfirmSubmitButton>
             )}
-          </HStack>
-        </CardBody>
-      </Card>
-    </>
+
+          {!reserva.idPagoReserva && (
+            <ConfirmSubmitButton
+              header="Pago"
+              body={`¿Desea registrar el pago de $${precioAPagar}?`}
+              onSubmit={() => mutatePago(reserva)}
+            >
+              Pagar
+            </ConfirmSubmitButton>
+          )}
+        </HStack>
+      </CardBody>
+    </Card>
   );
 }

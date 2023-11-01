@@ -15,4 +15,5 @@ export const establecimientoSchema = z.object({
   urlImagen: z.string().min(1).nullable(),
   idAdministrador: z.number().positive().int(),
   horariosDeAtencion: z.string().optional().nullable(),
+  disciplinas: z.array(z.string().min(1)).optional(),
 });

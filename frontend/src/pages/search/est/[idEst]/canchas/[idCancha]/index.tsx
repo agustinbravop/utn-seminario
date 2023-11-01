@@ -47,8 +47,6 @@ export default function VistaJugadorCancha() {
     return <LoadingSpinner />;
   }
 
-  const disciplinas = cancha?.disciplinas;
-
   return (
     <div>
       <Heading textAlign="center" mt="40px">
@@ -84,7 +82,7 @@ export default function VistaJugadorCancha() {
             </Box>
             <Box>
               <Heading size="xs">Disciplinas</Heading>
-              <Text fontSize="sm">{disciplinas.join(" - ")}</Text>
+              <Text fontSize="sm">{cancha.disciplinas.join(" - ")}</Text>
             </Box>
             <Box>
               <Heading size="xs">Habilitación</Heading>
@@ -109,7 +107,7 @@ export default function VistaJugadorCancha() {
                     value={filtros.disciplina}
                     onChange={(e) => setFiltro("disciplina", e.target.value)}
                   >
-                    {disciplinas.map((d, idx) => (
+                    {cancha.disciplinas.map((d, idx) => (
                       <option value={d} key={idx}>
                         {d}
                       </option>

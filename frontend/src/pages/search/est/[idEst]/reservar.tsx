@@ -14,7 +14,6 @@ import {
   useEstablecimientoByID,
 } from "@/utils/api";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
-import { useMemo } from "react";
 import { TablaDisponibilidadesReservables } from "@/components/display";
 import { horaADecimal } from "@/utils/dates";
 import { useBusqueda } from "@/hooks";
@@ -42,10 +41,6 @@ export default function ReservarEstablecimientoPage() {
     idEst: Number(idEst),
     ...filtros,
   });
-  const disciplinas = useMemo(
-    () => [...new Set(disps?.map((c) => c.disciplina))],
-    [disps]
-  );
 
   if (!est || !disps) {
     return <LoadingSpinner />;
@@ -68,7 +63,7 @@ export default function ReservarEstablecimientoPage() {
             value={filtros.disciplina}
             onChange={(e) => setFiltro("disciplina", e.target.value)}
           >
-            {disciplinas.map((d, idx) => (
+            {est.disciplinas.map((d, idx) => (
               <option value={d} key={idx}>
                 {d}
               </option>

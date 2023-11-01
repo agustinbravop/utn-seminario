@@ -43,6 +43,7 @@ export type Establecimiento = {
   urlImagen?: string;
   correo: string;
   idAdministrador: number;
+  disciplinas: string[];
   horariosDeAtencion: string | undefined;
 };
 
