@@ -15,7 +15,7 @@ export interface ReservaRepository {
   getReservaByID(id: number): Promise<Reserva>;
   buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
   crearReserva(res: CrearReservaParam): Promise<Reserva>;
-  existsReservaByDate(idDisp: number, fecha: Date): Promise<boolean>;
+  getReservasByDate(fecha: Date): Promise<Reserva[]>;
   updateReserva(res: Reserva): Promise<Reserva>;
 }
 
@@ -192,19 +192,14 @@ export class PrismaReservaRepository implements ReservaRepository {
    * Devuelve si una reserva de cierta disponibilidad en cierta fecha ya existe.
    * Sirve para validar que la misma fecha de una disponibilidad no se reserve dos veces.
    */
-  async existsReservaByDate(idDisp: number, fecha: Date) {
+  async getReservasByDate(fecha: Date) {
     try {
-      const reserva = await this.prisma.reserva.findUnique({
-        where: {
-          idDisponibilidad_fechaReservada: {
-            idDisponibilidad: idDisp,
-            fechaReservada: fecha,
-          },
-        },
+      const reservas = await this.prisma.reserva.findMany({
+        where: { fechaReservada: fecha },
         include: this.include,
       });
 
-      return reserva !== null;
+      return reservas.map((r) => toRes(r));
     } catch {
       throw new InternalServerError("Error al consultar la reserva en la DB");
     }

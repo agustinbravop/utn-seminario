@@ -65,7 +65,7 @@ export default function EstablecimientoReservasPage() {
           <StatGroup width="fit-content" gap="40px" ml="20px">
             <Stat>
               <StatLabel>
-                <Tooltip label="Dinero que se espera recibir al terminar este período de tiempo, si todas las reservas son pagadas">
+                <Tooltip label="Dinero que se espera recibir si todas las reservas que se van a jugar en este período de tiempo son pagadas">
                   Total estimado
                 </Tooltip>
               </StatLabel>
@@ -78,7 +78,7 @@ export default function EstablecimientoReservasPage() {
             </Stat>
             <Stat>
               <StatLabel>
-                <Tooltip label="Dinero recibido por el establecimiento hasta ahora">
+                <Tooltip label="Dinero recibido hasta ahora correspondiente a las reservas que se van a jugar en este período de tiempo">
                   Total ingresado
                 </Tooltip>
               </StatLabel>
@@ -91,8 +91,8 @@ export default function EstablecimientoReservasPage() {
             </Stat>
             <Stat>
               <StatLabel>
-                <Tooltip label="Cantidad de reservas que el establecimiento recibió en este período de tiempo">
-                  Reservas recibidas
+                <Tooltip label="Cantidad de reservas que los jugadores del establecimiento hicieron para jugar">
+                  Reservas a ser jugadas
                 </Tooltip>
               </StatLabel>
               <StatNumber>
@@ -133,7 +133,7 @@ export default function EstablecimientoReservasPage() {
                       <StatNumber>${cancha.total}</StatNumber>
                     </Stat>
                     <Stat>
-                      <StatLabel>Reservas</StatLabel>
+                      <StatLabel>Reservas a jugar</StatLabel>
                       <StatNumber>{cancha.reservas.length}</StatNumber>
                     </Stat>
                   </StatGroup>

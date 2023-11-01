@@ -76,7 +76,7 @@ export class DisponibilidadServiceimpl implements DisponibilidadService {
     for (const d of disponibilidades) {
       if (
         // Se excluye a sí misma de la validación.
-        d.id !== disp.id && 
+        d.id !== disp.id &&
         // Dos disponibilidades se solapan si tienen la misma disciplina,
         d.disciplina === disp.disciplina &&
         // en el mismo día de la semana,

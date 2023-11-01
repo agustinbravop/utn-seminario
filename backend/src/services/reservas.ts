@@ -152,13 +152,12 @@ export class ReservaServiceImpl implements ReservaService {
 
   /** Lanza un error al intentar reservar una disponibilidad ya reservada en la fecha dada. */
   private async validarDisponibilidadLibre(res: CrearReserva) {
-    const yaFueReservada = await this.repo.existsReservaByDate(
-      res.idDisponibilidad,
-      res.fechaReservada
-    );
-    if (yaFueReservada) {
+    const reservas = await this.repo.getReservasByDate(res.fechaReservada);
+    if (reservas) {
       throw new ConflictError(
-        `La disponibilidad ya fue reservada en la fecha ${res.fechaReservada}`
+        `Ese horario ya está reservado en la fecha ${
+          res.fechaReservada.toISOString().split("T")[0]
+        }`
       );
     }
   }

@@ -3,6 +3,7 @@ import { BuscarDisponibilidadesQuery } from "../services/disponibilidades.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { PrismaClient, dia, disciplina, disponibilidad } from "@prisma/client";
 import { getDiaDeSemana } from "../utils/dates.js";
+import { ReservaRepository } from "./reservas.js";
 
 export interface DisponibilidadRepository {
   getByCanchaID(idCancha: number): Promise<Disponibilidad[]>;
@@ -18,14 +19,19 @@ export class PrismaDisponibilidadRepository
   implements DisponibilidadRepository
 {
   private prisma: PrismaClient;
+  private reservaRepository: ReservaRepository;
   private include = {
     disciplina: true,
     dias: true,
     cancha: true,
   };
 
-  constructor(prismaClient: PrismaClient) {
+  constructor(
+    prismaClient: PrismaClient,
+    reservaRepository: ReservaRepository
+  ) {
     this.prisma = prismaClient;
+    this.reservaRepository = reservaRepository;
   }
 
   async getByCanchaID(idCancha: number) {
@@ -67,7 +73,7 @@ export class PrismaDisponibilidadRepository
 
   async buscar(filtros: BuscarDisponibilidadesQuery) {
     try {
-      const disps = await this.prisma.disponibilidad.findMany({
+      let disps = await this.prisma.disponibilidad.findMany({
         where: {
           idDisciplina: filtros.disciplina,
           cancha: {
@@ -87,6 +93,30 @@ export class PrismaDisponibilidadRepository
         },
         include: this.include,
       });
+      if (filtros.fecha) {
+        const reservas = await this.reservaRepository.getReservasByDate(
+          filtros.fecha
+        );
+        // TODO!!!!!
+        // console.log(disps.length);
+        // disps = disps.filter((d) =>
+        //   reservas.every((res) => {
+        //     console.log(
+        //       d.horaInicio,
+        //       d.horaFin,
+        //       res.disponibilidad.horaInicio,
+        //       res.disponibilidad.horaFin,
+        //       res.disponibilidad.horaInicio >= d.horaFin ||
+        //         res.disponibilidad.horaFin <= d.horaInicio
+        //     );
+        //     return (
+        //       res.disponibilidad.horaInicio >= d.horaFin ||
+        //       res.disponibilidad.horaFin <= d.horaInicio
+        //     );
+        //   })
+        // );
+      }
+      // console.log(disps.length);
       return disps.map((d) => toDisp(d));
     } catch {
       throw new InternalServerError("Error al buscar las disponibilidades");
