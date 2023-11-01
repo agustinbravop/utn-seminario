@@ -1,4 +1,4 @@
-import { Select, SelectProps } from "@chakra-ui/react";
+import { FormLabel, Select, SelectProps } from "@chakra-ui/react";
 import { useController } from "react-hook-form";
 import BaseFormControl, {
   NoVariantBaseFormControlProps,
@@ -14,21 +14,28 @@ export interface SelectControlProps
  * https://chakra-ui.com/docs/components/select
  */
 export default function SelectControl(props: SelectControlProps) {
-  const { name, control, icon, placeholder, variant, children, ...rest } =
-    props;
+  const {
+    name,
+    control,
+    icon,
+    placeholder,
+    variant = "floating",
+    label,
+    children,
+    ...rest
+  } = props;
   const { field } = useController({ name, control });
 
   return (
-    <BaseFormControl name={name} control={control} {...rest}>
-      <Select
-        {...field}
-        id={name}
-        placeholder={placeholder}
-        icon={icon}
-        variant={variant}
-      >
+    <BaseFormControl name={name} control={control} variant={variant} {...rest}>
+      <Select {...field} id={name} placeholder={placeholder} icon={icon}>
         {children}
       </Select>
+      {label && typeof label === "string" ? (
+        <FormLabel htmlFor={name}>{label}</FormLabel>
+      ) : (
+        label
+      )}
     </BaseFormControl>
   );
 }

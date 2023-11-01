@@ -48,7 +48,7 @@ export default function BuscarEstablecimientosPage() {
       </Heading>
       <FormProvider {...methods}>
         <VStack
-          gap="0.3rem"
+          gap="0.5rem"
           bg="#e9eef1"
           mt="15px"
           mx="auto"
@@ -65,18 +65,19 @@ export default function BuscarEstablecimientosPage() {
             />
             <SelectLocalidadControl
               name="localidad"
-              bg="white"
               borderRadius="10px"
+              bg="white"
               ml="0px"
               value={values.localidad}
               provincia={values.provincia}
             />
           </HStack>
           <SelectControl
-            borderRadius="10px"
+            label="Disciplina"
             name="disciplina"
+            placeholder="Todas"
+            borderRadius="10px"
             bg="white"
-            placeholder="Disciplina"
           >
             {DISCIPLINAS.sort().map((d) => (
               <option key={d} value={d}>
@@ -85,23 +86,24 @@ export default function BuscarEstablecimientosPage() {
             ))}
           </SelectControl>
           <DateControl
+            name="fecha"
+            label="Fecha"
             bg="white"
             borderRadius="10px"
-            name="fecha"
             size="md"
             width="100%"
           />
           <InputControl
-            bg="white"
-            borderRadius="10px"
             name="nombre"
+            placeholder="Nombre del establecimiento"
+            label="Nombre del establecimiento"
             rightElement={
               <InputRightElement>
-                <SearchIcon color="gray.300" />
+                <SearchIcon color="gray" />
               </InputRightElement>
             }
-            _placeholder={{ color: "#1a202c" }}
-            placeholder="Nombre del establecimiento"
+            bg="white"
+            borderRadius="10px"
             size="md"
             width="100%"
           />

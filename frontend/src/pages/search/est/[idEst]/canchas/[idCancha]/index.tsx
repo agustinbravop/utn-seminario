@@ -3,6 +3,8 @@ import {
   Card,
   CardBody,
   CardHeader,
+  FormControl,
+  FormLabel,
   HStack,
   Heading,
   Image,
@@ -97,29 +99,34 @@ export default function VistaJugadorCancha() {
                 Estas son las disponibilidades de la cancha:
               </Text>
 
-              <HStack>
-                <Select
-                  placeholder="Disciplina"
-                  width="150px"
-                  my="20px"
-                  fontSize="sm"
-                  name="disciplina"
-                  value={filtros.disciplina}
-                  onChange={(e) => setFiltro("disciplina", e.target.value)}
-                >
-                  {disciplinas.map((d, idx) => (
-                    <option value={d} key={idx}>
-                      {d}
-                    </option>
-                  ))}
-                </Select>
-                <Input
-                  type="date"
-                  name="fecha"
-                  value={filtros.fecha}
-                  onChange={(e) => setFiltro("fecha", e.target.value)}
-                  width="fit-content"
-                />
+              <HStack my="20px">
+                <FormControl width="unset" variant="floating">
+                  <Select
+                    placeholder="Todas"
+                    width="150px"
+                    fontSize="sm"
+                    name="disciplina"
+                    value={filtros.disciplina}
+                    onChange={(e) => setFiltro("disciplina", e.target.value)}
+                  >
+                    {disciplinas.map((d, idx) => (
+                      <option value={d} key={idx}>
+                        {d}
+                      </option>
+                    ))}
+                  </Select>
+                  <FormLabel>Disciplina</FormLabel>
+                </FormControl>
+                <FormControl width="unset" variant="floating">
+                  <Input
+                    type="date"
+                    name="fecha"
+                    value={filtros.fecha}
+                    onChange={(e) => setFiltro("fecha", e.target.value)}
+                    width="fit-content"
+                  />
+                  <FormLabel>Fecha</FormLabel>
+                </FormControl>
               </HStack>
               <TableContainer pt="15px" pb="20px">
                 <Table variant="simple" size="sm">

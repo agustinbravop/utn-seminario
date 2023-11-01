@@ -4,6 +4,8 @@ import {
 } from "@/components/display";
 import {
   Button,
+  FormControl,
+  FormLabel,
   HStack,
   Heading,
   Icon,
@@ -133,23 +135,26 @@ export default function EstablecimientosPage() {
         Establecimientos
       </Heading>
       <HStack mr="16%" ml="16%" mb="50px" mt="20px">
-        <InputGroup width="300px">
-          <InputRightElement>
-            <SearchIcon color="gray.300" />
-          </InputRightElement>
-          <Input
-            focusBorderColor="lightblue"
-            placeholder="Nombre"
-            size="md"
-            onChange={handleChange}
-            value={filtro}
-          />
-        </InputGroup>
+        <FormControl variant="floating">
+          <InputGroup width="300px">
+            <InputRightElement>
+              <SearchIcon color="gray" />
+            </InputRightElement>
+            <Input
+              focusBorderColor="lightblue"
+              placeholder="Nombre"
+              size="md"
+              onChange={handleChange}
+              value={filtro}
+            />
+            <FormLabel>Nombre</FormLabel>
+          </InputGroup>
+        </FormControl>
         <HStack ml="auto" spacing={4}>
           <Text mb="0">
             {establecimientos.length} /{" "}
             {admin.suscripcion.limiteEstablecimientos} establecimiento
-            {establecimientos.length === 1 || "s"}
+            {admin.suscripcion.limiteEstablecimientos === 1 || "s"}
           </Text>
           <Link
             to={
