@@ -37,7 +37,7 @@ export default function EstablecimientoReservasPage() {
   return (
     <>
       <EstablecimientoMenu />
-      <HStack mr="16%" ml="16%" mb="20px" mt="30px">
+      <HStack mr="12%" ml="12%" mb="20px" mt="30px">
         <FormControl variant="floating" width="auto">
           <Input
             type="date"

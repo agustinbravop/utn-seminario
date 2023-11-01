@@ -30,7 +30,7 @@ export default function EstablecimientoMenu() {
         {est.nombre}
       </Heading>
 
-      <HStack m="0.2em 16% 0.75em" borderBottom="#E2E8F0 0.2em solid">
+      <HStack m="0.2em 12% 0.75em" borderBottom="#E2E8F0 0.2em solid">
         <LinkButton to={`/ests/${est.id}`}>Información</LinkButton>
         <LinkButton to={`/ests/${est.id}/canchas`}>Canchas</LinkButton>
         <LinkButton to={`/ests/${est.id}/reservas`}>Reservas</LinkButton>

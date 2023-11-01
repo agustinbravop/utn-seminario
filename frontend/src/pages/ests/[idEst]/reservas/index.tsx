@@ -22,7 +22,7 @@ import {
 import { useNavigate } from "react-router";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
-import { formatFecha, formatISOFecha } from "@/utils/dates";
+import { estaEntreFechas, formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
 import { ReservaEstado } from "@/components/display";
@@ -47,11 +47,17 @@ export default function EstablecimientoReservasPage() {
   const reservasOrdenadas = [...(reservas || [])].sort((a, b) => {
     if (ordenColumna === "Cancha") {
       return ordenAscendente
-        ? a.disponibilidad.cancha?.nombre.localeCompare(
-            b.disponibilidad.cancha?.nombre
+        ? a.disponibilidad.cancha.nombre.localeCompare(
+            b.disponibilidad.cancha.nombre
           )
-        : b.disponibilidad.cancha?.nombre.localeCompare(
-            a.disponibilidad.cancha?.nombre
+        : b.disponibilidad.cancha.nombre.localeCompare(
+            a.disponibilidad.cancha.nombre
+          );
+    } else if (ordenColumna === "Disciplina") {
+      return ordenAscendente
+        ? a.disponibilidad.disciplina.localeCompare(b.disponibilidad.disciplina)
+        : b.disponibilidad.disciplina.localeCompare(
+            a.disponibilidad.disciplina
           );
     } else if (ordenColumna === "Fecha") {
       return ordenAscendente
@@ -91,7 +97,8 @@ export default function EstablecimientoReservasPage() {
   });
 
   const [filtroNombre, setFiltroNombre] = useState("");
-  const [filtroFecha, setFiltroFecha] = useState(formatFecha(new Date()));
+  const [filtroDesde, setFiltroDesde] = useState(formatFecha(new Date()));
+  const [filtroHasta, setFiltroHasta] = useState(formatFecha(new Date()));
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
@@ -105,9 +112,11 @@ export default function EstablecimientoReservasPage() {
     const nombreIncluido = nombreJugador
       .toLowerCase()
       .includes(filtroNombre.toLowerCase());
-    const fechaCoincide =
-      filtroFecha === "" ||
-      formatISOFecha(r.fechaReservada) === formatISOFecha(filtroFecha);
+    const fechaCoincide = estaEntreFechas(
+      r.fechaReservada,
+      filtroDesde,
+      filtroHasta
+    );
 
     var estadoCoincide = false;
     if (filtroEstado === estado && estado === "Pagada") {
@@ -126,14 +135,14 @@ export default function EstablecimientoReservasPage() {
   return (
     <>
       <EstablecimientoMenu />
-      <HStack mr="16%" ml="16%" mb="30px" mt="0px">
+      <HStack mr="12%" ml="12%" mb="30px" mt="0px">
         <Text>
           {reservas.length > 0
             ? "Estas son las reservas actuales para este establecimiento."
             : "Actualmente no hay reservas para este establecimiento."}
         </Text>
       </HStack>
-      <HStack mr="16%" ml="16%" mb="20px" mt="0px">
+      <HStack mr="12%" ml="12%" mb="20px" mt="0px">
         <FormControl variant="floating" width="auto">
           <Input
             type="text"
@@ -146,11 +155,22 @@ export default function EstablecimientoReservasPage() {
         <FormControl variant="floating" width="auto">
           <Input
             type="date"
+            name="desde"
             placeholder="Fecha"
-            value={filtroFecha}
-            onChange={(e) => setFiltroFecha(e.target.value)}
+            value={filtroDesde}
+            onChange={(e) => setFiltroDesde(e.target.value)}
           />
-          <FormLabel>Fecha</FormLabel>
+          <FormLabel>Desde</FormLabel>
+        </FormControl>
+        <FormControl variant="floating" width="auto">
+          <Input
+            type="date"
+            name="hasta"
+            placeholder="Fecha"
+            value={filtroHasta}
+            onChange={(e) => setFiltroHasta(e.target.value)}
+          />
+          <FormLabel>Hasta</FormLabel>
         </FormControl>
 
         <FormControl variant="floating" width="auto">
@@ -168,7 +188,7 @@ export default function EstablecimientoReservasPage() {
           <FormLabel>Estado</FormLabel>
         </FormControl>
       </HStack>
-      <TableContainer pt="15px" pb="20px" mr="16%" ml="16%" mb="30px" mt="0px">
+      <TableContainer pt="15px" pb="20px" mr="12%" ml="12%" mb="30px" mt="0px">
         <Table variant="striped" size="sm">
           <Thead>
             <Tr>
@@ -179,6 +199,22 @@ export default function EstablecimientoReservasPage() {
               >
                 Cancha{" "}
                 {ordenColumna === "Cancha" && (
+                  <>
+                    {ordenAscendente ? (
+                      <TriangleUpIcon color="blue.500" />
+                    ) : (
+                      <TriangleDownIcon color="blue.500" />
+                    )}
+                  </>
+                )}
+              </Th>
+              <Th
+                textAlign="center"
+                onClick={() => handleOrdenarColumna("Disciplina")}
+                cursor="pointer"
+              >
+                Disciplina{" "}
+                {ordenColumna === "Disciplina" && (
                   <>
                     {ordenAscendente ? (
                       <TriangleUpIcon color="blue.500" />
@@ -259,7 +295,8 @@ export default function EstablecimientoReservasPage() {
             {reservasFiltradas.map((r) => {
               return (
                 <Tr key={r.id}>
-                  <Td textAlign="center">{r.disponibilidad.cancha?.nombre}</Td>
+                  <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>
+                  <Td textAlign="center">{r.disponibilidad.disciplina}</Td>
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
                   <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
