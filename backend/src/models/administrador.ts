@@ -6,13 +6,13 @@ export type Administrador = z.infer<typeof administradorSchema>;
 
 export const administradorSchema = z.object({
   id: z.number().positive().int(),
-  nombre: z.string().nonempty(),
-  apellido: z.string().nonempty(),
-  correo: z.string().nonempty().email(),
-  telefono: z.string().nonempty(),
+  nombre: z.string().min(1),
+  apellido: z.string().min(1),
+  correo: z.string().min(1).email(),
+  telefono: z.string().min(1),
   usuario: z
     .string()
-    .nonempty()
+    .min(1)
     .refine((str) => !str.includes(" ")),
   tarjeta: tarjetaSchema,
   suscripcion: suscripcionSchema,
