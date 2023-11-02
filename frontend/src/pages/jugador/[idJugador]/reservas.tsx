@@ -24,7 +24,7 @@ function reservaCompare(a: Reserva, b: Reserva) {
 }
 
 type Filtros = {
-  orden: "Más recientes" | "Más antiguas";
+  orden: "Recientes" | "Antiguas";
   disciplina: string;
 };
 
@@ -34,12 +34,12 @@ export default function JugadorReservasPage() {
     jugador.id
   );
   const methods = useYupForm<Filtros>({
-    defaultValues: { orden: "Más recientes" },
+    defaultValues: { orden: "Recientes" },
   });
   const { orden, disciplina } = useWatch({ control: methods.control });
 
   function ordenarReservas(res: Reserva[]) {
-    if (orden === "Más recientes") {
+    if (orden === "Recientes") {
       return res.sort((a, b) => reservaCompare(b, a));
     } else {
       return res.sort((a, b) => reservaCompare(a, b));
@@ -52,9 +52,9 @@ export default function JugadorReservasPage() {
       (r) => r.disponibilidad.disciplina === disciplina
     );
   }
-  const reservasActivas = reservasFiltradas.filter((reserva) =>
-    isReservaActiva(reserva)
-  );
+  const reservasActivas = reservasFiltradas
+    .filter((reserva) => isReservaActiva(reserva))
+    .reverse();
   const historial = reservasFiltradas.filter((res) => !isReservaActiva(res));
 
   return (
@@ -73,8 +73,8 @@ export default function JugadorReservasPage() {
         >
           <Text>Ordenar por:</Text>
           <SelectControl name="orden" label="Orden" width="fit-content">
-            <option value="Más recientes">Más recientes</option>
-            <option value="Más antiguas">Más antiguas</option>
+            <option value="Recientes">Recientes</option>
+            <option value="Antiguas">Antiguas</option>
           </SelectControl>
           <SelectControl
             width="fit-content"

@@ -61,6 +61,8 @@ export default function InputControl(props: InputControlProps) {
     leftElement,
     rightElement,
     type,
+    min,
+    max,
     placeholder,
     variant,
     children,
@@ -97,6 +99,8 @@ export default function InputControl(props: InputControlProps) {
             value={field.value ?? ""}
             id={name}
             type={type}
+            min={min}
+            max={max}
             placeholder={placeholder ?? " "} // Si es "" (string vacío) el floating label no flota
             variant={variant}
           />

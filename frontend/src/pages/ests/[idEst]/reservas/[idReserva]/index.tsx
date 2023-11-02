@@ -149,6 +149,8 @@ export default function ReservaInfoPage() {
               <Text fontSize="sm">
                 {reserva.pagoSenia
                   ? formatISO(reserva.pagoSenia.fechaPago)
+                  : reserva.pagoReserva
+                  ? "-"
                   : "Falta señar"}
               </Text>
             </Box>

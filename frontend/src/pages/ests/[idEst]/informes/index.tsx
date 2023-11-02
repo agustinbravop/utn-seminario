@@ -61,8 +61,25 @@ export default function EstablecimientoReservasPage() {
       {!informe ? (
         <LoadingSpinner />
       ) : (
-        <Box mx="16%">
+        <Box mx="12%">
           <StatGroup width="fit-content" gap="40px" ml="20px">
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Cantidad de reservas que los jugadores del establecimiento hicieron para jugar">
+                  Reservas a ser jugadas
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>
+                {informe.canchas.reduce(
+                  (acum, c) => acum + c.reservas.length,
+                  0
+                )}
+              </StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
             <Stat>
               <StatLabel>
                 <Tooltip label="Dinero que se espera recibir si todas las reservas que se van a jugar en este período de tiempo son pagadas">
@@ -89,23 +106,6 @@ export default function EstablecimientoReservasPage() {
                 {fechaHasta && formatISOFecha(fechaHasta)}
               </StatHelpText>
             </Stat>
-            <Stat>
-              <StatLabel>
-                <Tooltip label="Cantidad de reservas que los jugadores del establecimiento hicieron para jugar">
-                  Reservas a ser jugadas
-                </Tooltip>
-              </StatLabel>
-              <StatNumber>
-                {informe.canchas.reduce(
-                  (acum, c) => acum + c.reservas.length,
-                  0
-                )}
-              </StatNumber>
-              <StatHelpText>
-                {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
-                {fechaHasta && formatISOFecha(fechaHasta)}
-              </StatHelpText>
-            </Stat>
           </StatGroup>
 
           <Heading size="lg" my="0.5em" ml="2em">
@@ -125,16 +125,16 @@ export default function EstablecimientoReservasPage() {
                   <Heading size="md">{cancha.nombre}</Heading>
                   <StatGroup mt="0.5em">
                     <Stat>
+                      <StatLabel>Reservas a jugar</StatLabel>
+                      <StatNumber>{cancha.reservas.length}</StatNumber>
+                    </Stat>
+                    <Stat>
                       <StatLabel>Estimado</StatLabel>
                       <StatNumber>${cancha.estimado}</StatNumber>
                     </Stat>
                     <Stat>
                       <StatLabel>Ingresado</StatLabel>
                       <StatNumber>${cancha.total}</StatNumber>
-                    </Stat>
-                    <Stat>
-                      <StatLabel>Reservas a jugar</StatLabel>
-                      <StatNumber>{cancha.reservas.length}</StatNumber>
                     </Stat>
                   </StatGroup>
                 </CardBody>

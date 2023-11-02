@@ -31,6 +31,7 @@ import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import FormReservarDisponibilidad from "./_formReservar";
 import { ordenarDias } from "@/utils/dias";
 import { useBusqueda } from "@/hooks";
+import { formatFecha } from "@/utils/dates";
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/search/est/:idEst/canchas/:idCancha");
@@ -122,6 +123,7 @@ export default function VistaJugadorCancha() {
                     value={filtros.fecha}
                     onChange={(e) => setFiltro("fecha", e.target.value)}
                     width="fit-content"
+                    min={formatFecha(new Date())}
                   />
                   <FormLabel>Fecha</FormLabel>
                 </FormControl>

@@ -2,22 +2,22 @@ import { EstablecimientoCardJugador } from "@/components/display";
 import {
   BusquedaEstablecimientos,
   useBuscarEstablecimientos,
+  useLocalidadesByProvincia,
 } from "@/utils/api";
 import { SearchIcon } from "@chakra-ui/icons";
 import { HStack, Heading, InputRightElement, VStack } from "@chakra-ui/react";
 import { formatFecha } from "@/utils/dates";
-import { useYupForm } from "@/hooks";
-import { useWatch } from "react-hook-form";
+import { useYupForm, useBusqueda } from "@/hooks";
+import { useWatch, FormProvider } from "react-hook-form";
 import { DISCIPLINAS } from "@/utils/constants";
-import { useLocalidadesByProvincia } from "@/utils/api";
 import { InputControl, SelectControl } from "@/components/forms";
-import { FormProvider } from "react-hook-form";
-import DateControl from "@/components/forms/DateControl";
 import { useEffect } from "react";
-import LoadingSpinner from "@/components/feedback/LoadingSpinner";
-import { useBusqueda } from "@/hooks/useBusqueda";
-import SelectProvinciaControl from "@/components/forms/SelectProvinciaControl";
-import SelectLocalidadControl from "@/components/forms/SelectLocalidadControl";
+import { LoadingSpinner } from "@/components/feedback";
+import {
+  DateControl,
+  SelectProvinciaControl,
+  SelectLocalidadControl,
+} from "@/components/forms";
 import { QuestionAlert } from "@/components/media-and-icons";
 
 export default function BuscarEstablecimientosPage() {
@@ -92,6 +92,7 @@ export default function BuscarEstablecimientosPage() {
             borderRadius="10px"
             size="md"
             width="100%"
+            min={formatFecha(new Date())}
           />
           <InputControl
             name="nombre"

@@ -15,7 +15,7 @@ import {
 } from "@/utils/api";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { TablaDisponibilidadesReservables } from "@/components/display";
-import { horaADecimal } from "@/utils/dates";
+import { formatFecha, horaADecimal } from "@/utils/dates";
 import { useBusqueda } from "@/hooks";
 import { BusquedaFiltros } from "@/hooks/useBusqueda";
 
@@ -78,6 +78,7 @@ export default function ReservarEstablecimientoPage() {
             value={filtros.fecha}
             onChange={(e) => setFiltro("fecha", e.target.value)}
             width="fit-content"
+            min={formatFecha(new Date())}
           />
           <FormLabel>Fecha</FormLabel>
         </FormControl>
