@@ -176,7 +176,7 @@ export class PrismaReservaRepository implements ReservaRepository {
           fechaReservada: res.fechaReservada,
           precio: res.precio,
           senia: res.senia,
-          jugador: { connect: { id: res.idJugador } },
+          jugador: { connect: { id: res.idJugador } } ?? undefined,
           disponibilidad: { connect: { id: res.idDisponibilidad } },
         },
         include: this.include,
@@ -212,23 +212,36 @@ export class PrismaReservaRepository implements ReservaRepository {
 }
 
 type ReservaDB = reserva & {
-  jugador: jugador;
+  jugador?: jugador;
+  nombre: string | null;
   disponibilidad: disponibilidadDB;
   pagoReserva: pago | null;
   pagoSenia?: pago | null;
 };
 
 function toRes(res: ReservaDB): Reserva {
-  const { clave, ...jugador } = res.jugador;
-  return {
-    ...res,
-    jugador,
-    senia: res.senia?.toNumber() ?? undefined,
-    precio: res.precio.toNumber(),
-    pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
-    pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
-    disponibilidad: toDisp(res.disponibilidad),
-  };
+  if (res.jugador){
+    const { clave, ...jugador } = res.jugador;
+    return {
+      ...res,
+      jugador,
+      senia: res.senia?.toNumber() ?? undefined,
+      precio: res.precio.toNumber(),
+      pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
+      pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
+      disponibilidad: toDisp(res.disponibilidad),
+    };
+  }
+  else{
+    return {
+      ...res,
+      senia: res.senia?.toNumber() ?? undefined,
+      precio: res.precio.toNumber(),
+      pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
+      pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
+      disponibilidad: toDisp(res.disponibilidad),
+    }
+  }
 }
 
 async function awaitQuery(
