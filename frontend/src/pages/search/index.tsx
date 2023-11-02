@@ -28,9 +28,11 @@ export default function BuscarEstablecimientosPage() {
   const values = useWatch({ control: methods.control });
   useEffect(() => {
     updateFiltros(values);
+    console.log(values);
   }, [values, updateFiltros]);
   const { data: ests, isFetchedAfterMount } = useBuscarEstablecimientos({
     ...values,
+    disciplina: values.disciplina || undefined
   });
   const { data: localidades } = useLocalidadesByProvincia(values.provincia);
   useEffect(() => {

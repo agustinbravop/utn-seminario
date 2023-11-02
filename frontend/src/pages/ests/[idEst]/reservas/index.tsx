@@ -13,6 +13,7 @@ import {
   FormControl,
   FormLabel,
   Select,
+  Button,
 } from "@chakra-ui/react";
 import {
   TriangleUpIcon,
@@ -26,6 +27,7 @@ import { formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
 import { ReservaEstado } from "@/components/display";
+import { Link } from 'react-router-dom'
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -167,6 +169,9 @@ export default function EstablecimientoReservasPage() {
           </Select>
           <FormLabel>Estado</FormLabel>
         </FormControl>
+        <Link to={`../../../search/est/${idEst}/reservar`}>
+          <Button>Reservar</Button>
+        </Link>
       </HStack>
       <TableContainer pt="15px" pb="20px" mr="16%" ml="16%" mb="30px" mt="0px">
         <Table variant="striped" size="sm">
