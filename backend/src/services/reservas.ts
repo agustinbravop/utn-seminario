@@ -123,11 +123,11 @@ export class ReservaServiceImpl implements ReservaService {
 
   async crear(crearReserva: CrearReserva) {
     await this.validarCanchaHabilitada(crearReserva);
-    await this.validarDisponibilidadLibre(crearReserva);
 
     const disp = await this.dispRepository.getByID(
       crearReserva.idDisponibilidad
     );
+    await this.validarDisponibilidadLibre(crearReserva, disp);
     await this.validarDiaDeSemana(crearReserva, disp);
     this.validarFechaReservada(crearReserva, disp);
 
@@ -151,9 +151,23 @@ export class ReservaServiceImpl implements ReservaService {
   }
 
   /** Lanza un error al intentar reservar una disponibilidad ya reservada en la fecha dada. */
-  private async validarDisponibilidadLibre(res: CrearReserva) {
-    const reservas = await this.repo.getReservasByDate(res.fechaReservada);
-    if (reservas) {
+  private async validarDisponibilidadLibre(
+    res: CrearReserva,
+    disp: Disponibilidad
+  ) {
+    // Se obtienen todas las reservas de esta cancha en la fecha a reservar...
+    const reservasMismaFecha = await this.buscar({
+      idCancha: disp.idCancha,
+      fechaReservadaDesde: res.fechaReservada,
+      fechaReservadaHasta: res.fechaReservada,
+    });
+    // ...para validar que ninguna de esas reservas se solape con la nueva.
+    const horarioSolapado = reservasMismaFecha.some(
+      (r) =>
+        r.disponibilidad.horaFin > disp.horaInicio &&
+        r.disponibilidad.horaInicio < disp.horaFin
+    );
+    if (horarioSolapado) {
       throw new ConflictError(
         `Ese horario ya está reservado en la fecha ${
           res.fechaReservada.toISOString().split("T")[0]

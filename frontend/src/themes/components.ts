@@ -12,7 +12,7 @@ const floatingLabelStyles = {
   px: 1,
   my: 3,
   transformOrigin: "left top",
-  lineHeight: "1em"
+  lineHeight: "1em",
 };
 
 export const floatingLabelActiveStyles = {

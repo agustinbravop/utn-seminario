@@ -97,26 +97,18 @@ export class PrismaDisponibilidadRepository
         const reservas = await this.reservaRepository.getReservasByDate(
           filtros.fecha
         );
-        // TODO!!!!!
-        // console.log(disps.length);
-        // disps = disps.filter((d) =>
-        //   reservas.every((res) => {
-        //     console.log(
-        //       d.horaInicio,
-        //       d.horaFin,
-        //       res.disponibilidad.horaInicio,
-        //       res.disponibilidad.horaFin,
-        //       res.disponibilidad.horaInicio >= d.horaFin ||
-        //         res.disponibilidad.horaFin <= d.horaInicio
-        //     );
-        //     return (
-        //       res.disponibilidad.horaInicio >= d.horaFin ||
-        //       res.disponibilidad.horaFin <= d.horaInicio
-        //     );
-        //   })
-        // );
+
+        // Ignorar las disps cuyo horario ya fue reservado en su cancha en otra disciplina.
+        disps = disps.filter(
+          (d) =>
+            !reservas.some(
+              (res) =>
+                res.disponibilidad.idCancha === d.idCancha &&
+                res.disponibilidad.horaInicio < d.horaFin &&
+                res.disponibilidad.horaFin > d.horaInicio
+            )
+        );
       }
-      // console.log(disps.length);
       return disps.map((d) => toDisp(d));
     } catch {
       throw new InternalServerError("Error al buscar las disponibilidades");
