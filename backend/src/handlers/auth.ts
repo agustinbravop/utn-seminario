@@ -10,7 +10,7 @@ import { UnauthorizedError, ForbiddenError } from "../utils/apierrors.js";
 export const registrarAdminSchema = administradorSchema
   .omit({ id: true, tarjeta: true, suscripcion: true })
   .extend({
-    clave: z.string().nonempty(),
+    clave: z.string().min(1),
     idSuscripcion: z.number().positive().int(),
     tarjeta: tarjetaSchema.omit({ id: true }),
   });
@@ -19,23 +19,23 @@ type RegistrarAdmin = z.infer<typeof registrarAdminSchema>;
 
 // Se puede iniciar sesión o con usuario o con correo.
 export const loginSchema = z.object({
-  correoOUsuario: z.string().nonempty(),
-  clave: z.string().nonempty(),
+  correoOUsuario: z.string().min(1),
+  clave: z.string().min(1),
 });
 
 type Login = z.infer<typeof loginSchema>;
 
 export const registrarJugadorSchema = jugadorSchema
   .extend({
-    clave: z.string().nonempty(),
+    clave: z.string().min(1),
   })
   .omit({ id: true });
 
 type RegistrarJugador = z.infer<typeof registrarJugadorSchema>;
 
 export const cambiarClaveSchema = z.object({
-  nueva: z.string().nonempty(),
-  actual: z.string().nonempty(),
+  nueva: z.string().min(1),
+  actual: z.string().min(1),
 });
 
 type CambiarClave = z.infer<typeof cambiarClaveSchema>;

@@ -2,22 +2,22 @@ import { EstablecimientoCardJugador } from "@/components/display";
 import {
   BusquedaEstablecimientos,
   useBuscarEstablecimientos,
+  useLocalidadesByProvincia,
 } from "@/utils/api";
 import { SearchIcon } from "@chakra-ui/icons";
 import { HStack, Heading, InputRightElement, VStack } from "@chakra-ui/react";
 import { formatFecha } from "@/utils/dates";
-import { useYupForm } from "@/hooks";
-import { useWatch } from "react-hook-form";
+import { useYupForm, useBusqueda } from "@/hooks";
+import { useWatch, FormProvider } from "react-hook-form";
 import { DISCIPLINAS } from "@/utils/constants";
-import { useLocalidadesByProvincia } from "@/utils/api";
 import { InputControl, SelectControl } from "@/components/forms";
-import { FormProvider } from "react-hook-form";
-import DateControl from "@/components/forms/DateControl";
 import { useEffect } from "react";
-import LoadingSpinner from "@/components/feedback/LoadingSpinner";
-import { useBusqueda } from "@/hooks/useBusqueda";
-import SelectProvinciaControl from "@/components/forms/SelectProvinciaControl";
-import SelectLocalidadControl from "@/components/forms/SelectLocalidadControl";
+import { LoadingSpinner } from "@/components/feedback";
+import {
+  DateControl,
+  SelectProvinciaControl,
+  SelectLocalidadControl,
+} from "@/components/forms";
 import { QuestionAlert } from "@/components/media-and-icons";
 
 export default function BuscarEstablecimientosPage() {
@@ -48,7 +48,7 @@ export default function BuscarEstablecimientosPage() {
       </Heading>
       <FormProvider {...methods}>
         <VStack
-          gap="0.3rem"
+          gap="0.5rem"
           bg="#e9eef1"
           mt="15px"
           mx="auto"
@@ -65,18 +65,19 @@ export default function BuscarEstablecimientosPage() {
             />
             <SelectLocalidadControl
               name="localidad"
-              bg="white"
               borderRadius="10px"
+              bg="white"
               ml="0px"
               value={values.localidad}
               provincia={values.provincia}
             />
           </HStack>
           <SelectControl
-            borderRadius="10px"
+            label="Disciplina"
             name="disciplina"
+            placeholder="Todas"
+            borderRadius="10px"
             bg="white"
-            placeholder="Disciplina"
           >
             {DISCIPLINAS.sort().map((d) => (
               <option key={d} value={d}>
@@ -85,23 +86,25 @@ export default function BuscarEstablecimientosPage() {
             ))}
           </SelectControl>
           <DateControl
+            name="fecha"
+            label="Fecha"
             bg="white"
             borderRadius="10px"
-            name="fecha"
             size="md"
             width="100%"
+            min={formatFecha(new Date())}
           />
           <InputControl
-            bg="white"
-            borderRadius="10px"
             name="nombre"
+            placeholder="Nombre del establecimiento"
+            label="Nombre del establecimiento"
             rightElement={
               <InputRightElement>
-                <SearchIcon color="gray.300" />
+                <SearchIcon color="gray" />
               </InputRightElement>
             }
-            _placeholder={{ color: "#1a202c" }}
-            placeholder="Nombre del establecimiento"
+            bg="white"
+            borderRadius="10px"
             size="md"
             width="100%"
           />

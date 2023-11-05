@@ -45,7 +45,14 @@ export class PrismaCanchaRepository implements CanchaRepository {
     try {
       const est = await this.prisma.cancha.findUnique({
         where: { id: idCancha },
-        include: { establecimiento: { include: { localidad: true } } },
+        include: {
+          establecimiento: {
+            include: {
+              localidad: true,
+              canchas: { include: { disponibilidades: true } },
+            },
+          },
+        },
       });
       if (!est) {
         throw new NotFoundError(`No existe cancha con id ${idCancha}`);

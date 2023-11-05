@@ -110,6 +110,7 @@ export default function FormDisp({
               <SelectControl
                 placeholder="Seleccionar disciplina "
                 name="disciplina"
+                label="Disciplina"
                 isRequired
               >
                 {DISCIPLINAS.map((disciplina, i) => (

@@ -63,7 +63,8 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const jugadorService = new JugadorServiceImpl(jugadorRepo);
   const jugadorHandler = new JugadorHandler(jugadorService);
 
-  const dispRepo = new PrismaDisponibilidadRepository(prismaClient);
+  const resRepo = new PrismaReservaRepository(prismaClient);
+  const dispRepo = new PrismaDisponibilidadRepository(prismaClient, resRepo);
   const dispService = new DisponibilidadServiceimpl(dispRepo);
   const dispHandler = new DisponibilidadHandler(dispService);
 
@@ -83,7 +84,6 @@ export function createRouter(prismaClient: PrismaClient): Router {
   const pagoService = new PagoServiceImpl(pagoRepo);
   const pagoHandler = new PagoHandler(pagoService);
 
-  const resRepo = new PrismaReservaRepository(prismaClient);
   const resService = new ReservaServiceImpl(
     resRepo,
     canchaRepo,

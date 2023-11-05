@@ -37,7 +37,7 @@ export default function EstablecimientoReservasPage() {
   return (
     <>
       <EstablecimientoMenu />
-      <HStack mr="16%" ml="16%" mb="20px" mt="30px">
+      <HStack mr="12%" ml="12%" mb="20px" mt="30px">
         <FormControl variant="floating" width="auto">
           <Input
             type="date"
@@ -61,11 +61,28 @@ export default function EstablecimientoReservasPage() {
       {!informe ? (
         <LoadingSpinner />
       ) : (
-        <Box mx="16%">
+        <Box mx="12%">
           <StatGroup width="fit-content" gap="40px" ml="20px">
             <Stat>
               <StatLabel>
-                <Tooltip label="Dinero que se espera recibir al terminar este período de tiempo, si todas las reservas son pagadas">
+                <Tooltip label="Cantidad de reservas que los jugadores del establecimiento hicieron para jugar">
+                  Reservas a ser jugadas
+                </Tooltip>
+              </StatLabel>
+              <StatNumber>
+                {informe.canchas.reduce(
+                  (acum, c) => acum + c.reservas.length,
+                  0
+                )}
+              </StatNumber>
+              <StatHelpText>
+                {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
+                {fechaHasta && formatISOFecha(fechaHasta)}
+              </StatHelpText>
+            </Stat>
+            <Stat>
+              <StatLabel>
+                <Tooltip label="Dinero que se espera recibir si todas las reservas que se van a jugar en este período de tiempo son pagadas">
                   Total estimado
                 </Tooltip>
               </StatLabel>
@@ -78,7 +95,7 @@ export default function EstablecimientoReservasPage() {
             </Stat>
             <Stat>
               <StatLabel>
-                <Tooltip label="Dinero recibido por el establecimiento hasta ahora">
+                <Tooltip label="Dinero recibido hasta ahora correspondiente a las reservas que se van a jugar en este período de tiempo">
                   Total ingresado
                 </Tooltip>
               </StatLabel>
@@ -86,23 +103,6 @@ export default function EstablecimientoReservasPage() {
               <StatHelpText>
                 {fechaDesde && formatISOFecha(fechaDesde)}
                 {" - "}
-                {fechaHasta && formatISOFecha(fechaHasta)}
-              </StatHelpText>
-            </Stat>
-            <Stat>
-              <StatLabel>
-                <Tooltip label="Cantidad de reservas que el establecimiento recibió en este período de tiempo">
-                  Reservas recibidas
-                </Tooltip>
-              </StatLabel>
-              <StatNumber>
-                {informe.canchas.reduce(
-                  (acum, c) => acum + c.reservas.length,
-                  0
-                )}
-              </StatNumber>
-              <StatHelpText>
-                {fechaDesde && formatISOFecha(fechaDesde)} -{" "}
                 {fechaHasta && formatISOFecha(fechaHasta)}
               </StatHelpText>
             </Stat>
@@ -125,16 +125,16 @@ export default function EstablecimientoReservasPage() {
                   <Heading size="md">{cancha.nombre}</Heading>
                   <StatGroup mt="0.5em">
                     <Stat>
+                      <StatLabel>Reservas a jugar</StatLabel>
+                      <StatNumber>{cancha.reservas.length}</StatNumber>
+                    </Stat>
+                    <Stat>
                       <StatLabel>Estimado</StatLabel>
                       <StatNumber>${cancha.estimado}</StatNumber>
                     </Stat>
                     <Stat>
                       <StatLabel>Ingresado</StatLabel>
                       <StatNumber>${cancha.total}</StatNumber>
-                    </Stat>
-                    <Stat>
-                      <StatLabel>Reservas</StatLabel>
-                      <StatNumber>{cancha.reservas.length}</StatNumber>
                     </Stat>
                   </StatGroup>
                 </CardBody>

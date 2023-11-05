@@ -1,14 +1,21 @@
 import { useParams } from "react-router";
-import { HStack, Heading, Input, Select, Text } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  HStack,
+  Heading,
+  Input,
+  Select,
+  Text,
+} from "@chakra-ui/react";
 import {
   BuscarDisponibilidadResult,
   useBuscarDisponibilidades,
   useEstablecimientoByID,
 } from "@/utils/api";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
-import { useMemo } from "react";
 import { TablaDisponibilidadesReservables } from "@/components/display";
-import { horaADecimal } from "@/utils/dates";
+import { formatFecha, horaADecimal } from "@/utils/dates";
 import { useBusqueda } from "@/hooks";
 import { BusquedaFiltros } from "@/hooks/useBusqueda";
 
@@ -34,10 +41,6 @@ export default function ReservarEstablecimientoPage() {
     idEst: Number(idEst),
     ...filtros,
   });
-  const disciplinas = useMemo(
-    () => [...new Set(disps?.map((c) => c.disciplina))],
-    [disps]
-  );
 
   if (!est || !disps) {
     return <LoadingSpinner />;
@@ -51,29 +54,34 @@ export default function ReservarEstablecimientoPage() {
         {est?.nombre}
       </Heading>
 
-      <HStack>
-        <Select
-          placeholder="Disciplina"
-          width="150px"
-          my="20px"
-          fontSize="sm"
-          name="disciplina"
-          value={filtros.disciplina}
-          onChange={(e) => setFiltro("disciplina", e.target.value)}
-        >
-          {disciplinas.map((d, idx) => (
-            <option value={d} key={idx}>
-              {d}
-            </option>
-          ))}
-        </Select>
-        <Input
-          type="date"
-          name="fecha"
-          value={filtros.fecha}
-          onChange={(e) => setFiltro("fecha", e.target.value)}
-          width="fit-content"
-        />
+      <HStack my="20px">
+        <FormControl width="unset" variant="floating">
+          <Select
+            placeholder="Todas"
+            name="disciplina"
+            width="fit-content"
+            value={filtros.disciplina}
+            onChange={(e) => setFiltro("disciplina", e.target.value)}
+          >
+            {est.disciplinas.map((d, idx) => (
+              <option value={d} key={idx}>
+                {d}
+              </option>
+            ))}
+          </Select>
+          <FormLabel>Disciplina</FormLabel>
+        </FormControl>
+        <FormControl width="unset" variant="floating">
+          <Input
+            type="date"
+            name="fecha"
+            value={filtros.fecha}
+            onChange={(e) => setFiltro("fecha", e.target.value)}
+            width="fit-content"
+            min={formatFecha(new Date())}
+          />
+          <FormLabel>Fecha</FormLabel>
+        </FormControl>
       </HStack>
 
       <Heading size="md">Horarios disponibles</Heading>

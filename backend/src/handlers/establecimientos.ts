@@ -26,7 +26,7 @@ export const buscarEstablecimientoQuerySchema = z.object({
   nombre: z.string().optional(),
   provincia: z.string().optional(),
   localidad: z.string().optional(),
-  disciplina: z.string().optional(),
+  disciplina: z.string().min(1).optional().catch(undefined),
   fecha: z.coerce.date().optional(),
   habilitado: z.coerce.boolean().optional().default(true).catch(true),
 });

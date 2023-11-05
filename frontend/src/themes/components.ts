@@ -10,8 +10,9 @@ const floatingLabelStyles = {
   fontWeight: "normal",
   mx: 3,
   px: 1,
-  my: 2,
+  my: 3,
   transformOrigin: "left top",
+  lineHeight: "1em",
 };
 
 export const floatingLabelActiveStyles = {

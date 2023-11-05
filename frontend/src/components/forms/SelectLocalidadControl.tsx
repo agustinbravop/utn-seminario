@@ -9,7 +9,12 @@ export default function SelectLocalidadControl({
   const { data: localidades } = useLocalidadesByProvincia(provincia);
 
   return (
-    <SelectControl placeholder="Localidad" {...props}>
+    <SelectControl
+      placeholder="Localidad"
+      label="Localidad"
+      variant="floating"
+      {...props}
+    >
       {localidades.sort().map((l) => (
         <option key={l} value={l}>
           {l}

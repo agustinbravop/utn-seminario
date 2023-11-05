@@ -8,7 +8,12 @@ export default function SelectProvinciaControl({
   const { data: provincias } = useProvincias();
 
   return (
-    <SelectControl placeholder="Provincia" {...props}>
+    <SelectControl
+      placeholder="Provincia"
+      label="Provincia"
+      variant="floating"
+      {...props}
+    >
       {provincias.sort().map((p) => (
         <option key={p} value={p}>
           {p}

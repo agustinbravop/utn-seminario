@@ -32,7 +32,7 @@ export default function EstablecimientoCanchasPage() {
   return (
     <>
       <EstablecimientoMenu />
-      <HStack mr="16%" ml="16%" mb="50px" mt="0px">
+      <HStack mr="12%" ml="12%" mb="50px" mt="0px">
         <InputGroup width="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
