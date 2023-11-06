@@ -66,8 +66,8 @@ export default function EstablecimientoReservasPage() {
             a.disponibilidad.horaInicio
           );
     } else if (ordenColumna === "Jugador") {
-      const nombreA = `${a.jugador.nombre} ${a.jugador.apellido}`;
-      const nombreB = `${b.jugador.nombre} ${b.jugador.apellido}`;
+      const nombreA = `${a.jugador?.nombre} ${a.jugador?.apellido}`;
+      const nombreB = `${b.jugador?.nombre} ${b.jugador?.apellido}`;
       return ordenAscendente
         ? nombreA.localeCompare(nombreB)
         : nombreB.localeCompare(nombreA);
@@ -97,7 +97,7 @@ export default function EstablecimientoReservasPage() {
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
-    const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
+    const nombreJugador = `${r.jugador?.nombre} ${r.jugador?.apellido}`;
     const estado = r.idPagoReserva
       ? "Pagada"
       : r.idPagoSenia
@@ -165,7 +165,7 @@ export default function EstablecimientoReservasPage() {
               <option key={i} value={pago}>
                 {pago}
               </option>
-            ))}
+            ))} 
           </Select>
           <FormLabel>Estado</FormLabel>
         </FormControl>
@@ -268,7 +268,7 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
                   <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
-                    {r.jugador.nombre} {r.jugador.apellido}
+                    {r.jugador?.nombre} {r.jugador?.apellido}
                   </Td>
                   <Td textAlign="center">
                     <ReservaEstado res={r} />

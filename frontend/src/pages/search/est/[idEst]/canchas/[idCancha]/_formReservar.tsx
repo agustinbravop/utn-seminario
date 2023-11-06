@@ -1,6 +1,6 @@
-import { SubmitButton } from "@/components/forms";
+import { InputControl, SubmitButton } from "@/components/forms";
 import DateControl from "@/components/forms/DateControl";
-import { useBusqueda, useYupForm } from "@/hooks";
+import { useBusqueda, useCurrentAdmin, useYupForm } from "@/hooks";
 import { Disponibilidad } from "@/models";
 import { CrearReserva, useCrearReserva } from "@/utils/api";
 import { formatFecha } from "@/utils/dates";
@@ -42,6 +42,7 @@ export default function FormReservarDisponibilidad({
   const searchParams = new URLSearchParams(window.location.href);
   const date = searchParams.get("date")!;
   const { filtros } = useBusqueda();
+  const {isAdmin} = useCurrentAdmin()
 
   const { mutate, isLoading } = useCrearReserva({
     onSuccess: () => {
@@ -65,6 +66,7 @@ export default function FormReservarDisponibilidad({
     defaultValues: {
       idDisponibilidad: disp.id,
       fechaReservada: filtros.fecha || date || formatFecha(new Date()),
+      nombre: "-",
     },
   });
 
@@ -121,6 +123,11 @@ export default function FormReservarDisponibilidad({
                   </Box>
                 </HStack>
               </VStack>
+              {
+                isAdmin
+                ?<InputControl name="nombre" label="Nombre del jugador" size='sm' mt="10px" />
+                :null
+              }
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="gray" mr={3} onClick={onClose}>

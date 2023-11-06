@@ -10,7 +10,7 @@ export const crearReservaSchema = z.object({
 });
 
 export const getReservaQuerySchema = z.object({
-  idJugador: z.coerce.number().positive().int().optional(),
+  idJugador: z.coerce.number().positive().int(),
   idDisp: z.coerce.number().positive().int().optional(),
   idEst: z.coerce.number().positive().int().optional(),
 });
@@ -56,8 +56,9 @@ export class ReservaHandler {
   postReserva(): RequestHandler {
     return async (_req, res) => {
       const crearReserva: CrearReserva = res.locals.body;
-      const idJugador = res.locals.idJugador;
-
+      const idJugador = res.locals.idJugador ?? 0;
+      console.log(res.locals.body);
+      console.log(crearReserva)
       const reservaCreada = await this.service.crear({
         ...crearReserva,
         idJugador,

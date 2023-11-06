@@ -11,6 +11,7 @@ import { getDiaDeSemana, setHora, toUTC } from "../utils/dates";
 export type CrearReserva = {
   fechaReservada: Date;
   idJugador: number;
+  nombre?: string;
   idDisponibilidad: number;
 };
 
@@ -130,9 +131,10 @@ export class ReservaServiceImpl implements ReservaService {
     );
     await this.validarDiaDeSemana(crearReserva, disp);
     this.validarFechaReservada(crearReserva, disp);
-
+    console.log("Service " + crearReserva.idJugador + " " + crearReserva.nombre)
     return await this.repo.crearReserva({
       ...crearReserva,
+      nombre: crearReserva.nombre,
       precio: disp.precioReserva,
       senia: disp.precioSenia,
     });
