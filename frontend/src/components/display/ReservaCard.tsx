@@ -15,7 +15,6 @@ import {
   VStack,
   CardProps,
   Stack,
-  Button,
   useToast,
 } from "@chakra-ui/react";
 import { Reserva } from "@/models";

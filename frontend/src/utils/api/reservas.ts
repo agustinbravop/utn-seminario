@@ -72,7 +72,7 @@ export function useCancelarReserva(
 ) {
   return useApiMutation({
     ...options,
-    invalidateOnSuccess: (r) => ["reservas", r.id],
+    invalidateOnSuccess: (r) => ["reservas", "byJugador", r.jugador.id], 
     mutationFn: (reserva) =>
       patch<Reserva>(`${API_URL}/reservas/${reserva.id}/cancelar`, reserva),
   });
