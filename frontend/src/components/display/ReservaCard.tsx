@@ -29,30 +29,23 @@ interface ReservaCardProps extends CardProps {
 }
 
 export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
-
-
   const fechaActualMinutos = Date.now() 
-  //const fechaReservaMinutos = (Date.now() + 172800000 ) / 60000  
   const umbralMinutos = 5000000
   const prueba = Number(fechaHoraReservada(reserva))
   const diferenciaMinutos = prueba - fechaActualMinutos 
-
-  console.log("cid campeadot")
-  console.log(diferenciaMinutos)
-
   const toast = useToast();
 
   const { mutate } = useCancelarReserva({
     onSuccess: () => {
       toast({
-        title: "Cancha creada",
-        description: `Cancha creada exitosamente.`,
+        title: "Reserva cancelada",
+        description: `Reserva cancelada exitosamente.`,
         status: "success",
       });
     },
     onError: () => {
       toast({
-        title: "Error al crear la cancha",
+        title: "Error al cancelar la reserva",
         description: `Intente de nuevo.`,
         status: "error",
       });

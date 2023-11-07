@@ -99,7 +99,6 @@ export class ReservaServiceImpl implements ReservaService {
   }
 
   async cancelarReserva(res: Reserva): Promise<Reserva> {
-      console.log(res)
       return await this.repo.updateReserva(res);
   }
 
