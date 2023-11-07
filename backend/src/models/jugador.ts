@@ -7,7 +7,7 @@ export const jugadorSchema = z.object({
   nombre: z.string().min(1),
   apellido: z.string().min(1),
   correo: z.string().min(1).email(),
-  telefono: z.string().min(1),
+  telefono: z.string().min(1).optional(),
   usuario: z
     .string()
     .min(1)

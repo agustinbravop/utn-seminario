@@ -15,6 +15,7 @@ type JugadorDB = jugador & {
 export function toJugador({ clave, ...jugador }: JugadorDB): Jugador {
   return {
     ...jugador,
+    telefono: jugador.telefono ?? undefined,
     disciplina: jugador.idDisciplina ?? undefined,
     localidad: jugador.localidad?.nombre ?? undefined,
     provincia: jugador.localidad?.idProvincia ?? undefined,
