@@ -13,6 +13,7 @@ import {
   FormControl,
   FormLabel,
   Select,
+  Button,
 } from "@chakra-ui/react";
 import {
   TriangleUpIcon,
@@ -26,6 +27,7 @@ import { estaEntreFechas, formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
 import { ReservaEstado } from "@/components/display";
+import { Link } from 'react-router-dom'
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -70,8 +72,8 @@ export default function EstablecimientoReservasPage() {
             a.disponibilidad.horaInicio
           );
     } else if (ordenColumna === "Jugador") {
-      const nombreA = `${a.jugador.nombre} ${a.jugador.apellido}`;
-      const nombreB = `${b.jugador.nombre} ${b.jugador.apellido}`;
+      const nombreA = `${a.jugador?.nombre} ${a.jugador?.apellido}`;
+      const nombreB = `${b.jugador?.nombre} ${b.jugador?.apellido}`;
       return ordenAscendente
         ? nombreA.localeCompare(nombreB)
         : nombreB.localeCompare(nombreA);
@@ -102,7 +104,7 @@ export default function EstablecimientoReservasPage() {
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
-    const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
+    const nombreJugador = `${r.jugador?.nombre} ${r.jugador?.apellido}`;
     const estado = r.idPagoReserva
       ? "Pagada"
       : r.idPagoSenia
@@ -183,10 +185,13 @@ export default function EstablecimientoReservasPage() {
               <option key={i} value={pago}>
                 {pago}
               </option>
-            ))}
+            ))} 
           </Select>
           <FormLabel>Estado</FormLabel>
         </FormControl>
+        <Link to={`../../../search/est/${idEst}/reservar`}>
+          <Button>Reservar</Button>
+        </Link>
       </HStack>
       <TableContainer pt="15px" pb="20px" mr="12%" ml="12%" mb="30px" mt="0px">
         <Table variant="striped" size="sm">
@@ -300,7 +305,7 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
                   <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
-                    {r.jugador.nombre} {r.jugador.apellido}
+                    {r.jugador?.nombre} {r.jugador?.apellido }
                   </Td>
                   <Td textAlign="center">
                     <ReservaEstado res={r} />

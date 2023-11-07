@@ -150,8 +150,8 @@ export default function ReservaInfoPage() {
                 {reserva.pagoSenia
                   ? formatISO(reserva.pagoSenia.fechaPago)
                   : reserva.pagoReserva
-                  ? "-"
-                  : "Falta señar"}
+                    ? "-"
+                    : "Falta señar"}
               </Text>
             </Box>
           </HStack>
@@ -165,12 +165,15 @@ export default function ReservaInfoPage() {
           <Box flex="1">
             <Heading size="xs">Nombre y Apellido</Heading>
             <Text fontSize="sm">
-              {reserva.jugador.nombre} {reserva.jugador.apellido}
+              {reserva.jugador
+                ? reserva.jugador.nombre + " " + reserva.jugador.apellido
+                : reserva.nombre
+              }
             </Text>
           </Box>
           <Box flex="1">
             <Heading size="xs">Teléfono</Heading>
-            <Text fontSize="sm">{reserva.jugador.telefono}</Text>
+            <Text fontSize="sm">{reserva.jugador?.telefono ?? "-"}</Text>
           </Box>
         </HStack>
 

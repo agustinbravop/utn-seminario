@@ -11,6 +11,7 @@ import { getDiaDeSemana, setHora, toUTC } from "../utils/dates";
 export type CrearReserva = {
   fechaReservada: Date;
   idJugador: number;
+  nombre?: string;
   idDisponibilidad: number;
 };
 
@@ -63,6 +64,7 @@ export class ReservaServiceImpl implements ReservaService {
       throw new Error("Reserva con seña existente");
     }
     try {
+      console.log(res)
       const pago = await this.pagoRepo.crear(
         new Decimal(res.disponibilidad.precioSenia), //???
         "Efectivo"
@@ -89,6 +91,8 @@ export class ReservaServiceImpl implements ReservaService {
       } else {
         monto = new Decimal(res.precio);
       }
+      console.log("Service")
+      console.log(monto)
       const pago = await this.pagoRepo.crear(monto, "Efectivo");
       res.pagoReserva = pago;
       return await this.repo.updateReserva(res);
@@ -130,9 +134,10 @@ export class ReservaServiceImpl implements ReservaService {
     await this.validarDisponibilidadLibre(crearReserva, disp);
     await this.validarDiaDeSemana(crearReserva, disp);
     this.validarFechaReservada(crearReserva, disp);
-
+    console.log("Service " + crearReserva.idJugador + " " + crearReserva.nombre)
     return await this.repo.crearReserva({
       ...crearReserva,
+      nombre: crearReserva.nombre,
       precio: disp.precioReserva,
       senia: disp.precioSenia,
     });

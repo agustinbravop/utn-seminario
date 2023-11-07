@@ -10,6 +10,7 @@ import { API_URL, patch, post } from ".";
 export type CrearReserva = {
   idDisponibilidad: number;
   fechaReservada: string;
+  nombre?: string;
 };
 
 export function useReservasByEstablecimientoID(

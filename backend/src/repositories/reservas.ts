@@ -50,7 +50,9 @@ export class PrismaReservaRepository implements ReservaRepository {
           fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
           fechaReservada: res.fechaReservada,
           precio: res.precio,
-          jugador: { connect: { id: res.jugador.id } },
+          jugador: res.jugador
+            ? { connect: { id: res.jugador?.id } }
+            : undefined ,
           disponibilidad: { connect: { id: res.disponibilidad.id } },
           pagoReserva: res.pagoReserva
             ? { connect: { id: res.pagoReserva.id } }
@@ -169,7 +171,27 @@ export class PrismaReservaRepository implements ReservaRepository {
   }
 
   async crearReserva(res: CrearReservaParam) {
+    console.log("Repository: ")
+    console.log(res)
+    /*
     try {
+      const data = {
+        fechaReservada: res.fechaReservada,
+        precio: res.precio,
+        senia: res.senia,
+        jugador: {},
+        nombre: res.nombre ?? '-',
+        disponibilidad: { connect: { id: res.idDisponibilidad } },
+      };
+      if (res.idJugador !== 0) {
+        data.jugador = { connect: { id: res.idJugador } };
+      }
+      const dbRes = await this.prisma.reserva.create({
+        data,
+        include: this.include,
+      }); 
+
+
       const dbRes = await this.prisma.reserva.create({
         data: {
           id: undefined,
@@ -177,13 +199,59 @@ export class PrismaReservaRepository implements ReservaRepository {
           precio: res.precio,
           senia: res.senia,
           jugador: { connect: { id: res.idJugador } },
+          nombre: res.nombre ?? '-',
           disponibilidad: { connect: { id: res.idDisponibilidad } },
         },
         include: this.include,
       });
+    */
+
+      //ESTO SE PUEDE MEJORAR EN CUANTO A LEGIBILIDAD
+    try {
+      let dbRes;
+      if (res.idJugador !== 0) {
+        dbRes = await this.prisma.reserva.create({
+          data: {
+            id: undefined,
+            fechaReservada: res.fechaReservada,
+            precio: res.precio,
+            senia: res.senia,
+            jugador: { connect: { id: res.idJugador } },
+            nombre: res.nombre ?? '-',
+            disponibilidad: { connect: { id: res.idDisponibilidad } },
+          },
+          include: this.include,
+        });
+      } else{
+        dbRes = await this.prisma.reserva.create({
+          data: {
+            id: undefined,
+            fechaReservada: res.fechaReservada,
+            precio: res.precio,
+            senia: res.senia,
+            nombre: res.nombre ?? '-',
+            disponibilidad: { connect: { id: res.idDisponibilidad } },
+          },
+          include: {disponibilidad: {
+            include: {
+              disciplina: true,
+              dias: true,
+              cancha: {
+                include: {
+                  establecimiento: true,
+                },
+              },
+            },
+          },
+          pagoReserva: true,
+          pagoSenia: true,
+        },
+        });
+      }
 
       return toRes(dbRes);
-    } catch {
+    } catch(e) {
+      console.log(e)
       throw new InternalServerError("No se pudo crear la reserva");
     }
   }
@@ -207,23 +275,39 @@ export class PrismaReservaRepository implements ReservaRepository {
 }
 
 type ReservaDB = reserva & {
-  jugador: jugador;
+  jugador?: jugador | null;
+  nombre: string | null;
   disponibilidad: disponibilidadDB;
   pagoReserva: pago | null;
   pagoSenia?: pago | null;
 };
 
 function toRes(res: ReservaDB): Reserva {
-  const { clave, ...jugador } = res.jugador;
-  return {
-    ...res,
-    jugador,
-    senia: res.senia?.toNumber() ?? undefined,
-    precio: res.precio.toNumber(),
-    pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
-    pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
-    disponibilidad: toDisp(res.disponibilidad),
-  };
+  if (res.jugador){
+    const { clave, ...jugador } = res.jugador;
+    return {
+      ...res,
+      jugador,
+      nombre: res.nombre ?? "",
+      senia: res.senia?.toNumber() ?? undefined,
+      precio: res.precio.toNumber(),
+      pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
+      pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
+      disponibilidad: toDisp(res.disponibilidad),
+    };
+  }
+  else{
+    return {
+      ...res,
+      jugador: undefined,
+      nombre: res.nombre ?? "",
+      senia: res.senia?.toNumber() ?? undefined,
+      precio: res.precio.toNumber(),
+      pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
+      pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
+      disponibilidad: toDisp(res.disponibilidad),
+    }
+  }
 }
 
 async function awaitQuery(
