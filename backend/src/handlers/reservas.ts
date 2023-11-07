@@ -7,6 +7,7 @@ import { Reserva } from "../models/reserva.js";
 export const crearReservaSchema = z.object({
   idDisponibilidad: z.number().positive().int(),
   fechaReservada: z.coerce.date(),
+  nombre: z.string().optional()
 });
 
 export const getReservaQuerySchema = z.object({
@@ -55,8 +56,12 @@ export class ReservaHandler {
 
   postReserva(): RequestHandler {
     return async (_req, res) => {
+
       const crearReserva: CrearReserva = res.locals.body;
       const idJugador = res.locals.idJugador? res.locals.idJugador : 0 ;
+      console.log("HANDLER")
+      console.log(res.locals)
+      console.log(crearReserva)
       const reservaCreada = await this.service.crear({
         ...crearReserva,
         idJugador,
