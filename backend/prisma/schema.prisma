@@ -163,6 +163,7 @@ model reserva {
   precio         Decimal  @db.Decimal
   senia          Decimal? @db.Decimal
 
+  estado          Boolean  @default(true)
   idDisponibilidad Int
   disponibilidad   disponibilidad @relation(fields: [idDisponibilidad], references: [id], onDelete: NoAction, onUpdate: NoAction)
   idJugador        Int
