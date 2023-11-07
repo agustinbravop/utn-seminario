@@ -33,6 +33,7 @@ export interface ReservaService {
   crear(res: CrearReserva): Promise<Reserva>;
   pagarSenia(res: Reserva): Promise<Reserva>;
   pagarReserva(res: Reserva): Promise<Reserva>;
+  cancelarReserva(res: Reserva): Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
@@ -95,6 +96,11 @@ export class ReservaServiceImpl implements ReservaService {
     } catch (e) {
       throw new InternalServerError("Error al registrar el pago de la reserva");
     }
+  }
+
+  async cancelarReserva(res: Reserva): Promise<Reserva> {
+      console.log(res)
+      return await this.repo.updateReserva(res);
   }
 
   async getByEstablecimientoID(idEst: number) {

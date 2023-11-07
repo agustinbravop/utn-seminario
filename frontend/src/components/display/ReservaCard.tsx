@@ -15,6 +15,7 @@ import {
   VStack,
   CardProps,
   Stack,
+  Button,
 } from "@chakra-ui/react";
 import { Reserva } from "@/models";
 import { CircleIcon } from "../media-and-icons";
@@ -23,6 +24,12 @@ import { formatISOFecha } from "@/utils/dates";
 interface ReservaCardProps extends CardProps {
   reserva: Reserva;
 }
+
+const fechaActualMinutos = Date.now() / 60000
+const fechaReservaMinutos = (Date.now() + 172800000 ) / 60000
+const umbralMinutos = 2880
+const diferenciaMinutos = fechaReservaMinutos - fechaActualMinutos;
+
 
 export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
   return (
@@ -113,6 +120,9 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             </Tag>
           </Stack>
         </CardBody>
+        {diferenciaMinutos >= umbralMinutos && (
+          <Button>Cancelar reserva</Button>
+        )}
       </Card>
     </>
   );

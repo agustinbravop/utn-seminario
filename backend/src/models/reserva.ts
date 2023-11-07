@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {  z } from "zod";
 import { jugadorSchema } from "./jugador";
 import { disponibilidadSchema } from "./disponibilidad";
 import { pagoSchema } from "./pago";
@@ -13,6 +13,7 @@ export const reservaSchema = z.object({
   fechaCreada: z.coerce.date(),
   jugador: jugadorSchema,
   disponibilidad: disponibilidadSchema,
+  estado: z.boolean(),
   pagoReserva: pagoSchema.optional(),
   pagoSenia: pagoSchema.optional(),
 });

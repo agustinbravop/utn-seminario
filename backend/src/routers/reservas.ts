@@ -32,6 +32,16 @@ export function reservasRouter(
   );
 
   router.patch(
+    "/:idRes/cancelar", //validateIDParams("idRes"),
+    //Solo el admin seña por ahora, el metodo de
+    //pago hardcodeado es "Efectivo" por ahora
+    authMiddle.isAdmin(),
+    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
+    handler.cancelarReserva()
+  );
+
+
+  router.patch(
     "/:idRes", //validateIDParams("idRes"),
     //Solo el admin seña por ahora, el metodo de
     //pago hardcodeado es "Efectivo" por ahora

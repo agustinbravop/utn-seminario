@@ -79,6 +79,19 @@ export class ReservaHandler {
     };
   }
 
+  cancelarReserva(): RequestHandler {
+    return async (_req, res) => {
+      const reserva: Reserva = {
+        id: Number(_req.params["idRes"]),
+        estado: false,
+        ..._req.body,
+      };
+      const reservaUpdated = await this.service.cancelarReserva(reserva);
+      res.status(201).json(reservaUpdated);
+    };
+  }
+
+
   pagarReserva(): RequestHandler {
     return async (_req, res) => {
       const reserva: Reserva = {
