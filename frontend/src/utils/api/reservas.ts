@@ -83,7 +83,7 @@ export function usePagarReserva(
   options?: UseApiMutationOptions<Reserva, Reserva>
 ) {
   return useApiMutation({
-    ...options,
+    ...options,    
     invalidateOnSuccess: (r) => ["reservas", r.id],
     mutationFn: (reserva) =>
       patch<Reserva>(`${API_URL}/reservas/pagar/${reserva.id}`, reserva),
