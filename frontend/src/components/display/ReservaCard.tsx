@@ -22,18 +22,23 @@ import { CircleIcon } from "../media-and-icons";
 import { formatISOFecha } from "@/utils/dates";
 import { useCancelarReserva } from "@/utils/api";
 import { ConfirmSubmitButton } from "../forms";
+import { fechaHoraReservada } from "@/utils/reservas";
 
 interface ReservaCardProps extends CardProps {
   reserva: Reserva;
 }
 
-const fechaActualMinutos = Date.now() / 60000
-const fechaReservaMinutos = (Date.now() + 172800000 ) / 60000
-const umbralMinutos = 2880
-const diferenciaMinutos = fechaReservaMinutos - fechaActualMinutos;
-
-
 export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
+
+
+  const fechaActualMinutos = Date.now() 
+  //const fechaReservaMinutos = (Date.now() + 172800000 ) / 60000  
+  const umbralMinutos = 5000000
+  const prueba = Number(fechaHoraReservada(reserva))
+  const diferenciaMinutos = prueba - fechaActualMinutos 
+
+  console.log("cid campeadot")
+  console.log(diferenciaMinutos)
 
   const toast = useToast();
 
