@@ -200,6 +200,17 @@ export default function ReservaInfoPage() {
               Pagar
             </ConfirmSubmitButton>
           )}
+          {reserva.nombre && (
+            <ConfirmSubmitButton
+              header="Cancelar Reserva"
+              body={`¿Desea cancelar la reserva?`}
+              // onSubmit={() => mutatePago(reserva)}
+              onSubmit={() => alert('cancelar')}
+              colorScheme='red'
+            >
+              Cancelar Reserva
+            </ConfirmSubmitButton>
+          )}
         </HStack>
       </CardBody>
     </Card>
