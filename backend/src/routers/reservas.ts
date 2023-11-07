@@ -36,7 +36,7 @@ export function reservasRouter(
     "/:idRes/cancelar", //validateIDParams("idRes"),
     //Solo el admin seña por ahora, el metodo de
     //pago hardcodeado es "Efectivo" por ahora
-    authMiddle.isJugador(),
+    // authMiddle.isJugador() Ahora puede ser el jugador o el admin quien cancele una reserva
     //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
     handler.cancelarReserva()
   );

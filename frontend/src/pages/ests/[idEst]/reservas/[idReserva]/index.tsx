@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "@/router";
 import {
+  useCancelarReservaAdmin,
   usePagarReserva,
   useReservaByID,
   useSeniarReserva,
@@ -49,14 +50,14 @@ export default function ReservaInfoPage() {
   const { mutate: mutatePago } = usePagarReserva({
     onSuccess: () => {
       toast({
-        title: "Reserva pagada",
-        description: "Se registró el pago de la reserva.",
+        title: "Reserva señada",
+        description: "Se registró la seña de la reserva.",
         status: "success",
       });
     },
     onError: () => {
       toast({
-        title: "Error al realizar el pago",
+        title: "Error al señar la reserva",
         description: "Intente de nuevo.",
         status: "error",
       });
@@ -71,6 +72,23 @@ export default function ReservaInfoPage() {
   if (reserva.senia && reserva.pagoSenia) {
     precioAPagar = reserva.precio - reserva.senia;
   }
+  
+  const { mutate: mutateCancelar } = useCancelarReservaAdmin({ 
+    onSuccess: () => {
+      toast({
+        title: "Reserva cancelada",
+        description: "Reserva cancelada exitosamente.",
+        status: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error al cancelar la reserva",
+        description: "Intente de nuevo.",
+        status: "error",
+      });
+    },
+  });
 
   return (
     <Card m="auto" height="60%" maxW="450px" mt="5%">
@@ -204,8 +222,8 @@ export default function ReservaInfoPage() {
             <ConfirmSubmitButton
               header="Cancelar Reserva"
               body={`¿Desea cancelar la reserva?`}
-              // onSubmit={() => mutatePago(reserva)}
-              onSubmit={() => alert('cancelar')}
+              onSubmit={() => mutateCancelar(reserva)}
+              // onSubmit={() => alert('cancelar')}
               colorScheme='red'
             >
               Cancelar Reserva
