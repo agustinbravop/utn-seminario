@@ -98,7 +98,7 @@ export default function JugadorEditarPerfilPage() {
             </Box>
             <Box>
               <Heading size="xs">Provincia</Heading>
-              <SelectProvinciaControl name="provincia" isRequired />
+              <SelectProvinciaControl name="provincia" isRequired label="" />
             </Box>
             <Box>
               <Heading size="xs">Localidad</Heading>
@@ -106,6 +106,7 @@ export default function JugadorEditarPerfilPage() {
                 name="localidad"
                 isRequired
                 provincia={provincia}
+                label=""
               />
             </Box>
             <Box>
