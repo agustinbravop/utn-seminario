@@ -51,6 +51,7 @@ export class PrismaReservaRepository implements ReservaRepository {
           fechaReservada: res.fechaReservada,
           precio: res.precio,
           estado: res.estado,
+          nombre: res.nombre,
           jugador: res.jugador
             ? { connect: { id: res.jugador?.id } }
             : undefined ,
@@ -125,6 +126,7 @@ export class PrismaReservaRepository implements ReservaRepository {
         orderBy: [{ fechaReservada: "asc" }],
         include: this.include,
       });
+      console.log(reservas[0])
       return reservas.map((r) => toRes(r));
     } catch {
       throw new InternalServerError(
@@ -165,6 +167,7 @@ export class PrismaReservaRepository implements ReservaRepository {
         },
         include: this.include,
       });
+      console.log(reservas[0])
       return reservas.map((p) => toRes(p));
     } catch (e) {
       console.error(e);
@@ -234,7 +237,9 @@ export class PrismaReservaRepository implements ReservaRepository {
             nombre: res.nombre ?? '-',
             disponibilidad: { connect: { id: res.idDisponibilidad } },
           },
-          include: {disponibilidad: {
+          include: {
+
+            disponibilidad: {
             include: {
               disciplina: true,
               dias: true,

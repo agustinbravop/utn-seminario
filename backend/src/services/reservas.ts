@@ -93,7 +93,7 @@ export class ReservaServiceImpl implements ReservaService {
         monto = new Decimal(res.precio);
       }
       console.log("Service")
-      console.log(monto)
+      console.log(res.nombre)
       const pago = await this.pagoRepo.crear(monto, "Efectivo");
       res.pagoReserva = pago;
       return await this.repo.updateReserva(res);

@@ -168,7 +168,7 @@ model reserva {
   disponibilidad   disponibilidad @relation(fields: [idDisponibilidad], references: [id], onDelete: NoAction, onUpdate: NoAction)
   idJugador        Int?
   jugador          jugador?        @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  nombre           String?         @default("-")
+  nombre           String?         
   idPagoReserva    Int?
   pagoReserva      pago?          @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
   idPagoSenia      Int?
