@@ -53,7 +53,7 @@ export class AuthHandler {
     return async (_req, res) => {
       const login: Login = res.locals.body;
 
-      const token = await this.service.loginUsuario(
+      const token = await this.service.loginConClave(
         login.correoOUsuario,
         login.clave
       );
@@ -85,7 +85,7 @@ export class AuthHandler {
         id: 0,
       };
 
-      const adminCreado = await this.service.registrarAdministrador(
+      const adminCreado = await this.service.registrarAdministradorConClave(
         admin,
         body.clave
       );
@@ -100,7 +100,7 @@ export class AuthHandler {
       // Se construye el Jugador del modelo.
       const jugador: Jugador = { ...body, id: 0 };
 
-      const jugadorCreado = await this.service.registrarJugador(
+      const jugadorCreado = await this.service.registrarJugadorConClave(
         jugador,
         body.clave
       );
@@ -173,6 +173,15 @@ export class AuthHandler {
       // Los handlers subsiguientes tienen acceso al idJugador que vino en el JWT.
       res.locals.idJugador = Number(jwt?.jugador?.id);
       next();
+    };
+  }
+
+  googleRedirect(): RequestHandler {
+    return async (req, res) => {
+      const code = req.query.code as string;
+
+      const token = await this.service.loginGoogle(code);
+      res.status(200).json({ token });
     };
   }
 }
