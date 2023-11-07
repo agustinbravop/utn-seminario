@@ -33,7 +33,7 @@ export class ReservaHandler {
       } else if (query.idEst) {
         reserva = await this.service.getByEstablecimientoID(query.idEst);
       } else if (query.idJugador) {
-        reserva = await this.service.getByJugadorID(query.idJugador);
+        reserva = await this.service.getByJugadorID(query.idJugador); 
       } else {
         throw new BadRequestError(
           "Especificar un query param: 'idJugador', 'idDisp' o 'idEst'."
@@ -79,6 +79,21 @@ export class ReservaHandler {
       res.status(201).json(reservaUpdated);
     };
   }
+
+  cancelarReserva(): RequestHandler {
+    return async (_req, res) => {
+      console.log(_req.params["idRes"])
+
+      const reserva: Reserva = {
+        id: Number(_req.params["idRes"]),
+        ..._req.body,
+        estado: false,
+      };
+      const reservaUpdated = await this.service.cancelarReserva(reserva);
+      res.status(201).json(reservaUpdated);
+    };
+  }
+
 
   pagarReserva(): RequestHandler {
     return async (_req, res) => {

@@ -68,11 +68,23 @@ export function useSeniarReserva(
   });
 }
 
-export function usePagarReserva(
+export function useCancelarReserva(
   options?: UseApiMutationOptions<Reserva, Reserva>
 ) {
   return useApiMutation({
     ...options,
+    invalidateOnSuccess: (r) => ["reservas", "byJugador", r.jugador.id], 
+    mutationFn: (reserva) =>
+      patch<Reserva>(`${API_URL}/reservas/${reserva.id}/cancelar`, reserva),
+  });
+}
+
+
+export function usePagarReserva(
+  options?: UseApiMutationOptions<Reserva, Reserva>
+) {
+  return useApiMutation({
+    ...options,    
     invalidateOnSuccess: (r) => ["reservas", r.id],
     mutationFn: (reserva) =>
       patch<Reserva>(`${API_URL}/reservas/pagar/${reserva.id}`, reserva),

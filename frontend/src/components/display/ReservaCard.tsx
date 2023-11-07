@@ -15,16 +15,43 @@ import {
   VStack,
   CardProps,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import { Reserva } from "@/models";
 import { CircleIcon } from "../media-and-icons";
 import { formatISOFecha } from "@/utils/dates";
+import { useCancelarReserva } from "@/utils/api";
+import { ConfirmSubmitButton } from "../forms";
+import { fechaHoraReservada } from "@/utils/reservas";
 
 interface ReservaCardProps extends CardProps {
   reserva: Reserva;
 }
 
 export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
+  const fechaActualMinutos = Date.now() 
+  const umbral = 586400000
+  const prueba = Number(fechaHoraReservada(reserva))
+  const diferenciaTiempo = prueba - fechaActualMinutos 
+  const toast = useToast();
+
+  const { mutate } = useCancelarReserva({
+    onSuccess: () => {
+      toast({
+        title: "Reserva cancelada",
+        description: `Reserva cancelada exitosamente.`,
+        status: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error al cancelar la reserva",
+        description: `Intente de nuevo.`,
+        status: "error",
+      });
+    },
+  });
+
   return (
     <>
       <Card size="sm" m={2} w="min(80vw, 350px)" {...props}>
@@ -113,6 +140,18 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             </Tag>
           </Stack>
         </CardBody>
+        {diferenciaTiempo >= umbral && (
+              <ConfirmSubmitButton
+              colorScheme="red"
+              onSubmit={() =>
+                mutate(reserva)
+              }
+              header="Cancelar reserva"
+              body="¿Está seguro de cancelar la reserva?"
+            >
+              Cancelar Reserva
+            </ConfirmSubmitButton>
+        )}
       </Card>
     </>
   );

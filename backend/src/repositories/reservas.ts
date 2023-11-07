@@ -50,6 +50,7 @@ export class PrismaReservaRepository implements ReservaRepository {
           fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
           fechaReservada: res.fechaReservada,
           precio: res.precio,
+          estado: res.estado,
           jugador: res.jugador
             ? { connect: { id: res.jugador?.id } }
             : undefined ,
@@ -87,7 +88,8 @@ export class PrismaReservaRepository implements ReservaRepository {
   async getReservasByJugadorID(idJugador: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
-        where: { idJugador: idJugador },
+        where: { idJugador: idJugador,
+                estado: true  },
         orderBy: [{ fechaReservada: "asc" }],
         include: this.include,
       });

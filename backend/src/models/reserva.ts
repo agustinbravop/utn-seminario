@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {  z } from "zod";
 import { jugadorSchema } from "./jugador";
 import { disponibilidadSchema } from "./disponibilidad";
 import { pagoSchema } from "./pago";
@@ -14,6 +14,7 @@ export const reservaSchema = z.object({
   jugador: jugadorSchema.optional(),
   nombre: z.string().optional(),
   disponibilidad: disponibilidadSchema,
+  estado: z.boolean(),
   pagoReserva: pagoSchema.optional(),
   pagoSenia: pagoSchema.optional(),
 });
