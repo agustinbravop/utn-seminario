@@ -30,7 +30,7 @@ interface ReservaCardProps extends CardProps {
 
 export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
   const fechaActualMinutos = Date.now() 
-  const umbral = 586400000
+  const umbral = 24 * 60 * 60 * 1000; //Un día
   const prueba = Number(fechaHoraReservada(reserva))
   const diferenciaTiempo = prueba - fechaActualMinutos 
   const toast = useToast();
