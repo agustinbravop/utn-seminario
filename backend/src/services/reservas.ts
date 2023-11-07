@@ -64,6 +64,7 @@ export class ReservaServiceImpl implements ReservaService {
       throw new Error("Reserva con seña existente");
     }
     try {
+      console.log(res)
       const pago = await this.pagoRepo.crear(
         new Decimal(res.disponibilidad.precioSenia), //???
         "Efectivo"
@@ -90,6 +91,8 @@ export class ReservaServiceImpl implements ReservaService {
       } else {
         monto = new Decimal(res.precio);
       }
+      console.log("Service")
+      console.log(monto)
       const pago = await this.pagoRepo.crear(monto, "Efectivo");
       res.pagoReserva = pago;
       return await this.repo.updateReserva(res);

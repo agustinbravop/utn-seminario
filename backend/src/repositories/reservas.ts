@@ -50,7 +50,9 @@ export class PrismaReservaRepository implements ReservaRepository {
           fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
           fechaReservada: res.fechaReservada,
           precio: res.precio,
-          jugador: { connect: { id: res.jugador?.id } },
+          jugador: res.jugador
+            ? { connect: { id: res.jugador?.id } }
+            : undefined ,
           disponibilidad: { connect: { id: res.disponibilidad.id } },
           pagoReserva: res.pagoReserva
             ? { connect: { id: res.pagoReserva.id } }
@@ -203,6 +205,8 @@ export class PrismaReservaRepository implements ReservaRepository {
         include: this.include,
       });
     */
+
+      //ESTO SE PUEDE MEJORAR EN CUANTO A LEGIBILIDAD
     try {
       let dbRes;
       if (res.idJugador !== 0) {

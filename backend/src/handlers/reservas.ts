@@ -56,9 +56,7 @@ export class ReservaHandler {
   postReserva(): RequestHandler {
     return async (_req, res) => {
       const crearReserva: CrearReserva = res.locals.body;
-      const idJugador = res.locals.idJugador ?? 0;
-      console.log(res.locals.body);
-      console.log(crearReserva)
+      const idJugador = res.locals.idJugador? res.locals.idJugador : 0 ;
       const reservaCreada = await this.service.crear({
         ...crearReserva,
         idJugador,
@@ -75,6 +73,8 @@ export class ReservaHandler {
         pagoReserva: _req.body.idPagoReserva,
         ..._req.body,
       };
+      console.log("Handler:")
+      console.log(reserva)
       const reservaUpdated = await this.service.pagarSenia(reserva);
       res.status(201).json(reservaUpdated);
     };
@@ -88,6 +88,8 @@ export class ReservaHandler {
         pagoReserva: _req.body.idPagoReserva,
         ..._req.body,
       };
+      console.log("Handler:")
+      console.log(reserva)
       const reservaUpdated = await this.service.pagarReserva(reserva);
       res.status(201).json(reservaUpdated);
     };

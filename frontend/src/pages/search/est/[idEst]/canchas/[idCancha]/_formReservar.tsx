@@ -66,7 +66,7 @@ export default function FormReservarDisponibilidad({
     defaultValues: {
       idDisponibilidad: disp.id,
       fechaReservada: filtros.fecha || date || formatFecha(new Date()),
-      nombre: "-",
+      nombre: "",
     },
   });
 

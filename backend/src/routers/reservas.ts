@@ -27,7 +27,7 @@ export function reservasRouter(
   router.post(
     "/",
     //SACO EL auth PARA FACILIDAD DE PRUEBAS
-    //authMiddle.isJugador(),
+    authMiddle.isLogged(),
     validateBody(crearReservaSchema),
     handler.postReserva()
   );

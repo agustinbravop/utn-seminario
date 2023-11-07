@@ -138,6 +138,22 @@ export class AuthHandler {
     return jwt;
   }
 
+  public isLogged(): Handler {
+    return async (req, res, next) => {
+      const token = req.header("Authorization");
+      const jwt = await this.verifyAuthorizationHeader(token);
+
+      if (this.service.hasRol(jwt, Rol.Administrador)) {
+        res.locals.idAdmin = Number(jwt?.admin?.id);
+      }
+      if (this.service.hasRol(jwt, Rol.Jugador)) {
+        res.locals.idJugador = Number(jwt?.jugador?.id);
+      }
+      
+      next();
+    };
+  }
+
   /**
    * Valida que la request tenga un JWT válido y que sea de un usuario **administrador**.
    * Setea `res.locals.idAdmin` con el idAdmin que vino en el JWT.

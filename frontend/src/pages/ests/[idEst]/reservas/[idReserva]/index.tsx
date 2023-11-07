@@ -136,12 +136,15 @@ export default function ReservaInfoPage() {
             <Box ml="3">
               <Heading size="xs">Nombre y Apellido</Heading>
               <Text fontSize="sm">
-                {reserva.jugador.nombre} {reserva.jugador.apellido}
+                {reserva.jugador
+                  ? reserva.jugador.nombre + " " + reserva.jugador.apellido
+                  : reserva.nombre
+                }
               </Text>
             </Box>
             <Box ml="3">
               <Heading size="xs"> Teléfono </Heading>
-              <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
+              <Text fontSize="sm"> {reserva.jugador?.telefono ?? "-"} </Text>
             </Box>
           </Stack>
 

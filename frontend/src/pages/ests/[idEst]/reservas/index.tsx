@@ -268,7 +268,7 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
                   <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
-                    {r.jugador?.nombre} {r.jugador?.apellido}
+                    {r.jugador?.nombre} {r.jugador?.apellido }
                   </Td>
                   <Td textAlign="center">
                     <ReservaEstado res={r} />
