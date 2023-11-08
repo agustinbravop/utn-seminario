@@ -36,6 +36,9 @@ JWT_SECRET=l7K15qPS401QMpTNXHfg5YTvkIvmUPQY
 JWT_ISSUER=canchas-api
 JWT_EXPIRATION_TIME=24h
 PORT=3001
+
+GOOGLE_CLIENT_ID=242199369878-vh11h5c6s5t8oo0sp4tubclc3mv59l11.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET={secret}
 ```
 
 3. Obtener las dependencias:
@@ -57,14 +60,20 @@ npm run start
 
 ```
 cd ../frontend
-echo "VITE_API_BASE_URL=http://localhost:3001" > .env
 yarn install
 ```
 
-6. Levantar el servidor:
+6. Crear en la carpeta `frontend/` un archivo `.env` con las siguientes variables de entorno:
+
+```shell
+VITE_API_BASE_URL=http://localhost:3001
+VITE_GOOGLE_CLIENT_ID=242199369878-vh11h5c6s5t8oo0sp4tubclc3mv59l11.apps.googleusercontent.com
+```
+
+7. Levantar el servidor:
 
 ```
-yarn run start
+yarn start
 ```
 
 ## Links Relevantes

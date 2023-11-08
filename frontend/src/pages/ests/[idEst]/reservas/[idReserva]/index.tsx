@@ -72,8 +72,8 @@ export default function ReservaInfoPage() {
   if (reserva.senia && reserva.pagoSenia) {
     precioAPagar = reserva.precio - reserva.senia;
   }
-  
-  const { mutate: mutateCancelar } = useCancelarReservaAdmin({ 
+
+  const { mutate: mutateCancelar } = useCancelarReservaAdmin({
     onSuccess: () => {
       toast({
         title: "Reserva cancelada",
@@ -168,8 +168,8 @@ export default function ReservaInfoPage() {
                 {reserva.pagoSenia
                   ? formatISO(reserva.pagoSenia.fechaPago)
                   : reserva.pagoReserva
-                    ? "-"
-                    : "Falta señar"}
+                  ? "-"
+                  : "Falta señar"}
               </Text>
             </Box>
           </HStack>
@@ -185,8 +185,7 @@ export default function ReservaInfoPage() {
             <Text fontSize="sm">
               {reserva.jugador
                 ? reserva.jugador.nombre + " " + reserva.jugador.apellido
-                : reserva.nombre
-              }
+                : reserva.nombre}
             </Text>
           </Box>
           <Box flex="1">
@@ -224,7 +223,7 @@ export default function ReservaInfoPage() {
               body={`¿Desea cancelar la reserva?`}
               onSubmit={() => mutateCancelar(reserva)}
               // onSubmit={() => alert('cancelar')}
-              colorScheme='red'
+              colorScheme="red"
             >
               Cancelar Reserva
             </ConfirmSubmitButton>

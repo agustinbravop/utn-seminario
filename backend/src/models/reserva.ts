@@ -1,4 +1,4 @@
-import {  z } from "zod";
+import { z } from "zod";
 import { jugadorSchema } from "./jugador";
 import { disponibilidadSchema } from "./disponibilidad";
 import { pagoSchema } from "./pago";

@@ -13,7 +13,7 @@ export type Jugador = {
   id: number;
   nombre: string;
   apellido: string;
-  telefono: string;
+  telefono?: string;
   correo: string;
   usuario: string;
   localidad?: string;

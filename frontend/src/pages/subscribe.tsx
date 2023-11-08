@@ -85,7 +85,7 @@ export default function SubscribePage() {
         description: "Inicie sesión para continuar.",
         status: "success",
       });
-      navigate("/login");
+      navigate("/auth/login");
     },
     onError: (err) => {
       toast({

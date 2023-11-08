@@ -27,7 +27,7 @@ import { estaEntreFechas, formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
 import { ReservaEstado } from "@/components/display";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -185,7 +185,7 @@ export default function EstablecimientoReservasPage() {
               <option key={i} value={pago}>
                 {pago}
               </option>
-            ))} 
+            ))}
           </Select>
           <FormLabel>Estado</FormLabel>
         </FormControl>
@@ -306,9 +306,8 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
                     {r.jugador
-                    ? r.jugador.nombre + " " + r.jugador.apellido
-                    : r.nombre
-                  }
+                      ? r.jugador.nombre + " " + r.jugador.apellido
+                      : r.nombre}
                   </Td>
                   <Td textAlign="center">
                     <ReservaEstado res={r} />

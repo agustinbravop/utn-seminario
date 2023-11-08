@@ -32,7 +32,7 @@ export default function BuscarEstablecimientosPage() {
   }, [values, updateFiltros]);
   const { data: ests, isFetchedAfterMount } = useBuscarEstablecimientos({
     ...values,
-    disciplina: values.disciplina || undefined
+    disciplina: values.disciplina || undefined,
   });
   const { data: localidades } = useLocalidadesByProvincia(values.provincia);
   useEffect(() => {

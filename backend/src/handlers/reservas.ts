@@ -7,7 +7,7 @@ import { Reserva } from "../models/reserva.js";
 export const crearReservaSchema = z.object({
   idDisponibilidad: z.number().positive().int(),
   fechaReservada: z.coerce.date(),
-  nombre: z.string().optional()
+  nombre: z.string().optional(),
 });
 
 export const getReservaQuerySchema = z.object({
@@ -34,7 +34,7 @@ export class ReservaHandler {
       } else if (query.idEst) {
         reserva = await this.service.getByEstablecimientoID(query.idEst);
       } else if (query.idJugador) {
-        reserva = await this.service.getByJugadorID(query.idJugador); 
+        reserva = await this.service.getByJugadorID(query.idJugador);
       } else {
         throw new BadRequestError(
           "Especificar un query param: 'idJugador', 'idDisp' o 'idEst'."
@@ -56,12 +56,11 @@ export class ReservaHandler {
 
   postReserva(): RequestHandler {
     return async (_req, res) => {
-
       const crearReserva: CrearReserva = res.locals.body;
-      const idJugador = res.locals.idJugador? res.locals.idJugador : 0 ;
-      console.log("HANDLER")
-      console.log(res.locals)
-      console.log(crearReserva)
+      const idJugador = res.locals.idJugador ? res.locals.idJugador : 0;
+      console.log("HANDLER");
+      console.log(res.locals);
+      console.log(crearReserva);
       const reservaCreada = await this.service.crear({
         ...crearReserva,
         idJugador,
@@ -78,8 +77,8 @@ export class ReservaHandler {
         pagoReserva: _req.body.idPagoReserva,
         ..._req.body,
       };
-      console.log("Handler:")
-      console.log(reserva)
+      console.log("Handler:");
+      console.log(reserva);
       const reservaUpdated = await this.service.pagarSenia(reserva);
       res.status(201).json(reservaUpdated);
     };
@@ -87,7 +86,7 @@ export class ReservaHandler {
 
   cancelarReserva(): RequestHandler {
     return async (_req, res) => {
-      console.log(_req.params["idRes"])
+      console.log(_req.params["idRes"]);
 
       const reserva: Reserva = {
         id: Number(_req.params["idRes"]),
@@ -99,7 +98,6 @@ export class ReservaHandler {
     };
   }
 
-
   pagarReserva(): RequestHandler {
     return async (_req, res) => {
       const reserva: Reserva = {
@@ -108,8 +106,8 @@ export class ReservaHandler {
         pagoReserva: _req.body.idPagoReserva,
         ..._req.body,
       };
-      console.log("Handler:")
-      console.log(reserva)
+      console.log("Handler:");
+      console.log(reserva);
       const reservaUpdated = await this.service.pagarReserva(reserva);
       res.status(201).json(reservaUpdated);
     };

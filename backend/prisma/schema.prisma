@@ -111,13 +111,13 @@ model metodoDePago {
 }
 
 model jugador {
-  id       Int    @id @default(autoincrement()) @map("idJugador")
-  usuario  String @unique @db.VarChar
-  correo   String @unique @db.VarChar
-  clave    String @db.VarChar
-  nombre   String @db.VarChar
-  apellido String @db.VarChar
-  telefono String @db.VarChar
+  id       Int     @id @default(autoincrement()) @map("idJugador")
+  usuario  String  @unique @db.VarChar
+  correo   String  @unique @db.VarChar
+  clave    String? @db.VarChar
+  nombre   String  @db.VarChar
+  apellido String  @db.VarChar
+  telefono String? @db.VarChar
 
   idLocalidad  Int?
   localidad    localidad?  @relation(fields: [idLocalidad], references: [id])

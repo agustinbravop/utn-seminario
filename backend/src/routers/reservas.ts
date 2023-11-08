@@ -41,7 +41,6 @@ export function reservasRouter(
     handler.cancelarReserva()
   );
 
-
   router.patch(
     "/:idRes", //validateIDParams("idRes"),
     //Solo el admin seña por ahora, el metodo de

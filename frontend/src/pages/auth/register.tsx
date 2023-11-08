@@ -59,7 +59,7 @@ export default function RegisterPage() {
         description: "Inicie sesión para continuar.",
         status: "success",
       });
-      navigate("/login");
+      navigate("/auth/login");
     },
     onError: (err) => {
       toast({
@@ -175,7 +175,7 @@ export default function RegisterPage() {
           )}
           <Text>
             ¿Ya tiene una cuenta?{" "}
-            <Link to="/login" style={{ color: "blue" }}>
+            <Link to="/auth/login" style={{ color: "blue" }}>
               Inicie sesión
             </Link>
           </Text>

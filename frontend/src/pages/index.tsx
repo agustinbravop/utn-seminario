@@ -22,7 +22,7 @@ export default function LandingPage() {
           Encontrá tu cancha preferida de entre más de mil establecimientos para
           jugar con tus amigos. Estás a un solo click de distancia.
         </Text>
-        <Link to="/login">
+        <Link to="/auth/login">
           <Button mt="15px" type="button">
             Buscar
           </Button>
