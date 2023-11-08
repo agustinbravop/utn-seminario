@@ -28,11 +28,12 @@ interface ReservaCardProps extends CardProps {
   reserva: Reserva;
 }
 
-export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
-  const fechaActualMinutos = Date.now() 
-  const umbral = 24 * 60 * 60 * 1000; //Un día
-  const prueba = Number(fechaHoraReservada(reserva))
-  const diferenciaTiempo = prueba - fechaActualMinutos 
+export default function ReservaCard({ reserva, ...props }: ReservaCardProps) { 
+  const umbral = 24 * 60 * 60 * 1000; //Un día en milisegundos
+  const fechaActualMinutos = Date.now()
+  const fechaReservaMinutos = Number(fechaHoraReservada(reserva))
+  const diferenciaTiempo = fechaReservaMinutos - fechaActualMinutos 
+
   const toast = useToast();
 
   const { mutate } = useCancelarReserva({
