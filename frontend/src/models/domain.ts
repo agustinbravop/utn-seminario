@@ -108,6 +108,16 @@ export type Reserva = {
   };
 };
 
+/**
+ * Representa el estado de una `Reserva` respecto de sus pagos y si está cancelada o no.
+ */
+export enum EstadoReserva {
+  Seniada = "Señada",
+  NoPagada = "No pagada",
+  Pagada = "Pagada",
+  Cancelada = "Cancelada",
+}
+
 export type Pago = {
   id: number;
   monto: number;

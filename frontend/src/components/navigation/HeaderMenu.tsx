@@ -42,7 +42,7 @@ export default function HeaderMenu() {
         shadow="md"
         padding="0 2rem 0 2rem"
         height="3.6rem"
-        backgroundColor="#f8fafd"
+        bgColor="#f8fafd"
       >
         {nav}
       </HStack>

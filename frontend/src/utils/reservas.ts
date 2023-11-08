@@ -1,4 +1,4 @@
-import { Reserva } from "@/models";
+import { EstadoReserva, Reserva } from "@/models";
 import { toUTCDate } from "./dates";
 
 /**
@@ -31,4 +31,32 @@ export function fechaHoraFinReserva(res: Reserva) {
 /** Devuelve `true` si el horario de fin de la reserva todavía no fue alcanzado. */
 export function isReservaActiva(reserva: Reserva) {
   return fechaHoraFinReserva(reserva) >= new Date();
+}
+
+/** Devuelve el `EstadoReserva` de una `Reserva`, de acuerdo a sus pagos. */
+export function estadoReserva(reserva: Reserva): EstadoReserva {
+  let estado = EstadoReserva.NoPagada;
+
+  if (reserva.cancelada) {
+    estado = EstadoReserva.Cancelada;
+  } else if (reserva.pagoReserva) {
+    estado = EstadoReserva.Pagada;
+  } else if (reserva.pagoSenia) {
+    estado = EstadoReserva.Seniada;
+  }
+  return estado;
+}
+
+/** Retorna el color asociado al `EstadoReserva` correspondiente. */
+export function colorEstadoReserva(estadoReserva: EstadoReserva): string {
+  switch (estadoReserva) {
+    case EstadoReserva.NoPagada:
+      return "gray";
+    case EstadoReserva.Seniada:
+      return "orange";
+    case EstadoReserva.Pagada:
+      return "green";
+    case EstadoReserva.Cancelada:
+      return "red";
+  }
 }

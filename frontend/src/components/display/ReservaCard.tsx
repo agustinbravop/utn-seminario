@@ -11,18 +11,17 @@ import {
   Tag,
   TagLeftIcon,
   TagLabel,
-  HStack,
   VStack,
   CardProps,
   Stack,
   useToast,
 } from "@chakra-ui/react";
-import { Reserva } from "@/models";
+import { EstadoReserva, Reserva } from "@/models";
 import { CircleIcon } from "../media-and-icons";
 import { formatISOFecha } from "@/utils/dates";
 import { useCancelarReserva } from "@/utils/api";
 import { ConfirmSubmitButton } from "../forms";
-import { fechaHoraReservada } from "@/utils/reservas";
+import { estadoReserva, fechaHoraReservada } from "@/utils/reservas";
 
 interface ReservaCardProps extends CardProps {
   reserva: Reserva;
@@ -53,29 +52,30 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
     },
   });
 
+  const estado = estadoReserva(reserva);
+
   return (
     <>
       <Card size="sm" m={2} w="min(80vw, 350px)" {...props}>
-        {reserva.idPagoReserva ? (
-          <CardHeader borderRadius="6px" backgroundColor="green.100">
-            <HStack justifyContent="center">
-              <CircleIcon color="green" />
-              <Text>Pagada</Text>
-            </HStack>
+        {estado === EstadoReserva.Pagada ? (
+          <CardHeader bgColor="green.100" borderRadius="6px" textAlign="center">
+            <CircleIcon verticalAlign="-0.1em" color="green" /> Pagada
           </CardHeader>
-        ) : reserva.idPagoSenia ? (
-          <CardHeader borderRadius="6px" backgroundColor="orange.100">
-            <HStack justifyContent="center">
-              <CircleIcon color="orange" />
-              <Text>Señada</Text>
-            </HStack>
+        ) : estado === EstadoReserva.NoPagada ? (
+          <CardHeader bgColor="gray.300" borderRadius="6px" textAlign="center">
+            <CircleIcon verticalAlign="-0.1em" color="gray" /> No pagada
+          </CardHeader>
+        ) : estado === EstadoReserva.Seniada ? (
+          <CardHeader
+            bgColor="orange.100"
+            borderRadius="6px"
+            textAlign="center"
+          >
+            <CircleIcon verticalAlign="-0.1em" color="gray" /> Señada
           </CardHeader>
         ) : (
-          <CardHeader backgroundColor="gray.300" borderRadius="6px">
-            <HStack justifyContent="center">
-              <CircleIcon color="red" />
-              <Text>No pagada</Text>
-            </HStack>
+          <CardHeader bgColor="red.100" borderRadius="6px" textAlign="center">
+            <CircleIcon verticalAlign="-0.1em" color="red" /> Cancelada
           </CardHeader>
         )}
 
@@ -122,7 +122,6 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             align="center"
             justifyContent="center"
             fontSize={{ base: "15px", md: "17px", lg: "15px" }}
-            mb={3}
           >
             <Tag size="sm" variant="subtle" colorScheme="gray">
               <TagLeftIcon as={CalendarIcon} boxSize={3} />
@@ -147,6 +146,10 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             onSubmit={() => mutate({ idReserva: reserva.id })}
             header="Cancelar reserva"
             body="¿Está seguro de cancelar la reserva?"
+            variant="outline"
+            m="0.4em auto"
+            size="sm"
+            width="fit-content"
           >
             Cancelar Reserva
           </ConfirmSubmitButton>

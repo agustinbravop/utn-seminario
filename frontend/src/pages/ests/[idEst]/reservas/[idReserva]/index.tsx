@@ -236,6 +236,7 @@ export default function ReservaInfoPage() {
           <Button onClick={() => navigate(-1)}>Volver</Button>
           {!reserva.idPagoSenia &&
             !reserva.idPagoReserva &&
+            !reserva.cancelada &&
             reserva.disponibilidad.precioSenia && (
               <ConfirmSubmitButton
                 header="Seña"
@@ -246,7 +247,7 @@ export default function ReservaInfoPage() {
               </ConfirmSubmitButton>
             )}
 
-          {!reserva.idPagoReserva && (
+          {!reserva.idPagoReserva && !reserva.cancelada && (
             <ConfirmSubmitButton
               header="Pago"
               body={`¿Desea registrar el pago de $${pagoRestante(reserva)}?`}
