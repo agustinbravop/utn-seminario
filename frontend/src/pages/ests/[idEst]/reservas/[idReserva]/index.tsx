@@ -92,9 +92,9 @@ export default function ReservaInfoPage() {
         <Heading as="h3" size="lg" textAlign="center">
           Datos de la reserva
         </Heading>
-        {!reserva.estado && (
+        {reserva.cancelada && (
           <Heading size="md" mt="35px" mb="15px" color="red">
-            Reserva Cancelada
+            Esta reserva fue cancelada
           </Heading>
         )}
         <VStack divider={<StackDivider />} mt="20px">
@@ -186,7 +186,7 @@ export default function ReservaInfoPage() {
             <Text fontSize="sm">
               {reserva.jugador
                 ? reserva.jugador.nombre + " " + reserva.jugador.apellido
-                : reserva.nombre}
+                : reserva.jugadorNoRegistrado}
             </Text>
           </Box>
           <Box flex="1">
@@ -194,23 +194,25 @@ export default function ReservaInfoPage() {
             <Text fontSize="sm">{reserva.jugador?.telefono ?? "-"}</Text>
           </Box>
         </HStack>
-        {reserva.nombre && (
+        {reserva.jugadorNoRegistrado && (
           <HStack mt="15px">
-            <Box flex="1">
+            <Box flex="1.5">
               <Text fontSize="sm">
-                Esta reserva es de un cliente no registrado en PlayFinder.
+                Esta reserva la hizo para un cliente no registrado en
+                PlayFinder.
               </Text>
             </Box>
             <Box flex="1">
-              {reserva.nombre && reserva.estado && (
+              {reserva.jugadorNoRegistrado && !reserva.cancelada && (
                 <ConfirmSubmitButton
                   header="Cancelar reserva"
                   body={
                     <>
                       <Text>
                         ¿Desea cancelar la reserva? Es importante que{" "}
-                        {reserva.nombre} se lo haya solicitado o usted le avise,
-                        porque ese cliente no está registrado en PlayFinder.
+                        {reserva.jugadorNoRegistrado} se lo haya solicitado o
+                        usted le avise, porque ese cliente no está registrado en
+                        PlayFinder.
                       </Text>
                       <Divider my="0.5em" />
                       <Text color="gray">
@@ -219,7 +221,7 @@ export default function ReservaInfoPage() {
                       </Text>
                     </>
                   }
-                  onSubmit={() => mutateCancelar(reserva)}
+                  onSubmit={() => mutateCancelar({ idReserva: reserva.id })}
                   colorScheme="red"
                   variant="outline"
                 >

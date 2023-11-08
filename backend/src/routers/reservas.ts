@@ -26,36 +26,35 @@ export function reservasRouter(
 
   router.post(
     "/",
-    //SACO EL auth PARA FACILIDAD DE PRUEBAS
     authMiddle.isLogged(),
     validateBody(crearReservaSchema),
     handler.postReserva()
   );
 
   router.patch(
-    "/:idRes/cancelar", //validateIDParams("idRes"),
+    "/:idRes/cancelar",
+    validateIDParams("idRes"),
     //Solo el admin seña por ahora, el metodo de
     //pago hardcodeado es "Efectivo" por ahora
     // authMiddle.isJugador() Ahora puede ser el jugador o el admin quien cancele una reserva
-    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
     handler.cancelarReserva()
   );
 
   router.patch(
-    "/:idRes", //validateIDParams("idRes"),
+    "/:idRes",
+    validateIDParams("idRes"),
     //Solo el admin seña por ahora, el metodo de
     //pago hardcodeado es "Efectivo" por ahora
     authMiddle.isAdmin(),
-    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
     handler.seniarReserva()
   );
 
   router.patch(
-    "/pagar/:idRes", //validateIDParams("idRes"),
+    "/pagar/:idRes",
+    validateIDParams("idRes"),
     //Solo el admin seña por ahora, el metodo de
     //pago hardcodeado es "Efectivo" por ahora
     authMiddle.isAdmin(),
-    //validateBody(crearReservaSchema) debería validar el body? Buena pregunta
     handler.pagarReserva()
   );
 

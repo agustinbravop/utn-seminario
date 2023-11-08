@@ -29,7 +29,7 @@ interface ReservaCardProps extends CardProps {
 }
 
 export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
-  const umbral = 24 * 60 * 60 * 1000; //Un día en milisegundos
+  const umbral = 24 * 60 * 60 * 1000; // Un día en milisegundos
   const fechaActualMinutos = Date.now();
   const fechaReservaMinutos = Number(fechaHoraReservada(reserva));
   const diferenciaTiempo = fechaReservaMinutos - fechaActualMinutos;
@@ -144,7 +144,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
         {diferenciaTiempo >= umbral && (
           <ConfirmSubmitButton
             colorScheme="red"
-            onSubmit={() => mutate(reserva)}
+            onSubmit={() => mutate({ idReserva: reserva.id })}
             header="Cancelar reserva"
             body="¿Está seguro de cancelar la reserva?"
           >
