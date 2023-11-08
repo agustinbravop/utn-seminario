@@ -14,6 +14,7 @@ import {
   FormLabel,
   Select,
   Button,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   TriangleUpIcon,
@@ -189,9 +190,14 @@ export default function EstablecimientoReservasPage() {
           </Select>
           <FormLabel>Estado</FormLabel>
         </FormControl>
-        <Link to={`../../../search/est/${idEst}/reservar`}>
-          <Button>Reservar</Button>
-        </Link>
+        <Tooltip label="Usted reserva un horario en nombre de clientes no registrados en PlayFinder">
+          <Link
+            style={{ marginLeft: "auto" }}
+            to={`../../../search/est/${idEst}/reservar`}
+          >
+            <Button>Reservar</Button>
+          </Link>
+        </Tooltip>
       </HStack>
       <TableContainer pt="15px" pb="20px" mr="12%" ml="12%" mb="30px" mt="0px">
         <Table variant="striped" size="sm">

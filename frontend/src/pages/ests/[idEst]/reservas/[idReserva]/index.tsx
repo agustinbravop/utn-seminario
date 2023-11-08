@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardBody,
+  Divider,
   HStack,
   Heading,
   StackDivider,
@@ -64,15 +65,6 @@ export default function ReservaInfoPage() {
     },
   });
 
-  if (!reserva) {
-    return <LoadingSpinner />;
-  }
-
-  let precioAPagar = reserva.precio;
-  if (reserva.senia && reserva.pagoSenia) {
-    precioAPagar = reserva.precio - reserva.senia;
-  }
-
   const { mutate: mutateCancelar } = useCancelarReservaAdmin({
     onSuccess: () => {
       toast({
@@ -90,15 +82,23 @@ export default function ReservaInfoPage() {
     },
   });
 
+  if (!reserva) {
+    return <LoadingSpinner />;
+  }
+
+  console.log(reserva);
+
   return (
     <Card m="auto" height="60%" maxW="450px" mt="5%">
       <CardBody m="15px">
         <Heading as="h3" size="lg" textAlign="center">
           Datos de la reserva
         </Heading>
-        {!reserva.estado && (<Heading size="md" mt="35px" mb="15px" color='red'>
-          Reserva Cancelada
-        </Heading>)}
+        {!reserva.estado && (
+          <Heading size="md" mt="35px" mb="15px" color="red">
+            Reserva Cancelada
+          </Heading>
+        )}
         <VStack divider={<StackDivider />} mt="20px">
           <HStack width="100%">
             <Box flex="1">
@@ -196,6 +196,41 @@ export default function ReservaInfoPage() {
             <Text fontSize="sm">{reserva.jugador?.telefono ?? "-"}</Text>
           </Box>
         </HStack>
+        {reserva.nombre && (
+          <HStack mt="15px">
+            <Box flex="1">
+              <Text fontSize="sm">
+                Esta reserva es de un cliente no registrado en PlayFinder.
+              </Text>
+            </Box>
+            <Box flex="1">
+              {reserva.nombre && reserva.estado && (
+                <ConfirmSubmitButton
+                  header="Cancelar reserva"
+                  body={
+                    <>
+                      <Text>
+                        ¿Desea cancelar la reserva? Es importante que{" "}
+                        {reserva.nombre} se lo haya solicitado o usted le avise,
+                        porque ese cliente no está registrado en PlayFinder.
+                      </Text>
+                      <Divider my="0.5em" />
+                      <Text color="gray">
+                        Cancelar esta reserva libera el horario reservado para
+                        que otro usuario lo pueda reservar nuevamente.
+                      </Text>
+                    </>
+                  }
+                  onSubmit={() => mutateCancelar(reserva)}
+                  colorScheme="red"
+                  variant="outline"
+                >
+                  Cancelar reserva
+                </ConfirmSubmitButton>
+              )}
+            </Box>
+          </HStack>
+        )}
 
         <HStack justifyContent="center" spacing="20px" pt="30px">
           <Button onClick={() => navigate(-1)}>Volver</Button>
@@ -214,21 +249,10 @@ export default function ReservaInfoPage() {
           {!reserva.idPagoReserva && (
             <ConfirmSubmitButton
               header="Pago"
-              body={`¿Desea registrar el pago de $${precioAPagar}?`}
+              body={`¿Desea registrar el pago de $${pagoRestante(reserva)}?`}
               onSubmit={() => mutatePago(reserva)}
             >
               Pagar
-            </ConfirmSubmitButton>
-          )}
-          {reserva.nombre && reserva.estado && (
-            <ConfirmSubmitButton
-              header="Cancelar Reserva"
-              body={`¿Desea cancelar la reserva?`}
-              onSubmit={() => mutateCancelar(reserva)}
-              // onSubmit={() => alert('cancelar')}
-              colorScheme="red"
-            >
-              Cancelar Reserva
             </ConfirmSubmitButton>
           )}
         </HStack>
