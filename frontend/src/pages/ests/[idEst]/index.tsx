@@ -83,12 +83,12 @@ export default function EstablecimientoInfoPage() {
   };
 
   return (
-    <>
+    <Box mr="12%" ml="12%">
       <EstablecimientoMenu />
-      <Text m="0 16% 30px 16%">
+      <Text mt="0px" mb="30px">
         Esta es la información de su establecimiento.
       </Text>
-      <Card m="auto" width="60%">
+      <Card m="auto" width="85%">
         <CardBody display="grid" gridTemplateColumns="1fr 1fr">
           <Image
             src={est?.urlImagen}
@@ -155,6 +155,6 @@ export default function EstablecimientoInfoPage() {
           </Box>
         </CardBody>
       </Card>
-    </>
+    </Box>
   );
 }

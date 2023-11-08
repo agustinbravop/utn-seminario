@@ -121,16 +121,16 @@ export default function FormReservarDisponibilidad({
                         : "No requiere señar"}
                     </Text>
                   </Box>
+                  {isAdmin && (
+                    <InputControl
+                      name="jugadorNoRegistrado"
+                      label="Nombre del jugador"
+                      size="sm"
+                      isRequired
+                    />
+                  )}
                 </HStack>
               </VStack>
-              {isAdmin && (
-                <InputControl
-                  name="jugadorNoRegistrado"
-                  label="Nombre del jugador"
-                  size="sm"
-                  mt="10px"
-                />
-              )}
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="gray" mr={3} onClick={onClose}>

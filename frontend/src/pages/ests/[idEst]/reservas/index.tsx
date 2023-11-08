@@ -15,6 +15,7 @@ import {
   Select,
   Button,
   Tooltip,
+  Box,
 } from "@chakra-ui/react";
 import {
   TriangleUpIcon,
@@ -136,16 +137,14 @@ export default function EstablecimientoReservasPage() {
   });
 
   return (
-    <>
+    <Box mr="12%" ml="12%" mb="30px" mt="0px">
       <EstablecimientoMenu />
-      <HStack mr="12%" ml="12%" mb="30px" mt="0px">
-        <Text>
-          {reservas.length > 0
-            ? "Estas son las reservas actuales para este establecimiento."
-            : "Actualmente no hay reservas para este establecimiento."}
-        </Text>
-      </HStack>
-      <HStack mr="12%" ml="12%" mb="20px" mt="0px">
+      <Text>
+        {reservas.length > 0
+          ? "Estas son las reservas actuales para este establecimiento."
+          : "Actualmente no hay reservas para este establecimiento."}
+      </Text>
+      <HStack mb="20px" mt="20px">
         <FormControl variant="floating" width="auto">
           <Input
             type="text"
@@ -199,7 +198,7 @@ export default function EstablecimientoReservasPage() {
           </Link>
         </Tooltip>
       </HStack>
-      <TableContainer pt="15px" pb="20px" mr="12%" ml="12%" mb="30px" mt="0px">
+      <TableContainer mt="1em" mb="1em">
         <Table size="sm">
           <Thead>
             <Tr>
@@ -305,7 +304,7 @@ export default function EstablecimientoReservasPage() {
           <Tbody>
             {reservasFiltradas.map((r, idx) => {
               const bgColor = r.cancelada
-                ? "lightcoral"
+                ? "red.200"
                 : idx % 2 === 0
                 ? "gray.100"
                 : "white";
@@ -317,8 +316,8 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
                     {r.jugador
-                      ? r.jugador.nombre + " " + r.jugador.apellido
-                      : r.jugadorNoRegistrado}
+                      ? `${r.jugador.nombre} ${r.jugador.apellido}`
+                      : r.jugadorNoRegistrado && `${r.jugadorNoRegistrado}*`}
                   </Td>
                   <Td textAlign="center">
                     <ReservaEstado res={r} />
@@ -337,6 +336,10 @@ export default function EstablecimientoReservasPage() {
           </Tbody>
         </Table>
       </TableContainer>
-    </>
+      <Text>
+        * Estos jugadores fueron cargados por el administrador del
+        establecimiento, y la reserva se hizo en su nombre.
+      </Text>
+    </Box>
   );
 }

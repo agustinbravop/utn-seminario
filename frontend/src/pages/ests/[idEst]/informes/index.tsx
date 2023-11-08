@@ -35,9 +35,9 @@ export default function EstablecimientoReservasPage() {
   });
 
   return (
-    <>
+    <Box mr="12%" ml="12%">
       <EstablecimientoMenu />
-      <HStack mr="12%" ml="12%" mb="20px" mt="30px">
+      <HStack mb="20px" mt="30px">
         <FormControl variant="floating" width="auto">
           <Input
             type="date"
@@ -61,7 +61,7 @@ export default function EstablecimientoReservasPage() {
       {!informe ? (
         <LoadingSpinner />
       ) : (
-        <Box mx="12%">
+        <Box>
           <StatGroup width="fit-content" gap="40px" ml="20px">
             <Stat>
               <StatLabel>
@@ -143,6 +143,6 @@ export default function EstablecimientoReservasPage() {
           </HStack>
         </Box>
       )}
-    </>
+    </Box>
   );
 }

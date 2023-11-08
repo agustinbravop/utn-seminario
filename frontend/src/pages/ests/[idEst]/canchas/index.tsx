@@ -1,5 +1,6 @@
 import { useParams } from "react-router";
 import {
+  Box,
   Button,
   HStack,
   Icon,
@@ -30,9 +31,9 @@ export default function EstablecimientoCanchasPage() {
   );
 
   return (
-    <>
+    <Box mr="12%" ml="12%">
       <EstablecimientoMenu />
-      <HStack mr="12%" ml="12%" mb="50px" mt="0px">
+      <HStack mb="50px" mt="0px">
         <InputGroup width="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
@@ -75,6 +76,6 @@ export default function EstablecimientoCanchasPage() {
           ))}
         </HStack>
       )}
-    </>
+    </Box>
   );
 }
