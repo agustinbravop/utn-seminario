@@ -96,6 +96,9 @@ export default function ReservaInfoPage() {
         <Heading as="h3" size="lg" textAlign="center">
           Datos de la reserva
         </Heading>
+        {!reserva.estado && (<Heading size="md" mt="35px" mb="15px" color='red'>
+          Reserva Cancelada
+        </Heading>)}
         <VStack divider={<StackDivider />} mt="20px">
           <HStack width="100%">
             <Box flex="1">
@@ -218,7 +221,7 @@ export default function ReservaInfoPage() {
               Pagar
             </ConfirmSubmitButton>
           )}
-          {reserva.nombre && (
+          {reserva.nombre && reserva.estado && (
             <ConfirmSubmitButton
               header="Cancelar Reserva"
               body={`¿Desea cancelar la reserva?`}
