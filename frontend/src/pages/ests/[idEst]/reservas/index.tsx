@@ -298,8 +298,9 @@ export default function EstablecimientoReservasPage() {
           </Thead>
           <Tbody>
             {reservasFiltradas.map((r) => {
+              const filaBackgroundColor = r.estado ? "inherit" : "lightcoral";
               return (
-                <Tr key={r.id}>
+                <Tr key={r.id} style={{ backgroundColor: filaBackgroundColor }}>
                   <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>
                   <Td textAlign="center">{r.disponibilidad.disciplina}</Td>
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
