@@ -1,5 +1,6 @@
 export * from "./utils";
 export * from "./auth";
+export * from "./oauth2";
 export * from "./canchas";
 export * from "./disponibilidades";
 export * from "./establecimientos";

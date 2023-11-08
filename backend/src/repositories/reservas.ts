@@ -217,7 +217,7 @@ function toRes(res: ReservaDB): Reserva {
   const { clave, ...jugador } = res.jugador;
   return {
     ...res,
-    jugador,
+    jugador: { ...jugador, telefono: jugador.telefono ?? undefined },
     senia: res.senia?.toNumber() ?? undefined,
     precio: res.precio.toNumber(),
     pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,

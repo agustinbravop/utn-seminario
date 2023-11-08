@@ -5,13 +5,13 @@ import {
   AlertDescription,
 } from "@chakra-ui/alert";
 
-type alertaProps = {
+type AlertaProps = {
   mensaje: string;
   status: "info" | "warning" | "success" | "error" | "loading" | undefined;
   descripcion?: string;
 };
 
-export default function Alerta({ mensaje, status, descripcion }: alertaProps) {
+export default function Alerta({ mensaje, status, descripcion }: AlertaProps) {
   return (
     <Alert
       status={status}

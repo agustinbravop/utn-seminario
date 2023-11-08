@@ -11,12 +11,10 @@
     "@hookform/resolvers": "^3.1.1",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-table": "^8.10.0",
-    "@types/react-swipeable-views": "^0.13.2",
     "framer-motion": "^10.12.16",
     "jwt-decode": "^3.1.2",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
-    "react-cookie": "^4.1.1",
     "react-credit-cards": "^0.8.3",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
@@ -24,7 +22,6 @@
     "react-icons": "^4.9.0",
     "react-router": "^6.11.2",
     "react-router-dom": "^6.12.0",
-    "react-swipeable-views": "^0.14.0",
     "yup": "^1.2.0"
   },
   "scripts": {

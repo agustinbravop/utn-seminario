@@ -24,7 +24,7 @@ export type ModificarAdmin = Omit<Administrador, "suscripcion" | "tarjeta">;
 
 export type ModificarJugador = Jugador;
 
-type Usuario =
+export type Usuario =
   | {
       admin: Administrador;
       jugador?: never;
@@ -43,7 +43,7 @@ export type CambiarClave = {
  * Helper function que toma un token, lo escribe a localStorage,
  * y devuelve una promise con su payload decodificado.
  */
-function captureToken(jwt: JWT) {
+export function captureToken(jwt: JWT) {
   writeLocalStorage("token", jwt);
   const payload: Usuario = jwtDecode(jwt.token);
   return Promise.resolve(payload);

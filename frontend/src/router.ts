@@ -14,6 +14,9 @@ export type Path =
   | `/admin/:idAdmin/perfil/editarSuscripcion`
   | `/admin/:idAdmin/perfil/selectEstab`
   | `/admin/:idAdmin/selectEstab`
+  | `/auth/login`
+  | `/auth/redirect/google`
+  | `/auth/register`
   | `/ests/:idEst`
   | `/ests/:idEst/canchas`
   | `/ests/:idEst/canchas/:idCancha`
@@ -28,8 +31,6 @@ export type Path =
   | `/jugador/:idJugador/perfil/cambiarClave`
   | `/jugador/:idJugador/perfil/editar`
   | `/jugador/:idJugador/reservas`
-  | `/login`
-  | `/register`
   | `/search`
   | `/search/est/:idEst`
   | `/search/est/:idEst/canchas`
