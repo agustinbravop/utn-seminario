@@ -7,7 +7,7 @@ import { Reserva } from "../models/reserva.js";
 export const crearReservaSchema = z.object({
   idDisponibilidad: z.number().positive().int(),
   fechaReservada: z.coerce.date(),
-  nombre: z.string().optional(),
+  jugadorNoRegistrado: z.string().optional(),
 });
 
 export const getReservaQuerySchema = z.object({
@@ -67,12 +67,12 @@ export class ReservaHandler {
   }
 
   seniarReserva(): RequestHandler {
-    return async (_req, res) => {
+    return async (req, res) => {
       const reserva: Reserva = {
-        id: Number(_req.params["idRes"]),
-        pagoSenia: _req.body.idPagoSenia,
-        pagoReserva: _req.body.idPagoReserva,
-        ..._req.body,
+        id: Number(req.params["idRes"]),
+        pagoSenia: req.body.idPagoSenia,
+        pagoReserva: req.body.idPagoReserva,
+        ...req.body,
       };
       const reservaUpdated = await this.service.pagarSenia(reserva);
       res.status(201).json(reservaUpdated);
@@ -80,24 +80,20 @@ export class ReservaHandler {
   }
 
   cancelarReserva(): RequestHandler {
-    return async (_req, res) => {
-      const reserva: Reserva = {
-        id: Number(_req.params["idRes"]),
-        ..._req.body,
-        estado: false,
-      };
-      const reservaUpdated = await this.service.cancelarReserva(reserva);
-      res.status(201).json(reservaUpdated);
+    return async (req, res) => {
+      const idReserva = Number(req.params["idRes"]);
+      const reservaCancelada = await this.service.cancelarReserva(idReserva);
+      res.status(201).json(reservaCancelada);
     };
   }
 
   pagarReserva(): RequestHandler {
-    return async (_req, res) => {
+    return async (req, res) => {
       const reserva: Reserva = {
-        id: Number(_req.params["idRes"]),
-        pagoSenia: _req.body.idPagoSenia,
-        pagoReserva: _req.body.idPagoReserva,
-        ..._req.body,
+        id: Number(req.params["idRes"]),
+        pagoSenia: req.body.idPagoSenia,
+        pagoReserva: req.body.idPagoReserva,
+        ...req.body,
       };
       const reservaUpdated = await this.service.pagarReserva(reserva);
       res.status(201).json(reservaUpdated);

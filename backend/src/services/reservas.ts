@@ -11,8 +11,8 @@ import { MetodoDePago } from "../models/pago";
 
 export type CrearReserva = {
   fechaReservada: Date;
-  idJugador: number;
-  nombre?: string;
+  idJugador?: number;
+  jugadorNoRegistrado?: string;
   idDisponibilidad: number;
 };
 
@@ -35,7 +35,7 @@ export interface ReservaService {
   crear(res: CrearReserva): Promise<Reserva>;
   pagarSenia(res: Reserva): Promise<Reserva>;
   pagarReserva(res: Reserva): Promise<Reserva>;
-  cancelarReserva(res: Reserva): Promise<Reserva>;
+  cancelarReserva(idRes: number): Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
@@ -100,8 +100,10 @@ export class ReservaServiceImpl implements ReservaService {
     }
   }
 
-  async cancelarReserva(res: Reserva): Promise<Reserva> {
-    return await this.repo.updateReserva(res);
+  async cancelarReserva(idReserva: number): Promise<Reserva> {
+    const res = await this.repo.getReservaByID(idReserva);
+    // TODO: validaciones para no poder cancelar cualquier reserva.
+    return await this.repo.updateReserva({ ...res, cancelada: true });
   }
 
   async getByEstablecimientoID(idEst: number) {
@@ -139,7 +141,7 @@ export class ReservaServiceImpl implements ReservaService {
     this.validarFechaReservada(crearReserva, disp);
     return await this.repo.crearReserva({
       ...crearReserva,
-      nombre: crearReserva.nombre,
+      jugadorNoRegistrado: crearReserva.jugadorNoRegistrado,
       precio: disp.precioReserva,
       senia: disp.precioSenia,
     });

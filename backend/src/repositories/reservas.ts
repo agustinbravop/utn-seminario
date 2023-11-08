@@ -1,11 +1,19 @@
 import { Reserva } from "../models/reserva.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
-import { PrismaClient, jugador, pago, reserva } from "@prisma/client";
+import {
+  PrismaClient,
+  disciplina,
+  jugador,
+  localidad,
+  pago,
+  reserva,
+} from "@prisma/client";
 import { disponibilidadDB, toDisp } from "./disponibilidades.js";
 import { BuscarReservaQuery, CrearReserva } from "../services/reservas.js";
 import { toPago } from "./pagos.js";
+import { toJugador } from "./jugador.js";
 
-type CrearReservaParam = CrearReserva & { precio: number; senia?: number };
+type CrearReservaParams = CrearReserva & { precio: number; senia?: number };
 
 export interface ReservaRepository {
   getReservasByEstablecimientoID(idEst: number): Promise<Reserva[]>;
@@ -14,7 +22,7 @@ export interface ReservaRepository {
   getReservasByCanchaID(idCancha: number): Promise<Reserva[]>;
   getReservaByID(id: number): Promise<Reserva>;
   buscar(filtros: BuscarReservaQuery): Promise<Reserva[]>;
-  crearReserva(res: CrearReservaParam): Promise<Reserva>;
+  crearReserva(res: CrearReservaParams): Promise<Reserva>;
   getReservasByDate(fecha: Date): Promise<Reserva[]>;
   updateReserva(res: Reserva): Promise<Reserva>;
 }
@@ -22,7 +30,12 @@ export interface ReservaRepository {
 export class PrismaReservaRepository implements ReservaRepository {
   private prisma: PrismaClient;
   private include = {
-    jugador: true,
+    jugador: {
+      include: {
+        localidad: true,
+        disciplina: true,
+      },
+    },
     disponibilidad: {
       include: {
         disciplina: true,
@@ -50,8 +63,8 @@ export class PrismaReservaRepository implements ReservaRepository {
           fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
           fechaReservada: res.fechaReservada,
           precio: res.precio,
-          estado: res.estado,
-          nombre: res.nombre,
+          cancelada: res.cancelada,
+          jugadorNoRegistrado: res.jugadorNoRegistrado,
           jugador: res.jugador
             ? { connect: { id: res.jugador?.id } }
             : undefined,
@@ -89,7 +102,7 @@ export class PrismaReservaRepository implements ReservaRepository {
   async getReservasByJugadorID(idJugador: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
-        where: { idJugador: idJugador, estado: true },
+        where: { idJugador: idJugador, cancelada: false },
         orderBy: [{ fechaReservada: "asc" }],
         include: this.include,
       });
@@ -172,52 +185,17 @@ export class PrismaReservaRepository implements ReservaRepository {
     }
   }
 
-  async crearReserva(res: CrearReservaParam) {
-    /*
-    try {
-      const data = {
-        fechaReservada: res.fechaReservada,
-        precio: res.precio,
-        senia: res.senia,
-        jugador: {},
-        nombre: res.nombre ?? '-',
-        disponibilidad: { connect: { id: res.idDisponibilidad } },
-      };
-      if (res.idJugador !== 0) {
-        data.jugador = { connect: { id: res.idJugador } };
-      }
-      const dbRes = await this.prisma.reserva.create({
-        data,
-        include: this.include,
-      }); 
-
-
-      const dbRes = await this.prisma.reserva.create({
-        data: {
-          id: undefined,
-          fechaReservada: res.fechaReservada,
-          precio: res.precio,
-          senia: res.senia,
-          jugador: { connect: { id: res.idJugador } },
-          nombre: res.nombre ?? '-',
-          disponibilidad: { connect: { id: res.idDisponibilidad } },
-        },
-        include: this.include,
-      });
-    */
-
-    //ESTO SE PUEDE MEJORAR EN CUANTO A LEGIBILIDAD
+  async crearReserva(res: CrearReservaParams) {
     try {
       let dbRes;
-      if (res.idJugador !== 0) {
+      if (res.idJugador) {
         dbRes = await this.prisma.reserva.create({
           data: {
-            id: undefined,
             fechaReservada: res.fechaReservada,
             precio: res.precio,
             senia: res.senia,
             jugador: { connect: { id: res.idJugador } },
-            nombre: res.nombre ?? "-",
+            jugadorNoRegistrado: res.jugadorNoRegistrado,
             disponibilidad: { connect: { id: res.idDisponibilidad } },
           },
           include: this.include,
@@ -225,28 +203,13 @@ export class PrismaReservaRepository implements ReservaRepository {
       } else {
         dbRes = await this.prisma.reserva.create({
           data: {
-            id: undefined,
             fechaReservada: res.fechaReservada,
             precio: res.precio,
             senia: res.senia,
-            nombre: res.nombre ?? "-",
+            jugadorNoRegistrado: res.jugadorNoRegistrado,
             disponibilidad: { connect: { id: res.idDisponibilidad } },
           },
-          include: {
-            disponibilidad: {
-              include: {
-                disciplina: true,
-                dias: true,
-                cancha: {
-                  include: {
-                    establecimiento: true,
-                  },
-                },
-              },
-            },
-            pagoReserva: true,
-            pagoSenia: true,
-          },
+          include: this.include,
         });
       }
 
@@ -275,38 +238,28 @@ export class PrismaReservaRepository implements ReservaRepository {
 }
 
 type ReservaDB = reserva & {
-  jugador?: jugador | null;
-  nombre: string | null;
+  jugador:
+    | (jugador & {
+        localidad: localidad | null;
+        disciplina: disciplina | null;
+      })
+    | null;
   disponibilidad: disponibilidadDB;
   pagoReserva: pago | null;
-  pagoSenia?: pago | null;
+  pagoSenia: pago | null;
 };
 
 function toRes(res: ReservaDB): Reserva {
-  if (res.jugador) {
-    const { clave, ...jugador } = res.jugador;
-    return {
-      ...res,
-      jugador: { ...jugador, telefono: jugador.telefono ?? undefined },
-      nombre: res.nombre ?? "",
-      senia: res.senia?.toNumber() ?? undefined,
-      precio: res.precio.toNumber(),
-      pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
-      pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
-      disponibilidad: toDisp(res.disponibilidad),
-    };
-  } else {
-    return {
-      ...res,
-      jugador: undefined,
-      nombre: res.nombre ?? "",
-      senia: res.senia?.toNumber() ?? undefined,
-      precio: res.precio.toNumber(),
-      pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
-      pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
-      disponibilidad: toDisp(res.disponibilidad),
-    };
-  }
+  return {
+    ...res,
+    jugador: res.jugador ? toJugador(res.jugador) : undefined,
+    jugadorNoRegistrado: res.jugadorNoRegistrado ?? undefined,
+    senia: res.senia?.toNumber() ?? undefined,
+    precio: res.precio.toNumber(),
+    pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
+    pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
+    disponibilidad: toDisp(res.disponibilidad),
+  };
 }
 
 async function awaitQuery(

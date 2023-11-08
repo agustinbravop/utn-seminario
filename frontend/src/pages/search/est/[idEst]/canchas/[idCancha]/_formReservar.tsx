@@ -123,14 +123,14 @@ export default function FormReservarDisponibilidad({
                   </Box>
                 </HStack>
               </VStack>
-              {isAdmin ? (
+              {isAdmin && (
                 <InputControl
-                  name="nombre"
+                  name="jugadorNoRegistrado"
                   label="Nombre del jugador"
                   size="sm"
                   mt="10px"
                 />
-              ) : null}
+              )}
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="gray" mr={3} onClick={onClose}>

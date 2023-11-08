@@ -200,7 +200,7 @@ export default function EstablecimientoReservasPage() {
         </Tooltip>
       </HStack>
       <TableContainer pt="15px" pb="20px" mr="12%" ml="12%" mb="30px" mt="0px">
-        <Table variant="striped" size="sm">
+        <Table size="sm">
           <Thead>
             <Tr>
               <Th
@@ -303,10 +303,14 @@ export default function EstablecimientoReservasPage() {
             </Tr>
           </Thead>
           <Tbody>
-            {reservasFiltradas.map((r) => {
-              const filaBackgroundColor = r.estado ? "inherit" : "lightcoral";
+            {reservasFiltradas.map((r, idx) => {
+              const bgColor = r.cancelada
+                ? "lightcoral"
+                : idx % 2 === 0
+                ? "gray.100"
+                : "white";
               return (
-                <Tr key={r.id} style={{ backgroundColor: filaBackgroundColor }}>
+                <Tr key={r.id} bgColor={bgColor}>
                   <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>
                   <Td textAlign="center">{r.disponibilidad.disciplina}</Td>
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
@@ -314,7 +318,7 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">
                     {r.jugador
                       ? r.jugador.nombre + " " + r.jugador.apellido
-                      : r.nombre}
+                      : r.jugadorNoRegistrado}
                   </Td>
                   <Td textAlign="center">
                     <ReservaEstado res={r} />
