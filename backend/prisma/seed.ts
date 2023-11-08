@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Dia } from "../src/models/disponibilidad";
+import { MetodoDePago } from "../src/models/pago";
 
 const prisma = new PrismaClient();
 
@@ -35,13 +36,21 @@ async function upsertDisciplina(disciplina: string) {
   });
 }
 
+async function upsertMetodoDePago(metodoDePago: string) {
+  return await prisma.metodoDePago.upsert({
+    where: { metodoDePago },
+    update: { metodoDePago },
+    create: { metodoDePago },
+  });
+}
+
 async function main() {
   // Se cargan las suscripciones.
   const startup = await upsertSuscripcion("Startup", 1, 3999.0);
   const premium = await upsertSuscripcion("Premium", 3, 5999.0);
   const enterprise = await upsertSuscripcion("Enterprise", 10, 8999.0);
 
-  console.info({ startup, premium, enterprise });
+  console.info([startup, premium, enterprise]);
 
   // Se cargan los días de la semana.
   const lun = await upsertDia(Dia.Lunes);
@@ -52,8 +61,9 @@ async function main() {
   const sab = await upsertDia(Dia.Sabado);
   const dom = await upsertDia(Dia.Domingo);
 
-  console.info({ lun, mar, mie, jue, vie, sab, dom });
+  console.info([lun, mar, mie, jue, vie, sab, dom]);
 
+  // Se cargan las disciplinas por defecto.
   const futbol = await upsertDisciplina("Fútbol");
   const basquet = await upsertDisciplina("Básquet");
   const tenis = await upsertDisciplina("Tenis");
@@ -61,7 +71,12 @@ async function main() {
   const hockey = await upsertDisciplina("Hockey");
   const pingPong = await upsertDisciplina("Ping Pong");
 
-  console.info({ futbol, basquet, tenis, padel, hockey, pingPong });
+  console.info([futbol, basquet, tenis, padel, hockey, pingPong]);
+
+  // Se cargan todos los métodos de pago soportados.
+  const efectivo = await upsertMetodoDePago(MetodoDePago.Efectivo);
+
+  console.info([efectivo]);
 }
 
 main()

@@ -149,15 +149,20 @@ export default function RegisterPage() {
             </Text>
           </Box>
           <HStack>
-            <SelectProvinciaControl name="provincia" label="Provincia" />
+            <SelectProvinciaControl
+              name="provincia"
+              label="Provincia"
+              placeholder="Todas"
+            />
             <SelectLocalidadControl
               name="localidad"
               label="Localidad"
+              placeholder="Todas"
               provincia={provincia}
             />
           </HStack>
           <SelectControl
-            placeholder="Seleccionar disciplina "
+            placeholder="Todas"
             name="disciplina"
             label="Disciplina"
           >

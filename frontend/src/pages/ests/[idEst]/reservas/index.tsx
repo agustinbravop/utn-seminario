@@ -13,6 +13,9 @@ import {
   FormControl,
   FormLabel,
   Select,
+  Button,
+  Tooltip,
+  Box,
 } from "@chakra-ui/react";
 import {
   TriangleUpIcon,
@@ -26,6 +29,7 @@ import { estaEntreFechas, formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
 import { ReservaEstado } from "@/components/display";
+import { Link } from "react-router-dom";
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
@@ -70,8 +74,8 @@ export default function EstablecimientoReservasPage() {
             a.disponibilidad.horaInicio
           );
     } else if (ordenColumna === "Jugador") {
-      const nombreA = `${a.jugador.nombre} ${a.jugador.apellido}`;
-      const nombreB = `${b.jugador.nombre} ${b.jugador.apellido}`;
+      const nombreA = `${a.jugador?.nombre} ${a.jugador?.apellido}`;
+      const nombreB = `${b.jugador?.nombre} ${b.jugador?.apellido}`;
       return ordenAscendente
         ? nombreA.localeCompare(nombreB)
         : nombreB.localeCompare(nombreA);
@@ -102,7 +106,7 @@ export default function EstablecimientoReservasPage() {
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
-    const nombreJugador = `${r.jugador.nombre} ${r.jugador.apellido}`;
+    const nombreJugador = `${r.jugador?.nombre} ${r.jugador?.apellido}`;
     const estado = r.idPagoReserva
       ? "Pagada"
       : r.idPagoSenia
@@ -133,16 +137,14 @@ export default function EstablecimientoReservasPage() {
   });
 
   return (
-    <>
+    <Box mr="12%" ml="12%" mb="30px" mt="0px">
       <EstablecimientoMenu />
-      <HStack mr="12%" ml="12%" mb="30px" mt="0px">
-        <Text>
-          {reservas.length > 0
-            ? "Estas son las reservas actuales para este establecimiento."
-            : "Actualmente no hay reservas para este establecimiento."}
-        </Text>
-      </HStack>
-      <HStack mr="12%" ml="12%" mb="20px" mt="0px">
+      <Text>
+        {reservas.length > 0
+          ? "Estas son las reservas actuales para este establecimiento."
+          : "Actualmente no hay reservas para este establecimiento."}
+      </Text>
+      <HStack mb="20px" mt="20px">
         <FormControl variant="floating" width="auto">
           <Input
             type="text"
@@ -187,9 +189,17 @@ export default function EstablecimientoReservasPage() {
           </Select>
           <FormLabel>Estado</FormLabel>
         </FormControl>
+        <Tooltip label="Usted reserva un horario en nombre de clientes no registrados en PlayFinder">
+          <Link
+            style={{ marginLeft: "auto" }}
+            to={`../../../search/est/${idEst}/reservar`}
+          >
+            <Button>Reservar</Button>
+          </Link>
+        </Tooltip>
       </HStack>
-      <TableContainer pt="15px" pb="20px" mr="12%" ml="12%" mb="30px" mt="0px">
-        <Table variant="striped" size="sm">
+      <TableContainer mt="1em" mb="1em">
+        <Table size="sm">
           <Thead>
             <Tr>
               <Th
@@ -292,15 +302,22 @@ export default function EstablecimientoReservasPage() {
             </Tr>
           </Thead>
           <Tbody>
-            {reservasFiltradas.map((r) => {
+            {reservasFiltradas.map((r, idx) => {
+              const bgColor = r.cancelada
+                ? "red.200"
+                : idx % 2 === 0
+                ? "gray.100"
+                : "white";
               return (
-                <Tr key={r.id}>
+                <Tr key={r.id} bgColor={bgColor}>
                   <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>
                   <Td textAlign="center">{r.disponibilidad.disciplina}</Td>
                   <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
                   <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
                   <Td textAlign="center">
-                    {r.jugador.nombre} {r.jugador.apellido}
+                    {r.jugador
+                      ? `${r.jugador.nombre} ${r.jugador.apellido}`
+                      : r.jugadorNoRegistrado && `${r.jugadorNoRegistrado}*`}
                   </Td>
                   <Td textAlign="center">
                     <ReservaEstado res={r} />
@@ -319,6 +336,10 @@ export default function EstablecimientoReservasPage() {
           </Tbody>
         </Table>
       </TableContainer>
-    </>
+      <Text>
+        * Estos jugadores fueron cargados por el administrador del
+        establecimiento, y la reserva se hizo en su nombre.
+      </Text>
+    </Box>
   );
 }

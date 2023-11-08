@@ -31,6 +31,7 @@ export default function BuscarEstablecimientosPage() {
   }, [values, updateFiltros]);
   const { data: ests, isFetchedAfterMount } = useBuscarEstablecimientos({
     ...values,
+    disciplina: values.disciplina || undefined,
   });
   const { data: localidades } = useLocalidadesByProvincia(values.provincia);
   useEffect(() => {
@@ -59,12 +60,14 @@ export default function BuscarEstablecimientosPage() {
           <HStack spacing="0.3rem">
             <SelectProvinciaControl
               name="provincia"
+              placeholder="Todas"
               borderRadius="10px"
               bg="white"
               mr="0px"
             />
             <SelectLocalidadControl
               name="localidad"
+              placeholder="Todas"
               borderRadius="10px"
               bg="white"
               ml="0px"

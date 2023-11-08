@@ -10,6 +10,7 @@ import { API_URL, patch, post } from ".";
 export type CrearReserva = {
   idDisponibilidad: number;
   fechaReservada: string;
+  nombre?: string;
 };
 
 export function useReservasByEstablecimientoID(
@@ -64,6 +65,28 @@ export function useSeniarReserva(
     invalidateOnSuccess: (r) => ["reservas", r.id],
     mutationFn: (reserva) =>
       patch<Reserva>(`${API_URL}/reservas/${reserva.id}`, reserva),
+  });
+}
+
+export function useCancelarReserva(
+  options?: UseApiMutationOptions<{ idReserva: number }, Reserva>
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (r) => ["reservas", "byJugador", r.jugador?.id],
+    mutationFn: ({ idReserva }) =>
+      patch<Reserva>(`${API_URL}/reservas/${idReserva}/cancelar`, {}),
+  });
+}
+
+export function useCancelarReservaAdmin(
+  options?: UseApiMutationOptions<{ idReserva: number }, Reserva>
+) {
+  return useApiMutation({
+    ...options,
+    invalidateOnSuccess: (r) => ["reservas", r.id],
+    mutationFn: ({ idReserva }) =>
+      patch<Reserva>(`${API_URL}/reservas/${idReserva}/cancelar`, {}),
   });
 }
 

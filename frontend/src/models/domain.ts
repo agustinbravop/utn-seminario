@@ -96,19 +96,31 @@ export type Reserva = {
   fechaCreada: string;
   precio: number;
   senia?: number;
+  cancelada: boolean;
   idPagoReserva?: number;
   pagoReserva?: Pago;
   idPagoSenia?: number;
   pagoSenia?: Pago;
-  jugador: Jugador;
+  jugador?: Jugador;
+  jugadorNoRegistrado?: string;
   disponibilidad: Disponibilidad & {
     cancha: Cancha & { establecimiento: Establecimiento };
   };
 };
 
+/**
+ * Representa el estado de una `Reserva` respecto de sus pagos y si está cancelada o no.
+ */
+export enum EstadoReserva {
+  Seniada = "Señada",
+  NoPagada = "No pagada",
+  Pagada = "Pagada",
+  Cancelada = "Cancelada",
+}
+
 export type Pago = {
   id: number;
   monto: number;
   fechaPago: string;
-  idMetodoDePago: string;
+  metodoDePago: string;
 };

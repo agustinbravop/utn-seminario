@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardBody,
+  Divider,
   HStack,
   Heading,
   StackDivider,
@@ -12,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "@/router";
 import {
+  useCancelarReservaAdmin,
   usePagarReserva,
   useReservaByID,
   useSeniarReserva,
@@ -49,14 +51,31 @@ export default function ReservaInfoPage() {
   const { mutate: mutatePago } = usePagarReserva({
     onSuccess: () => {
       toast({
-        title: "Reserva pagada",
-        description: "Se registró el pago de la reserva.",
+        title: "Reserva señada",
+        description: "Se registró la seña de la reserva.",
         status: "success",
       });
     },
     onError: () => {
       toast({
-        title: "Error al realizar el pago",
+        title: "Error al señar la reserva",
+        description: "Intente de nuevo.",
+        status: "error",
+      });
+    },
+  });
+
+  const { mutate: mutateCancelar } = useCancelarReservaAdmin({
+    onSuccess: () => {
+      toast({
+        title: "Reserva cancelada",
+        description: "Reserva cancelada exitosamente.",
+        status: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error al cancelar la reserva",
         description: "Intente de nuevo.",
         status: "error",
       });
@@ -67,17 +86,17 @@ export default function ReservaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  let precioAPagar = reserva.precio;
-  if (reserva.senia && reserva.pagoSenia) {
-    precioAPagar = reserva.precio - reserva.senia;
-  }
-
   return (
     <Card m="auto" height="60%" maxW="450px" mt="5%">
       <CardBody m="15px">
         <Heading as="h3" size="lg" textAlign="center">
           Datos de la reserva
         </Heading>
+        {reserva.cancelada && (
+          <Heading size="md" mt="35px" mb="15px" color="red">
+            Esta reserva fue cancelada
+          </Heading>
+        )}
         <VStack divider={<StackDivider />} mt="20px">
           <HStack width="100%">
             <Box flex="1">
@@ -165,19 +184,59 @@ export default function ReservaInfoPage() {
           <Box flex="1">
             <Heading size="xs">Nombre y Apellido</Heading>
             <Text fontSize="sm">
-              {reserva.jugador.nombre} {reserva.jugador.apellido}
+              {reserva.jugador
+                ? reserva.jugador.nombre + " " + reserva.jugador.apellido
+                : reserva.jugadorNoRegistrado}
             </Text>
           </Box>
           <Box flex="1">
             <Heading size="xs">Teléfono</Heading>
-            <Text fontSize="sm">{reserva.jugador.telefono}</Text>
+            <Text fontSize="sm">{reserva.jugador?.telefono ?? "-"}</Text>
           </Box>
         </HStack>
+        {reserva.jugadorNoRegistrado && (
+          <HStack mt="15px">
+            <Box flex="1.5">
+              <Text fontSize="sm">
+                Esta reserva la hizo para un cliente no registrado en
+                PlayFinder.
+              </Text>
+            </Box>
+            <Box flex="1">
+              {reserva.jugadorNoRegistrado && !reserva.cancelada && (
+                <ConfirmSubmitButton
+                  header="Cancelar reserva"
+                  body={
+                    <>
+                      <Text>
+                        ¿Desea cancelar la reserva? Es importante que{" "}
+                        {reserva.jugadorNoRegistrado} se lo haya solicitado o
+                        usted le avise, porque ese cliente no está registrado en
+                        PlayFinder.
+                      </Text>
+                      <Divider my="0.5em" />
+                      <Text color="gray">
+                        Cancelar esta reserva libera el horario reservado para
+                        que otro usuario lo pueda reservar nuevamente.
+                      </Text>
+                    </>
+                  }
+                  onSubmit={() => mutateCancelar({ idReserva: reserva.id })}
+                  colorScheme="red"
+                  variant="outline"
+                >
+                  Cancelar reserva
+                </ConfirmSubmitButton>
+              )}
+            </Box>
+          </HStack>
+        )}
 
         <HStack justifyContent="center" spacing="20px" pt="30px">
           <Button onClick={() => navigate(-1)}>Volver</Button>
           {!reserva.idPagoSenia &&
             !reserva.idPagoReserva &&
+            !reserva.cancelada &&
             reserva.disponibilidad.precioSenia && (
               <ConfirmSubmitButton
                 header="Seña"
@@ -188,10 +247,10 @@ export default function ReservaInfoPage() {
               </ConfirmSubmitButton>
             )}
 
-          {!reserva.idPagoReserva && (
+          {!reserva.idPagoReserva && !reserva.cancelada && (
             <ConfirmSubmitButton
               header="Pago"
-              body={`¿Desea registrar el pago de $${precioAPagar}?`}
+              body={`¿Desea registrar el pago de $${pagoRestante(reserva)}?`}
               onSubmit={() => mutatePago(reserva)}
             >
               Pagar

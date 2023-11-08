@@ -35,6 +35,7 @@ export interface AuthRepository {
   crearJugador(jugador: Jugador, clave?: string): Promise<Jugador>;
   getUsuarioYClave(correoOUsuario: string): Promise<UsuarioConClave>;
   getUsuario(correoOUsuario: string): Promise<Usuario>;
+  getUsuarioByID(id: number): Promise<Usuario>;
   cambiarClave(correoOUsuario: string, clave: string): Promise<UsuarioConClave>;
   getRoles(correoOUsuario: string): Promise<Rol[]>;
 }
@@ -48,13 +49,13 @@ export class PrismaAuthRepository implements AuthRepository {
 
   async getAdministradorYClave(correoOUsuario: string) {
     try {
-      const a = await this.prisma.administrador.findFirstOrThrow({
+      const admin = await this.prisma.administrador.findFirstOrThrow({
         where: {
           OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
         include: { suscripcion: true, tarjeta: true },
       });
-      return { admin: toAdmin(a), clave: a.clave };
+      return { admin: toAdmin(admin), clave: admin.clave };
     } catch (e) {
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
@@ -62,13 +63,25 @@ export class PrismaAuthRepository implements AuthRepository {
 
   async getAdministrador(correoOUsuario: string) {
     try {
-      const a = await this.prisma.administrador.findFirstOrThrow({
+      const admin = await this.prisma.administrador.findFirstOrThrow({
         where: {
           OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
         include: { suscripcion: true, tarjeta: true },
       });
-      return toAdmin(a);
+      return toAdmin(admin);
+    } catch (e) {
+      throw new NotFoundError("No existe cuenta con ese correo o usuario");
+    }
+  }
+
+  async getAdministradorByID(id: number) {
+    try {
+      const admin = await this.prisma.administrador.findFirstOrThrow({
+        where: { id },
+        include: { suscripcion: true, tarjeta: true },
+      });
+      return toAdmin(admin);
     } catch (e) {
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
@@ -76,13 +89,13 @@ export class PrismaAuthRepository implements AuthRepository {
 
   async getJugadorYClave(correoOUsuario: string) {
     try {
-      const j = await this.prisma.jugador.findFirstOrThrow({
+      const jugador = await this.prisma.jugador.findFirstOrThrow({
         where: {
           OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
         include: { disciplina: true, localidad: true },
       });
-      return { jugador: toJugador(j), clave: j.clave as string };
+      return { jugador: toJugador(jugador), clave: jugador.clave as string };
     } catch (e) {
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
@@ -90,17 +103,30 @@ export class PrismaAuthRepository implements AuthRepository {
 
   async getJugador(correoOUsuario: string) {
     try {
-      const j = await this.prisma.jugador.findFirstOrThrow({
+      const jugador = await this.prisma.jugador.findFirstOrThrow({
         where: {
           OR: [{ correo: correoOUsuario }, { usuario: correoOUsuario }],
         },
         include: { disciplina: true, localidad: true },
       });
-      return toJugador(j);
+      return toJugador(jugador);
     } catch (e) {
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
   }
+
+  async getJugadorByID(id: number) {
+    try {
+      const jugador = await this.prisma.jugador.findFirstOrThrow({
+        where: { id },
+        include: { disciplina: true, localidad: true },
+      });
+      return toJugador(jugador);
+    } catch (e) {
+      throw new NotFoundError("No existe cuenta con ese correo o usuario");
+    }
+  }
+
   /**
    * Primero busca un jugador. Si no lo encuentra, busca un administrador.
    * Si tampoco encuentra un administrador, tira un error 404.
@@ -124,6 +150,19 @@ export class PrismaAuthRepository implements AuthRepository {
       return { admin: await this.getAdministrador(correoOUsuario) };
     } catch {
       return { jugador: await this.getJugador(correoOUsuario) };
+    }
+  }
+
+  /**
+   * Primero busca un jugador. Si no lo encuentra, busca un administrador.
+   * Si tampoco encuentra un administrador, tira un error 404.
+   * @param id del usuario a buscar
+   */
+  async getUsuarioByID(id: number): Promise<Usuario> {
+    try {
+      return { admin: await this.getAdministradorByID(id) };
+    } catch {
+      return { jugador: await this.getJugadorByID(id) };
     }
   }
 
