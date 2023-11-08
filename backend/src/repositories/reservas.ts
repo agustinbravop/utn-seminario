@@ -102,7 +102,7 @@ export class PrismaReservaRepository implements ReservaRepository {
   async getReservasByJugadorID(idJugador: number) {
     try {
       const reservas = await this.prisma.reserva.findMany({
-        where: { idJugador: idJugador, cancelada: false },
+        where: { idJugador },
         orderBy: [{ fechaReservada: "asc" }],
         include: this.include,
       });

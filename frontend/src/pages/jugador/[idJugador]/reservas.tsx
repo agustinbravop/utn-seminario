@@ -52,10 +52,14 @@ export default function JugadorReservasPage() {
       (r) => r.disponibilidad.disciplina === disciplina
     );
   }
+  console.log(reservasFiltradas);
   const reservasActivas = reservasFiltradas
     .filter((reserva) => isReservaActiva(reserva))
+    .filter((reserva) => !reserva.cancelada)
     .reverse();
-  const historial = reservasFiltradas.filter((res) => !isReservaActiva(res));
+  const historial = reservasFiltradas.filter(
+    (res) => !isReservaActiva(res) || res.cancelada
+  );
 
   return (
     <>

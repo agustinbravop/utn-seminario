@@ -140,7 +140,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             </Tag>
           </Stack>
         </CardBody>
-        {diferenciaTiempo >= umbral && (
+        {diferenciaTiempo >= umbral && !reserva.cancelada && (
           <ConfirmSubmitButton
             colorScheme="red"
             onSubmit={() => mutate({ idReserva: reserva.id })}

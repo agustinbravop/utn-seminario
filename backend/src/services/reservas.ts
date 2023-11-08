@@ -65,6 +65,9 @@ export class ReservaServiceImpl implements ReservaService {
     if (res.pagoSenia) {
       throw new Error("Reserva con seña existente");
     }
+    if (res.cancelada) {
+      throw new ConflictError("No se puede señar una reserva cancelada");
+    }
     try {
       const pago = await this.pagoRepo.crear(
         new Decimal(res.disponibilidad.precioSenia),
@@ -80,6 +83,9 @@ export class ReservaServiceImpl implements ReservaService {
   async pagarReserva(res: Reserva): Promise<Reserva> {
     if (res.pagoReserva) {
       throw new ConflictError("Reserva con pago existente");
+    }
+    if (res.cancelada) {
+      throw new ConflictError("No se puede pagar una reserva cancelada");
     }
     try {
       let monto = new Decimal(0);
