@@ -125,7 +125,6 @@ export class PrismaReservaRepository implements ReservaRepository {
         orderBy: [{ fechaReservada: "asc" }],
         include: this.include,
       });
-      console.log(reservas[0]);
       return reservas.map((r) => toRes(r));
     } catch {
       throw new InternalServerError(
@@ -166,7 +165,6 @@ export class PrismaReservaRepository implements ReservaRepository {
         },
         include: this.include,
       });
-      console.log(reservas[0]);
       return reservas.map((p) => toRes(p));
     } catch (e) {
       console.error(e);
@@ -175,8 +173,6 @@ export class PrismaReservaRepository implements ReservaRepository {
   }
 
   async crearReserva(res: CrearReservaParam) {
-    console.log("Repository: ");
-    console.log(res);
     /*
     try {
       const data = {
@@ -256,7 +252,6 @@ export class PrismaReservaRepository implements ReservaRepository {
 
       return toRes(dbRes);
     } catch (e) {
-      console.log(e);
       throw new InternalServerError("No se pudo crear la reserva");
     }
   }

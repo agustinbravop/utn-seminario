@@ -112,5 +112,5 @@ export type Pago = {
   id: number;
   monto: number;
   fechaPago: string;
-  idMetodoDePago: string;
+  metodoDePago: string;
 };

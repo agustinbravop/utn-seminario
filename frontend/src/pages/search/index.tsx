@@ -28,7 +28,6 @@ export default function BuscarEstablecimientosPage() {
   const values = useWatch({ control: methods.control });
   useEffect(() => {
     updateFiltros(values);
-    console.log(values);
   }, [values, updateFiltros]);
   const { data: ests, isFetchedAfterMount } = useBuscarEstablecimientos({
     ...values,

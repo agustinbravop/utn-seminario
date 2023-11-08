@@ -1,5 +1,5 @@
 import { PrismaClient, pago } from "@prisma/client";
-import { Pago } from "../models/pago";
+import { MetodoDePago, Pago } from "../models/pago";
 import Decimal from "decimal.js";
 import { InternalServerError, NotFoundError } from "../utils/apierrors";
 import { BuscarPagosQuery } from "../services/pagos";
@@ -7,7 +7,7 @@ import { BuscarPagosQuery } from "../services/pagos";
 export interface PagoRepository {
   getByID(idPago: number): Promise<Pago>;
   buscar(filtros: BuscarPagosQuery): Promise<Pago[]>;
-  crear(monto: Decimal, metodoPago: string): Promise<Pago>;
+  crear(monto: Decimal, metodoPago: MetodoDePago): Promise<Pago>;
   getAll(): Promise<Pago[]>;
 }
 
@@ -86,7 +86,11 @@ export class PrismaPagoRepository implements PagoRepository {
 type PagoDB = pago;
 
 export function toPago(pago: PagoDB): Pago {
-  return { ...pago, monto: pago.monto.toNumber() };
+  return {
+    ...pago,
+    monto: pago.monto.toNumber(),
+    metodoDePago: pago.idMetodoDePago as MetodoDePago,
+  };
 }
 
 async function awaitQuery(

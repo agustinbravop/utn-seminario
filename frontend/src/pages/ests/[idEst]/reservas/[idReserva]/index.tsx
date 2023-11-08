@@ -86,8 +86,6 @@ export default function ReservaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  console.log(reserva);
-
   return (
     <Card m="auto" height="60%" maxW="450px" mt="5%">
       <CardBody m="15px">
