@@ -107,7 +107,7 @@ export default function TablaDisponibilidadesReservables({
       </Thead>
       <Tbody>
         {table.getRowModel().rows.map((row) => (
-          <Tr key={row.id}>
+          <Tr key={row.original.id}>
             {row.getVisibleCells().map((cell) => (
               <Td key={cell.id}>
                 {cell.id !== "reserva" &&
