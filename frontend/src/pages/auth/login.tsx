@@ -17,7 +17,7 @@ import {
   PasswordControl,
   SubmitButton,
 } from "@/components/forms";
-import { GOOGLE_LOGIN_URL, useLogin } from "@/utils/api";
+import { googleLoginUrl, useLogin } from "@/utils/api";
 import { useYupForm } from "@/hooks/useYupForm";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -103,7 +103,7 @@ export default function LoginPage() {
         </Box>
 
         <VStack my="1.5em">
-          <Link to={GOOGLE_LOGIN_URL}>
+          <Link to={googleLoginUrl}>
             <Button>
               {<Icon as={FcGoogle} boxSize={6} mr="0.3em" />}Iniciar sesión con
               Google
