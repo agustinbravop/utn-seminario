@@ -1,10 +1,10 @@
-import { Cancha } from "../models/cancha";
-import { Establecimiento } from "../models/establecimiento";
-import { Reserva } from "../models/reserva";
-import { setMidnight } from "../utils/dates";
-import { CanchaService } from "./canchas";
-import { EstablecimientoService } from "./establecimientos";
-import { ReservaService } from "./reservas";
+import { Cancha } from "../models/cancha.js";
+import { Establecimiento } from "../models/establecimiento.js";
+import { Reserva } from "../models/reserva.js";
+import { setMidnight } from "../utils/dates.js";
+import { CanchaService } from "./canchas.js";
+import { EstablecimientoService } from "./establecimientos.js";
+import { ReservaService } from "./reservas.js";
 
 export type PagosPorCanchaQuery = {
   idEst: number;

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import { UsuarioConClave } from "../repositories/auth";
-import { BadRequestError } from "./apierrors";
+import { UsuarioConClave } from "../repositories/auth.js";
+import { BadRequestError } from "./apierrors.js";
 
 export async function enviarCorreo(admin: UsuarioConClave) {
   const transporter = nodemailer.createTransport({
