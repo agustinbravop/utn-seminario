@@ -3,17 +3,17 @@ import {
   Button,
   Card,
   CardBody,
-  Grid,
-  GridItem,
+  Divider,
   HStack,
   Heading,
-  Stack,
   StackDivider,
   Text,
+  VStack,
   useToast,
 } from "@chakra-ui/react";
 import { useParams } from "@/router";
 import {
+  useCancelarReservaAdmin,
   usePagarReserva,
   useReservaByID,
   useSeniarReserva,
@@ -51,14 +51,31 @@ export default function ReservaInfoPage() {
   const { mutate: mutatePago } = usePagarReserva({
     onSuccess: () => {
       toast({
-        title: "Reserva pagada",
-        description: "Se registró el pago de la reserva.",
+        title: "Reserva señada",
+        description: "Se registró la seña de la reserva.",
         status: "success",
       });
     },
     onError: () => {
       toast({
-        title: "Error al realizar el pago",
+        title: "Error al señar la reserva",
+        description: "Intente de nuevo.",
+        status: "error",
+      });
+    },
+  });
+
+  const { mutate: mutateCancelar } = useCancelarReservaAdmin({
+    onSuccess: () => {
+      toast({
+        title: "Reserva cancelada",
+        description: "Reserva cancelada exitosamente.",
+        status: "success",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error al cancelar la reserva",
         description: "Intente de nuevo.",
         status: "error",
       });
@@ -69,108 +86,178 @@ export default function ReservaInfoPage() {
     return <LoadingSpinner />;
   }
 
-  let precioAPagar = reserva.precio;
-  if (reserva.senia && reserva.pagoSenia) {
-    precioAPagar = reserva.precio - reserva.senia;
-  }
-
   return (
-    <>
-      <Card m="auto" height="60%" maxW="400px" mt="5%">
-        <CardBody m="15px">
-          <Heading as="h3" size="lg" textAlign="center">
-            Datos de la reserva
+    <Card m="auto" height="60%" maxW="450px" mt="5%">
+      <CardBody m="15px">
+        <Heading as="h3" size="lg" textAlign="center">
+          Datos de la reserva
+        </Heading>
+        {reserva.cancelada && (
+          <Heading size="md" mt="35px" mb="15px" color="red">
+            Esta reserva fue cancelada
           </Heading>
-          <Stack divider={<StackDivider />} spacing="4.5" pt="20px">
-            <Grid gridTemplateColumns="1.8fr 1fr" rowGap="1.0em" pl="3">
-              <GridItem>
-                <Heading size="xs">Fecha de juego</Heading>
-                <Text fontSize="sm">
-                  {formatISOFecha(reserva.fechaReservada)}
-                </Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Horario</Heading>
-                <Text fontSize="sm">
-                  {reserva.disponibilidad.horaInicio}
-                  {" - "}
-                  {reserva.disponibilidad.horaFin} hs
-                </Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Fecha de creación</Heading>
-                <Text fontSize="sm">{formatISO(reserva.fechaCreada)}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Disciplina</Heading>
-                <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Estado</Heading>
-                <Text fontSize="sm">
-                  <ReservaEstado res={reserva} />
-                </Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Pago restante</Heading>
-                <Text fontSize="sm">${pagoRestante(reserva)}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Precio total</Heading>
-                <Text fontSize="sm">${reserva.precio}</Text>
-              </GridItem>
-              <GridItem>
-                <Heading size="xs">Seña</Heading>
-                <Text fontSize="sm">
-                  {reserva.senia ? `$${reserva.senia}` : "-"}
-                </Text>
-              </GridItem>
-            </Grid>
-          </Stack>
-
-          <Heading size="md" mt="1.5rem">
-            Información del jugador
-          </Heading>
-
-          <Stack divider={<StackDivider />} spacing="2.5" pt="13px">
-            <Box ml="3">
-              <Heading size="xs">Nombre y Apellido</Heading>
+        )}
+        <VStack divider={<StackDivider />} mt="20px">
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Fecha reservada para jugar</Heading>
               <Text fontSize="sm">
-                {reserva.jugador.nombre} {reserva.jugador.apellido}
+                {formatISOFecha(reserva.fechaReservada)}
               </Text>
             </Box>
-            <Box ml="3">
-              <Heading size="xs"> Teléfono </Heading>
-              <Text fontSize="sm"> {reserva.jugador.telefono} </Text>
+            <Box flex="1">
+              <Heading size="xs">Horario</Heading>
+              <Text fontSize="sm">
+                {reserva.disponibilidad.horaInicio}
+                {" - "}
+                {reserva.disponibilidad.horaFin} hs
+              </Text>
             </Box>
-          </Stack>
+          </HStack>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Fecha de creación</Heading>
+              <Text fontSize="sm">{formatISO(reserva.fechaCreada)}</Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Disciplina</Heading>
+              <Text fontSize="sm">{reserva.disponibilidad.disciplina}</Text>
+            </Box>
+          </HStack>
+        </VStack>
 
-          <HStack justifyContent="center" spacing="20px" pt="30px">
-            <Button onClick={() => navigate(-1)}>Volver</Button>
-            {!reserva.idPagoSenia &&
-              !reserva.idPagoReserva &&
-              reserva.disponibilidad.precioSenia && (
+        <Heading size="md" mt="35px" mb="15px">
+          Estado del pago
+        </Heading>
+        <VStack divider={<StackDivider />}>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Estado</Heading>
+              <Text fontSize="sm">
+                <ReservaEstado res={reserva} />
+              </Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Pago restante</Heading>
+              <Text fontSize="sm">${pagoRestante(reserva)}</Text>
+            </Box>
+          </HStack>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Precio total</Heading>
+              <Text fontSize="sm">${reserva.precio}</Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Seña</Heading>
+              <Text fontSize="sm">
+                {reserva.senia ? `$${reserva.senia}` : "-"}
+              </Text>
+            </Box>
+          </HStack>
+          <HStack width="100%">
+            <Box flex="1">
+              <Heading size="xs">Fecha del pago</Heading>
+              <Text fontSize="sm">
+                {reserva.pagoReserva
+                  ? formatISO(reserva.pagoReserva.fechaPago)
+                  : "Falta pagar"}
+              </Text>
+            </Box>
+            <Box flex="1">
+              <Heading size="xs">Fecha de la seña</Heading>
+              <Text fontSize="sm">
+                {reserva.pagoSenia
+                  ? formatISO(reserva.pagoSenia.fechaPago)
+                  : reserva.pagoReserva
+                  ? "-"
+                  : "Falta señar"}
+              </Text>
+            </Box>
+          </HStack>
+        </VStack>
+
+        <Heading size="md" mt="35px">
+          Información del jugador
+        </Heading>
+
+        <HStack mt="15px">
+          <Box flex="1">
+            <Heading size="xs">Nombre y Apellido</Heading>
+            <Text fontSize="sm">
+              {reserva.jugador
+                ? reserva.jugador.nombre + " " + reserva.jugador.apellido
+                : reserva.jugadorNoRegistrado}
+            </Text>
+          </Box>
+          <Box flex="1">
+            <Heading size="xs">Teléfono</Heading>
+            <Text fontSize="sm">{reserva.jugador?.telefono ?? "-"}</Text>
+          </Box>
+        </HStack>
+        {reserva.jugadorNoRegistrado && (
+          <HStack mt="15px">
+            <Box flex="1.5">
+              <Text fontSize="sm">
+                Esta reserva la hizo para un cliente no registrado en
+                PlayFinder.
+              </Text>
+            </Box>
+            <Box flex="1">
+              {reserva.jugadorNoRegistrado && !reserva.cancelada && (
                 <ConfirmSubmitButton
-                  header="Seña"
-                  body={`¿Desea registrar la seña de $${reserva.senia}?`}
-                  onSubmit={() => mutate(reserva)}
+                  header="Cancelar reserva"
+                  body={
+                    <>
+                      <Text>
+                        ¿Desea cancelar la reserva? Es importante que{" "}
+                        {reserva.jugadorNoRegistrado} se lo haya solicitado o
+                        usted le avise, porque ese cliente no está registrado en
+                        PlayFinder.
+                      </Text>
+                      <Divider my="0.5em" />
+                      <Text color="gray">
+                        Cancelar esta reserva libera el horario reservado para
+                        que otro usuario lo pueda reservar nuevamente.
+                      </Text>
+                    </>
+                  }
+                  onSubmit={() => mutateCancelar({ idReserva: reserva.id })}
+                  colorScheme="red"
+                  variant="outline"
                 >
-                  Señar
+                  Cancelar reserva
                 </ConfirmSubmitButton>
               )}
+            </Box>
+          </HStack>
+        )}
 
-            {!reserva.idPagoReserva && (
+        <HStack justifyContent="center" spacing="20px" pt="30px">
+          <Button onClick={() => navigate(-1)}>Volver</Button>
+          {!reserva.idPagoSenia &&
+            !reserva.idPagoReserva &&
+            !reserva.cancelada &&
+            reserva.disponibilidad.precioSenia && (
               <ConfirmSubmitButton
-                header="Pago"
-                body={`¿Desea registrar el pago de $${precioAPagar}?`}
-                onSubmit={() => mutatePago(reserva)}
+                header="Seña"
+                body={`¿Desea registrar la seña de $${reserva.senia}?`}
+                onSubmit={() => mutate(reserva)}
               >
-                Pagar
+                Señar
               </ConfirmSubmitButton>
             )}
-          </HStack>
-        </CardBody>
-      </Card>
-    </>
+
+          {!reserva.idPagoReserva && !reserva.cancelada && (
+            <ConfirmSubmitButton
+              header="Pago"
+              body={`¿Desea registrar el pago de $${pagoRestante(reserva)}?`}
+              onSubmit={() => mutatePago(reserva)}
+            >
+              Pagar
+            </ConfirmSubmitButton>
+          )}
+        </HStack>
+      </CardBody>
+    </Card>
   );
 }

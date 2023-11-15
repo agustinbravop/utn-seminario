@@ -90,7 +90,7 @@ export default function TablaDisponibilidadesReservables({
                     header.getContext()
                   )}
 
-                  <chakra.span pl="4">
+                  <chakra.span pl="1">
                     {header.column.getIsSorted() ? (
                       header.column.getIsSorted() === "desc" ? (
                         <TriangleDownIcon aria-label="sorted descending" />

@@ -2,7 +2,6 @@ import { useReservasByJugadorID } from "@/utils/api";
 import {
   HStack,
   Heading,
-  Select,
   Tab,
   TabList,
   TabPanel,
@@ -10,29 +9,37 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import { useCurrentJugador } from "@/hooks";
+import { useCurrentJugador, useYupForm } from "@/hooks";
 import { ReservaCard } from "@/components/display";
-import { useState } from "react";
 import { Reserva } from "@/models";
 import { DISCIPLINAS } from "@/utils/constants";
 import { fechaHoraReservada, isReservaActiva } from "@/utils/reservas";
 import { LoadingSpinner } from "@/components/feedback";
 import { QuestionAlert } from "@/components/media-and-icons";
+import { SelectControl } from "@/components/forms";
+import { FormProvider, useWatch } from "react-hook-form";
 
 function reservaCompare(a: Reserva, b: Reserva) {
   return Number(fechaHoraReservada(a)) - Number(fechaHoraReservada(b));
 }
+
+type Filtros = {
+  orden: "Recientes" | "Antiguas";
+  disciplina: string;
+};
 
 export default function JugadorReservasPage() {
   const { jugador } = useCurrentJugador();
   const { data: reservas, isFetchedAfterMount } = useReservasByJugadorID(
     jugador.id
   );
-  const [orden, setOrden] = useState(true);
-  const [disciplina, setDisciplina] = useState("");
+  const methods = useYupForm<Filtros>({
+    defaultValues: { orden: "Recientes" },
+  });
+  const { orden, disciplina } = useWatch({ control: methods.control });
 
   function ordenarReservas(res: Reserva[]) {
-    if (orden) {
+    if (orden === "Recientes") {
       return res.sort((a, b) => reservaCompare(b, a));
     } else {
       return res.sort((a, b) => reservaCompare(a, b));
@@ -45,8 +52,13 @@ export default function JugadorReservasPage() {
       (r) => r.disponibilidad.disciplina === disciplina
     );
   }
-  const reservasActivas = reservasFiltradas.filter((reserva) =>
-    isReservaActiva(reserva)
+  console.log(reservasFiltradas);
+  const reservasActivas = reservasFiltradas
+    .filter((reserva) => isReservaActiva(reserva))
+    .filter((reserva) => !reserva.cancelada)
+    .reverse();
+  const historial = reservasFiltradas.filter(
+    (res) => !isReservaActiva(res) || res.cancelada
   );
 
   return (
@@ -54,38 +66,36 @@ export default function JugadorReservasPage() {
       <Heading pb="25px" size="lg" textAlign="center">
         Mis Reservas
       </Heading>
-      <HStack
-        mx="10%"
-        mb="17px"
-        justifyContent="flex-start"
-        alignItems="center"
-        display="flex"
-        spacing="10px"
-      >
-        <Text>Ordenar por:</Text>
-        <Select
-          onChange={(e) => setOrden(e.target.value === "Más recientes")}
-          width="fit-content"
+      <FormProvider {...methods}>
+        <HStack
+          mx="10%"
+          mb="17px"
+          justifyContent="flex-start"
+          alignItems="center"
+          display="flex"
+          spacing="10px"
         >
-          <option defaultChecked value="Más recientes">
-            Más recientes
-          </option>
-          <option value="Más antiguas">Más antiguas</option>
-        </Select>
-        <Select
-          width="fit-content"
-          onChange={(e) => setDisciplina(e.target.value)}
-        >
-          <option defaultChecked value="">
-            Disciplina
-          </option>
-          {DISCIPLINAS.map((dis) => (
-            <option key={dis} value={dis}>
-              {dis}
+          <Text>Ordenar por:</Text>
+          <SelectControl name="orden" label="Orden" width="fit-content">
+            <option value="Recientes">Recientes</option>
+            <option value="Antiguas">Antiguas</option>
+          </SelectControl>
+          <SelectControl
+            width="fit-content"
+            label="Disciplina"
+            name="disciplina"
+          >
+            <option defaultChecked value="">
+              Todas
             </option>
-          ))}
-        </Select>
-      </HStack>
+            {DISCIPLINAS.map((dis) => (
+              <option key={dis} value={dis}>
+                {dis}
+              </option>
+            ))}
+          </SelectControl>
+        </HStack>
+      </FormProvider>
       <Tabs mx="5vw">
         <TabList>
           <Tab>Reservas Activas</Tab>
@@ -106,8 +116,8 @@ export default function JugadorReservasPage() {
           <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
             {!isFetchedAfterMount ? (
               <LoadingSpinner />
-            ) : reservasFiltradas.length > 0 ? (
-              reservasFiltradas.map((reserva) => (
+            ) : historial.length > 0 ? (
+              historial.map((reserva) => (
                 <ReservaCard key={reserva.id} reserva={reserva} />
               ))
             ) : (

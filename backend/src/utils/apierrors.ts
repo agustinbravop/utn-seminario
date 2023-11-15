@@ -49,6 +49,12 @@ export class InternalServerError extends ApiError {
   }
 }
 
+export class BadGatewayError extends ApiError {
+  constructor(msg: string) {
+    super(Status.BAD_GATEWAY, msg);
+  }
+}
+
 /**
  * Hypertext Transfer Protocol (HTTP) response status codes.
  * @see {@link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes}

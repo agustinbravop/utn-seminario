@@ -9,7 +9,7 @@ function CarouselButton(props: ButtonProps) {
       position="absolute"
       top="50%"
       fontSize="1.5rem"
-      backgroundColor="transparent"
+      bgColor="transparent"
       borderRadius="15px"
       padding="5px"
       fontWeight="600"

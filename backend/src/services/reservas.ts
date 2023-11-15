@@ -7,10 +7,12 @@ import { PagoRepository } from "../repositories/pagos";
 import { ReservaRepository } from "../repositories/reservas";
 import { ConflictError, InternalServerError } from "../utils/apierrors";
 import { getDiaDeSemana, setHora, toUTC } from "../utils/dates";
+import { MetodoDePago } from "../models/pago";
 
 export type CrearReserva = {
   fechaReservada: Date;
-  idJugador: number;
+  idJugador?: number;
+  jugadorNoRegistrado?: string;
   idDisponibilidad: number;
 };
 
@@ -33,7 +35,7 @@ export interface ReservaService {
   crear(res: CrearReserva): Promise<Reserva>;
   pagarSenia(res: Reserva): Promise<Reserva>;
   pagarReserva(res: Reserva): Promise<Reserva>;
-
+  cancelarReserva(idRes: number): Promise<Reserva>;
 }
 
 export class ReservaServiceImpl implements ReservaService {
@@ -63,10 +65,13 @@ export class ReservaServiceImpl implements ReservaService {
     if (res.pagoSenia) {
       throw new Error("Reserva con seña existente");
     }
+    if (res.cancelada) {
+      throw new ConflictError("No se puede señar una reserva cancelada");
+    }
     try {
       const pago = await this.pagoRepo.crear(
-        new Decimal(res.disponibilidad.precioSenia), //???
-        "Efectivo"
+        new Decimal(res.disponibilidad.precioSenia),
+        MetodoDePago.Efectivo
       );
       res.pagoSenia = pago;
       return await this.repo.updateReserva(res);
@@ -77,10 +82,13 @@ export class ReservaServiceImpl implements ReservaService {
 
   async pagarReserva(res: Reserva): Promise<Reserva> {
     if (res.pagoReserva) {
-      throw new Error("Reserva con pago existente");
+      throw new ConflictError("Reserva con pago existente");
+    }
+    if (res.cancelada) {
+      throw new ConflictError("No se puede pagar una reserva cancelada");
     }
     try {
-      var monto = new Decimal(0);
+      let monto = new Decimal(0);
       if (res.pagoSenia) {
         const precioDecimal = new Decimal(res.precio);
         const pagoSeniaDecimal = new Decimal(
@@ -90,12 +98,18 @@ export class ReservaServiceImpl implements ReservaService {
       } else {
         monto = new Decimal(res.precio);
       }
-      const pago = await this.pagoRepo.crear(monto, "Efectivo");
+      const pago = await this.pagoRepo.crear(monto, MetodoDePago.Efectivo);
       res.pagoReserva = pago;
       return await this.repo.updateReserva(res);
     } catch (e) {
       throw new InternalServerError("Error al registrar el pago de la reserva");
     }
+  }
+
+  async cancelarReserva(idReserva: number): Promise<Reserva> {
+    const res = await this.repo.getReservaByID(idReserva);
+    // TODO: validaciones para no poder cancelar cualquier reserva.
+    return await this.repo.updateReserva({ ...res, cancelada: true });
   }
 
   async getByEstablecimientoID(idEst: number) {
@@ -124,16 +138,16 @@ export class ReservaServiceImpl implements ReservaService {
 
   async crear(crearReserva: CrearReserva) {
     await this.validarCanchaHabilitada(crearReserva);
-    await this.validarDisponibilidadLibre(crearReserva);
 
     const disp = await this.dispRepository.getByID(
       crearReserva.idDisponibilidad
     );
+    await this.validarDisponibilidadLibre(crearReserva, disp);
     await this.validarDiaDeSemana(crearReserva, disp);
     this.validarFechaReservada(crearReserva, disp);
-
     return await this.repo.crearReserva({
       ...crearReserva,
+      jugadorNoRegistrado: crearReserva.jugadorNoRegistrado,
       precio: disp.precioReserva,
       senia: disp.precioSenia,
     });
@@ -152,14 +166,27 @@ export class ReservaServiceImpl implements ReservaService {
   }
 
   /** Lanza un error al intentar reservar una disponibilidad ya reservada en la fecha dada. */
-  private async validarDisponibilidadLibre(res: CrearReserva) {
-    const yaFueReservada = await this.repo.existsReservaByDate(
-      res.idDisponibilidad,
-      res.fechaReservada
+  private async validarDisponibilidadLibre(
+    res: CrearReserva,
+    disp: Disponibilidad
+  ) {
+    // Se obtienen todas las reservas de esta cancha en la fecha a reservar...
+    const reservasMismaFecha = await this.buscar({
+      idCancha: disp.idCancha,
+      fechaReservadaDesde: res.fechaReservada,
+      fechaReservadaHasta: res.fechaReservada,
+    });
+    // ...para validar que ninguna de esas reservas se solape con la nueva.
+    const horarioSolapado = reservasMismaFecha.some(
+      (r) =>
+        r.disponibilidad.horaFin > disp.horaInicio &&
+        r.disponibilidad.horaInicio < disp.horaFin
     );
-    if (yaFueReservada) {
+    if (horarioSolapado) {
       throw new ConflictError(
-        `La disponibilidad ya fue reservada en la fecha ${res.fechaReservada}`
+        `Ese horario ya está reservado en la fecha ${
+          res.fechaReservada.toISOString().split("T")[0]
+        }`
       );
     }
   }

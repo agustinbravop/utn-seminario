@@ -42,7 +42,7 @@ export default function HeaderMenu() {
         shadow="md"
         padding="0 2rem 0 2rem"
         height="3.6rem"
-        backgroundColor="#f8fafd"
+        bgColor="#f8fafd"
       >
         {nav}
       </HStack>
@@ -154,7 +154,7 @@ function UnregisteredNav() {
               Suscripciones
             </MenuItem>
           </Link>
-          <Link to="/login">
+          <Link to="/auth/login">
             <MenuItem>
               <Icon as={AiOutlineUser} mr="20px" /> Iniciar Sesión
             </MenuItem>
@@ -171,7 +171,7 @@ function UnregisteredNav() {
             </Button>
           </Tooltip>
         </Link>
-        <Link to="/login">
+        <Link to="/auth/login">
           <Button variant="outline" size="sm">
             Iniciar Sesión
           </Button>

@@ -10,7 +10,7 @@ import { UnauthorizedError, ForbiddenError } from "../utils/apierrors.js";
 export const registrarAdminSchema = administradorSchema
   .omit({ id: true, tarjeta: true, suscripcion: true })
   .extend({
-    clave: z.string().nonempty(),
+    clave: z.string().min(1),
     idSuscripcion: z.number().positive().int(),
     tarjeta: tarjetaSchema.omit({ id: true }),
   });
@@ -19,23 +19,23 @@ type RegistrarAdmin = z.infer<typeof registrarAdminSchema>;
 
 // Se puede iniciar sesión o con usuario o con correo.
 export const loginSchema = z.object({
-  correoOUsuario: z.string().nonempty(),
-  clave: z.string().nonempty(),
+  correoOUsuario: z.string().min(1),
+  clave: z.string().min(1),
 });
 
 type Login = z.infer<typeof loginSchema>;
 
 export const registrarJugadorSchema = jugadorSchema
   .extend({
-    clave: z.string().nonempty(),
+    clave: z.string().min(1),
   })
   .omit({ id: true });
 
 type RegistrarJugador = z.infer<typeof registrarJugadorSchema>;
 
 export const cambiarClaveSchema = z.object({
-  nueva: z.string().nonempty(),
-  actual: z.string().nonempty(),
+  nueva: z.string().min(1),
+  actual: z.string().min(1),
 });
 
 type CambiarClave = z.infer<typeof cambiarClaveSchema>;
@@ -53,7 +53,7 @@ export class AuthHandler {
     return async (_req, res) => {
       const login: Login = res.locals.body;
 
-      const token = await this.service.loginUsuario(
+      const token = await this.service.loginConClave(
         login.correoOUsuario,
         login.clave
       );
@@ -85,7 +85,7 @@ export class AuthHandler {
         id: 0,
       };
 
-      const adminCreado = await this.service.registrarAdministrador(
+      const adminCreado = await this.service.registrarAdministradorConClave(
         admin,
         body.clave
       );
@@ -100,7 +100,7 @@ export class AuthHandler {
       // Se construye el Jugador del modelo.
       const jugador: Jugador = { ...body, id: 0 };
 
-      const jugadorCreado = await this.service.registrarJugador(
+      const jugadorCreado = await this.service.registrarJugadorConClave(
         jugador,
         body.clave
       );
@@ -138,6 +138,22 @@ export class AuthHandler {
     return jwt;
   }
 
+  public isLogged(): Handler {
+    return async (req, res, next) => {
+      const token = req.header("Authorization");
+      const jwt = await this.verifyAuthorizationHeader(token);
+
+      if (this.service.hasRol(jwt, Rol.Administrador)) {
+        res.locals.idAdmin = Number(jwt?.admin?.id);
+      }
+      if (this.service.hasRol(jwt, Rol.Jugador)) {
+        res.locals.idJugador = Number(jwt?.jugador?.id);
+      }
+
+      next();
+    };
+  }
+
   /**
    * Valida que la request tenga un JWT válido y que sea de un usuario **administrador**.
    * Setea `res.locals.idAdmin` con el idAdmin que vino en el JWT.
@@ -173,6 +189,15 @@ export class AuthHandler {
       // Los handlers subsiguientes tienen acceso al idJugador que vino en el JWT.
       res.locals.idJugador = Number(jwt?.jugador?.id);
       next();
+    };
+  }
+
+  googleRedirect(): RequestHandler {
+    return async (req, res) => {
+      const code = req.query.code as string;
+     
+      const token = await this.service.loginGoogle(code);
+      res.status(200).json({ token });
     };
   }
 }

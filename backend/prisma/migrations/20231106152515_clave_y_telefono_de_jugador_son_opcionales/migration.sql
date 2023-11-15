@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "jugador" ALTER COLUMN "telefono" DROP NOT NULL,
+ALTER COLUMN "clave" DROP NOT NULL;

@@ -59,7 +59,7 @@ export default function RegisterPage() {
         description: "Inicie sesión para continuar.",
         status: "success",
       });
-      navigate("/login");
+      navigate("/auth/login");
     },
     onError: (err) => {
       toast({
@@ -149,15 +149,20 @@ export default function RegisterPage() {
             </Text>
           </Box>
           <HStack>
-            <SelectProvinciaControl name="provincia" label="Provincia" />
+            <SelectProvinciaControl
+              name="provincia"
+              label="Provincia"
+              placeholder="Todas"
+            />
             <SelectLocalidadControl
               name="localidad"
               label="Localidad"
+              placeholder="Todas"
               provincia={provincia}
             />
           </HStack>
           <SelectControl
-            placeholder="Seleccionar disciplina "
+            placeholder="Todas"
             name="disciplina"
             label="Disciplina"
           >
@@ -175,7 +180,7 @@ export default function RegisterPage() {
           )}
           <Text>
             ¿Ya tiene una cuenta?{" "}
-            <Link to="/login" style={{ color: "blue" }}>
+            <Link to="/auth/login" style={{ color: "blue" }}>
               Inicie sesión
             </Link>
           </Text>

@@ -15,6 +15,7 @@ type JugadorDB = jugador & {
 export function toJugador({ clave, ...jugador }: JugadorDB): Jugador {
   return {
     ...jugador,
+    telefono: jugador.telefono ?? undefined,
     disciplina: jugador.idDisciplina ?? undefined,
     localidad: jugador.localidad?.nombre ?? undefined,
     provincia: jugador.localidad?.idProvincia ?? undefined,
@@ -24,6 +25,7 @@ export function toJugador({ clave, ...jugador }: JugadorDB): Jugador {
 export interface JugadorRepository {
   getJugadorByID(id: number): Promise<Jugador>;
   modificarJugador(jugador: Jugador): Promise<Jugador>;
+  tieneClave(id: number): Promise<boolean>;
 }
 
 export class PrismaJugadorRepository implements JugadorRepository {
@@ -91,6 +93,21 @@ export class PrismaJugadorRepository implements JugadorRepository {
       `No existe jugador con id ${id}`,
       "Error al buscar el jugador"
     );
+  }
+
+  async tieneClave(id: number) {
+    let jugador = null;
+    try {
+      jugador = await this.prisma.jugador.findUnique({ where: { id } });
+    } catch (e) {
+      throw new InternalServerError(
+        "Error al buscar al jugador en la base de datos"
+      );
+    }
+    if (!jugador) {
+      throw new NotFoundError(`No existe jugador con id ${id}`);
+    }
+    return jugador.clave !== null;
   }
 }
 

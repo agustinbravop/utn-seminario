@@ -62,8 +62,6 @@ export function CurrentAdminProvider({ children }: CurrentAdminProviderProps) {
     setCurrentAdmin(usuario);
   };
 
-  useEffect(() => {});
-
   useEffect(() => {
     updateCurrentAdmin();
     refreshToken();

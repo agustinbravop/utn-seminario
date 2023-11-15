@@ -54,8 +54,8 @@ export class InformeServiceImpl implements InformeService {
     for (const c of canchas) {
       let reservas = await this.reservaService.buscar({
         idCancha: c.id,
-        fechaCreadaDesde: query.fechaDesde,
-        fechaCreadaHasta: query.fechaHasta
+        fechaReservadaDesde: query.fechaDesde,
+        fechaReservadaHasta: query.fechaHasta
           ? setMidnight(query.fechaHasta)
           : undefined,
       });

@@ -1,4 +1,10 @@
-import { PrismaClient, establecimiento, localidad } from "@prisma/client";
+import {
+  PrismaClient,
+  cancha,
+  disponibilidad,
+  establecimiento,
+  localidad,
+} from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Establecimiento } from "../models/establecimiento.js";
 import { getDiaDeSemana } from "../utils/dates.js";
@@ -23,7 +29,10 @@ export class PrismaEstablecimientoRepository
   implements EstablecimientoRepository
 {
   private prisma: PrismaClient;
-  private include = { localidad: true };
+  private include = {
+    localidad: true,
+    canchas: { include: { disponibilidades: true } },
+  };
 
   constructor(client: PrismaClient) {
     this.prisma = client;
@@ -182,9 +191,7 @@ export class PrismaEstablecimientoRepository
         cancha: {
           include: {
             establecimiento: {
-              include: {
-                localidad: true,
-              },
+              include: this.include,
             },
           },
         },
@@ -249,9 +256,7 @@ export class PrismaEstablecimientoRepository
         habilitado: filtros.habilitado,
         eliminado: false,
       },
-      include: {
-        localidad: true,
-      },
+      include: this.include,
     });
 
     return estsDB.map((ests) => toEst(ests));
@@ -290,6 +295,9 @@ export class PrismaEstablecimientoRepository
 
 type establecimientoDB = establecimiento & {
   localidad: localidad;
+  canchas: (cancha & {
+    disponibilidades: disponibilidad[];
+  })[];
 };
 
 export function toEst(est: establecimientoDB): Establecimiento {
@@ -297,6 +305,14 @@ export function toEst(est: establecimientoDB): Establecimiento {
     ...est,
     localidad: est.localidad.nombre,
     provincia: est.localidad.idProvincia,
+    disciplinas: [
+      ...new Set(
+        est.canchas
+          .map((cancha) => cancha.disponibilidades)
+          .flat()
+          .map((disp) => disp.idDisciplina)
+      ),
+    ],
   };
 }
 

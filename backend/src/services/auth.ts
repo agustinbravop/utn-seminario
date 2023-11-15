@@ -11,6 +11,10 @@ import {
 import { SignJWT, jwtVerify, JWTPayload } from "jose";
 import { KeyLike, createSecretKey } from "crypto";
 import { Jugador } from "../models/jugador.js";
+import {
+  getAccessTokenFromGoogleCode,
+  getGoogleUserInfo,
+} from "../utils/oauth2/google.js";
 
 /**
  * Representa el tipo de un usuario.
@@ -34,12 +38,14 @@ export type Usuario =
 export type JWTUserPayload = JWTPayload & Usuario;
 
 export interface AuthService {
-  registrarAdministrador(
+  registrarAdministradorConClave(
     admin: Administrador,
     clave: string
   ): Promise<Administrador>;
-  registrarJugador(jugador: Jugador, clave: string): Promise<Jugador>;
-  loginUsuario(correoOUsuario: string, clave: string): Promise<string>;
+  registrarJugadorConClave(jugador: Jugador, clave: string): Promise<Jugador>;
+  registrarJugador(jugador: Jugador): Promise<Jugador>;
+  loginConClave(correoOUsuario: string, clave: string): Promise<string>;
+  loginGoogle(code: string): Promise<string>;
   cambiarClave(
     correoOUsuario: string,
     actual: string,
@@ -107,8 +113,8 @@ export class AuthServiceImpl implements AuthService {
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setSubject(id.toString())
-      .setIssuer(process.env.JWT_ISSUER || "canchasapi")
-      .setExpirationTime(process.env.JWT_EXPIRATION_TIME || "1h") // token expiration time, e.g., "1 day"
+      .setIssuer(process.env.JWT_ISSUER || "playfinderapi")
+      .setExpirationTime(process.env.JWT_EXPIRATION_TIME || "24h") // token expiration time, e.g., "1 day"
       .sign(this.secretKey as Uint8Array);
 
     return token;
@@ -137,7 +143,7 @@ export class AuthServiceImpl implements AuthService {
    * @returns el JWT de la sesión si los datos son correctos.
    * @throws un ApiError si alguna validación falla.
    */
-  async loginUsuario(correoOUsuario: string, clave: string) {
+  async loginConClave(correoOUsuario: string, clave: string) {
     const userConClave = await this.compararClave(
       correoOUsuario,
       clave,
@@ -154,11 +160,54 @@ export class AuthServiceImpl implements AuthService {
     const userConClave = await this.repo.getUsuarioYClave(correoOUsuario);
 
     const { clave: hash } = userConClave;
-    const esValido = await bcrypt.compare(clave, hash);
+    const esValido = await bcrypt.compare(clave, hash!);
     if (!esValido) {
       throw error;
     }
     return userConClave;
+  }
+
+  /**
+   * Crea un JWT para un usuario que inicia sesión mediante OAuth2 (Google, etc) sin clave.
+   * @param correoOUsuario el correo o username del usuario.
+   * @returns el JWT de la sesión si los datos son correctos.
+   * @throws un ApiError si alguna validación falla.
+   */
+  private async loginSinClave(correoOUsuario: string) {
+    const usuario = await this.repo.getUsuario(correoOUsuario);
+    return await this.signJWT(usuario);
+  }
+
+  /** Inicia la sesión de un usuario mediante Google como OAuth2 provider. */
+  async loginGoogle(code: string): Promise<string> {
+    // Google envía un `code` que se intercambia por un `access_token`.
+    const accessToken = await getAccessTokenFromGoogleCode(code);
+
+    // Usando ese `code` se obtiene de Google el perfil y correo del usuario.
+    const data = await getGoogleUserInfo(accessToken);
+
+    // Con esos datos se valida la sesión del usuario.
+    try {
+      // Se intenta iniciar sesión.
+      return await this.loginSinClave(data.email);
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        // Si el usuario no estaba registrado, se lo registra.
+        const jugador: Jugador = {
+          id: 0,
+          correo: data.email,
+          usuario: data.email,
+          nombre: data.given_name,
+          apellido: data.family_name ?? data.given_name,
+        };
+        const jugadorCreado = await this.registrarJugador(jugador);
+        // También se le inicia sesión para devolver un token (como si sólo hubiera iniciado sesión).
+        return await this.loginSinClave(jugadorCreado.correo);
+      }
+    }
+    throw new UnauthorizedError(
+      "Error al iniciar la sesión del usuario con Google"
+    );
   }
 
   /**
@@ -174,7 +223,9 @@ export class AuthServiceImpl implements AuthService {
     }
 
     // Se obtienen los datos actuales del usuario al que corresponde el JWT.
-    const correo = jwt.admin ? jwt.admin.correo : jwt.jugador.correo;
+    const id = jwt.admin ? jwt.admin.id : jwt.jugador.id;
+    const user = await this.repo.getUsuarioByID(id);
+    const correo = user.admin ? user.admin.correo : user.jugador.correo;
     const userConClave = await this.repo.getUsuarioYClave(correo);
 
     return await this.signJWT(userConClave);
@@ -210,7 +261,7 @@ export class AuthServiceImpl implements AuthService {
    * @param clave la contraseña en texto plano del nuevo usuario administrador.
    * @returns el Administrador creado.
    */
-  async registrarAdministrador(admin: Administrador, clave: string) {
+  async registrarAdministradorConClave(admin: Administrador, clave: string) {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
 
     await this.validarUnicidad(admin.correo, admin.usuario);
@@ -235,12 +286,23 @@ export class AuthServiceImpl implements AuthService {
    * @param clave la contraseña en texto plano del nuevo usuario jugador.
    * @returns el Jugador creado.
    */
-  async registrarJugador(jugador: Jugador, clave: string) {
+  async registrarJugadorConClave(jugador: Jugador, clave: string) {
     const hash = await bcrypt.hash(clave, this.SALT_ROUNDS);
 
     await this.validarUnicidad(jugador.correo, jugador.usuario);
 
     return await this.repo.crearJugador(jugador, hash);
+  }
+
+  /**
+   * Registra el jugador sin una clave asociada. Esto se usa al autenticar mediante OAuth2.
+   * @param jugador el nuevo Jugador a registrar.
+   * @returns el Jugador creado.
+   */
+  async registrarJugador(jugador: Jugador) {
+    await this.validarUnicidad(jugador.correo, jugador.usuario);
+
+    return await this.repo.crearJugador(jugador);
   }
 
   async cambiarClave(correoOUsuario: string, actual: string, nueva: string) {

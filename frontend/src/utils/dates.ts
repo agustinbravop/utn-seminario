@@ -66,3 +66,25 @@ export function formatISOFecha(iso: string) {
 export function formatISO(iso: string) {
   return toUTCDate(iso).toLocaleString("es-ar");
 }
+
+/** `desde` y `hasta` son fechas ISO sin tiempo.
+ * Devuelve `true` si `date` (otra fecha ISO) está entre ellas.
+ * `date` puede tener un tiempo.
+ * La comparación es inclusiva.
+ * Si no se pasan parámetros, devuelve `true`.
+ */
+export function estaEntreFechas(date: string, desde?: string, hasta?: string) {
+  if (desde && hasta) {
+    const hastaDate = new Date(hasta);
+    hastaDate.setDate(hastaDate.getDate() + 1);
+    return date > desde && date < hastaDate.toISOString();
+  } else if (desde) {
+    return date > desde;
+  } else if (hasta) {
+    const hastaDate = new Date(hasta);
+    hastaDate.setDate(hastaDate.getDate() + 1);
+    return date < hastaDate.toISOString();
+  } else {
+    return true;
+  }
+}

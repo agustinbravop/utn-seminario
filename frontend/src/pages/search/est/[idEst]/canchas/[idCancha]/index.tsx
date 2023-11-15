@@ -3,6 +3,8 @@ import {
   Card,
   CardBody,
   CardHeader,
+  FormControl,
+  FormLabel,
   HStack,
   Heading,
   Image,
@@ -29,6 +31,7 @@ import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import FormReservarDisponibilidad from "./_formReservar";
 import { ordenarDias } from "@/utils/dias";
 import { useBusqueda } from "@/hooks";
+import { formatFecha } from "@/utils/dates";
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/search/est/:idEst/canchas/:idCancha");
@@ -44,8 +47,6 @@ export default function VistaJugadorCancha() {
   if (!cancha || !disponibilidades) {
     return <LoadingSpinner />;
   }
-
-  const disciplinas = cancha?.disciplinas;
 
   return (
     <div>
@@ -82,7 +83,7 @@ export default function VistaJugadorCancha() {
             </Box>
             <Box>
               <Heading size="xs">Disciplinas</Heading>
-              <Text fontSize="sm">{disciplinas.join(" - ")}</Text>
+              <Text fontSize="sm">{cancha.disciplinas.join(" - ")}</Text>
             </Box>
             <Box>
               <Heading size="xs">Habilitación</Heading>
@@ -97,29 +98,35 @@ export default function VistaJugadorCancha() {
                 Estas son las disponibilidades de la cancha:
               </Text>
 
-              <HStack>
-                <Select
-                  placeholder="Disciplina"
-                  width="150px"
-                  my="20px"
-                  fontSize="sm"
-                  name="disciplina"
-                  value={filtros.disciplina}
-                  onChange={(e) => setFiltro("disciplina", e.target.value)}
-                >
-                  {disciplinas.map((d, idx) => (
-                    <option value={d} key={idx}>
-                      {d}
-                    </option>
-                  ))}
-                </Select>
-                <Input
-                  type="date"
-                  name="fecha"
-                  value={filtros.fecha}
-                  onChange={(e) => setFiltro("fecha", e.target.value)}
-                  width="fit-content"
-                />
+              <HStack my="20px">
+                <FormControl width="unset" variant="floating">
+                  <Select
+                    placeholder="Todas"
+                    width="150px"
+                    fontSize="sm"
+                    name="disciplina"
+                    value={filtros.disciplina}
+                    onChange={(e) => setFiltro("disciplina", e.target.value)}
+                  >
+                    {cancha.disciplinas.map((d, idx) => (
+                      <option value={d} key={idx}>
+                        {d}
+                      </option>
+                    ))}
+                  </Select>
+                  <FormLabel>Disciplina</FormLabel>
+                </FormControl>
+                <FormControl width="unset" variant="floating">
+                  <Input
+                    type="date"
+                    name="fecha"
+                    value={filtros.fecha}
+                    onChange={(e) => setFiltro("fecha", e.target.value)}
+                    width="fit-content"
+                    min={formatFecha(new Date())}
+                  />
+                  <FormLabel>Fecha</FormLabel>
+                </FormControl>
               </HStack>
               <TableContainer pt="15px" pb="20px">
                 <Table variant="simple" size="sm">
