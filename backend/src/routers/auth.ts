@@ -24,6 +24,7 @@ export function authRouter(handler: AuthHandler): Router {
     validateBody(registrarJugadorSchema),
     handler.registerJugador()
   );
+  router.patch("/recuperar-clave", handler.enviarCorreo());
   router.patch(
     "/clave",
     validateBody(cambiarClaveSchema),

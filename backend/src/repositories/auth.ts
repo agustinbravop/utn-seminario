@@ -1,6 +1,7 @@
 import {
   PrismaClient,
   administrador,
+  jugador,
   suscripcion,
   tarjeta,
 } from "@prisma/client";
@@ -38,6 +39,7 @@ export interface AuthRepository {
   getUsuarioByID(id: number): Promise<Usuario>;
   cambiarClave(correoOUsuario: string, clave: string): Promise<UsuarioConClave>;
   getRoles(correoOUsuario: string): Promise<Rol[]>;
+  tokenDeCambio(correo:string, token : string) : Promise<jugador>
 }
 
 export class PrismaAuthRepository implements AuthRepository {
@@ -45,6 +47,26 @@ export class PrismaAuthRepository implements AuthRepository {
 
   constructor(client: PrismaClient) {
     this.prisma = client;
+  }
+  async tokenDeCambio(correo:string, token: string): Promise<jugador> {
+    try {
+      const user = await this.getUsuario(correo);
+      
+      const nuevoUser = this.prisma.jugador.update({
+        where: { id: user.jugador?.id },
+        data: {
+          nombre: user.jugador?.nombre,
+          apellido: user.jugador?.apellido,
+          correo: user.jugador?.correo,
+          telefono: user.jugador?.telefono,
+          usuario: user.jugador?.usuario,
+          tokenCambio: token
+        }
+      });
+      return nuevoUser
+    } catch (error) {
+      throw new NotFoundError("No se encontro usuario con el correo: " + correo)
+    }
   }
 
   async getAdministradorYClave(correoOUsuario: string) {

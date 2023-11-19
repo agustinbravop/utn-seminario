@@ -150,3 +150,16 @@ export function useCambiarClave(
       patch<JWT>(`${API_URL}/auth/clave`, claves).then(captureToken),
   });
 }
+type recuperarClave = {
+  correo: string,
+}
+export function useEnviarMail(
+  options?: UseApiMutationOptions<recuperarClave>
+  ) {
+    console.log("(API front)options: " + options)
+    return useApiMutation({
+      ...options,
+      mutationFn: (correo) =>
+        patch<String>(`${API_URL}/auth/recuperar-clave`, correo),
+    });
+}

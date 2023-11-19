@@ -118,6 +118,7 @@ model jugador {
   nombre   String  @db.VarChar
   apellido String  @db.VarChar
   telefono String? @db.VarChar
+  tokenCambio  String? @db.VarChar
 
   idLocalidad  Int?
   localidad    localidad?  @relation(fields: [idLocalidad], references: [id])

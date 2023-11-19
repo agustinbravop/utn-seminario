@@ -15,6 +15,7 @@ import {
   getAccessTokenFromGoogleCode,
   getGoogleUserInfo,
 } from "../utils/oauth2/google.js";
+import { jugador } from "@prisma/client";
 
 /**
  * Representa el tipo de un usuario.
@@ -51,6 +52,7 @@ export interface AuthService {
     actual: string,
     nueva: string
   ): Promise<string>;
+  generarTokenTemporal(correo: string): Promise<jugador>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(jwt: JWTUserPayload): Rol[];
   hasRol(jwt: JWTUserPayload, rol: Rol): boolean;
@@ -315,5 +317,22 @@ export class AuthServiceImpl implements AuthService {
     const hash = await bcrypt.hash(nueva, this.SALT_ROUNDS);
     const userConClave = await this.repo.cambiarClave(correoOUsuario, hash);
     return await this.signJWT(userConClave);
+  }
+
+  async generarTokenTemporal(correo: string): Promise<jugador> {
+    const payload = { correo: correo }; //Dudoso, ¿podría pedir el usuario completo?
+
+    //REVISAR SI ESTA BIEN ASI
+    const token = await new SignJWT(payload)
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setIssuer(process.env.JWT_ISSUER || "playfinderapi")
+      .setExpirationTime("10m") //Valido solo por 10 minutos
+      .sign(this.secretKey as Uint8Array);
+
+    
+    const userConToken = await this.repo.tokenDeCambio(correo, token);
+
+    return userConToken;
   }
 }

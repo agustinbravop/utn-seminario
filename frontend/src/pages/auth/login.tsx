@@ -119,6 +119,12 @@ export default function LoginPage() {
             Registrarse
           </Link>
         </Text>
+
+        <Text mt="1em" textAlign="center">
+          <Link to="/auth/recuperar_psw" style={{ color: "red" }}>
+            Olvidé mi contraseña
+          </Link>
+        </Text>
       </FormProvider>
     </>
   );

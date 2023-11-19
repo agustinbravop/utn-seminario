@@ -5,7 +5,15 @@ import { AuthService, Rol } from "../services/auth.js";
 import { SuscripcionService } from "../services/suscripciones.js";
 import { z } from "zod";
 import { Jugador, jugadorSchema } from "../models/jugador.js";
-import { UnauthorizedError, ForbiddenError } from "../utils/apierrors.js";
+import {
+  UnauthorizedError,
+  ForbiddenError,
+  BadRequestError,
+} from "../utils/apierrors.js";
+import nodemailer from "nodemailer";
+
+const USER = process.env.GMAIL_USER || ""
+const PSW = process.env.GMAIL_PSW || ""
 
 export const registrarAdminSchema = administradorSchema
   .omit({ id: true, tarjeta: true, suscripcion: true })
@@ -124,6 +132,63 @@ export class AuthHandler {
     };
   }
 
+  enviarCorreo(): RequestHandler {
+    return async (req, res) => {
+      const correo = req.body.correo;
+      console.log(correo)
+      if (!correo) {
+        throw new UnauthorizedError("Correo inexistente");
+      }
+
+      
+      
+      const mail = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, //Esto es para no configurar otra cosa (de momento al menos)
+        auth: {
+          user: btoa(USER), //O CAPAZ VA proces.env.GOOGLE_CLIENT_ID
+          pass: btoa(PSW), //O CAPAZ VA proces.env.GOOGLE_CLIENT_SECRET
+        },
+      });
+
+      //Verificar connexion
+
+      mail.verify(function (error, success) {
+        if (error) {
+          throw new BadRequestError("Error de conexion");
+        } else {
+          console.log("Al menos el setting del correo anda :)"); //Nunca pude conectar por problemas con google :(
+        }
+      });
+      
+
+      //Token que se envia al front y al correo
+      //Ya se asigna el token al usuario que corresponde (o se envia un error)
+      const {tokenCambio} = await this.service.generarTokenTemporal(correo);
+      
+      //Link que se envia por correo y posee el token
+      const linkCambio = `http://localhost:5173/nueva-contrasena/${tokenCambio}`; //Esta URL es del front
+      
+      const mensaje = {
+        from: process.env.GMAIL_USER,
+        to: correo,
+        subject: "Restablecimiento de Contraseña",
+        html: `<a href=${linkCambio}>Restablecer mi contraseña</a>`,
+      };
+      
+      mail.sendMail(mensaje, (err, info) => {
+        if (err) {
+          console.error("Error al enviar el correo:", err);
+        } else {
+          console.log("Correo enviado:", info.response);
+        }
+      });
+
+      res.status(200).json({ tokenCambio })
+    };
+  }
+
   private async verifyAuthorizationHeader(header: string | undefined) {
     const token = header?.replace("Bearer ", "");
     if (!token) {
@@ -142,6 +207,13 @@ export class AuthHandler {
     return async (req, res, next) => {
       const token = req.header("Authorization");
       const jwt = await this.verifyAuthorizationHeader(token);
+
+      if (
+        !this.service.hasRol(jwt, Rol.Administrador) &&
+        !this.service.hasRol(jwt, Rol.Jugador)
+      ) {
+        throw new ForbiddenError("No tiene un rol válido");
+      }
 
       if (this.service.hasRol(jwt, Rol.Administrador)) {
         res.locals.idAdmin = Number(jwt?.admin?.id);

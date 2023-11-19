@@ -15,6 +15,7 @@ export type Path =
   | `/admin/:idAdmin/perfil/selectEstab`
   | `/admin/:idAdmin/selectEstab`
   | `/auth/login`
+  | `/auth/recuperar_psw`
   | `/auth/redirect/google`
   | `/auth/register`
   | `/ests/:idEst`
