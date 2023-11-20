@@ -36,7 +36,7 @@ export default function EstablecimientoInfoPage() {
     onSuccess: () => {
       toast({
         title: "Establecimiento eliminado.",
-        description: `Establecimiento eliminado exitosamente.`,
+        description: "Establecimiento eliminado exitosamente.",
         status: "success",
       });
       navigate(`/ests`);
@@ -44,7 +44,7 @@ export default function EstablecimientoInfoPage() {
     onError: () => {
       toast({
         title: "Error al eliminar el establecimiento",
-        description: `Intente de nuevo.`,
+        description: "Intente de nuevo.",
         status: "error",
       });
     },

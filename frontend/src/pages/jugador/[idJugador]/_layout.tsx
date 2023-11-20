@@ -8,7 +8,7 @@ export default function JugadorAutenticadoLayout() {
   const { idJugador } = useParams("/jugador/:idJugador/perfil");
 
   if (!isJugador || jugador.id !== Number(idJugador)) {
-    return <Navigate to="/404" />;
+    return <Navigate to="/auth/login" />;
   }
 
   return <Outlet />;
