@@ -35,7 +35,8 @@ export interface AuthRepository {
   crearJugador(jugador: Jugador, clave?: string): Promise<Jugador>;
   getUsuarioYClave(correoOUsuario: string): Promise<UsuarioConClave>;
   getUsuario(correoOUsuario: string): Promise<Usuario>;
-  getUsuarioByID(id: number): Promise<Usuario>;
+  getJugadorByID(id: number): Promise<Jugador>;
+  getAdministradorByID(id: number): Promise<Administrador>;
   cambiarClave(correoOUsuario: string, clave: string): Promise<UsuarioConClave>;
   getRoles(correoOUsuario: string): Promise<Rol[]>;
 }
@@ -150,19 +151,6 @@ export class PrismaAuthRepository implements AuthRepository {
       return { admin: await this.getAdministrador(correoOUsuario) };
     } catch {
       return { jugador: await this.getJugador(correoOUsuario) };
-    }
-  }
-
-  /**
-   * Primero busca un jugador. Si no lo encuentra, busca un administrador.
-   * Si tampoco encuentra un administrador, tira un error 404.
-   * @param id del usuario a buscar
-   */
-  async getUsuarioByID(id: number): Promise<Usuario> {
-    try {
-      return { admin: await this.getAdministradorByID(id) };
-    } catch {
-      return { jugador: await this.getJugadorByID(id) };
     }
   }
 

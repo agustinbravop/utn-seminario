@@ -223,10 +223,11 @@ export class AuthServiceImpl implements AuthService {
     }
 
     // Se obtienen los datos actuales del usuario al que corresponde el JWT.
-    const id = jwt.admin ? jwt.admin.id : jwt.jugador.id;
-    const user = await this.repo.getUsuarioByID(id);
-    const correo = user.admin ? user.admin.correo : user.jugador.correo;
-    const userConClave = await this.repo.getUsuarioYClave(correo);
+    const user = jwt.admin
+      ? await this.repo.getAdministradorByID(jwt.admin.id)
+      : await this.repo.getJugadorByID(jwt.jugador.id);
+    // En el JWT puede haber venido un correo o usuario desactualizado.
+    const userConClave = await this.repo.getUsuarioYClave(user.correo);
 
     return await this.signJWT(userConClave);
   }
