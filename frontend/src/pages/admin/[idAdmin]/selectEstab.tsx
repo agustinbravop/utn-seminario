@@ -93,7 +93,7 @@ export default function SelectEstablecimiento() {
     }
 
     Promise.all(eliminados.map((e) => mutate(e.id)) || []).then(() =>
-      navigate(`/admin/${admin?.id}`)
+      navigate(`/ests`)
     );
   };
 

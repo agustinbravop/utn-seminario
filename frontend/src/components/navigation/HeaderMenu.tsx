@@ -63,7 +63,7 @@ function AdminNav({
   const usuario = useBreakpointValue({ base: "", sm: admin.usuario });
   return (
     <>
-      <Link to={`/admin/${admin.id}`}>
+      <Link to={"/ests"}>
         <LogoImage />
       </Link>
       <Menu>

@@ -83,14 +83,14 @@ export default function EstablecimientoReservasPage() {
       const estadoA = a.idPagoReserva
         ? "C - Pagado"
         : a.idPagoSenia
-        ? "B - Señado"
-        : "A - No Pagado";
+          ? "B - Señado"
+          : "A - No Pagado";
 
       const estadoB = b.idPagoReserva
         ? "C - Pagado"
         : b.idPagoSenia
-        ? "B - Señado"
-        : "A - No Pagado";
+          ? "B - Señado"
+          : "A - No Pagado";
 
       return ordenAscendente
         ? estadoA.localeCompare(estadoB)
@@ -110,8 +110,8 @@ export default function EstablecimientoReservasPage() {
     const estado = r.idPagoReserva
       ? "Pagada"
       : r.idPagoSenia
-      ? "Señada"
-      : "No Pagada";
+        ? "Señada"
+        : "No Pagada";
 
     const nombreIncluido = nombreJugador
       .toLowerCase()
@@ -306,8 +306,8 @@ export default function EstablecimientoReservasPage() {
               const bgColor = r.cancelada
                 ? "red.200"
                 : idx % 2 === 0
-                ? "gray.100"
-                : "white";
+                  ? "gray.100"
+                  : "white";
               return (
                 <Tr key={r.id} bgColor={bgColor}>
                   <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>

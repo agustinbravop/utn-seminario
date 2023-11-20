@@ -25,6 +25,14 @@ export function decimalAHora(n: number | undefined) {
   return `${String(entero).padStart(2, "0")}:${minutos.padStart(2, "0")}`;
 }
 
+/** Devuelve la hora local actual en formato `hh:mm`. */
+export function getHoraActual() {
+  const date = new Date();
+  const hh = String(date.getHours());
+  const mm = String(date.getMinutes()).padStart(2, "0");
+  return `${hh}:${mm}`;
+}
+
 /**
  * Toma un objeto `Date` y devuelve la fecha como un string en formato `aaaa-MM-dd`.
  */

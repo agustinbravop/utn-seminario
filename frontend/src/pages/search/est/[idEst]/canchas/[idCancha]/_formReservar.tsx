@@ -1,7 +1,13 @@
 import { InputControl, SubmitButton } from "@/components/forms";
 import DateControl from "@/components/forms/DateControl";
-import { useBusqueda, useCurrentAdmin, useYupForm } from "@/hooks";
+import {
+  useBusqueda,
+  useCurrentAdmin,
+  useCurrentJugador,
+  useYupForm,
+} from "@/hooks";
 import { Disponibilidad } from "@/models";
+import { useNavigate } from "@/router";
 import { CrearReserva, useCrearReserva } from "@/utils/api";
 import { formatFecha } from "@/utils/dates";
 import {
@@ -43,6 +49,8 @@ export default function FormReservarDisponibilidad({
   const date = searchParams.get("date")!;
   const { filtros } = useBusqueda();
   const { isAdmin } = useCurrentAdmin();
+  const { isJugador } = useCurrentJugador();
+  const navigate = useNavigate();
 
   const { mutate, isLoading } = useCrearReserva({
     onSuccess: () => {
@@ -81,6 +89,16 @@ export default function FormReservarDisponibilidad({
           <ModalContent
             as="form"
             onSubmit={methods.handleSubmit((values) => {
+              if (!isJugador && !isAdmin) {
+                // Si el usuario no está logueado, se lo redirecciona al login.
+                navigate("/auth/login");
+                toast({
+                  title: "Inicie sesión para reservar un horario",
+                  description: "Debe estar registrado para usar PlayFinder.",
+                  status: "warning",
+                });
+                return;
+              }
               mutate(values);
               onClose();
             })}

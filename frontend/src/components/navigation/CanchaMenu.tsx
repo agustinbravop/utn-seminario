@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import LoadingSpinner from "../feedback/LoadingSpinner";
 import Alerta from "../feedback/Alerta";
 import { useCanchaByID } from "@/utils/api";
+import { EstablecimientoBreadcrumb } from ".";
 
 export default function CanchaMenu() {
   const { idEst, idCancha } = useParams();
@@ -24,8 +25,11 @@ export default function CanchaMenu() {
   }
 
   return (
-    <Heading textAlign="center" pb="7" mt="40px">
-      {est.nombre}: {cancha.nombre}
-    </Heading>
+    <>
+      <EstablecimientoBreadcrumb ml="12%" />
+      <Heading textAlign="center" pb="7">
+        {est.nombre}: {cancha.nombre}
+      </Heading>
+    </>
   );
 }

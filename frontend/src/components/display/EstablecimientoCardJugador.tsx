@@ -30,7 +30,7 @@ export default function EstablecimientoCardJugador({
   return (
     <Link to={`est/${establecimiento.id}?date=${date}`}>
       <Card
-        width="360px"
+        maxWidth="340px"
         height="240px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
