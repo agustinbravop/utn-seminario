@@ -97,7 +97,7 @@ export default function LoginPage() {
 
         <Box position="relative">
           <Divider />
-          <AbsoluteCenter bg="white" px="4">
+          <AbsoluteCenter bg="white" px="10px">
             O con un proveedor
           </AbsoluteCenter>
         </Box>

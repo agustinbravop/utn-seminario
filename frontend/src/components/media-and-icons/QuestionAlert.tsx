@@ -12,7 +12,11 @@ export default function QuestionAlert({
   return (
     <VStack {...props}>
       <QuestionImage />
-      {typeof children === "string" ? <Text>{children}</Text> : children}
+      {typeof children === "string" ? (
+        <Text align="center">{children}</Text>
+      ) : (
+        children
+      )}
     </VStack>
   );
 }
