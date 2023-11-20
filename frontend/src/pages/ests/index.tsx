@@ -33,6 +33,7 @@ import {
   useEstablecimientosByAdminID,
   useEstablecimientosEliminadosByAdminID,
 } from "@/utils/api";
+import { EstablecimientoBreadcrumb } from "@/components/navigation";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -131,12 +132,11 @@ export default function EstablecimientosPage() {
 
   return (
     <>
-      <Heading textAlign="center" pb="12" mt="40px">
-        Establecimientos
-      </Heading>
-      <HStack mr="12%" ml="12%" mb="50px" mt="20px">
-        <FormControl variant="floating">
-          <InputGroup width="300px">
+      <EstablecimientoBreadcrumb ml="12%" />
+      <Heading textAlign="center">Establecimientos</Heading>
+      <HStack mx="12%" ml="12%" mb="50px" mt="20px" justify="space-between">
+        <FormControl variant="floating" width="max-content">
+          <InputGroup width="fit-content" m="0">
             <InputRightElement>
               <SearchIcon color="gray" />
             </InputRightElement>
@@ -150,17 +150,19 @@ export default function EstablecimientosPage() {
             <FormLabel>Nombre</FormLabel>
           </InputGroup>
         </FormControl>
-        <HStack ml="auto" spacing={4}>
-          <Text mb="0">
-            {establecimientos.length} /{" "}
+
+        <HStack spacing={4}>
+          <Text>
+            {establecimientos.length}
+            {" / "}
             {admin.suscripcion.limiteEstablecimientos} establecimiento
             {admin.suscripcion.limiteEstablecimientos === 1 || "s"}
           </Text>
           <Link
             to={
               establecimientos.length < admin.suscripcion.limiteEstablecimientos
-                ? "nuevoEstablecimiento"
-                : "mejorarSuscripcion"
+                ? `/admin/${admin.id}/nuevoEstablecimiento`
+                : `/admin/${admin.id}/mejorarSuscripcion`
             }
           >
             <Button leftIcon={<Icon as={GrAddCircle} />}>Agregar</Button>
@@ -171,7 +173,8 @@ export default function EstablecimientosPage() {
           />
         </HStack>
       </HStack>
-      <HStack ml="16%" mr="16%">
+
+      <HStack ml="12%" mr="12%">
         {isLoading ? (
           <LoadingSpinner />
         ) : isError ? (

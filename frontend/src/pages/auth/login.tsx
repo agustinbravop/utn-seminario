@@ -40,7 +40,7 @@ export default function LoginPage() {
   const { mutate, isLoading, isError, error } = useLogin({
     onSuccess: (user) => {
       if (user.admin) {
-        navigate(`/admin/${user.admin.id}`);
+        navigate(`/ests`);
       } else {
         navigate(`/search`);
       }

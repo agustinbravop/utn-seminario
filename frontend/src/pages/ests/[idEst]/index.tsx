@@ -39,7 +39,7 @@ export default function EstablecimientoInfoPage() {
         description: `Establecimiento eliminado exitosamente.`,
         status: "success",
       });
-      navigate(`/admin/${est?.idAdministrador}`);
+      navigate(`/ests`);
     },
     onError: () => {
       toast({

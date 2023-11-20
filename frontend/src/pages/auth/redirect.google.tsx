@@ -17,7 +17,7 @@ export default function GoogleRedirectPage() {
     onSuccess: (user) => {
       // Al terminar el login del back, si fue exitoso nos devuelve el JWT.
       if (user.admin) {
-        navigate(`/admin/${user.admin.id}`);
+        navigate(`/ests`);
       } else {
         navigate(`/search`);
       }
