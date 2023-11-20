@@ -35,7 +35,7 @@ export default function EstablecimientoMenu() {
         <LinkButton to={`/ests/${est.id}/canchas`}>Canchas</LinkButton>
         <LinkButton to={`/ests/${est.id}/reservas`}>Reservas</LinkButton>
         <LinkButton to={`/ests/${est.id}/informes`}>Informes</LinkButton>
-        <Link to={`/ests/${est.id}/graficos`}>Graficos</Link>
+        <LinkButton to={`/ests/${est.id}/estadistica`}>Estadistica</LinkButton>
       </HStack>
     </>
   );

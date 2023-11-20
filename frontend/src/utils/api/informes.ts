@@ -31,3 +31,30 @@ export function useInformePagosPorCancha(
     { ...options }
   );
 }
+
+type EstadisticaHorarios = { 
+  idEst?:number, 
+  horaInicio:string, 
+  horaFinal:string, 
+}
+type EstadisticaDia = { 
+  "Lunes":number, 
+  "Martes":number, 
+  "Miercoles":number, 
+  "Jueves":number, 
+  "Viernes":number, 
+  "Sabado":number, 
+  "Domingo": number
+}
+export function useEstadisticasHorarios(
+  query:EstadisticaHorarios, 
+  options?:UseApiQueryOptions<EstadisticaDia> 
+) { 
+  return useApiQuery( 
+    ["informes","diasSemana",query], 
+    new URL ( 
+      `${API_URL}/informes/estadistica?${queryString.stringify(query)}`
+    ), 
+    {...options}
+  )
+}
