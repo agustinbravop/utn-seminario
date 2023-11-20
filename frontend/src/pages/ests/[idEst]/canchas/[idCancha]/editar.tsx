@@ -12,6 +12,7 @@ import { FormProvider } from "react-hook-form";
 import { useYupForm } from "@/hooks";
 import * as Yup from "yup";
 import ImageControl from "@/components/forms/ImageControl";
+import { EstablecimientoBreadcrumb } from "@/components/navigation";
 
 type FormState = ModificarCancha & {
   imagen: File | undefined;
@@ -62,7 +63,8 @@ export default function EditCourtPage() {
 
   return (
     <>
-      <Heading m="40px" textAlign="center">
+      <EstablecimientoBreadcrumb ml="12%" />
+      <Heading mb="40px" textAlign="center">
         Editar Cancha
       </Heading>
       <FormProvider {...methods}>

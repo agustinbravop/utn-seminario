@@ -15,19 +15,19 @@ import {
 } from "@/utils/api";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { TablaDisponibilidadesReservables } from "@/components/display";
-import { formatFecha, horaADecimal } from "@/utils/dates";
+import { formatFecha, getHoraActual, horaADecimal } from "@/utils/dates";
 import { useBusqueda } from "@/hooks";
 import { BusquedaFiltros } from "@/hooks/useBusqueda";
+import { QuestionAlert } from "@/components/media-and-icons";
 
 function filtrarDisponibilidades(
   disps: BuscarDisponibilidadResult[],
   filtros: BusquedaFiltros
 ) {
-  let filtradas = disps;
-  if (filtros.disciplina) {
-    filtradas = disps.filter((d) => d.disciplina === filtros.disciplina);
+  if (filtros.fecha === formatFecha(new Date())) {
+    disps = disps.filter((disp) => disp.horaInicio > getHoraActual());
   }
-  return filtradas.sort(
+  return disps.sort(
     (a, b) => horaADecimal(a.horaInicio) - horaADecimal(b.horaInicio)
   );
 }
@@ -46,7 +46,7 @@ export default function ReservarEstablecimientoPage() {
     return <LoadingSpinner />;
   }
 
-  const disponibilidadesFiltradas = filtrarDisponibilidades(disps, filtros);
+  const dispsFiltradas = filtrarDisponibilidades(disps, filtros);
 
   return (
     <>
@@ -86,7 +86,12 @@ export default function ReservarEstablecimientoPage() {
 
       <Heading size="md">Horarios disponibles</Heading>
       <Text mb="1em">Seleccione un horario a reservar.</Text>
-      <TablaDisponibilidadesReservables data={disponibilidadesFiltradas} />
+      <TablaDisponibilidadesReservables data={dispsFiltradas} />
+      {dispsFiltradas.length === 0 && (
+        <QuestionAlert>
+          No hay horarios disponibles para esta fecha.
+        </QuestionAlert>
+      )}
     </>
   );
 }

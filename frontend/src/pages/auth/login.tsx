@@ -40,9 +40,9 @@ export default function LoginPage() {
   const { mutate, isLoading, isError, error } = useLogin({
     onSuccess: (user) => {
       if (user.admin) {
-        navigate(`/admin/${user.admin.id}`);
+        navigate("/ests");
       } else {
-        navigate(`/search`);
+        navigate("/search");
       }
     },
   });
@@ -89,15 +89,15 @@ export default function LoginPage() {
               {error.status === 401
                 ? "La contraseña ingresada es incorrecta."
                 : error.status === 404
-                ? "Ese correo o usuario no está registrado."
-                : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
+                  ? "Ese correo o usuario no está registrado."
+                  : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
             </Alert>
           )}
         </VStack>
 
         <Box position="relative">
           <Divider />
-          <AbsoluteCenter bg="white" px="4">
+          <AbsoluteCenter bg="white" px="10px">
             O con un proveedor
           </AbsoluteCenter>
         </Box>

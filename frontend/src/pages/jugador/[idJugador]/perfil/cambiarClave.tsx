@@ -63,13 +63,13 @@ export default function JugadorCambiarClavePage() {
             onSubmit={methods.handleSubmit((values) => mutate(values))}
           >
             <PasswordControl
-              label="Contraseña actual"
+              label="Clave actual"
               placeholder=" "
               name="actual"
               isRequired
             />
             <PasswordControl
-              label="Contraseña nueva"
+              label="Clave nueva"
               placeholder=" "
               name="nueva"
               helperText="Debe tener 8 o más caracteres."

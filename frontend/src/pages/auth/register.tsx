@@ -64,7 +64,7 @@ export default function RegisterPage() {
     onError: (err) => {
       toast({
         title: err.conflictMsg("Error al registrarse. Intente de nuevo"),
-        description: `Intente de nuevo.`,
+        description: "Intente de nuevo.",
         status: "error",
       });
     },
