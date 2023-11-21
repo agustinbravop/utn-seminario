@@ -39,6 +39,12 @@ export type CambiarClave = {
   nueva: string;
 };
 
+export type ResetearClave = {
+  correo: string;
+  token: string;
+  nueva: string;
+};
+
 /**
  * Helper function que toma un token, lo escribe a localStorage,
  * y devuelve una promise con su payload decodificado.
@@ -150,16 +156,25 @@ export function useCambiarClave(
       patch<JWT>(`${API_URL}/auth/clave`, claves).then(captureToken),
   });
 }
-type recuperarClave = {
-  correo: string,
+
+export function useSolicitarResetearClave(
+  options?: UseApiMutationOptions<{ correo: string }>
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: (correo) =>
+      post(`${API_URL}/auth/correo-resetear-clave`, correo),
+  });
 }
-export function useEnviarMail(
-  options?: UseApiMutationOptions<recuperarClave>
-  ) {
-    console.log("(API front)options: " + options)
-    return useApiMutation({
-      ...options,
-      mutationFn: (correo) =>
-        patch<String>(`${API_URL}/auth/recuperar-clave`, correo),
-    });
+
+export function useResetearClave(
+  options?: UseApiMutationOptions<ResetearClave, Usuario>
+) {
+  return useApiMutation({
+    ...options,
+    mutationFn: (recuperarClave) =>
+      patch<JWT>(`${API_URL}/auth/resetear-clave`, recuperarClave).then(
+        captureToken
+      ),
+  });
 }

@@ -5,15 +5,7 @@ import { AuthService, Rol } from "../services/auth.js";
 import { SuscripcionService } from "../services/suscripciones.js";
 import { z } from "zod";
 import { Jugador, jugadorSchema } from "../models/jugador.js";
-import {
-  UnauthorizedError,
-  ForbiddenError,
-  BadRequestError,
-} from "../utils/apierrors.js";
-import nodemailer from "nodemailer";
-
-const USER = process.env.GMAIL_USER || ""
-const PSW = process.env.GMAIL_PSW || ""
+import { UnauthorizedError, ForbiddenError } from "../utils/apierrors.js";
 
 export const registrarAdminSchema = administradorSchema
   .omit({ id: true, tarjeta: true, suscripcion: true })
@@ -47,6 +39,18 @@ export const cambiarClaveSchema = z.object({
 });
 
 type CambiarClave = z.infer<typeof cambiarClaveSchema>;
+
+export const correoResetearClaveSchema = z.object({
+  correo: z.string().email(),
+});
+
+export const resetearClaveSchema = z.object({
+  correo: z.string().email(),
+  nueva: z.string().min(1),
+  token: z.string().min(1),
+});
+
+type ResetearClave = z.infer<typeof resetearClaveSchema>;
 
 export class AuthHandler {
   private service: AuthService;
@@ -116,7 +120,7 @@ export class AuthHandler {
     };
   }
 
-  patchClave(): RequestHandler {
+  patchCambiarClave(): RequestHandler {
     return async (req, res) => {
       const { actual, nueva }: CambiarClave = res.locals.body;
 
@@ -132,60 +136,23 @@ export class AuthHandler {
     };
   }
 
-  enviarCorreo(): RequestHandler {
-    return async (req, res) => {
-      const correo = req.body.correo;
-      console.log(correo)
-      if (!correo) {
-        throw new UnauthorizedError("Correo inexistente");
-      }
+  postCorreoResetearClave(): RequestHandler {
+    return async (_req, res) => {
+      const correo = res.locals.body.correo;
+      console.log(correo);
 
-      
-      
-      const mail = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false, //Esto es para no configurar otra cosa (de momento al menos)
-        auth: {
-          user: btoa(USER), //O CAPAZ VA proces.env.GOOGLE_CLIENT_ID
-          pass: btoa(PSW), //O CAPAZ VA proces.env.GOOGLE_CLIENT_SECRET
-        },
-      });
+      await this.service.generarTokenParaResetearClave(correo);
 
-      //Verificar connexion
+      res.status(201).json({});
+    };
+  }
 
-      mail.verify(function (error, success) {
-        if (error) {
-          throw new BadRequestError("Error de conexion");
-        } else {
-          console.log("Al menos el setting del correo anda :)"); //Nunca pude conectar por problemas con google :(
-        }
-      });
-      
+  patchResetearClave(): RequestHandler {
+    return async (_req, res) => {
+      const { nueva, correo, token }: ResetearClave = res.locals.body;
 
-      //Token que se envia al front y al correo
-      //Ya se asigna el token al usuario que corresponde (o se envia un error)
-      const {tokenCambio} = await this.service.generarTokenTemporal(correo);
-      
-      //Link que se envia por correo y posee el token
-      const linkCambio = `http://localhost:5173/nueva-contrasena/${tokenCambio}`; //Esta URL es del front
-      
-      const mensaje = {
-        from: process.env.GMAIL_USER,
-        to: correo,
-        subject: "Restablecimiento de Contraseña",
-        html: `<a href=${linkCambio}>Restablecer mi contraseña</a>`,
-      };
-      
-      mail.sendMail(mensaje, (err, info) => {
-        if (err) {
-          console.error("Error al enviar el correo:", err);
-        } else {
-          console.log("Correo enviado:", info.response);
-        }
-      });
-
-      res.status(200).json({ tokenCambio })
+      const jwt = await this.service.resetearClave(correo, token, nueva);
+      res.status(200).json({ token: jwt });
     };
   }
 

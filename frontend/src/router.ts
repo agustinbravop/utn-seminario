@@ -13,10 +13,11 @@ export type Path =
   | `/admin/:idAdmin/perfil/editarSuscripcion`
   | `/admin/:idAdmin/perfil/selectEstab`
   | `/admin/:idAdmin/selectEstab`
+  | `/auth/clave-olvidada`
   | `/auth/login`
-  | `/auth/recuperar_psw`
   | `/auth/redirect/google`
   | `/auth/register`
+  | `/auth/resetear-clave`
   | `/ests`
   | `/ests/:idEst`
   | `/ests/:idEst/canchas`

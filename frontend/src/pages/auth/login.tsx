@@ -121,8 +121,9 @@ export default function LoginPage() {
         </Text>
 
         <Text mt="1em" textAlign="center">
-          <Link to="/auth/recuperar_psw" style={{ color: "red" }}>
-            Olvidé mi contraseña
+          ¿Olvidó su contraseña?{" "}
+          <Link to="/auth/clave-olvidada" style={{ color: "blue" }}>
+            Restablecer
           </Link>
         </Text>
       </FormProvider>

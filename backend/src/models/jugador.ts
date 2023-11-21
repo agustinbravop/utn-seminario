@@ -15,6 +15,4 @@ export const jugadorSchema = z.object({
   localidad: z.string().optional(),
   provincia: z.string().optional(),
   disciplina: z.string().optional(),
-  tokenCambio: z.string().optional(),
-
 });
