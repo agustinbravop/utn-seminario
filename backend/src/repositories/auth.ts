@@ -1,31 +1,22 @@
-import {
-  PrismaClient,
-  administrador,
-  suscripcion,
-  tarjeta,
-} from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Administrador } from "../models/administrador.js";
 import {
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
 } from "../utils/apierrors.js";
-import { Rol, Usuario } from "../services/auth.js";
+import { Rol, Usuario, UsuarioConClave } from "../services/auth.js";
 import { Jugador } from "../models/jugador.js";
 import { toJugador } from "./jugador.js";
-import { toSuscripcion } from "./suscripciones.js";
+import { toAdmin } from "./administrador.js";
 
-export type AdministradorConClave = {
+type AdministradorConClave = {
   admin: Administrador;
   clave: string;
+  token?: string;
 };
 
-export type UsuarioConClave = Usuario & { clave: string };
-
-export type JugadorConClave = {
-  jugador: Jugador;
-  clave: string;
-};
+type JugadorConClave = { jugador: Jugador; clave: string; token?: string };
 
 export interface AuthRepository {
   crearAdministrador(
@@ -37,7 +28,7 @@ export interface AuthRepository {
   getUsuario(correoOUsuario: string): Promise<Usuario>;
   getJugadorByID(id: number): Promise<Jugador>;
   getAdministradorByID(id: number): Promise<Administrador>;
-  cambiarClave(correoOUsuario: string, clave: string): Promise<UsuarioConClave>;
+  cambiarClave(correoOUsuario: string, clave: string): Promise<Usuario>;
   getRoles(correoOUsuario: string): Promise<Rol[]>;
 }
 
@@ -48,7 +39,9 @@ export class PrismaAuthRepository implements AuthRepository {
     this.prisma = client;
   }
 
-  async getAdministradorYClave(correoOUsuario: string) {
+  async getAdministradorYClave(
+    correoOUsuario: string
+  ): Promise<AdministradorConClave> {
     try {
       const admin = await this.prisma.administrador.findFirstOrThrow({
         where: {
@@ -56,7 +49,10 @@ export class PrismaAuthRepository implements AuthRepository {
         },
         include: { suscripcion: true, tarjeta: true },
       });
-      return { admin: toAdmin(admin), clave: admin.clave };
+      return {
+        admin: toAdmin(admin),
+        clave: admin.clave,
+      };
     } catch (e) {
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
@@ -88,7 +84,7 @@ export class PrismaAuthRepository implements AuthRepository {
     }
   }
 
-  async getJugadorYClave(correoOUsuario: string) {
+  async getJugadorYClave(correoOUsuario: string): Promise<JugadorConClave> {
     try {
       const jugador = await this.prisma.jugador.findFirstOrThrow({
         where: {
@@ -96,7 +92,10 @@ export class PrismaAuthRepository implements AuthRepository {
         },
         include: { disciplina: true, localidad: true },
       });
-      return { jugador: toJugador(jugador), clave: jugador.clave as string };
+      return {
+        jugador: toJugador(jugador),
+        clave: jugador.clave as string,
+      };
     } catch (e) {
       throw new NotFoundError("No existe cuenta con ese correo o usuario");
     }
@@ -264,7 +263,7 @@ export class PrismaAuthRepository implements AuthRepository {
         data: { clave },
         include: { disciplina: true, localidad: true },
       });
-      return dbJugador;
+      return toJugador(dbJugador);
     } catch (e) {
       throw new InternalServerError("No se pudo cambiar la contraseña");
     }
@@ -281,39 +280,20 @@ export class PrismaAuthRepository implements AuthRepository {
         data: { clave },
         include: { tarjeta: true, suscripcion: true },
       });
-      return dbAdmin;
+      return toAdmin(dbAdmin);
     } catch (e) {
       throw new InternalServerError("No se pudo cambiar la contraseña");
     }
   }
+
   async cambiarClave(correoOUsuario: string, clave: string) {
     const roles = await this.getRoles(correoOUsuario);
     if (roles.includes(Rol.Administrador)) {
       const a = await this.cambiarClaveAdministrador(correoOUsuario, clave);
-      return { admin: toAdmin(a), clave: a.clave };
+      return { admin: a };
     } else {
       const j = await this.cambiarClaveJugador(correoOUsuario, clave);
-      return { jugador: toJugador(j), clave: j.clave as string };
+      return { jugador: j };
     }
   }
-}
-
-type administradorDB = administrador & {
-  suscripcion: suscripcion;
-  tarjeta: tarjeta;
-};
-/**
- * Sirve para sacar la clave, que pasa desapercibida en el tipo `Administrador`.
- * @param admin una entidad administrador de Prisma.
- * @param suscripcion una entidad suscripcion de Prisma.
- * @param tarjeta una entidad tarjeta de Prisma.
- * @returns un objeto Administrador del dominio.
- */
-export function toAdmin({
-  clave,
-  idSuscripcion,
-  idTarjeta,
-  ...admin
-}: administradorDB): Administrador {
-  return { ...admin, suscripcion: toSuscripcion(admin.suscripcion) };
 }

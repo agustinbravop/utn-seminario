@@ -9,13 +9,13 @@ datasource db {
 }
 
 model administrador {
-  id       Int    @id @default(autoincrement()) @map("idAdministrador")
-  usuario  String @unique @db.VarChar
-  correo   String @unique @db.VarChar
-  clave    String @db.VarChar
-  nombre   String @db.VarChar
-  apellido String @db.VarChar
-  telefono String @db.VarChar
+  id       Int     @id @default(autoincrement()) @map("idAdministrador")
+  usuario  String  @unique @db.VarChar
+  correo   String  @unique @db.VarChar
+  clave    String  @db.VarChar
+  nombre   String  @db.VarChar
+  apellido String  @db.VarChar
+  telefono String  @db.VarChar
 
   idTarjeta        Int               @unique
   tarjeta          tarjeta           @relation(fields: [idTarjeta], references: [id], onDelete: Cascade)

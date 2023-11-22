@@ -15,6 +15,7 @@ import {
   getAccessTokenFromGoogleCode,
   getGoogleUserInfo,
 } from "../utils/oauth2/google.js";
+import { enviarRecuperarClave } from "../utils/mails.js";
 
 /**
  * Representa el tipo de un usuario.
@@ -35,7 +36,9 @@ export type Usuario =
       jugador: Jugador;
     };
 
-export type JWTUserPayload = JWTPayload & Usuario;
+export type JWTUserPayload = JWTPayload & Usuario & { roles: Rol[] };
+
+export type UsuarioConClave = Usuario & { clave: string };
 
 export interface AuthService {
   registrarAdministradorConClave(
@@ -51,6 +54,8 @@ export interface AuthService {
     actual: string,
     nueva: string
   ): Promise<string>;
+  resetearClave(correo: string, token: string, nueva: string): Promise<string>;
+  generarTokenParaResetearClave(correo: string): Promise<string>;
   verifyJWT(token: string): Promise<JWTUserPayload | null>;
   getRolesFromJWT(jwt: JWTUserPayload): Rol[];
   hasRol(jwt: JWTUserPayload, rol: Rol): boolean;
@@ -65,7 +70,10 @@ export class AuthServiceImpl implements AuthService {
   constructor(repository: AuthRepository) {
     this.SALT_ROUNDS = 10;
     this.repo = repository;
-    this.secretKey = createSecretKey(process.env.JWT_SECRET ?? "", "utf-8");
+    this.secretKey = createSecretKey(
+      process.env.JWT_SECRET || "secret",
+      "utf-8"
+    );
   }
 
   /**
@@ -96,39 +104,53 @@ export class AuthServiceImpl implements AuthService {
   /**
    * Esta función genera un JWT con los datos del usuario y sus roles.
    * @param usuario el Administrador que va a ir en el payload. Corresponde al usuario autenticado.
+   * @param expirationTime la duración del token. La estándar se configura por variable de entorno.
+   * @param secretKey el secreto para firmar el token. El estándar se configura por variable de entorno.
    * @returns un `Promise<string>` con el JWT firmado.
    */
-  private async signJWT(usuario: Usuario) {
-    let id;
-    let payload;
+  private async signJWT(
+    usuario: Usuario,
+    options?: {
+      expirationTime?: string | number;
+      secretKey?: KeyLike | Uint8Array;
+    }
+  ) {
+    let id: string;
+    let payload: JWTUserPayload;
     if (usuario.admin) {
-      id = usuario.admin.id;
+      id = usuario.admin.id.toString();
       payload = { admin: usuario.admin, roles: [Rol.Administrador] };
     } else {
-      id = usuario.jugador.id;
+      id = usuario.jugador.id.toString();
       payload = { jugador: usuario.jugador, roles: [Rol.Jugador] };
     }
 
     const token = await new SignJWT(payload)
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setSubject(id.toString())
+      .setSubject(id)
       .setIssuer(process.env.JWT_ISSUER || "playfinderapi")
-      .setExpirationTime(process.env.JWT_EXPIRATION_TIME || "24h") // token expiration time, e.g., "1 day"
-      .sign(this.secretKey as Uint8Array);
+      .setExpirationTime(
+        options?.expirationTime || process.env.JWT_EXPIRATION_TIME || "24h"
+      )
+      .sign((options?.secretKey ?? this.secretKey) as Uint8Array);
 
     return token;
   }
 
   /**
-   * Valida un JWT. Un JWT es auténtico si fue firmado por la función signJWT.
-   * @returns true si el JWT es válido. Retorna falso en caso contrario.
+   * Valida un JWT. Un JWT es auténtico si fue firmado por la función `signJWT`.
+   * Retorna null si el JWT es inválido.
+   * @param secretKey el secreto para decodifiar el token. El estándar viene por variable de entorno.
+   * @returns JWTUserPayload el payload con la información del usuario si el JWT es válido.
    */
-  async verifyJWT(token: string) {
+  async verifyJWT(token: string, secretKey?: KeyLike | Uint8Array) {
     try {
-      const jwt = await jwtVerify(token, this.secretKey as Uint8Array, {
-        issuer: process.env.JWT_ISSUER,
-      });
+      const jwt = await jwtVerify(
+        token,
+        (secretKey ?? this.secretKey) as Uint8Array,
+        { issuer: process.env.JWT_ISSUER }
+      );
       return jwt.payload as JWTUserPayload;
     } catch (e) {
       // token verification failed
@@ -316,5 +338,43 @@ export class AuthServiceImpl implements AuthService {
     const hash = await bcrypt.hash(nueva, this.SALT_ROUNDS);
     const userConClave = await this.repo.cambiarClave(correoOUsuario, hash);
     return await this.signJWT(userConClave);
+  }
+
+  async resetearClave(correo: string, token: string, nueva: string) {
+    const userConClave = await this.repo.getUsuarioYClave(correo);
+    // Se usa la clave hasheada actual del usuario como llave secreta del JWT.
+    console.log(userConClave);
+    const jwt = await this.verifyJWT(
+      token,
+      createSecretKey(userConClave.clave, "utf-8")
+    );
+    if (!jwt) {
+      throw new UnauthorizedError("Token JWT inválido");
+    }
+
+    const hash = await bcrypt.hash(nueva, this.SALT_ROUNDS);
+    const user = await this.repo.cambiarClave(correo, hash);
+    return await this.signJWT(user);
+  }
+
+  /**
+   * Genera un token que se usará para resetear la contraseña del usuario cuando se la olvide.
+   * Este token se envía al correo del usuario.
+   */
+  async generarTokenParaResetearClave(correo: string) {
+    const usuario = await this.repo.getUsuarioYClave(correo);
+
+    const token = await this.signJWT(usuario, {
+      expirationTime: "1h",
+      // Usamos la clave hasheada actual del usuario como llave secreta del JWT
+      secretKey: createSecretKey(usuario.clave, "utf-8"),
+    });
+
+    await enviarRecuperarClave(
+      usuario,
+      `${process.env.FRONT_URL}/auth/resetear-clave?token=${token}&correo=${correo}`
+    );
+
+    return token;
   }
 }

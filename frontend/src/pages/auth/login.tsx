@@ -119,6 +119,13 @@ export default function LoginPage() {
             Registrarse
           </Link>
         </Text>
+
+        <Text mt="1em" textAlign="center">
+          ¿Olvidó su contraseña?{" "}
+          <Link to="/auth/clave-olvidada" style={{ color: "blue" }}>
+            Restablecer
+          </Link>
+        </Text>
       </FormProvider>
     </>
   );
