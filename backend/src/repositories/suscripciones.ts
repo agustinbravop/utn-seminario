@@ -35,6 +35,7 @@ export class PrismaSuscripcionRepository implements SuscripcionRepository {
       const suscripciones = await this.prisma.suscripcion.findMany();
       return suscripciones.map((s) => toSuscripcion(s));
     } catch (e) {
+      console.error(e);
       throw new InternalServerError("No se pudo obtener las suscripciones");
     }
   }

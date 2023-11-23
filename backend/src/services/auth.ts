@@ -38,7 +38,7 @@ export type Usuario =
 
 export type JWTUserPayload = JWTPayload & Usuario & { roles: Rol[] };
 
-export type UsuarioConClave = Usuario & { clave: string };
+export type UsuarioConClave = Usuario & { clave?: string };
 
 export interface AuthService {
   registrarAdministradorConClave(
@@ -178,15 +178,19 @@ export class AuthServiceImpl implements AuthService {
     correoOUsuario: string,
     clave: string,
     error: ApiError
-  ) {
+  ): Promise<Usuario> {
     const userConClave = await this.repo.getUsuarioYClave(correoOUsuario);
 
-    const { clave: hash } = userConClave;
+    const { clave: hash, ...usuario } = userConClave;
+    if (!hash) {
+      throw new BadRequestError("La cuenta no tiene contraseña asociada.");
+    }
+
     const esValido = await bcrypt.compare(clave, hash!);
     if (!esValido) {
       throw error;
     }
-    return userConClave;
+    return usuario;
   }
 
   /**
@@ -341,12 +345,15 @@ export class AuthServiceImpl implements AuthService {
   }
 
   async resetearClave(correo: string, token: string, nueva: string) {
-    const userConClave = await this.repo.getUsuarioYClave(correo);
+    const usuario = await this.repo.getUsuarioYClave(correo);
+    if (!usuario.clave) {
+      throw new ConflictError("No existe contraseña asociada a esta cuenta.");
+    }
+
     // Se usa la clave hasheada actual del usuario como llave secreta del JWT.
-    console.log(userConClave);
     const jwt = await this.verifyJWT(
       token,
-      createSecretKey(userConClave.clave, "utf-8")
+      createSecretKey(usuario.clave, "utf-8")
     );
     if (!jwt) {
       throw new UnauthorizedError("Token JWT inválido");
@@ -363,6 +370,9 @@ export class AuthServiceImpl implements AuthService {
    */
   async generarTokenParaResetearClave(correo: string) {
     const usuario = await this.repo.getUsuarioYClave(correo);
+    if (!usuario.clave) {
+      throw new ConflictError("No existe contraseña asociada a esta cuenta.");
+    }
 
     const token = await this.signJWT(usuario, {
       expirationTime: "1h",

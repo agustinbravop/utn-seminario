@@ -8,7 +8,7 @@ import {
   validateBody,
   validateIDParams,
   validateQueryParams,
-} from "../middlewares/validation";
+} from "../middlewares/validation.js";
 import { AuthHandler } from "../handlers/auth.js";
 
 export function reservasRouter(

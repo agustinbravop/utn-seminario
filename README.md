@@ -13,6 +13,12 @@ asignatura de la carrera Ingeniería en Sistemas de Información necesaria para 
 - Ortiz, Claudia Marisela.
 - San Lorenzo, André Leandro.
 
+## Demo en vivo
+
+El deploy de la aplicación se puede encontrar en: https://playfinder-app-mds6s.ondigitalocean.app/.
+
+Nota: este link puede estar desactualizado. Si no funciona es porque la demo se dejó de mantener.
+
 ## Levantar la app en entorno local
 
 NOTA: Las variables de entorno que se muestran tienen valores por defecto y pueden ser cambiados a conveniencia.
@@ -39,6 +45,7 @@ PORT=3001
 
 GOOGLE_CLIENT_ID=242199369878-vh11h5c6s5t8oo0sp4tubclc3mv59l11.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET={secret}
+FRONT_URL=http://localhost:5173
 ```
 
 3. Obtener las dependencias:
@@ -68,6 +75,7 @@ yarn install
 ```shell
 VITE_API_BASE_URL=http://localhost:3001
 VITE_GOOGLE_CLIENT_ID=242199369878-vh11h5c6s5t8oo0sp4tubclc3mv59l11.apps.googleusercontent.com
+VITE_BASE_URL=http://localhost:5173
 ```
 
 7. Levantar el servidor:

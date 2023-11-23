@@ -1,5 +1,5 @@
-import { Pago } from "../models/pago";
-import { PagoRepository } from "../repositories/pagos";
+import { Pago } from "../models/pago.js";
+import { PagoRepository } from "../repositories/pagos.js";
 
 export type BuscarPagosQuery = {
   idCancha?: number;
