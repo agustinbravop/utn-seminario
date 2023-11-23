@@ -89,8 +89,8 @@ export default function LoginPage() {
               {error.status === 401
                 ? "La contraseña ingresada es incorrecta."
                 : error.status === 404
-                ? "Ese correo o usuario no está registrado."
-                : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
+                  ? "Ese correo o usuario no está registrado."
+                  : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
             </Alert>
           )}
         </VStack>
@@ -123,7 +123,7 @@ export default function LoginPage() {
         <Text mt="1em" textAlign="center">
           ¿Olvidó su contraseña?{" "}
           <Link to="/auth/clave-olvidada" style={{ color: "blue" }}>
-            Restablecer
+            Restablecerla
           </Link>
         </Text>
       </FormProvider>

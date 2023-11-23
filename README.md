@@ -13,6 +13,12 @@ asignatura de la carrera Ingeniería en Sistemas de Información necesaria para 
 - Ortiz, Claudia Marisela.
 - San Lorenzo, André Leandro.
 
+## Demo en vivo
+
+El deploy de la aplicación se puede encontrar en: https://playfinder-app-mds6s.ondigitalocean.app/.
+
+Nota: este link puede estar desactualizado. Si no funciona es porque la demo se dejó de mantener.
+
 ## Levantar la app en entorno local
 
 NOTA: Las variables de entorno que se muestran tienen valores por defecto y pueden ser cambiados a conveniencia.
