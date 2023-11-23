@@ -54,7 +54,7 @@ export default function BuscarEstablecimientosPage() {
           mt="15px"
           mx="auto"
           p="0.3rem"
-          width="360px"
+          maxWidth="360px"
           borderRadius="10px"
         >
           <HStack spacing="0.3rem">

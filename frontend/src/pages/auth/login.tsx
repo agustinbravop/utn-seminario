@@ -40,9 +40,9 @@ export default function LoginPage() {
   const { mutate, isLoading, isError, error } = useLogin({
     onSuccess: (user) => {
       if (user.admin) {
-        navigate(`/admin/${user.admin.id}`);
+        navigate("/ests");
       } else {
-        navigate(`/search`);
+        navigate("/search");
       }
     },
   });
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
         <Box position="relative">
           <Divider />
-          <AbsoluteCenter bg="white" px="4">
+          <AbsoluteCenter bg="white" px="10px">
             O con un proveedor
           </AbsoluteCenter>
         </Box>
@@ -117,6 +117,13 @@ export default function LoginPage() {
           ¿No tiene una cuenta?{" "}
           <Link to="/auth/register" style={{ color: "blue" }}>
             Registrarse
+          </Link>
+        </Text>
+
+        <Text mt="1em" textAlign="center">
+          ¿Olvidó su contraseña?{" "}
+          <Link to="/auth/clave-olvidada" style={{ color: "blue" }}>
+            Restablecer
           </Link>
         </Text>
       </FormProvider>

@@ -40,7 +40,7 @@ export default function SelectEstablecimiento() {
         description: `Suscripción actualizada exitosamente.`,
         status: "success",
       });
-      navigate(`/admin/${admin?.id}`);
+      navigate(`/ests`);
     },
     onError: () => {
       toast({
