@@ -127,7 +127,7 @@ var misoptions = {
             </Select>
             <br/>
             <br/>
-            <span>HASTA</span>
+            <span>HASTA:</span>
             <Select  maxW="100" value = {hasta} onChange={(e)=>setHasta(e.target.value)}>
                 { 
                  ArrayHorarios.map((hora, index)=> ( 
