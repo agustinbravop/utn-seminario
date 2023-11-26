@@ -10,7 +10,7 @@
     "build": "npx prisma migrate dev && npx prisma db seed && tsc --project .",
     "dev": "tsx watch src/index.ts",
     "start": "tsc --project . && node dist/src/index.js",
-    "serve": "tsc --watch src/index.ts",
+    "serve": "nodemon src/index.ts",
     "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

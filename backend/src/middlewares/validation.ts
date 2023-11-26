@@ -38,7 +38,6 @@ export function validateBody(schema: AnyZodObject) {
 export function validateQueryParams(schema: AnyZodObject) {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.query);
-
     if (!result.success) {
       const issues = result.error.issues;
       const msg = issues

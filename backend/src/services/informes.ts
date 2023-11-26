@@ -5,7 +5,13 @@ import { setMidnight } from "../utils/dates";
 import { CanchaService } from "./canchas";
 import { EstablecimientoService } from "./establecimientos";
 import { ReservaService } from "./reservas";
+import { InformeRepository, Semanas} from "../repositories/informe";
 
+export type queryHorarios = { 
+  idEst:number; 
+  horaInicio:string;  
+  horaFinal:string; 
+}
 export type PagosPorCanchaQuery = {
   idEst: number;
   fechaDesde?: Date;
@@ -24,21 +30,25 @@ type IngresosPorCancha = Establecimiento & {
 
 export interface InformeService {
   ingresosPorCancha(query: PagosPorCanchaQuery): Promise<IngresosPorCancha>;
+  getAllReserva(queryHorarios:queryHorarios):Promise<Semanas>; 
 }
 
 export class InformeServiceImpl implements InformeService {
   private estService: EstablecimientoService;
   private canchaService: CanchaService;
   private reservaService: ReservaService;
+  private informe:InformeRepository;  
 
   constructor(
     estService: EstablecimientoService,
     canchaService: CanchaService,
-    reservaService: ReservaService
+    reservaService: ReservaService, 
+    informeService:InformeRepository,
   ) {
     this.estService = estService;
     this.canchaService = canchaService;
     this.reservaService = reservaService;
+    this.informe=informeService; 
   }
 
   async ingresosPorCancha(query: PagosPorCanchaQuery) {
@@ -76,5 +86,10 @@ export class InformeServiceImpl implements InformeService {
     }
 
     return res;
+  }
+
+  async getAllReserva(query:queryHorarios):Promise<Semanas> 
+  { 
+    return await this.informe.getAllReserva(query); 
   }
 }
