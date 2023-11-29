@@ -1,6 +1,6 @@
 import { EstablecimientoMenu } from "@/components/navigation";
 import { Bar } from "react-chartjs-2";
-import { Select, HStack, Box } from "@chakra-ui/react";
+import { Select, HStack, Box, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useParams } from "@/router";
 import {
@@ -42,11 +42,16 @@ function horarios() {
   return tiempo;
 }
 
-export default function HorariosPopularesPage() {
+export default function InformeHorariosPage() {
   return (
     <Box mx="12%">
       <EstablecimientoMenu />
-      <InformesMenu title="Horarios Poulares del Establecimiento" />
+      <InformesMenu informe="Horarios" />
+      <Text>
+        Este gráfico muestra los días históricamente más concurridos de este
+        establecimiento, en base a todas las reservas que se realizaron en
+        PlayFinder.
+      </Text>
       <Bars />
     </Box>
   );

@@ -99,6 +99,7 @@ export function createRouter(prismaClient: PrismaClient): Router {
     estService,
     canchaService,
     resService,
+    pagoService,
     informeRepo
   );
   const informeHandler = new InformeHandler(informeService);

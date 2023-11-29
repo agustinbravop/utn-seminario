@@ -4,15 +4,22 @@ import {
   InformeHandler,
   informeHorarios,
   informePagosPorCanchaQuerySchema,
+  informeReservasPorCanchaQuerySchema,
 } from "../handlers/informes.js";
 
 export function informesRouter(handler: InformeHandler): Router {
   const router = express.Router();
 
   router.get(
-    "/ingresosPorCancha",
+    "/reservasPorCancha",
+    validateQueryParams(informeReservasPorCanchaQuerySchema),
+    handler.reservasPorCancha()
+  );
+
+  router.get(
+    "/pagosPorCancha",
     validateQueryParams(informePagosPorCanchaQuerySchema),
-    handler.ingresosPorCancha()
+    handler.pagosPorCancha()
   );
 
   router.get(

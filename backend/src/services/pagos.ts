@@ -4,8 +4,8 @@ import { PagoRepository } from "../repositories/pagos.js";
 export type BuscarPagosQuery = {
   idCancha?: number;
   idEst?: number;
-  fechaDesde?: string;
-  fechaHasta?: string;
+  fechaDesde?: Date;
+  fechaHasta?: Date;
 };
 
 export interface PagoService {

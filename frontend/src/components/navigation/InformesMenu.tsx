@@ -11,7 +11,15 @@ import {
 } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 
-export default function InformesMenu({ title }: { title: string }) {
+type Informe = "Reservas" | "Pagos" | "Horarios";
+
+const titulo = {
+  Reservas: "Reservas por período",
+  Pagos: "Pagos cobrados por período",
+  Horarios: "Horarios populares",
+};
+
+export default function InformesMenu({ informe }: { informe: Informe }) {
   const { idEst } = useParams();
   return (
     <HStack my="1.5em" gap="2em">
@@ -20,27 +28,33 @@ export default function InformesMenu({ title }: { title: string }) {
           as={Button}
           leftIcon={<Icon as={ChevronDownIcon} boxSize={6} />}
         >
-          Informes
+          {informe}
         </MenuButton>
         <MenuList zIndex="dropdown">
-          <Link to={`/ests/${idEst}/informes`}>
-            <MenuItem>
-              <InfoIcon mr="20px" /> Reservas
-            </MenuItem>
-          </Link>
-          <Link to={`/ests/${idEst}/informes/pagos`}>
-            <MenuItem>
-              <InfoIcon mr="20px" /> Pagos
-            </MenuItem>
-          </Link>
-          <Link to={`/ests/${idEst}/informes/horarios`}>
-            <MenuItem>
-              <InfoIcon mr="20px" /> Horarios
-            </MenuItem>
-          </Link>
+          {informe !== "Reservas" && (
+            <Link to={`/ests/${idEst}/informes`}>
+              <MenuItem>
+                <InfoIcon mr="20px" /> Reservas
+              </MenuItem>
+            </Link>
+          )}
+          {informe !== "Pagos" && (
+            <Link to={`/ests/${idEst}/informes/pagos`}>
+              <MenuItem>
+                <InfoIcon mr="20px" /> Pagos
+              </MenuItem>
+            </Link>
+          )}
+          {informe !== "Horarios" && (
+            <Link to={`/ests/${idEst}/informes/horarios`}>
+              <MenuItem>
+                <InfoIcon mr="20px" /> Horarios
+              </MenuItem>
+            </Link>
+          )}
         </MenuList>
       </Menu>
-      <Heading size="lg">{title}</Heading>
+      <Heading size="lg">{titulo[informe]}</Heading>
     </HStack>
   );
 }

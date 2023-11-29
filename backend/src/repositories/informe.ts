@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { queryHorarios } from "../services/informes.js";
+import { HorariosPopularesQuery } from "../services/informes.js";
 
-export type Semanas = {
+export type HorariosPorSemana = {
   Lunes: number;
   Martes: Number;
   Miercoles: number;
@@ -12,7 +12,7 @@ export type Semanas = {
 };
 
 export interface InformeRepository {
-  getAllReserva(query: queryHorarios): Promise<Semanas>;
+  getAllReserva(query: HorariosPopularesQuery): Promise<HorariosPorSemana>;
 }
 
 export class PrismaInformeRepository implements InformeRepository {
@@ -38,7 +38,9 @@ export class PrismaInformeRepository implements InformeRepository {
     pagoSenia: true,
   };
 
-  async getAllReserva(query: queryHorarios): Promise<Semanas> {
+  async getAllReserva(
+    query: HorariosPopularesQuery
+  ): Promise<HorariosPorSemana> {
     const diasSemana = {
       Lunes: 0,
       Martes: 0,
