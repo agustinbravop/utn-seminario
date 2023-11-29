@@ -37,7 +37,8 @@ type EstadisticaHorarios = {
   horaInicio: string;
   horaFinal: string;
 };
-type EstadisticaDia = {
+
+export type EstadisticaDia = {
   Lunes: number;
   Martes: number;
   Miercoles: number;
@@ -46,6 +47,7 @@ type EstadisticaDia = {
   Sabado: number;
   Domingo: number;
 };
+
 export function useEstadisticasHorarios(
   query: EstadisticaHorarios,
   options?: UseApiQueryOptions<EstadisticaDia>

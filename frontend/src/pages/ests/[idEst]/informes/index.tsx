@@ -1,5 +1,6 @@
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { EstablecimientoMenu } from "@/components/navigation";
+import InformesMenu from "@/components/navigation/InformesMenu";
 import { useParams } from "@/router";
 import { useInformePagosPorCancha } from "@/utils/api";
 import { FallbackImage } from "@/utils/constants";
@@ -37,6 +38,7 @@ export default function EstablecimientoReservasPage() {
   return (
     <Box mr="12%" ml="12%">
       <EstablecimientoMenu />
+      <InformesMenu title="Fechas de reservas" />
       <HStack mb="20px" mt="30px">
         <FormControl variant="floating" width="auto">
           <Input
