@@ -2,7 +2,7 @@ import {
   BadGatewayError,
   InternalServerError,
   UnauthorizedError,
-} from "../apierrors";
+} from "../apierrors.js";
 
 /** Los datos que el usuario de Google compartió con nuestra app. */
 type GoogleUserInfo = {
@@ -28,7 +28,7 @@ export async function getAccessTokenFromGoogleCode(code: string) {
         client_id: process.env.GOOGLE_CLIENT_ID,
         client_secret: process.env.GOOGLE_CLIENT_SECRET,
         // Esta `redirect_uri` debe ser la misma que la configurada en las credenciales de Google.
-        redirect_uri: "http://localhost:5173/auth/redirect/google",
+        redirect_uri: `${process.env.FRONT_URL}/auth/redirect/google`,
         grant_type: "authorization_code",
         code,
       }),
@@ -51,7 +51,6 @@ export async function getGoogleUserInfo(access_token: string) {
       headers: { Authorization: `Bearer ${access_token}` },
     });
     if (res.ok) {
-      
       return (await res.json()) as GoogleUserInfo;
     }
   } catch {

@@ -2,12 +2,12 @@ import { RequestHandler } from "express";
 import {
   BuscarDisponibilidadesQuery,
   DisponibilidadService,
-} from "../services/disponibilidades";
+} from "../services/disponibilidades.js";
 import {
   Disponibilidad,
   disponibilidadSchema,
 } from "../models/disponibilidad.js";
-import { ForbiddenError } from "../utils/apierrors";
+import { ForbiddenError } from "../utils/apierrors.js";
 import { z } from "zod";
 
 export const crearDisponibilidadSchema = disponibilidadSchema.omit({

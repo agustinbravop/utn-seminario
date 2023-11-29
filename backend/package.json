@@ -7,7 +7,8 @@
     "seed": "tsx prisma/seed.ts"
   },
   "scripts": {
-    "build": "npx prisma migrate dev && npx prisma db seed && tsc --project .",
+    "migrate": "npx prisma migrate dev && npx prisma db seed",
+    "build": "npx prisma generate && tsc --project .",
     "dev": "tsx watch src/index.ts",
     "start": "tsc --project . && node dist/src/index.js",
     "serve": "nodemon src/index.ts",
@@ -41,7 +42,7 @@
     "jose": "^4.14.4",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.3",
+    "nodemailer": "^6.9.7",
     "zod": "^3.21.4"
   }
 }

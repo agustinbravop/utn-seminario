@@ -2,7 +2,7 @@ import express, { Router } from "express";
 import {
   validateIDParams,
   validateQueryParams,
-} from "../middlewares/validation";
+} from "../middlewares/validation.js";
 import { PagoHandler, buscarPagosQuerySchema } from "../handlers/pagos.js";
 
 export function pagosRouter(handler: PagoHandler): Router {

@@ -1,4 +1,4 @@
-import { Dia } from "../models/disponibilidad";
+import { Dia } from "../models/disponibilidad.js";
 
 /** Sigue el orden de JavaScript. Domingo === 0.  */
 const dias: Dia[] = [

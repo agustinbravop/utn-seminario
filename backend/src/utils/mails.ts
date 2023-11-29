@@ -1,28 +1,42 @@
-import nodemailer from "nodemailer";
-import { UsuarioConClave } from "../repositories/auth";
-import { BadRequestError } from "./apierrors";
+import nodemailer, { TransportOptions } from "nodemailer";
+import { Usuario } from "../services/auth.js";
+import { BadGatewayError } from "./apierrors.js";
 
-export async function enviarCorreo(admin: UsuarioConClave) {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.USERGMAIL,
-      pass: process.env.PASSGMAIL,
-    },
-  });
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    type: "OAUTH2",
+    user: process.env.GOOGLE_USER,
+    pass: process.env.GOOGLE_PASSWORD,
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+  },
+} as TransportOptions);
+
+export async function enviarRecuperarClave(user: Usuario, urlToken: string) {
+  const correo = user.admin ? user.admin.correo : user.jugador.correo;
+  const nombre = user.admin
+    ? `${user.admin.nombre} ${user.admin.apellido}`
+    : `${user.jugador.nombre} ${user.jugador.apellido}`;
   try {
     await transporter.sendMail({
-      from: "Cambio de Contraseña <seminariointegrador21@gmail.com>",
-      to: admin.admin?.correo,
-      subject: "Cambio de contraseña",
-      html: `<p>Estimado/a ${admin.admin?.correo} su contraseña se ha cambiado con exito </p>`,
+      from: "PlayFinder <playfinder0@gmail.com>",
+      to: correo,
+      subject: "PlayFinder - Restablecer su contraseña",
+      html: `
+      <h1>PlayFinder</h1>
+      <p>Estimado/a ${nombre}, usted ha solicitado recuperar su contraseña de PlayFinder.</p>
+      <p>Para cambiar su contraseña por una nueva, haga click en el siguiente link: 
+        <a href=${urlToken}>${urlToken}</a>
+      </p>`,
     });
   } catch (error) {
     console.error(error);
-    throw new BadRequestError(
-      "Ha ocurrido un error no se pudo enviar el correo. Intente más tarde"
+    throw new BadGatewayError(
+      "Error al intentar enviar el correo para recuperar la contraseña."
     );
   }
 }

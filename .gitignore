@@ -10,6 +10,7 @@ backend/imagenes
 
 # utilities
 *.bat
+*.sh
 
 # Keep environment variables out of version control
 .env

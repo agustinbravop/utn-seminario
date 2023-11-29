@@ -93,13 +93,13 @@ export function createRouter(prismaClient: PrismaClient): Router {
     pagoRepo
   );
   const resHandler = new ReservaHandler(resService);
-  const informeRepo=new PrismaInformeRepository(prismaClient); 
+  const informeRepo = new PrismaInformeRepository(prismaClient);
 
   const informeService = new InformeServiceImpl(
     estService,
     canchaService,
-    resService, 
-    informeRepo,
+    resService,
+    informeRepo
   );
   const informeHandler = new InformeHandler(informeService);
 

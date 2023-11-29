@@ -1,8 +1,8 @@
 import { PrismaClient, pago } from "@prisma/client";
-import { MetodoDePago, Pago } from "../models/pago";
+import { MetodoDePago, Pago } from "../models/pago.js";
 import Decimal from "decimal.js";
-import { InternalServerError, NotFoundError } from "../utils/apierrors";
-import { BuscarPagosQuery } from "../services/pagos";
+import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
+import { BuscarPagosQuery } from "../services/pagos.js";
 
 export interface PagoRepository {
   getByID(idPago: number): Promise<Pago>;

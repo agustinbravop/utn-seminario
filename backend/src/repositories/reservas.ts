@@ -216,7 +216,7 @@ export class PrismaReservaRepository implements ReservaRepository {
     } catch (e) {
       throw new InternalServerError("No se pudo crear la reserva");
     }
-  }  
+  }
 
   /**
    * Devuelve si una reserva de cierta disponibilidad en cierta fecha ya existe.

@@ -40,6 +40,18 @@ export const cambiarClaveSchema = z.object({
 
 type CambiarClave = z.infer<typeof cambiarClaveSchema>;
 
+export const correoResetearClaveSchema = z.object({
+  correo: z.string().email(),
+});
+
+export const resetearClaveSchema = z.object({
+  correo: z.string().email(),
+  nueva: z.string().min(1),
+  token: z.string().min(1),
+});
+
+type ResetearClave = z.infer<typeof resetearClaveSchema>;
+
 export class AuthHandler {
   private service: AuthService;
   private susService: SuscripcionService;
@@ -108,7 +120,7 @@ export class AuthHandler {
     };
   }
 
-  patchClave(): RequestHandler {
+  patchCambiarClave(): RequestHandler {
     return async (req, res) => {
       const { actual, nueva }: CambiarClave = res.locals.body;
 
@@ -121,6 +133,26 @@ export class AuthHandler {
 
       const token = await this.service.cambiarClave(correo, actual, nueva);
       res.status(200).json({ token });
+    };
+  }
+
+  postCorreoResetearClave(): RequestHandler {
+    return async (_req, res) => {
+      const correo = res.locals.body.correo;
+      console.log(correo);
+
+      await this.service.generarTokenParaResetearClave(correo);
+
+      res.status(201).json({});
+    };
+  }
+
+  patchResetearClave(): RequestHandler {
+    return async (_req, res) => {
+      const { nueva, correo, token }: ResetearClave = res.locals.body;
+
+      const jwt = await this.service.resetearClave(correo, token, nueva);
+      res.status(200).json({ token: jwt });
     };
   }
 
@@ -142,6 +174,13 @@ export class AuthHandler {
     return async (req, res, next) => {
       const token = req.header("Authorization");
       const jwt = await this.verifyAuthorizationHeader(token);
+
+      if (
+        !this.service.hasRol(jwt, Rol.Administrador) &&
+        !this.service.hasRol(jwt, Rol.Jugador)
+      ) {
+        throw new ForbiddenError("No tiene un rol válido");
+      }
 
       if (this.service.hasRol(jwt, Rol.Administrador)) {
         res.locals.idAdmin = Number(jwt?.admin?.id);
@@ -195,7 +234,7 @@ export class AuthHandler {
   googleRedirect(): RequestHandler {
     return async (req, res) => {
       const code = req.query.code as string;
-     
+
       const token = await this.service.loginGoogle(code);
       res.status(200).json({ token });
     };

@@ -1,7 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import {
+  PrismaClient,
+  administrador,
+  suscripcion,
+  tarjeta,
+} from "@prisma/client";
 import { InternalServerError, NotFoundError } from "../utils/apierrors.js";
 import { Administrador } from "../models/administrador.js";
-import { toAdmin } from "./auth.js";
+import { toSuscripcion } from "./suscripciones.js";
 
 export interface AdministradorRepository {
   getAdministradorByID(id: number): Promise<Administrador>;
@@ -59,4 +64,25 @@ export class PrismaAdministradorRepository implements AdministradorRepository {
     }
     throw new NotFoundError("No existe administrador con id " + id);
   }
+}
+
+type AdministradorDB = administrador & {
+  suscripcion: suscripcion;
+  tarjeta: tarjeta;
+};
+
+/**
+ * Sirve para sacar la clave, que pasa desapercibida en el tipo `Administrador`.
+ * @param admin una entidad administrador de Prisma.
+ * @param suscripcion una entidad suscripcion de Prisma.
+ * @param tarjeta una entidad tarjeta de Prisma.
+ * @returns un objeto Administrador del dominio.
+ */
+export function toAdmin({
+  clave,
+  idSuscripcion,
+  idTarjeta,
+  ...admin
+}: AdministradorDB): Administrador {
+  return { ...admin, suscripcion: toSuscripcion(admin.suscripcion) };
 }

@@ -1,13 +1,13 @@
 import Decimal from "decimal.js";
-import { Disponibilidad } from "../models/disponibilidad";
-import { Reserva } from "../models/reserva";
-import { CanchaRepository } from "../repositories/canchas";
-import { DisponibilidadRepository } from "../repositories/disponibilidades";
-import { PagoRepository } from "../repositories/pagos";
-import { ReservaRepository } from "../repositories/reservas";
-import { ConflictError, InternalServerError } from "../utils/apierrors";
-import { getDiaDeSemana, setHora, toUTC } from "../utils/dates";
-import { MetodoDePago } from "../models/pago";
+import { Disponibilidad } from "../models/disponibilidad.js";
+import { Reserva } from "../models/reserva.js";
+import { CanchaRepository } from "../repositories/canchas.js";
+import { DisponibilidadRepository } from "../repositories/disponibilidades.js";
+import { PagoRepository } from "../repositories/pagos.js";
+import { ReservaRepository } from "../repositories/reservas.js";
+import { ConflictError, InternalServerError } from "../utils/apierrors.js";
+import { getDiaDeSemana, setHora, toUTC } from "../utils/dates.js";
+import { MetodoDePago } from "../models/pago.js";
 
 export type CrearReserva = {
   fechaReservada: Date;
@@ -211,7 +211,4 @@ export class ReservaServiceImpl implements ReservaService {
       );
     }
   }
-
- 
-  
 }
