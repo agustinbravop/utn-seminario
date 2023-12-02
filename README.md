@@ -43,9 +43,12 @@ JWT_ISSUER=canchas-api
 JWT_EXPIRATION_TIME=24h
 PORT=3001
 
+FRONT_URL=http://localhost:5173
+
 GOOGLE_CLIENT_ID=242199369878-vh11h5c6s5t8oo0sp4tubclc3mv59l11.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET={secret}
-FRONT_URL=http://localhost:5173
+SENDGRID_API_KEY={secret}
+SENDGRID_VERIFIED_SENDER=playfinder0@gmail.com
 ```
 
 3. Obtener las dependencias:

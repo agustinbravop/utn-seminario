@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.3.1",
+    "@sendgrid/mail": "^6.5.5",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.37.1",
     "cors": "^2.8.5",
@@ -42,7 +43,6 @@
     "jose": "^4.14.4",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.7",
     "zod": "^3.21.4"
   }
 }
