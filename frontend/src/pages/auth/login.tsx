@@ -89,16 +89,16 @@ export default function LoginPage() {
               {error.status === 401
                 ? "La contraseña ingresada es incorrecta."
                 : error.status === 404
-                ? "Ese correo o usuario no está registrado."
-                : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
+                  ? "Ese correo o usuario no está registrado."
+                  : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
             </Alert>
           )}
         </VStack>
 
-        <Box position="relative">
+        <Box position="relative" maxWidth="450px" m="auto">
           <Divider />
-          <AbsoluteCenter bg="white" px="10px">
-            O con un proveedor
+          <AbsoluteCenter bg="white" width="150px" textAlign="center">
+            Con un proveedor
           </AbsoluteCenter>
         </Box>
 
@@ -111,7 +111,7 @@ export default function LoginPage() {
           </Link>
         </VStack>
 
-        <Divider />
+        <Divider maxWidth="450px" m="auto" />
 
         <Text mt="1em" textAlign="center">
           ¿No tiene una cuenta?{" "}
