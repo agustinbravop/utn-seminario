@@ -10,7 +10,6 @@ import {
 import { MdPlace } from "react-icons/md";
 import { Establecimiento } from "@/models/index";
 import { Link } from "react-router-dom";
-import { Box } from "@chakra-ui/react";
 import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 import { useBuscarDisponibilidades } from "@/utils/api";
 
@@ -30,40 +29,38 @@ export default function EstablecimientoCardJugador({
   return (
     <Link to={`est/${establecimiento.id}?date=${date}`}>
       <Card
-        maxWidth="340px"
-        height="240px"
+        maxWidth="350px"
+        height="250px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        <Box width="360px" height="125px">
+        <CardBody p="5px">
           <Image
-            src={
-              !(establecimiento?.urlImagen === null)
-                ? establecimiento?.urlImagen
-                : FALLBACK_IMAGE_SRC
-            }
+            src={establecimiento?.urlImagen}
+            fallbackSrc={FALLBACK_IMAGE_SRC}
             borderRadius="lg"
-            alt={`Imagen del establecimiento ${establecimiento.nombre}`}
+            alt={`${establecimiento.nombre}`}
             objectFit="cover"
-            height="100%"
-            width="93%"
-            mt="5px"
-            ml="0.8rem"
+            width="100%"
+            height="50%"
+            mb="1em"
           />
-        </Box>
-        <CardBody height="100%">
           <VStack spacing="0" textAlign="start">
             <Heading fontSize="15px" mb="10px">
               {establecimiento.nombre}
             </Heading>
             <Text mb="2" fontSize="sm">
-              <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
+              <Icon
+                as={MdPlace}
+                boxSize={4}
+                mr="0.2em"
+                verticalAlign="-0.2em"
+              />
               {establecimiento.direccion}
             </Text>
             <Text mb="0" fontSize="sm">
-              {/* TODO: hacer variable al $1800 */}
-              Desde{" "}
+              {"Desde "}
               <strong>
                 $
                 {disps.reduce(

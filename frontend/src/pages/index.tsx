@@ -23,7 +23,7 @@ export default function LandingPage() {
           jugar con tus amigos. Estás a un solo click de distancia.
         </Text>
         <Link to="/auth/login">
-          <Button mt="15px" type="button">
+          <Button mt="15px" type="button" colorScheme="brand">
             Buscar
           </Button>
         </Link>
@@ -43,8 +43,7 @@ export default function LandingPage() {
           </Heading>
           <Text maxWidth="400px">
             Play Finder te permite administrar las reservas de tus canchas,
-            aceptar pagos a través de Mercado Pago, ver reportes de ingresos y
-            mucho más.
+            registrar pagos, ver reportes de ingresos y mucho más.
           </Text>
           <Link to="/suscripciones">
             <Button mt="20px">Ver Opciones</Button>
