@@ -40,7 +40,7 @@ export default function ResetearClavePage() {
     onSuccess: () => {
       toast({
         title: "Contraseña reestablecida.",
-        description: "Guárdela de manera segura.",
+        description: "Recuérdela de manera segura.",
         status: "success",
       });
     },

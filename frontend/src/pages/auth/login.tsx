@@ -95,10 +95,10 @@ export default function LoginPage() {
           )}
         </VStack>
 
-        <Box position="relative">
+        <Box position="relative" maxWidth="450px" m="auto">
           <Divider />
-          <AbsoluteCenter bg="white" px="10px">
-            O con un proveedor
+          <AbsoluteCenter bg="white" width="150px" textAlign="center">
+            Con un proveedor
           </AbsoluteCenter>
         </Box>
 
@@ -111,7 +111,7 @@ export default function LoginPage() {
           </Link>
         </VStack>
 
-        <Divider />
+        <Divider maxWidth="450px" m="auto" />
 
         <Text mt="1em" textAlign="center">
           ¿No tiene una cuenta?{" "}
