@@ -9,8 +9,8 @@ import {
   InformeRepository,
   HorariosPorSemana,
 } from "../repositories/informe.js";
-import { Pago } from "../models/pago.js";
 import { PagoService } from "./pagos.js";
+import { PagoConReserva } from "../models/pago.js";
 
 export type HorariosPopularesQuery = {
   idEst: number;
@@ -34,15 +34,9 @@ type ReservasPorCancha = Establecimiento & {
   total: number;
 };
 
-export type PagosPorCanchaQuery = {
-  idEst: number;
-  fechaDesde?: Date;
-  fechaHasta?: Date;
-};
-
 type PagosPorCancha = Establecimiento & {
   canchas: (Cancha & {
-    pagos: Pago[];
+    pagos: PagoConReserva[];
     total: number;
   })[];
   total: number;
@@ -50,7 +44,7 @@ type PagosPorCancha = Establecimiento & {
 
 export interface InformeService {
   reservasPorCancha(query: ReservasPorCanchaQuery): Promise<ReservasPorCancha>;
-  pagosPorCancha(query: PagosPorCanchaQuery): Promise<PagosPorCancha>;
+  pagosPorCancha(query: ReservasPorCanchaQuery): Promise<PagosPorCancha>;
   horariosPopulares(query: HorariosPopularesQuery): Promise<HorariosPorSemana>;
 }
 
@@ -78,7 +72,7 @@ export class InformeServiceImpl implements InformeService {
   async reservasPorCancha(query: ReservasPorCanchaQuery) {
     const est = await this.estService.getByID(query.idEst);
     const canchas = await this.canchaService.getByEstablecimientoID(est.id);
-    const res: ReservasPorCancha = {
+    const reservasPorCancha: ReservasPorCancha = {
       ...est,
       canchas: [],
       total: 0,
@@ -104,18 +98,18 @@ export class InformeServiceImpl implements InformeService {
         return acum + senia + monto;
       }, 0);
 
-      res.canchas.push({ ...c, reservas, total, estimado });
-      res.total += total;
-      res.estimado += estimado;
+      reservasPorCancha.canchas.push({ ...c, reservas, total, estimado });
+      reservasPorCancha.total += total;
+      reservasPorCancha.estimado += estimado;
     }
 
-    return res;
+    return reservasPorCancha;
   }
 
-  async pagosPorCancha(query: PagosPorCanchaQuery) {
+  async pagosPorCancha(query: ReservasPorCanchaQuery) {
     const est = await this.estService.getByID(query.idEst);
     const canchas = await this.canchaService.getByEstablecimientoID(est.id);
-    const res: PagosPorCancha = {
+    const pagosPorCancha: PagosPorCancha = {
       ...est,
       canchas: [],
       total: 0,
@@ -130,17 +124,13 @@ export class InformeServiceImpl implements InformeService {
           : undefined,
       });
 
-      const total = pagos.reduce((acum, p) => {
-        const senia = p.monto ?? 0;
-        const monto = p.monto ?? 0;
-        return acum + senia + monto;
-      }, 0);
+      const total = pagos.reduce((acum, p) => acum + p.monto ?? 0, 0);
 
-      res.canchas.push({ ...c, pagos, total });
-      res.total += total;
+      pagosPorCancha.canchas.push({ ...c, pagos, total });
+      pagosPorCancha.total += total;
     }
 
-    return res;
+    return pagosPorCancha;
   }
 
   async horariosPopulares(

@@ -1,5 +1,5 @@
 import { API_URL } from ".";
-import { Cancha, Establecimiento, Pago, Reserva } from "@/models";
+import { Cancha, Establecimiento, PagoConReserva, Reserva } from "@/models";
 import { useApiQuery, UseApiQueryOptions } from "@/hooks";
 import queryString from "query-string";
 
@@ -40,7 +40,7 @@ export type PagosPorCanchaQuery = {
 
 type PagosPorCancha = Establecimiento & {
   canchas: (Cancha & {
-    pagos: Pago[];
+    pagos: PagoConReserva[];
     total: number;
   })[];
   total: number;

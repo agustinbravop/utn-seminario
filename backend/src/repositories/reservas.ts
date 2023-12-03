@@ -8,10 +8,10 @@ import {
   pago,
   reserva,
 } from "@prisma/client";
-import { disponibilidadDB, toDisp } from "./disponibilidades.js";
+import { DisponibilidadDB, toDisp } from "./disponibilidades.js";
 import { BuscarReservaQuery, CrearReserva } from "../services/reservas.js";
-import { toPago } from "./pagos.js";
 import { toJugador } from "./jugador.js";
+import { toPago } from "./pagos.js";
 
 type CrearReservaParams = CrearReserva & { precio: number; senia?: number };
 
@@ -236,28 +236,36 @@ export class PrismaReservaRepository implements ReservaRepository {
   }
 }
 
-type ReservaDB = reserva & {
+export type ReservaDB = reserva & {
   jugador:
     | (jugador & {
         localidad: localidad | null;
         disciplina: disciplina | null;
       })
     | null;
-  disponibilidad: disponibilidadDB;
+  disponibilidad: DisponibilidadDB;
   pagoReserva: pago | null;
   pagoSenia: pago | null;
 };
 
-function toRes(res: ReservaDB): Reserva {
+export function toResSinPagos(
+  res: Omit<ReservaDB, "pagoReserva" | "pagoSenia">
+): Omit<Reserva, "pagoReserva" | "pagoSenia"> {
   return {
     ...res,
     jugador: res.jugador ? toJugador(res.jugador) : undefined,
     jugadorNoRegistrado: res.jugadorNoRegistrado ?? undefined,
     senia: res.senia?.toNumber() ?? undefined,
     precio: res.precio.toNumber(),
-    pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
-    pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
     disponibilidad: toDisp(res.disponibilidad),
+  };
+}
+
+export function toRes(res: ReservaDB): Reserva {
+  return {
+    ...toResSinPagos(res),
+    pagoReserva: res.pagoReserva ? toPago(res.pagoReserva) : undefined,
+    pagoSenia: res.pagoSenia ? toPago(res.pagoSenia) : undefined,
   };
 }
 
@@ -267,10 +275,10 @@ async function awaitQuery(
   errorMsg: string
 ): Promise<Reserva> {
   try {
-    const reservaDB = await promise;
+    const reserva = await promise;
 
-    if (reservaDB) {
-      return toRes(reservaDB);
+    if (reserva) {
+      return toRes(reserva);
     }
   } catch {
     throw new InternalServerError(errorMsg);

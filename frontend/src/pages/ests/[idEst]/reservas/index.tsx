@@ -122,7 +122,7 @@ export default function EstablecimientoReservasPage() {
       filtroHasta
     );
 
-    var estadoCoincide = false;
+    let estadoCoincide = false;
     if (filtroEstado === estado && estado === "Pagada") {
       estadoCoincide = true;
     } else if (filtroEstado === estado && filtroEstado === "No Pagada") {
@@ -192,7 +192,7 @@ export default function EstablecimientoReservasPage() {
         <Tooltip label="Usted reserva un horario en nombre de clientes no registrados en PlayFinder">
           <Link
             style={{ marginLeft: "auto" }}
-            to={`../../../search/est/${idEst}/reservar`}
+            to={`/search/est/${idEst}/reservar`}
           >
             <Button>Reservar</Button>
           </Link>

@@ -1,4 +1,4 @@
-import { Pago } from "../models/pago.js";
+import { PagoConReserva } from "../models/pago.js";
 import { PagoRepository } from "../repositories/pagos.js";
 
 export type BuscarPagosQuery = {
@@ -9,8 +9,8 @@ export type BuscarPagosQuery = {
 };
 
 export interface PagoService {
-  getByID(idRes: number): Promise<Pago>;
-  buscar(filtros: BuscarPagosQuery): Promise<Pago[]>;
+  getByID(idRes: number): Promise<PagoConReserva>;
+  buscar(filtros: BuscarPagosQuery): Promise<PagoConReserva[]>;
 }
 
 export class PagoServiceImpl implements PagoService {

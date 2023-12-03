@@ -15,6 +15,6 @@ export const reservaSchema = z.object({
   jugadorNoRegistrado: z.string().optional(),
   disponibilidad: disponibilidadSchema,
   cancelada: z.boolean().default(false),
-  pagoReserva: pagoSchema.optional(),
-  pagoSenia: pagoSchema.optional(),
+  pagoReserva: z.lazy(() => pagoSchema.optional()),
+  pagoSenia: z.lazy(() => pagoSchema.optional()),
 });

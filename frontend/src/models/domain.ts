@@ -124,3 +124,7 @@ export type Pago = {
   fechaPago: string;
   metodoDePago: string;
 };
+
+export type PagoConReserva = Pago & {
+  reserva: Omit<Reserva, "pagoReserva" | "pagoSenia">;
+};

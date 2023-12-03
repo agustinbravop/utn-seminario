@@ -79,7 +79,7 @@ export default function InformePagosPage() {
             <Stat>
               <StatLabel>
                 <Tooltip label="Dinero recibido de los pagos cobrados">
-                  Pagos recibidos
+                  Pagos
                 </Tooltip>
               </StatLabel>
               <StatNumber>
@@ -89,7 +89,7 @@ export default function InformePagosPage() {
             <Stat>
               <StatLabel>
                 <Tooltip label="Dinero cobrado de los pagos recibidos en el período de tiempo">
-                  Ingresos cobrados
+                  Ingresos
                 </Tooltip>
               </StatLabel>
               <StatNumber>${informe.total}</StatNumber>
@@ -126,14 +126,20 @@ export default function InformePagosPage() {
                   <TableContainer border="2px solid gray" borderRadius="6">
                     <Table size="sm">
                       <Thead>
+                        <Th>Jugador</Th>
                         <Th>Monto</Th>
                         <Th>Fecha</Th>
                       </Thead>
                       <Tbody>
                         {cancha.pagos.map((p) => (
                           <Tr key={p.id}>
+                            <Td>
+                              {p.reserva.jugador
+                                ? p.reserva.jugador.nombre
+                                : p.reserva.jugadorNoRegistrado}
+                            </Td>
                             <Td>$ {p.monto}</Td>
-                            <Td>{p.fechaPago}</Td>
+                            <Td>{new Date(p.fechaPago).toLocaleString()}</Td>
                           </Tr>
                         ))}
                       </Tbody>
