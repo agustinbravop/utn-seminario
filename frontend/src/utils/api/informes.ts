@@ -9,7 +9,7 @@ export type ReservasPorCanchaQuery = {
   fechaHasta?: string;
 };
 
-type ReservasPorCancha = Establecimiento & {
+export type ReservasPorCancha = Establecimiento & {
   canchas: (Cancha & {
     reservas: Reserva[];
     estimado: number;
@@ -38,7 +38,7 @@ export type PagosPorCanchaQuery = {
   fechaHasta?: string;
 };
 
-type PagosPorCancha = Establecimiento & {
+export type PagosPorCancha = Establecimiento & {
   canchas: (Cancha & {
     pagos: PagoConReserva[];
     total: number;

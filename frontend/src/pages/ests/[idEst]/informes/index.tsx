@@ -1,21 +1,30 @@
 import { ReservaEstado } from "@/components/display";
-import LoadingSpinner from "@/components/feedback/LoadingSpinner";
-import { EstablecimientoMenu } from "@/components/navigation";
-import InformesMenu from "@/components/navigation/InformesMenu";
+import { LoadingSpinner } from "@/components/feedback";
+import { EstablecimientoMenu, InformesMenu } from "@/components/navigation";
 import { useParams } from "@/router";
-import { useInformeReservasPorCancha } from "@/utils/api";
+import { ReservasPorCancha, useInformeReservasPorCancha } from "@/utils/api";
 import { FallbackImage } from "@/utils/constants";
 import { formatFecha } from "@/utils/dates";
+import { useState } from "react";
+import { FaListUl } from "react-icons/fa";
 import {
   Box,
+  Button,
   Card,
   CardBody,
   FormControl,
   FormLabel,
   HStack,
   Heading,
+  Icon,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Stat,
   StatGroup,
   StatLabel,
@@ -29,13 +38,14 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function InformeReservasPage() {
   const { idEst } = useParams("/ests/:idEst/informes");
-  const [fechaDesde, setFechaDesde] = useState<string>(formatFecha(new Date()));
-  const [fechaHasta, setFechaHasta] = useState<string>(formatFecha(new Date()));
+  const [fechaDesde, setFechaDesde] = useState(formatFecha(new Date()));
+  const [fechaHasta, setFechaHasta] = useState(formatFecha(new Date()));
 
   const { data: informe } = useInformeReservasPorCancha({
     idEst: Number(idEst),
@@ -115,65 +125,105 @@ export default function InformeReservasPage() {
           </Heading>
           <HStack wrap="wrap" justify="center">
             {informe.canchas.map((cancha) => (
-              <Card key={cancha.id} width="350px" borderRadius="10px">
-                <Image
-                  src={cancha.urlImagen}
-                  fallback={<FallbackImage height="125px" />}
-                  height="125px"
-                  fit="cover"
-                  borderRadius="10px 10px 0 0"
-                />
-                <CardBody px="0.5em">
-                  <Heading mx="1em" size="md">
-                    {cancha.nombre}
-                  </Heading>
-                  <StatGroup mx="1em" mt="0.5em">
-                    <Stat>
-                      <StatLabel>Reservas</StatLabel>
-                      <StatNumber>{cancha.reservas.length}</StatNumber>
-                    </Stat>
-                    <Stat>
-                      <StatLabel>Estimado</StatLabel>
-                      <StatNumber>${cancha.estimado}</StatNumber>
-                    </Stat>
-                    <Stat>
-                      <StatLabel>Ingresado</StatLabel>
-                      <StatNumber>${cancha.total}</StatNumber>
-                    </Stat>
-                  </StatGroup>
-                  <TableContainer border="2px solid gray" borderRadius="6">
-                    <Table size="sm">
-                      <Thead>
-                        <Th>Jugador</Th>
-                        <Th>Horario</Th>
-                        <Th>Estado</Th>
-                      </Thead>
-                      <Tbody>
-                        {cancha.reservas.map((res) => (
-                          <Tr key={res.id}>
-                            <Td>
-                              {res.jugador
-                                ? res.jugador.nombre
-                                : res.jugadorNoRegistrado}
-                            </Td>
-                            <Td>
-                              {res.disponibilidad.horaInicio}-
-                              {res.disponibilidad.horaFin}
-                            </Td>
-                            <Td>
-                              <ReservaEstado res={res} />
-                            </Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                </CardBody>
-              </Card>
+              <InformeReservasDetalleCanchaCard cancha={cancha} />
             ))}
           </HStack>
         </Box>
       )}
     </Box>
+  );
+}
+
+function InformeReservasDetalleCanchaCard({
+  cancha,
+}: {
+  cancha: ReservasPorCancha["canchas"][0];
+}) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+
+  return (
+    <Card key={cancha.id} width="350px" borderRadius="10px">
+      <Image
+        src={cancha.urlImagen}
+        fallback={<FallbackImage height="125px" />}
+        height="125px"
+        fit="cover"
+        borderRadius="10px 10px 0 0"
+      />
+      <CardBody px="0.5em">
+        <HStack justify="space-between" mr="1em">
+          <Heading mx="1em" size="md">
+            {cancha.nombre}
+          </Heading>
+          <Button size="sm" onClick={onOpen}>
+            <Icon as={FaListUl} />
+          </Button>
+        </HStack>
+        <StatGroup mx="1em" mt="0.5em">
+          <Stat>
+            <StatLabel>Reservas</StatLabel>
+            <StatNumber>{cancha.reservas.length}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Estimado</StatLabel>
+            <StatNumber>${cancha.estimado}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Ingresado</StatLabel>
+            <StatNumber>${cancha.total}</StatNumber>
+          </Stat>
+        </StatGroup>
+
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Detalle de la cancha {cancha.nombre}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <TableContainer>
+                <Table size="sm">
+                  <Thead>
+                    <Th>Jugador</Th>
+                    <Th>Horario</Th>
+                    <Th>Estado</Th>
+                  </Thead>
+                  <Tbody>
+                    {cancha.reservas.map((res) => (
+                      <Tr
+                        key={res.id}
+                        onClick={() =>
+                          navigate(
+                            `/ests/${cancha.idEstablecimiento}/reservas/${res.id}`
+                          )
+                        }
+                        _hover={{
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Td>
+                          {res.jugador
+                            ? res.jugador.nombre
+                            : res.jugadorNoRegistrado}
+                        </Td>
+                        <Td>
+                          {res.disponibilidad.horaInicio}
+                          {" - "}
+                          {res.disponibilidad.horaFin}
+                        </Td>
+                        <Td>
+                          <ReservaEstado res={res} />
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </CardBody>
+    </Card>
   );
 }

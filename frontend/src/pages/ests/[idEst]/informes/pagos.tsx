@@ -1,20 +1,28 @@
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { EstablecimientoMenu } from "@/components/navigation";
 import InformesMenu from "@/components/navigation/InformesMenu";
-import { useParams } from "@/router";
-import { useInformePagosPorCancha } from "@/utils/api";
+import { useNavigate, useParams } from "react-router";
+import { PagosPorCancha, useInformePagosPorCancha } from "@/utils/api";
 import { FallbackImage } from "@/utils/constants";
 import { formatFecha } from "@/utils/dates";
 import {
   Box,
+  Button,
   Card,
   CardBody,
   FormControl,
   FormLabel,
   HStack,
   Heading,
+  Icon,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Stat,
   StatGroup,
   StatLabel,
@@ -28,11 +36,13 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { FaListUl } from "react-icons/fa";
 
 export default function InformePagosPage() {
-  const { idEst } = useParams("/ests/:idEst/informes/pagos");
+  const { idEst } = useParams();
   const [fechaDesde, setFechaDesde] = useState<string>(formatFecha(new Date()));
   const [fechaHasta, setFechaHasta] = useState<string>(formatFecha(new Date()));
 
@@ -78,9 +88,7 @@ export default function InformePagosPage() {
           <StatGroup width="fit-content" gap="40px" my="20px">
             <Stat>
               <StatLabel>
-                <Tooltip label="Dinero recibido de los pagos cobrados">
-                  Pagos
-                </Tooltip>
+                <Tooltip label="Cantidad de pagos cobrados">Pagos</Tooltip>
               </StatLabel>
               <StatNumber>
                 {informe.canchas.reduce((acum, c) => acum + c.pagos.length, 0)}
@@ -101,56 +109,94 @@ export default function InformePagosPage() {
           </Heading>
           <HStack wrap="wrap" justify="center">
             {informe.canchas.map((cancha) => (
-              <Card key={cancha.id} width="350px" borderRadius="10px">
-                <Image
-                  src={cancha.urlImagen}
-                  fallback={<FallbackImage height="125px" />}
-                  height="125px"
-                  fit="cover"
-                  borderRadius="10px 10px 0 0"
-                />
-                <CardBody px="0.5em">
-                  <Heading mx="1em" size="md">
-                    {cancha.nombre}
-                  </Heading>
-                  <StatGroup mx="1em" mt="0.5em">
-                    <Stat>
-                      <StatLabel>Pagos</StatLabel>
-                      <StatNumber>{cancha.pagos.length}</StatNumber>
-                    </Stat>
-                    <Stat>
-                      <StatLabel>Ingresado</StatLabel>
-                      <StatNumber>${cancha.total}</StatNumber>
-                    </Stat>
-                  </StatGroup>
-                  <TableContainer border="2px solid gray" borderRadius="6">
-                    <Table size="sm">
-                      <Thead>
-                        <Th>Jugador</Th>
-                        <Th>Monto</Th>
-                        <Th>Fecha</Th>
-                      </Thead>
-                      <Tbody>
-                        {cancha.pagos.map((p) => (
-                          <Tr key={p.id}>
-                            <Td>
-                              {p.reserva.jugador
-                                ? p.reserva.jugador.nombre
-                                : p.reserva.jugadorNoRegistrado}
-                            </Td>
-                            <Td>$ {p.monto}</Td>
-                            <Td>{new Date(p.fechaPago).toLocaleString()}</Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                </CardBody>
-              </Card>
+              <InformePagosDetalleCanchaCard cancha={cancha} />
             ))}
           </HStack>
         </Box>
       )}
     </Box>
+  );
+}
+
+function InformePagosDetalleCanchaCard({
+  cancha,
+}: {
+  cancha: PagosPorCancha["canchas"][0];
+}) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+
+  return (
+    <Card key={cancha.id} width="350px" borderRadius="10px">
+      <Image
+        src={cancha.urlImagen}
+        fallback={<FallbackImage height="125px" />}
+        height="125px"
+        fit="cover"
+        borderRadius="10px 10px 0 0"
+      />
+      <CardBody px="0.5em">
+        <HStack justify="space-between" mr="1em">
+          <Heading mx="1em" size="md">
+            {cancha.nombre}
+          </Heading>
+          <Button size="sm" onClick={onOpen}>
+            <Icon as={FaListUl} />
+          </Button>
+        </HStack>
+        <StatGroup mx="1em" mt="0.5em">
+          <Stat>
+            <StatLabel>Pagos</StatLabel>
+            <StatNumber>{cancha.pagos.length}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Ingresado</StatLabel>
+            <StatNumber>${cancha.total}</StatNumber>
+          </Stat>
+        </StatGroup>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Detalle de la cancha {cancha.nombre}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <TableContainer>
+                <Table size="sm">
+                  <Thead>
+                    <Th>Jugador</Th>
+                    <Th>Monto</Th>
+                    <Th>Fecha</Th>
+                  </Thead>
+                  <Tbody>
+                    {cancha.pagos.map((p) => (
+                      <Tr
+                        key={p.id}
+                        onClick={() =>
+                          navigate(
+                            `/ests/${cancha.idEstablecimiento}/reservas/${p.reserva.id}`
+                          )
+                        }
+                        _hover={{
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Td>
+                          {p.reserva.jugador
+                            ? p.reserva.jugador.nombre
+                            : p.reserva.jugadorNoRegistrado}
+                        </Td>
+                        <Td>$ {p.monto}</Td>
+                        <Td>{new Date(p.fechaPago).toLocaleString()}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </CardBody>
+    </Card>
   );
 }
