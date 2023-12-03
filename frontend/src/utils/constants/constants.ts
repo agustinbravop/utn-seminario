@@ -84,3 +84,7 @@ export const MINUTOS = [
   "50",
   "55",
 ];
+
+export const HORARIOS = HORAS.flatMap((hora) =>
+  MINUTOS.map((min) => `${hora}:${min}`)
+);

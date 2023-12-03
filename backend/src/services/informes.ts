@@ -5,17 +5,15 @@ import { setMidnight } from "../utils/dates.js";
 import { CanchaService } from "./canchas.js";
 import { EstablecimientoService } from "./establecimientos.js";
 import { ReservaService } from "./reservas.js";
-import {
-  InformeRepository,
-  HorariosPorSemana,
-} from "../repositories/informe.js";
+import { InformeRepository } from "../repositories/informe.js";
 import { PagoService } from "./pagos.js";
 import { PagoConReserva } from "../models/pago.js";
+import { Dia } from "../models/disponibilidad.js";
 
-export type HorariosPopularesQuery = {
+export type DiasDeSemanaPopularesQuery = {
   idEst: number;
   horaInicio: string;
-  horaFinal: string;
+  horaFin: string;
 };
 
 export type ReservasPorCanchaQuery = {
@@ -24,7 +22,7 @@ export type ReservasPorCanchaQuery = {
   fechaHasta?: Date;
 };
 
-type ReservasPorCancha = Establecimiento & {
+export type ReservasPorCancha = Establecimiento & {
   canchas: (Cancha & {
     reservas: Reserva[];
     estimado: number;
@@ -34,7 +32,7 @@ type ReservasPorCancha = Establecimiento & {
   total: number;
 };
 
-type PagosPorCancha = Establecimiento & {
+export type PagosPorCancha = Establecimiento & {
   canchas: (Cancha & {
     pagos: PagoConReserva[];
     total: number;
@@ -45,7 +43,9 @@ type PagosPorCancha = Establecimiento & {
 export interface InformeService {
   reservasPorCancha(query: ReservasPorCanchaQuery): Promise<ReservasPorCancha>;
   pagosPorCancha(query: ReservasPorCanchaQuery): Promise<PagosPorCancha>;
-  horariosPopulares(query: HorariosPopularesQuery): Promise<HorariosPorSemana>;
+  diasDeSemanaPopulares(
+    query: DiasDeSemanaPopularesQuery
+  ): Promise<Record<Dia, number>>;
 }
 
 export class InformeServiceImpl implements InformeService {
@@ -133,9 +133,7 @@ export class InformeServiceImpl implements InformeService {
     return pagosPorCancha;
   }
 
-  async horariosPopulares(
-    query: HorariosPopularesQuery
-  ): Promise<HorariosPorSemana> {
-    return await this.informe.getAllReserva(query);
+  async diasDeSemanaPopulares(query: DiasDeSemanaPopularesQuery) {
+    return await this.informe.getDiasDeSemanaPopulares(query);
   }
 }

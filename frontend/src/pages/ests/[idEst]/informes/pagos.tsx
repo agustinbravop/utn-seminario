@@ -48,8 +48,8 @@ export default function InformePagosPage() {
 
   const { data: informe } = useInformePagosPorCancha({
     idEst: Number(idEst),
-    fechaDesde: fechaDesde || undefined,
-    fechaHasta: fechaHasta || undefined,
+    fechaDesde: fechaDesde,
+    fechaHasta: fechaHasta,
   });
 
   return (

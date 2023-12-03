@@ -49,8 +49,8 @@ export default function InformeReservasPage() {
 
   const { data: informe } = useInformeReservasPorCancha({
     idEst: Number(idEst),
-    fechaDesde: fechaDesde || undefined,
-    fechaHasta: fechaHasta || undefined,
+    fechaDesde: fechaDesde,
+    fechaHasta: fechaHasta,
   });
 
   return (

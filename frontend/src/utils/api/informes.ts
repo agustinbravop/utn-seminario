@@ -1,12 +1,18 @@
 import { API_URL } from ".";
-import { Cancha, Establecimiento, PagoConReserva, Reserva } from "@/models";
+import {
+  Cancha,
+  Dia,
+  Establecimiento,
+  PagoConReserva,
+  Reserva,
+} from "@/models";
 import { useApiQuery, UseApiQueryOptions } from "@/hooks";
 import queryString from "query-string";
 
 export type ReservasPorCanchaQuery = {
-  idEst?: number;
-  fechaDesde?: string;
-  fechaHasta?: string;
+  idEst: number;
+  fechaDesde: string;
+  fechaHasta: string;
 };
 
 export type ReservasPorCancha = Establecimiento & {
@@ -25,18 +31,10 @@ export function useInformeReservasPorCancha(
 ) {
   return useApiQuery(
     ["informes", "reservasPorCancha", query],
-    new URL(
-      `${API_URL}/informes/reservasPorCancha?${queryString.stringify(query)}`
-    ),
+    `${API_URL}/informes/reservasPorCancha?${queryString.stringify(query)}`,
     { ...options }
   );
 }
-
-export type PagosPorCanchaQuery = {
-  idEst?: number;
-  fechaDesde?: string;
-  fechaHasta?: string;
-};
 
 export type PagosPorCancha = Establecimiento & {
   canchas: (Cancha & {
@@ -47,41 +45,29 @@ export type PagosPorCancha = Establecimiento & {
 };
 
 export function useInformePagosPorCancha(
-  query: PagosPorCanchaQuery,
+  query: ReservasPorCanchaQuery,
   options?: UseApiQueryOptions<PagosPorCancha>
 ) {
   return useApiQuery(
     ["informes", "pagosPorCancha", query],
-    new URL(
-      `${API_URL}/informes/pagosPorCancha?${queryString.stringify(query)}`
-    ),
+    `${API_URL}/informes/pagosPorCancha?${queryString.stringify(query)}`,
     { ...options }
   );
 }
 
-type EstadisticaHorarios = {
+type DiasDeSemanaPopularesQuery = {
   idEst?: number;
   horaInicio: string;
-  horaFinal: string;
+  horaFin: string;
 };
 
-export type EstadisticaDia = {
-  Lunes: number;
-  Martes: number;
-  Miercoles: number;
-  Jueves: number;
-  Viernes: number;
-  Sabado: number;
-  Domingo: number;
-};
-
-export function useEstadisticasHorarios(
-  query: EstadisticaHorarios,
-  options?: UseApiQueryOptions<EstadisticaDia>
+export function useDiasDeSemanaPopulares(
+  query: DiasDeSemanaPopularesQuery,
+  options?: UseApiQueryOptions<Record<Dia, number>>
 ) {
   return useApiQuery(
-    ["informes", "diasSemana", query],
-    new URL(`${API_URL}/informes/estadistica?${queryString.stringify(query)}`),
+    ["informes", "diasDeSemana", query],
+    `${API_URL}/informes/diasDeSemana?${queryString.stringify(query)}`,
     { ...options }
   );
 }

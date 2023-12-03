@@ -2,8 +2,7 @@ import express, { Router } from "express";
 import { validateQueryParams } from "../middlewares/validation.js";
 import {
   InformeHandler,
-  informeHorarios,
-  informePagosPorCanchaQuerySchema,
+  diasDeSemanaPopularesQuerySchema,
   informeReservasPorCanchaQuerySchema,
 } from "../handlers/informes.js";
 
@@ -18,14 +17,14 @@ export function informesRouter(handler: InformeHandler): Router {
 
   router.get(
     "/pagosPorCancha",
-    validateQueryParams(informePagosPorCanchaQuerySchema),
+    validateQueryParams(informeReservasPorCanchaQuerySchema),
     handler.pagosPorCancha()
   );
 
   router.get(
-    "/estadistica",
-    validateQueryParams(informeHorarios),
-    handler.HorariosMasConcurridos()
+    "/diasDeSemana",
+    validateQueryParams(diasDeSemanaPopularesQuerySchema),
+    handler.diasDeSemanaPopulares()
   );
 
   return router;

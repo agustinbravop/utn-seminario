@@ -1,27 +1,16 @@
 import { PrismaClient } from "@prisma/client";
-import { HorariosPopularesQuery } from "../services/informes.js";
-
-export type HorariosPorSemana = {
-  Lunes: number;
-  Martes: Number;
-  Miercoles: number;
-  Jueves: number;
-  Viernes: number;
-  Sabado: number;
-  Domingo: number;
-};
+import { DiasDeSemanaPopularesQuery } from "../services/informes.js";
+import { Dia } from "../models/disponibilidad.js";
+import { getDiaDeSemana } from "../utils/dates.js";
 
 export interface InformeRepository {
-  getAllReserva(query: HorariosPopularesQuery): Promise<HorariosPorSemana>;
+  getDiasDeSemanaPopulares(
+    query: DiasDeSemanaPopularesQuery
+  ): Promise<Record<Dia, number>>;
 }
 
 export class PrismaInformeRepository implements InformeRepository {
   private prisma: PrismaClient;
-
-  constructor(Prisma: PrismaClient) {
-    this.prisma = Prisma;
-  }
-
   private include = {
     disponibilidad: {
       include: {
@@ -38,63 +27,37 @@ export class PrismaInformeRepository implements InformeRepository {
     pagoSenia: true,
   };
 
-  async getAllReserva(
-    query: HorariosPopularesQuery
-  ): Promise<HorariosPorSemana> {
-    const diasSemana = {
+  constructor(Prisma: PrismaClient) {
+    this.prisma = Prisma;
+  }
+
+  async getDiasDeSemanaPopulares(query: DiasDeSemanaPopularesQuery) {
+    const diasSemana: Record<Dia, number> = {
       Lunes: 0,
       Martes: 0,
-      Miercoles: 0,
+      Miércoles: 0,
       Jueves: 0,
       Viernes: 0,
-      Sabado: 0,
+      Sábado: 0,
       Domingo: 0,
     };
-    const reserva = await this.prisma.reserva.findMany({
+    const reservas = await this.prisma.reserva.findMany({
       where: {
         disponibilidad: {
-          cancha: {
-            idEstablecimiento: query.idEst,
-          },
+          cancha: { idEstablecimiento: query.idEst },
+          horaInicio: { gte: query.horaInicio },
+          horaFin: { lte: query.horaFin },
         },
       },
       include: this.include,
     });
-    const reservaHorarios = reserva.filter(
-      (res) =>
-        res.disponibilidad.horaInicio >= query.horaInicio &&
-        res.disponibilidad.horaInicio <= query.horaFinal &&
-        res.disponibilidad.horaFin >= query.horaInicio &&
-        res.disponibilidad.horaFin <= query.horaFinal
-    );
-    reservaHorarios.forEach((element) =>
-      element.disponibilidad.dias.forEach((x) => {
-        switch (x.dia) {
-          case "Lunes":
-            diasSemana.Lunes = diasSemana.Lunes + 1;
-            break;
-          case "Martes":
-            diasSemana.Martes = diasSemana.Martes + 1;
-            break;
-          case "Miércoles":
-            diasSemana.Miercoles = diasSemana.Miercoles + 1;
-            break;
-          case "Jueves":
-            diasSemana.Jueves = diasSemana.Jueves + 1;
-            break;
-          case "Viernes":
-            diasSemana.Jueves = diasSemana.Jueves + 1;
-            break;
-          case "Sábado":
-            diasSemana.Sabado = diasSemana.Sabado + 1;
-            break;
-          case "Domingo":
-            diasSemana.Domingo = diasSemana.Domingo + 1;
-            break;
-        }
-      })
-    );
-    console.log("reserva", reserva);
+
+    for (const res of reservas) {
+      // Cada reserva realizada para un día de samana aumenta en uno ese día.
+      const dia = getDiaDeSemana(res.fechaReservada);
+      diasSemana[dia as Dia] += 1;
+    }
+
     return diasSemana;
   }
 }

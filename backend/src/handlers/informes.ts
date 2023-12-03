@@ -3,8 +3,7 @@ import { z } from "zod";
 import {
   InformeService,
   ReservasPorCanchaQuery,
-  HorariosPopularesQuery,
-  PagosPorCanchaQuery,
+  DiasDeSemanaPopularesQuery,
 } from "../services/informes.js";
 
 export const informeReservasPorCanchaQuerySchema = z.object({
@@ -13,16 +12,10 @@ export const informeReservasPorCanchaQuerySchema = z.object({
   fechaHasta: z.coerce.date().optional(),
 });
 
-export const informePagosPorCanchaQuerySchema = z.object({
-  idEst: z.coerce.number().int(),
-  fechaDesde: z.coerce.date().optional(),
-  fechaHasta: z.coerce.date().optional(),
-});
-
-export const informeHorarios = z.object({
+export const diasDeSemanaPopularesQuerySchema = z.object({
   idEst: z.coerce.number().int(),
   horaInicio: z.string(),
-  horaFinal: z.string(),
+  horaFin: z.string(),
 });
 
 export class InformeHandler {
@@ -41,16 +34,16 @@ export class InformeHandler {
 
   pagosPorCancha(): RequestHandler {
     return async (_req, res) => {
-      const query: PagosPorCanchaQuery = res.locals.query;
+      const query: ReservasPorCanchaQuery = res.locals.query;
       const pagosPorCancha = await this.service.pagosPorCancha(query);
       res.status(200).json(pagosPorCancha);
     };
   }
 
-  HorariosMasConcurridos(): RequestHandler {
+  diasDeSemanaPopulares(): RequestHandler {
     return async (_req, res) => {
-      const query: HorariosPopularesQuery = res.locals.query;
-      const reserva = await this.service.horariosPopulares(query);
+      const query: DiasDeSemanaPopularesQuery = res.locals.query;
+      const reserva = await this.service.diasDeSemanaPopulares(query);
       res.status(200).json(reserva);
     };
   }
