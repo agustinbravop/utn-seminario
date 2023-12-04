@@ -32,11 +32,8 @@ export default function EstablecimientoCard({
       >
         <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
           <Image
-            src={
-              !(establecimiento?.urlImagen === null)
-                ? establecimiento?.urlImagen
-                : FALLBACK_IMAGE_SRC
-            }
+            src={establecimiento?.urlImagen}
+            fallbackSrc={FALLBACK_IMAGE_SRC}
             borderTopRadius="lg"
             alt={`Imagen del establecimiento ${establecimiento.nombre}`}
             objectFit="cover"
@@ -50,11 +47,12 @@ export default function EstablecimientoCard({
               {establecimiento.nombre}
             </Heading>
             <Text mb="0">
-              <Icon as={MdPlace} boxSize={4} mr="2" />{" "}
+              <Icon as={MdPlace} boxSize={5} mr="2" verticalAlign="-0.2em" />
               {establecimiento.direccion}
             </Text>
             <Text>
-              <PhoneIcon boxSize={4} mr="2" /> {establecimiento.telefono}
+              <PhoneIcon boxSize={4} mr="2" verticalAlign="-0.15em" />
+              {establecimiento.telefono}
             </Text>
             <Text>{establecimiento.horariosDeAtencion}</Text>
           </VStack>

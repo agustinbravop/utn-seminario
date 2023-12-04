@@ -6,16 +6,11 @@ export const FALLBACK_IMAGE_SRC = fallbackImage;
 export const LOGO_IMAGE_SRC =
   "https://cdn.discordapp.com/attachments/1031369249345785886/1131656498670485614/SPOILER_logo.png";
 
-export const DISCIPLINAS = [
-  "Básquet",
-  "Fútbol",
-  "Tenis",
-  "Pádel",
-  "Hockey",
-  "Ping Pong",
-];
+export const DISCIPLINAS = Object.freeze(
+  ["Básquet", "Fútbol", "Tenis", "Pádel", "Hockey", "Ping Pong"].sort()
+);
 
-export const DIAS: Dia[] = [
+export const DIAS: readonly Dia[] = Object.freeze([
   "Lunes",
   "Martes",
   "Miércoles",
@@ -23,13 +18,13 @@ export const DIAS: Dia[] = [
   "Viernes",
   "Sábado",
   "Domingo",
-];
+]);
 
 /**
  * Mapea un día de la semana a su abreviación de tres caracteres.
  * @example DIAS_ABBR["Miércoles"] === "Mié" // true
  */
-export const DIAS_ABBR: Record<Dia, string> = {
+export const DIAS_ABBR: Record<Dia, string> = Object.freeze({
   Lunes: "Lun",
   Martes: "Mar",
   Miércoles: "Mié",
@@ -37,12 +32,12 @@ export const DIAS_ABBR: Record<Dia, string> = {
   Viernes: "Vie",
   Sábado: "Sáb",
   Domingo: "Dom",
-};
+});
 
-export const DURACION_RESERVA = [30, 45, 60, 90, 120];
+export const DURACION_RESERVA = Object.freeze([30, 45, 60, 90, 120]);
 
 /** Las horas del día, del '1' al '23'. */
-export const HORAS = [
+export const HORAS = Object.freeze([
   "00",
   "01",
   "02",
@@ -67,10 +62,10 @@ export const HORAS = [
   "21",
   "22",
   "23",
-];
+]);
 
 /** Los minutos de una hora, en múltiplos de 5. */
-export const MINUTOS = [
+export const MINUTOS = Object.freeze([
   "00",
   "05",
   "10",
@@ -83,4 +78,8 @@ export const MINUTOS = [
   "45",
   "50",
   "55",
-];
+]);
+
+export const HORARIOS = Object.freeze(
+  HORAS.flatMap((hora) => MINUTOS.map((min) => `${hora}:${min}`))
+);

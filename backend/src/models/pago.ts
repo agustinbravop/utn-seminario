@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { reservaSchema } from "./reserva";
 
 export enum MetodoDePago {
   Efectivo = "Efectivo",
@@ -16,3 +17,14 @@ export const pagoSchema = z.object({
   fechaPago: z.coerce.date(),
   metodoDePago: z.nativeEnum(MetodoDePago),
 });
+
+// Es necesario `z.lazy()` porque `reservaSchema` necesita `pagoSchema` para definirse.
+// `pagoConReserva` incluye todo de una reserva excepto los `pagoReserva` y `pagoSenia`.
+export const pagoConReservaSchema = pagoSchema.extend({
+  reserva: z.lazy(() =>
+    reservaSchema.omit({ pagoReserva: true, pagoSenia: true })
+  ),
+});
+
+/** Un objeto `Pago` asociado con la `Reserva` a la cual pertenece. */
+export type PagoConReserva = z.infer<typeof pagoConReservaSchema>;

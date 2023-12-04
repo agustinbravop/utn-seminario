@@ -1,9 +1,12 @@
 import { API_URL } from ".";
-import { Pago } from "@/models";
+import { PagoConReserva } from "@/models";
 import { useApiQuery, UseApiQueryOptions } from "@/hooks";
 import queryString from "query-string";
 
-export function usePagoByID(id: number, options?: UseApiQueryOptions<Pago>) {
+export function usePagoByID(
+  id: number,
+  options?: UseApiQueryOptions<PagoConReserva>
+) {
   return useApiQuery(
     ["establecimientos", id],
     `${API_URL}/establecimientos/${id}`,
@@ -18,7 +21,7 @@ export type BuscarPagosQuery = {
 
 export function useBuscarPagos(
   filtros: BuscarPagosQuery,
-  options?: UseApiQueryOptions<Pago[]>
+  options?: UseApiQueryOptions<PagoConReserva[]>
 ) {
   return useApiQuery(
     ["pagos", "buscar", filtros],

@@ -11,7 +11,7 @@
     "build": "npx prisma generate && tsc --project .",
     "dev": "tsx watch src/index.ts",
     "start": "tsc --project . && node dist/src/index.js",
-    "serve": "tsx watch src/index.ts",
+    "serve": "nodemon src/index.ts",
     "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

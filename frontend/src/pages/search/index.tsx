@@ -4,8 +4,15 @@ import {
   useBuscarEstablecimientos,
   useLocalidadesByProvincia,
 } from "@/utils/api";
+import { floatingLabelActiveStyles } from "@/themes/components";
 import { SearchIcon } from "@chakra-ui/icons";
-import { HStack, Heading, InputRightElement, VStack } from "@chakra-ui/react";
+import {
+  FormLabel,
+  HStack,
+  Heading,
+  InputRightElement,
+  VStack,
+} from "@chakra-ui/react";
 import { formatFecha } from "@/utils/dates";
 import { useYupForm, useBusqueda } from "@/hooks";
 import { useWatch, FormProvider } from "react-hook-form";
@@ -49,7 +56,7 @@ export default function BuscarEstablecimientosPage() {
       </Heading>
       <FormProvider {...methods}>
         <VStack
-          gap="0.5rem"
+          gap="0.65rem"
           bg="#e9eef1"
           mt="15px"
           mx="auto"
@@ -82,7 +89,7 @@ export default function BuscarEstablecimientosPage() {
             borderRadius="10px"
             bg="white"
           >
-            {DISCIPLINAS.sort().map((d) => (
+            {DISCIPLINAS.map((d) => (
               <option key={d} value={d}>
                 {d}
               </option>
@@ -99,22 +106,26 @@ export default function BuscarEstablecimientosPage() {
           />
           <InputControl
             name="nombre"
-            placeholder="Nombre del establecimiento"
-            label="Nombre del establecimiento"
+            placeholder="Nombre"
+            bg="white"
+            borderRadius="10px"
+            size="md"
+            width="100%"
+            label={
+              <FormLabel sx={{ ...floatingLabelActiveStyles }}>
+                Nombre del establecimiento
+              </FormLabel>
+            }
             rightElement={
               <InputRightElement>
                 <SearchIcon color="gray" />
               </InputRightElement>
             }
-            bg="white"
-            borderRadius="10px"
-            size="md"
-            width="100%"
           />
         </VStack>
       </FormProvider>
 
-      <HStack flexWrap="wrap" justifyContent="center" pt="20px" w="330">
+      <HStack flexWrap="wrap" justifyContent="center" pt="20px">
         {ests.length > 0 ? (
           ests.map((est) => (
             <EstablecimientoCardJugador

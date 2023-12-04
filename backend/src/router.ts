@@ -44,6 +44,7 @@ import { informesRouter } from "./routers/informes.js";
 import { InformeServiceImpl } from "./services/informes.js";
 import { InformeHandler } from "./handlers/informes.js";
 import { oauth2Router } from "./routers/oauth2.js";
+import { PrismaInformeRepository } from "./repositories/informes.js";
 
 export function createRouter(prismaClient: PrismaClient): Router {
   const router = express.Router();
@@ -92,11 +93,14 @@ export function createRouter(prismaClient: PrismaClient): Router {
     pagoRepo
   );
   const resHandler = new ReservaHandler(resService);
+  const informeRepo = new PrismaInformeRepository(prismaClient);
 
   const informeService = new InformeServiceImpl(
     estService,
     canchaService,
-    resService
+    resService,
+    pagoService,
+    informeRepo
   );
   const informeHandler = new InformeHandler(informeService);
 

@@ -34,6 +34,7 @@ import {
   useEstablecimientosEliminadosByAdminID,
 } from "@/utils/api";
 import { EstablecimientoBreadcrumb } from "@/components/navigation";
+import { QuestionAlert } from "@/components/media-and-icons";
 
 interface EstablecimientosListProps {
   data?: Establecimiento[];
@@ -51,7 +52,11 @@ function EstablecimientosList({ data }: EstablecimientosListProps) {
       </HStack>
     );
   } else {
-    return <Text textAlign="center">No se encontraron establecimientos</Text>;
+    return (
+      <QuestionAlert m="auto">
+        No se encontraron establecimientos.
+      </QuestionAlert>
+    );
   }
 }
 

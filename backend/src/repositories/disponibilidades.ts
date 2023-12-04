@@ -183,12 +183,12 @@ export class PrismaDisponibilidadRepository
   }
 }
 
-export type disponibilidadDB = Omit<disponibilidad, "idDisciplina"> & {
+export type DisponibilidadDB = Omit<disponibilidad, "idDisciplina"> & {
   disciplina: disciplina;
   dias: dia[];
 };
 
-export function toDisp(disp: disponibilidadDB): Disponibilidad {
+export function toDisp(disp: DisponibilidadDB): Disponibilidad {
   return {
     ...disp,
     disciplina: disp.disciplina.disciplina,
@@ -199,7 +199,7 @@ export function toDisp(disp: disponibilidadDB): Disponibilidad {
 }
 
 async function awaitQuery(
-  promise: Promise<disponibilidadDB | null>,
+  promise: Promise<DisponibilidadDB | null>,
   notFoundMsg: string,
   errorMsg: string
 ): Promise<Disponibilidad> {

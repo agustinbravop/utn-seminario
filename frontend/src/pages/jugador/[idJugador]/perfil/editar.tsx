@@ -116,7 +116,7 @@ export default function JugadorEditarPerfilPage() {
                 placeholder="Disciplina"
                 isRequired
               >
-                {DISCIPLINAS.sort().map((d) => (
+                {DISCIPLINAS.map((d) => (
                   <option key={d} value={d}>
                     {d}
                   </option>

@@ -1,11 +1,21 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
-import { InformeService, PagosPorCanchaQuery } from "../services/informes.js";
+import {
+  InformeService,
+  ReservasPorCanchaQuery,
+  DiasDeSemanaPopularesQuery,
+} from "../services/informes.js";
 
-export const informePagosPorCanchaQuerySchema = z.object({
+export const informeReservasPorCanchaQuerySchema = z.object({
   idEst: z.coerce.number().int(),
   fechaDesde: z.coerce.date().optional(),
   fechaHasta: z.coerce.date().optional(),
+});
+
+export const diasDeSemanaPopularesQuerySchema = z.object({
+  idEst: z.coerce.number().int(),
+  horaInicio: z.string(),
+  horaFin: z.string(),
 });
 
 export class InformeHandler {
@@ -14,11 +24,35 @@ export class InformeHandler {
     this.service = service;
   }
 
-  ingresosPorCancha(): RequestHandler {
+  reservasPorCancha(): RequestHandler {
     return async (_req, res) => {
-      const query: PagosPorCanchaQuery = res.locals.query;
-      const pagosPorCancha = await this.service.ingresosPorCancha(query);
+      const query: ReservasPorCanchaQuery = res.locals.query;
+      const pagosPorCancha = await this.service.reservasPorCancha(query);
       res.status(200).json(pagosPorCancha);
+    };
+  }
+
+  pagosPorCancha(): RequestHandler {
+    return async (_req, res) => {
+      const query: ReservasPorCanchaQuery = res.locals.query;
+      const pagosPorCancha = await this.service.pagosPorCancha(query);
+      res.status(200).json(pagosPorCancha);
+    };
+  }
+
+  diasDeSemanaPopulares(): RequestHandler {
+    return async (_req, res) => {
+      const query: DiasDeSemanaPopularesQuery = res.locals.query;
+      const reserva = await this.service.diasDeSemanaPopulares(query);
+      res.status(200).json(reserva);
+    };
+  }
+
+  horariosPopulares(): RequestHandler {
+    return async (_req, res) => {
+      const query: DiasDeSemanaPopularesQuery = res.locals.query;
+      const reserva = await this.service.horariosPopulares(query);
+      res.status(200).json(reserva);
     };
   }
 }

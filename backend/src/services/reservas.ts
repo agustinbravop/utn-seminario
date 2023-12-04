@@ -145,6 +145,7 @@ export class ReservaServiceImpl implements ReservaService {
     await this.validarDisponibilidadLibre(crearReserva, disp);
     await this.validarDiaDeSemana(crearReserva, disp);
     this.validarFechaReservada(crearReserva, disp);
+
     return await this.repo.crearReserva({
       ...crearReserva,
       jugadorNoRegistrado: crearReserva.jugadorNoRegistrado,
