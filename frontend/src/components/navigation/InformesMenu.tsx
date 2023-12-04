@@ -1,4 +1,4 @@
-import { ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Menu,
   MenuButton,
@@ -10,6 +10,9 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
+import { BsGraphUpArrow } from "react-icons/bs";
+import { IoTodayOutline } from "react-icons/io5";
+import { MdAutoGraph } from "react-icons/md";
 
 type Informe = "Reservas" | "Pagos" | "Horarios";
 
@@ -34,21 +37,21 @@ export default function InformesMenu({ informe }: { informe: Informe }) {
           {informe !== "Reservas" && (
             <Link to={`/ests/${idEst}/informes`}>
               <MenuItem>
-                <InfoIcon mr="20px" /> Reservas
+                <Icon as={MdAutoGraph} mr="20px" /> Reservas
               </MenuItem>
             </Link>
           )}
           {informe !== "Pagos" && (
             <Link to={`/ests/${idEst}/informes/pagos`}>
               <MenuItem>
-                <InfoIcon mr="20px" /> Pagos
+                <Icon as={BsGraphUpArrow} mr="20px" /> Pagos
               </MenuItem>
             </Link>
           )}
           {informe !== "Horarios" && (
             <Link to={`/ests/${idEst}/informes/horarios`}>
               <MenuItem>
-                <InfoIcon mr="20px" /> Horarios
+                <Icon as={IoTodayOutline} mr="20px" /> Horarios
               </MenuItem>
             </Link>
           )}

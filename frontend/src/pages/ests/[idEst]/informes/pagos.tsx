@@ -154,7 +154,7 @@ function InformePagosDetalleCanchaCard({
             <StatNumber>${cancha.total}</StatNumber>
           </Stat>
         </StatGroup>
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Detalle de la cancha {cancha.nombre}</ModalHeader>

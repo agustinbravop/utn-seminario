@@ -36,28 +36,14 @@ import {
 import { EstablecimientoBreadcrumb } from "@/components/navigation";
 import { QuestionAlert } from "@/components/media-and-icons";
 
-interface EstablecimientosListProps {
-  data?: Establecimiento[];
-  isLoading: boolean;
-  isError: boolean;
-}
-
-function EstablecimientosList({ data }: EstablecimientosListProps) {
-  if (data && data.length > 0) {
-    return (
-      <HStack flexWrap="wrap" justify="center" align="center" m="auto">
-        {data.map((est) => (
-          <EstablecimientoCard key={est.id} establecimiento={est} />
-        ))}
-      </HStack>
-    );
-  } else {
-    return (
-      <QuestionAlert m="auto">
-        No se encontraron establecimientos.
-      </QuestionAlert>
-    );
-  }
+function EstablecimientosList({ data }: { data: Establecimiento[] }) {
+  return (
+    <HStack flexWrap="wrap" justify="center" align="center" m="auto">
+      {data.map((est) => (
+        <EstablecimientoCard key={est.id} establecimiento={est} />
+      ))}
+    </HStack>
+  );
 }
 
 interface EstablecimientosEliminadosModalProps {
@@ -125,14 +111,12 @@ export default function EstablecimientosPage() {
     setFiltro(e.target.value);
   };
 
-  const {
-    data: establecimientos,
-    isLoading,
-    isError,
-  } = useEstablecimientosByAdminID(Number(admin.id));
+  const { data, isError, isFetched } = useEstablecimientosByAdminID(
+    Number(admin.id)
+  );
 
-  const establecimientosFiltrados = establecimientos.filter((establecimiento) =>
-    establecimiento.nombre.toLowerCase().includes(filtro.toLowerCase())
+  const establecimientos = data.filter((est) =>
+    est.nombre.toLowerCase().includes(filtro.toLowerCase())
   );
 
   return (
@@ -158,14 +142,14 @@ export default function EstablecimientosPage() {
 
         <HStack spacing={4}>
           <Text>
-            {establecimientos.length}
+            {data.length}
             {" / "}
             {admin.suscripcion.limiteEstablecimientos} establecimiento
             {admin.suscripcion.limiteEstablecimientos === 1 || "s"}
           </Text>
           <Link
             to={
-              establecimientos.length < admin.suscripcion.limiteEstablecimientos
+              data.length < admin.suscripcion.limiteEstablecimientos
                 ? `/admin/${admin.id}/nuevoEstablecimiento`
                 : `/admin/${admin.id}/mejorarSuscripcion`
             }
@@ -173,23 +157,21 @@ export default function EstablecimientosPage() {
             <Button leftIcon={<Icon as={GrAddCircle} />}>Agregar</Button>
           </Link>
           <EstablecimientosEliminadosModal
-            establecimientosActuales={establecimientos.length}
+            establecimientosActuales={data.length}
             idAdmin={admin.id}
           />
         </HStack>
       </HStack>
 
       <HStack ml="12%" mr="12%">
-        {isLoading ? (
+        {!isFetched ? (
           <LoadingSpinner />
-        ) : isError ? (
-          <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />
+        ) : isError || establecimientos.length === 0 ? (
+          <QuestionAlert m="auto">
+            No se encontraron establecimientos.
+          </QuestionAlert>
         ) : (
-          <EstablecimientosList
-            data={filtro ? establecimientosFiltrados : establecimientos}
-            isLoading={isLoading}
-            isError={isError}
-          />
+          <EstablecimientosList data={establecimientos} />
         )}
       </HStack>
     </>

@@ -36,13 +36,13 @@ export default function BuscarEstablecimientosPage() {
   useEffect(() => {
     updateFiltros(values);
   }, [values, updateFiltros]);
-  const { data: ests, isFetchedAfterMount } = useBuscarEstablecimientos({
+  const { data: ests, isFetched } = useBuscarEstablecimientos({
     ...values,
     disciplina: values.disciplina || undefined,
   });
   const { data: localidades } = useLocalidadesByProvincia(values.provincia);
   useEffect(() => {
-    // Evita que la localidad quede desincronizada con los Select de la interfaz.
+    // Evita que la localidad quede desincronizada con los `Select` de la interfaz.
     if (!localidades.includes(values.localidad ?? "")) {
       methods.setValue("localidad", undefined);
       setFiltro("localidad", "");
@@ -51,14 +51,14 @@ export default function BuscarEstablecimientosPage() {
 
   return (
     <>
-      <Heading size="md" textAlign="center">
+      <Heading size="lg" textAlign="center">
         Buscá un establecimiento para jugar
       </Heading>
       <FormProvider {...methods}>
         <VStack
           gap="0.65rem"
           bg="#e9eef1"
-          mt="15px"
+          mt="1.5em"
           mx="auto"
           p="0.3rem"
           maxWidth="360px"
@@ -134,7 +134,7 @@ export default function BuscarEstablecimientosPage() {
               date={values.fecha ?? formatFecha(new Date())}
             />
           ))
-        ) : isFetchedAfterMount ? (
+        ) : isFetched ? (
           <QuestionAlert>
             No se encontraron establecimientos con esos filtros.
           </QuestionAlert>

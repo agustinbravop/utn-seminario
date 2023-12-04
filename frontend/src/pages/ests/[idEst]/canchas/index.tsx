@@ -23,8 +23,9 @@ import { QuestionAlert } from "@/components/media-and-icons";
 export default function EstablecimientoCanchasPage() {
   const { idEst } = useParams();
   const [filtro, setFiltro] = useState("");
-  const { data, isLoading, isFetchedAfterMount, isError } =
-    useCanchasByEstablecimientoID(Number(idEst));
+  const { data, isFetched, isError } = useCanchasByEstablecimientoID(
+    Number(idEst)
+  );
 
   const canchas = data.filter((cancha) =>
     cancha.nombre.toLowerCase().includes(filtro.toLowerCase())
@@ -61,9 +62,9 @@ export default function EstablecimientoCanchasPage() {
           mensaje="Error inesperado. No podemos listar las canchas"
           status="error"
         />
-      ) : isLoading ? (
+      ) : !isFetched ? (
         <LoadingSpinner />
-      ) : canchas.length === 0 && isFetchedAfterMount ? (
+      ) : canchas.length === 0 && isFetched ? (
         <QuestionAlert m="auto">
           {filtro
             ? "No hay canchas con ese nombre."
