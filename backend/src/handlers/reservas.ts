@@ -2,7 +2,6 @@ import { RequestHandler } from "express";
 import { z } from "zod";
 import { CrearReserva, ReservaService } from "../services/reservas.js";
 import { BadRequestError } from "../utils/apierrors.js";
-import { Reserva } from "../models/reserva.js";
 
 export const crearReservaSchema = z.object({
   idDisponibilidad: z.number().positive().int(),
@@ -48,7 +47,6 @@ export class ReservaHandler {
   getReservaByID(): RequestHandler {
     return async (req, res) => {
       const idReserva = Number(req.params["idRes"]);
-
       const reserva = await this.service.getByID(idReserva);
       res.status(200).json(reserva);
     };
@@ -68,14 +66,17 @@ export class ReservaHandler {
 
   seniarReserva(): RequestHandler {
     return async (req, res) => {
-      const reserva: Reserva = {
-        id: Number(req.params["idRes"]),
-        pagoSenia: req.body.idPagoSenia,
-        pagoReserva: req.body.idPagoReserva,
-        ...req.body,
-      };
-      const reservaUpdated = await this.service.pagarSenia(reserva);
-      res.status(201).json(reservaUpdated);
+      const id = Number(req.params["idRes"]);
+      const reservaSeniada = await this.service.pagarSenia(id);
+      res.status(201).json(reservaSeniada);
+    };
+  }
+
+  pagarReserva(): RequestHandler {
+    return async (req, res) => {
+      const id = Number(req.params["idRes"]);
+      const reservaPagada = await this.service.pagarReserva(id);
+      res.status(201).json(reservaPagada);
     };
   }
 
@@ -84,19 +85,6 @@ export class ReservaHandler {
       const idReserva = Number(req.params["idRes"]);
       const reservaCancelada = await this.service.cancelarReserva(idReserva);
       res.status(201).json(reservaCancelada);
-    };
-  }
-
-  pagarReserva(): RequestHandler {
-    return async (req, res) => {
-      const reserva: Reserva = {
-        id: Number(req.params["idRes"]),
-        pagoSenia: req.body.idPagoSenia,
-        pagoReserva: req.body.idPagoReserva,
-        ...req.body,
-      };
-      const reservaUpdated = await this.service.pagarReserva(reserva);
-      res.status(201).json(reservaUpdated);
     };
   }
 }

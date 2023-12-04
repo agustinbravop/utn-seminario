@@ -43,8 +43,7 @@ export function reservasRouter(
   router.patch(
     "/:idRes",
     validateIDParams("idRes"),
-    //Solo el admin seña por ahora, el metodo de
-    //pago hardcodeado es "Efectivo" por ahora
+    // Solo el admin seña por ahora, y el método de pago hardcodeado es "Efectivo"
     authMiddle.isAdmin(),
     handler.seniarReserva()
   );
@@ -52,8 +51,7 @@ export function reservasRouter(
   router.patch(
     "/pagar/:idRes",
     validateIDParams("idRes"),
-    //Solo el admin seña por ahora, el metodo de
-    //pago hardcodeado es "Efectivo" por ahora
+    // Solo el admin paga por ahora, y el metodo de pago hardcodeado es "Efectivo"
     authMiddle.isAdmin(),
     handler.pagarReserva()
   );

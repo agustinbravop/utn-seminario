@@ -86,6 +86,7 @@ export default function ReservarEstablecimientoPage() {
 
       <Heading size="md">Horarios disponibles</Heading>
       <Text mb="1em">Seleccione un horario a reservar.</Text>
+
       <TablaDisponibilidadesReservables data={dispsFiltradas} />
       {dispsFiltradas.length === 0 && (
         <QuestionAlert>

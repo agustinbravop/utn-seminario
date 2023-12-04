@@ -60,7 +60,7 @@ export class PrismaReservaRepository implements ReservaRepository {
       const nuevaReserva = await this.prisma.reserva.update({
         where: { id: res.id },
         data: {
-          fechaCreada: res.fechaCreada, //falta congelar el precio de la seña :)
+          fechaCreada: res.fechaCreada, // TODO: falta congelar el precio de la seña :)
           fechaReservada: res.fechaReservada,
           precio: res.precio,
           cancelada: res.cancelada,

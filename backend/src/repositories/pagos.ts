@@ -8,7 +8,7 @@ import { ReservaDB, toResSinPagos } from "./reservas.js";
 export interface PagoRepository {
   getByID(idPago: number): Promise<PagoConReserva>;
   buscar(filtros: BuscarPagosQuery): Promise<PagoConReserva[]>;
-  crear(monto: Decimal, metodoPago: MetodoDePago): Promise<PagoConReserva>;
+  crear(monto: Decimal, metodoPago: MetodoDePago): Promise<Pago>;
   getAll(): Promise<PagoConReserva[]>;
 }
 
@@ -17,21 +17,12 @@ export class PrismaPagoRepository implements PagoRepository {
   private include = {
     reservas: {
       include: {
-        jugador: {
-          include: {
-            localidad: true,
-            disciplina: true,
-          },
-        },
+        jugador: { include: { localidad: true, disciplina: true } },
         disponibilidad: {
           include: {
             disciplina: true,
             dias: true,
-            cancha: {
-              include: {
-                establecimiento: true,
-              },
-            },
+            cancha: { include: { establecimiento: true } },
           },
         },
       },
@@ -55,10 +46,7 @@ export class PrismaPagoRepository implements PagoRepository {
     try {
       const pagos = await this.prisma.pago.findMany({
         where: {
-          fechaPago: {
-            gte: filtros.fechaDesde,
-            lte: filtros.fechaHasta,
-          },
+          fechaPago: { gte: filtros.fechaDesde, lte: filtros.fechaHasta },
           reservas: {
             some: {
               disponibilidad: {
@@ -102,7 +90,7 @@ export class PrismaPagoRepository implements PagoRepository {
         },
         include: this.include,
       });
-      return toPagoConReserva(pagoDB);
+      return toPago(pagoDB);
     } catch {
       throw new InternalServerError("Error al crear el pago");
     }
