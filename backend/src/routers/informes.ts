@@ -14,7 +14,6 @@ export function informesRouter(handler: InformeHandler): Router {
     validateQueryParams(informeReservasPorCanchaQuerySchema),
     handler.reservasPorCancha()
   );
-
   router.get(
     "/pagosPorCancha",
     validateQueryParams(informeReservasPorCanchaQuerySchema),
@@ -25,6 +24,11 @@ export function informesRouter(handler: InformeHandler): Router {
     "/diasDeSemana",
     validateQueryParams(diasDeSemanaPopularesQuerySchema),
     handler.diasDeSemanaPopulares()
+  );
+  router.get(
+    "/horarios",
+    validateQueryParams(diasDeSemanaPopularesQuerySchema),
+    handler.horariosPopulares()
   );
 
   return router;

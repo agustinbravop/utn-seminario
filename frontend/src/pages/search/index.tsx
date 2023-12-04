@@ -89,7 +89,7 @@ export default function BuscarEstablecimientosPage() {
             borderRadius="10px"
             bg="white"
           >
-            {DISCIPLINAS.sort().map((d) => (
+            {DISCIPLINAS.map((d) => (
               <option key={d} value={d}>
                 {d}
               </option>

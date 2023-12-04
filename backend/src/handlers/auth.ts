@@ -139,10 +139,7 @@ export class AuthHandler {
   postCorreoResetearClave(): RequestHandler {
     return async (_req, res) => {
       const correo = res.locals.body.correo;
-      console.log(correo);
-
       await this.service.generarTokenParaResetearClave(correo);
-
       res.status(201).json({});
     };
   }
@@ -150,7 +147,6 @@ export class AuthHandler {
   patchResetearClave(): RequestHandler {
     return async (_req, res) => {
       const { nueva, correo, token }: ResetearClave = res.locals.body;
-
       const jwt = await this.service.resetearClave(correo, token, nueva);
       res.status(200).json({ token: jwt });
     };

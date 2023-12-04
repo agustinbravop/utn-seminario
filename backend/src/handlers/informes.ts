@@ -47,4 +47,12 @@ export class InformeHandler {
       res.status(200).json(reserva);
     };
   }
+
+  horariosPopulares(): RequestHandler {
+    return async (_req, res) => {
+      const query: DiasDeSemanaPopularesQuery = res.locals.query;
+      const reserva = await this.service.horariosPopulares(query);
+      res.status(200).json(reserva);
+    };
+  }
 }

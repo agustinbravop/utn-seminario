@@ -71,3 +71,14 @@ export function useDiasDeSemanaPopulares(
     { ...options }
   );
 }
+
+export function useHorariosPopulares(
+  query: DiasDeSemanaPopularesQuery,
+  options?: UseApiQueryOptions<Record<string, number>>
+) {
+  return useApiQuery(
+    ["informes", "horarios", query],
+    `${API_URL}/informes/horarios?${queryString.stringify(query)}`,
+    { ...options }
+  );
+}
