@@ -14,9 +14,8 @@ export default function NotFoundPage() {
       <Image
         src={NotFoundPageIllustrationSvg}
         objectFit="cover"
-        objectPosition="50% 50%"
-        boxSize="60vh"
-        alt="Error 404, página no encontrada"
+        maxWidth="400px"
+        alt="Gato colgando de un error 404"
         margin="auto"
       />
       <HStack justify="center">

@@ -99,7 +99,13 @@ export default function JugadorReservasPage() {
           <Tab>Historial</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
+          <TabPanel
+            display="flex"
+            justifyContent="center"
+            flexWrap="wrap"
+            px="0"
+            gap="1em"
+          >
             {!isFetched ? (
               <LoadingSpinner />
             ) : reservasActivas.length > 0 ? (
@@ -110,7 +116,13 @@ export default function JugadorReservasPage() {
               <QuestionAlert>No hay reservas activas por jugar.</QuestionAlert>
             )}
           </TabPanel>
-          <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
+          <TabPanel
+            display="flex"
+            justifyContent="center"
+            flexWrap="wrap"
+            px="0"
+            gap="1em"
+          >
             {!isFetched ? (
               <LoadingSpinner />
             ) : historial.length > 0 ? (

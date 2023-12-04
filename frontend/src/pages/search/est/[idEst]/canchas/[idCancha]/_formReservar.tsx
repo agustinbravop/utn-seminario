@@ -7,7 +7,7 @@ import {
   useYupForm,
 } from "@/hooks";
 import { Disponibilidad } from "@/models";
-import { useNavigate } from "@/router";
+import { useNavigate, useParams } from "@/router";
 import { CrearReserva, useCrearReserva } from "@/utils/api";
 import { formatFecha } from "@/utils/dates";
 import {
@@ -44,21 +44,31 @@ export default function FormReservarDisponibilidad({
   disp,
 }: FormReservarDisponibilidadProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
-  const searchParams = new URLSearchParams(window.location.href);
-  const date = searchParams.get("date")!;
+  const { idEst } = useParams("/search/est/:idEst");
   const { filtros } = useBusqueda();
   const { isAdmin } = useCurrentAdmin();
   const { isJugador } = useCurrentJugador();
   const navigate = useNavigate();
+  const toast = useToast();
+  const searchParams = new URLSearchParams(window.location.href);
+  const date = searchParams.get("date")!;
 
   const { mutate, isLoading } = useCrearReserva({
-    onSuccess: () => {
+    onSuccess: (res) => {
       toast({
         title: "Su reserva fue registrada",
         description: "Reserva creada exitosamente.",
         status: "success",
       });
+      if (isJugador) {
+        navigate("/search/est/:idEst/reservar/:idReserva", {
+          params: { idReserva: `${res.id}`, idEst: idEst },
+        });
+      } else if (isAdmin) {
+        navigate("/ests/:idEst/reservas/:idReserva", {
+          params: { idReserva: `${res.id}`, idEst: idEst },
+        });
+      }
     },
     onError: (error) => {
       toast({

@@ -27,48 +27,48 @@ export type TablaDisponibilidadesReservablesProps = {
   data: BuscarDisponibilidadResult[];
 };
 
+// Función para filtrar tabla
+const columnHelper = createColumnHelper<BuscarDisponibilidadResult>();
+
+// Columnas que se van a poder ordenar
+const columns = [
+  columnHelper.accessor("horaInicio", {
+    cell: (info) => info.getValue(),
+    header: "Inicio",
+  }),
+  columnHelper.accessor("horaFin", {
+    cell: (info) => info.getValue(),
+    header: "Fin",
+  }),
+  columnHelper.accessor("disciplina", {
+    cell: (info) => info.getValue(),
+    header: "Disciplina",
+  }),
+  columnHelper.accessor("dias", {
+    cell: (info) =>
+      ordenarDias(info.getValue())
+        .map((dia) => DIAS_ABBR[dia])
+        .join(", "),
+    header: "Días",
+  }),
+  columnHelper.accessor("cancha.nombre", {
+    cell: (info) => info.getValue(),
+    header: "Cancha",
+  }),
+  columnHelper.accessor("precioReserva", {
+    cell: (info) => "$" + info.getValue(),
+    header: "Precio",
+  }),
+  columnHelper.accessor("precioSenia", {
+    cell: (info) => (info.getValue() ? "$" + info.getValue() : "Sin seña"),
+    header: "Seña",
+  }),
+];
+
 export default function TablaDisponibilidadesReservables({
   data,
 }: TablaDisponibilidadesReservablesProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
-
-  //Funcion para filtrar tabla
-  const columnHelper = createColumnHelper<BuscarDisponibilidadResult>();
-
-  //Columnas que se van a poder ordenar
-  const columns = [
-    columnHelper.accessor("horaInicio", {
-      cell: (info) => info.getValue(),
-      header: "Inicio",
-    }),
-    columnHelper.accessor("horaFin", {
-      cell: (info) => info.getValue(),
-      header: "Fin",
-    }),
-    columnHelper.accessor("disciplina", {
-      cell: (info) => info.getValue(),
-      header: "Disciplina",
-    }),
-    columnHelper.accessor("dias", {
-      cell: (info) =>
-        ordenarDias(info.getValue())
-          .map((dia) => DIAS_ABBR[dia])
-          .join(", "),
-      header: "Días",
-    }),
-    columnHelper.accessor("cancha.nombre", {
-      cell: (info) => info.getValue(),
-      header: "Cancha",
-    }),
-    columnHelper.accessor("precioReserva", {
-      cell: (info) => "$" + info.getValue(),
-      header: "Precio",
-    }),
-    columnHelper.accessor("precioSenia", {
-      cell: (info) => (info.getValue() ? "$" + info.getValue() : "Sin seña"),
-      header: "Seña",
-    }),
-  ];
 
   const table = useReactTable({
     columns,
@@ -76,9 +76,7 @@ export default function TablaDisponibilidadesReservables({
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting,
-    },
+    state: { sorting },
   });
 
   return (
