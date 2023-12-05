@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { reservaSchema } from "./reserva";
+import { reservaSchema } from "./reserva.js";
 
 export enum MetodoDePago {
   Efectivo = "Efectivo",

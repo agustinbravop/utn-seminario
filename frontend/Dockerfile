@@ -9,8 +9,8 @@ COPY yarn.lock .
 RUN yarn install
 COPY . .
 
-# Vite inyecta las variables de entorno en buildtime, no runtime. Podríamos buscar una manera
-# (incómoda) de inyectarlas en runtime para pasarlas en `docker run` y no en `docker build`.
+# TODO: Vite inyecta las variables de entorno en buildtime, no runtime. Buscar una manera
+# de inyectarlas en runtime para pasarlas en `docker run` y no en `docker build`.
 ARG API_BASE_URL=http://localhost:3001
 ARG GOOGLE_CLIENT_ID=242199369878-vh11h5c6s5t8oo0sp4tubclc3mv59l11.apps.googleusercontent.com
 ARG BASE_URL=http://localhost:5173

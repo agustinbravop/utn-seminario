@@ -15,9 +15,9 @@ asignatura de la carrera Ingeniería en Sistemas de Información necesaria para 
 
 ## Demo en vivo
 
-El deploy de la aplicación se puede encontrar en: https://playfinder-app-mds6s.ondigitalocean.app/.
+El deploy de la aplicación se puede encontrar en: https://playfinder-front.gentlesand-306ace58.brazilsouth.azurecontainerapps.io/.
 
-Nota: este link puede estar desactualizado. Si no funciona es porque la demo se dejó de mantener.
+Nota: este link eventualmente estará desactualizado. Si no funciona es porque la demo ya se dejó de mantener.
 
 ## Levantar la app en entorno local
 
