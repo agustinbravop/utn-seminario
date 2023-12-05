@@ -58,13 +58,13 @@ export function useReservaByID(
 }
 
 export function useSeniarReserva(
-  options?: UseApiMutationOptions<Reserva, Reserva>
+  options?: UseApiMutationOptions<{ idRes: number }, Reserva>
 ) {
   return useApiMutation({
     ...options,
     invalidateOnSuccess: (r) => ["reservas", r.id],
-    mutationFn: (reserva) =>
-      patch<Reserva>(`${API_URL}/reservas/${reserva.id}`, reserva),
+    mutationFn: ({ idRes }) =>
+      patch<Reserva>(`${API_URL}/reservas/${idRes}`, {}),
   });
 }
 
@@ -91,17 +91,19 @@ export function useCancelarReservaAdmin(
 }
 
 export function usePagarReserva(
-  options?: UseApiMutationOptions<Reserva, Reserva>
+  options?: UseApiMutationOptions<{ idRes: number }, Reserva>
 ) {
   return useApiMutation({
     ...options,
     invalidateOnSuccess: (r) => ["reservas", r.id],
-    mutationFn: (reserva) =>
-      patch<Reserva>(`${API_URL}/reservas/pagar/${reserva.id}`, reserva),
+    mutationFn: ({ idRes }) =>
+      patch<Reserva>(`${API_URL}/reservas/pagar/${idRes}`, {}),
   });
 }
 
-export function useCrearReserva(options?: UseApiMutationOptions<CrearReserva>) {
+export function useCrearReserva(
+  options?: UseApiMutationOptions<CrearReserva, Reserva>
+) {
   return useApiMutation({
     ...options,
     invalidateManyOnSuccess: [["reservas"], ["disponibilidades"]],

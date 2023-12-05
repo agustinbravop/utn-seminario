@@ -1,4 +1,5 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
+import { Ref, forwardRef } from "react";
 
 export interface SubmitButtonProps extends ButtonProps {}
 
@@ -7,12 +8,17 @@ export interface SubmitButtonProps extends ButtonProps {}
  *
  * https://chakra-ui.com/docs/components/button
  */
-export default function SubmitButton(props: SubmitButtonProps) {
+const SubmitButton = forwardRef(function SubmitButton(
+  props: SubmitButtonProps,
+  ref: Ref<HTMLButtonElement>
+) {
   const { children, ...rest } = props;
 
   return (
-    <Button type="submit" colorScheme="brand" {...rest}>
+    <Button type="submit" ref={ref} colorScheme="brand" {...rest}>
       {children}
     </Button>
   );
-}
+});
+
+export default SubmitButton;

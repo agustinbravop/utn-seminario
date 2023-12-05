@@ -56,7 +56,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
 
   return (
     <>
-      <Card size="sm" m={2} w="min(80vw, 350px)" {...props}>
+      <Card size="sm" w="min(80vw, 350px)" {...props}>
         {estado === EstadoReserva.Pagada ? (
           <CardHeader bgColor="green.100" borderRadius="6px" textAlign="center">
             <CircleIcon verticalAlign="-0.1em" color="green" /> Pagada
@@ -79,7 +79,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
           </CardHeader>
         )}
 
-        <CardBody textAlign="center">
+        <CardBody px="0" textAlign="center">
           <Heading
             justifyContent="center"
             display="flex"

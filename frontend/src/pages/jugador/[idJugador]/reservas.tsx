@@ -30,9 +30,7 @@ type Filtros = {
 
 export default function JugadorReservasPage() {
   const { jugador } = useCurrentJugador();
-  const { data: reservas, isFetchedAfterMount } = useReservasByJugadorID(
-    jugador.id
-  );
+  const { data: reservas, isFetched } = useReservasByJugadorID(jugador.id);
   const methods = useYupForm<Filtros>({
     defaultValues: { orden: "Recientes" },
   });
@@ -101,8 +99,14 @@ export default function JugadorReservasPage() {
           <Tab>Historial</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
-            {!isFetchedAfterMount ? (
+          <TabPanel
+            display="flex"
+            justifyContent="center"
+            flexWrap="wrap"
+            px="0"
+            gap="1em"
+          >
+            {!isFetched ? (
               <LoadingSpinner />
             ) : reservasActivas.length > 0 ? (
               reservasActivas.map((reserva) => (
@@ -112,15 +116,21 @@ export default function JugadorReservasPage() {
               <QuestionAlert>No hay reservas activas por jugar.</QuestionAlert>
             )}
           </TabPanel>
-          <TabPanel display="flex" justifyContent="center" flexWrap="wrap">
-            {!isFetchedAfterMount ? (
+          <TabPanel
+            display="flex"
+            justifyContent="center"
+            flexWrap="wrap"
+            px="0"
+            gap="1em"
+          >
+            {!isFetched ? (
               <LoadingSpinner />
             ) : historial.length > 0 ? (
               historial.map((reserva) => (
                 <ReservaCard key={reserva.id} reserva={reserva} />
               ))
             ) : (
-              <QuestionAlert>Todavía no ha realizado reservas.</QuestionAlert>
+              <QuestionAlert>No tiene reservas anteriores.</QuestionAlert>
             )}
           </TabPanel>
         </TabPanels>

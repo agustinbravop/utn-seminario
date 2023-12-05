@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { SubmitButton } from ".";
 import { SubmitButtonProps } from "./SubmitButton";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 interface ConfirmSubmitButtonProps extends SubmitButtonProps {
   /** Contenido del `ModalHeader`. */
@@ -54,6 +54,8 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
     ...rest
   } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  // Accesibilidad para focusear el botón primario al abrir el modal.
+  const focusRef = useRef<HTMLButtonElement>(null);
 
   const handleClick = useCallback(
     (e: React.SyntheticEvent) => {
@@ -76,7 +78,12 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
         {children}
       </SubmitButton>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        initialFocusRef={focusRef}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{header}</ModalHeader>
@@ -87,7 +94,11 @@ export default function ConfirmSubmitButton(props: ConfirmSubmitButtonProps) {
             <Button colorScheme="gray" mr={3} onClick={onClose}>
               {cancel ?? "Cancelar"}
             </Button>
-            <SubmitButton isLoading={isLoading} onClick={handleSubmit}>
+            <SubmitButton
+              ref={focusRef}
+              isLoading={isLoading}
+              onClick={handleSubmit}
+            >
               {confirm ?? "Aceptar"}
             </SubmitButton>
           </ModalFooter>

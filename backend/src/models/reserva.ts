@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { jugadorSchema } from "./jugador";
-import { disponibilidadSchema } from "./disponibilidad";
-import { pagoSchema } from "./pago";
+import { jugadorSchema } from "./jugador.js";
+import { disponibilidadSchema } from "./disponibilidad.js";
+import { pagoSchema } from "./pago.js";
 
 export type Reserva = z.infer<typeof reservaSchema>;
 

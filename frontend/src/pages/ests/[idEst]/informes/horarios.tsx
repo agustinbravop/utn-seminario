@@ -43,11 +43,11 @@ export default function InformeHorariosPage() {
       <InformesMenu informe="Horarios" />
       <Text>
         Este informe muestra los horarios y días de semana históricamente más
-        concurridos de este establecimiento, en base a todas las reservas que se
+        concurridos del establecimiento, en base a todas las reservas que se
         realizaron en PlayFinder.
       </Text>
       <HStack my="1em">
-        <span>Desde las</span>
+        <span>Filtrar desde las</span>
         <Select
           maxW="90px"
           value={desde}

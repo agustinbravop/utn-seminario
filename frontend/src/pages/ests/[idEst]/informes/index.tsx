@@ -175,7 +175,7 @@ function InformeReservasDetalleCanchaCard({
           </Stat>
         </StatGroup>
 
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Detalle de la cancha {cancha.nombre}</ModalHeader>
@@ -185,38 +185,51 @@ function InformeReservasDetalleCanchaCard({
                 <Table size="sm">
                   <Thead>
                     <Th>Jugador</Th>
+                    <Th>Fecha</Th>
                     <Th>Horario</Th>
                     <Th>Estado</Th>
                   </Thead>
                   <Tbody>
-                    {cancha.reservas.map((res) => (
-                      <Tr
-                        key={res.id}
-                        onClick={() =>
-                          navigate(
-                            `/ests/${cancha.idEstablecimiento}/reservas/${res.id}`
+                    {cancha.reservas
+                      .sort(
+                        (a, b) =>
+                          // Ordenar por fecha (y por horario de inicio si es misma fecha)
+                          a.fechaReservada.localeCompare(b.fechaReservada) * 2 +
+                          a.disponibilidad.horaInicio.localeCompare(
+                            b.disponibilidad.horaInicio
                           )
-                        }
-                        _hover={{
-                          textDecoration: "underline",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <Td>
-                          {res.jugador
-                            ? res.jugador.nombre
-                            : res.jugadorNoRegistrado}
-                        </Td>
-                        <Td>
-                          {res.disponibilidad.horaInicio}
-                          {" - "}
-                          {res.disponibilidad.horaFin}
-                        </Td>
-                        <Td>
-                          <ReservaEstado res={res} />
-                        </Td>
-                      </Tr>
-                    ))}
+                      )
+                      .map((res) => (
+                        <Tr
+                          key={res.id}
+                          onClick={() =>
+                            navigate(
+                              `/ests/${cancha.idEstablecimiento}/reservas/${res.id}`
+                            )
+                          }
+                          _hover={{
+                            textDecoration: "underline",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Td>
+                            {res.jugador
+                              ? res.jugador.nombre
+                              : res.jugadorNoRegistrado}
+                          </Td>
+                          <Td>
+                            {new Date(res.fechaReservada).toLocaleDateString()}
+                          </Td>
+                          <Td>
+                            {res.disponibilidad.horaInicio}
+                            {" - "}
+                            {res.disponibilidad.horaFin}
+                          </Td>
+                          <Td>
+                            <ReservaEstado res={res} />
+                          </Td>
+                        </Tr>
+                      ))}
                   </Tbody>
                 </Table>
               </TableContainer>

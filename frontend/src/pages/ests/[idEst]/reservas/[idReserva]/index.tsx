@@ -31,7 +31,7 @@ export default function ReservaInfoPage() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const { mutate } = useSeniarReserva({
+  const { mutate: mutateSenia } = useSeniarReserva({
     onSuccess: () => {
       toast({
         title: "Reserva señada",
@@ -51,14 +51,14 @@ export default function ReservaInfoPage() {
   const { mutate: mutatePago } = usePagarReserva({
     onSuccess: () => {
       toast({
-        title: "Reserva señada",
-        description: "Se registró la seña de la reserva.",
+        title: "Reserva pagada",
+        description: "Se registró el pago de la reserva.",
         status: "success",
       });
     },
     onError: () => {
       toast({
-        title: "Error al señar la reserva",
+        title: "Error al pagar la reserva",
         description: "Intente de nuevo.",
         status: "error",
       });
@@ -169,8 +169,8 @@ export default function ReservaInfoPage() {
                 {reserva.pagoSenia
                   ? formatISO(reserva.pagoSenia.fechaPago)
                   : reserva.pagoReserva
-                  ? "-"
-                  : "Falta señar"}
+                    ? "-"
+                    : "Falta señar"}
               </Text>
             </Box>
           </HStack>
@@ -241,7 +241,7 @@ export default function ReservaInfoPage() {
               <ConfirmSubmitButton
                 header="Seña"
                 body={`¿Desea registrar la seña de $${reserva.senia}?`}
-                onSubmit={() => mutate(reserva)}
+                onSubmit={() => mutateSenia({ idRes: reserva.id })}
               >
                 Señar
               </ConfirmSubmitButton>
@@ -251,7 +251,7 @@ export default function ReservaInfoPage() {
             <ConfirmSubmitButton
               header="Pago"
               body={`¿Desea registrar el pago de $${pagoRestante(reserva)}?`}
-              onSubmit={() => mutatePago(reserva)}
+              onSubmit={() => mutatePago({ idRes: reserva.id })}
             >
               Pagar
             </ConfirmSubmitButton>
