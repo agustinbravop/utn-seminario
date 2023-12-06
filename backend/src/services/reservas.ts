@@ -138,7 +138,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     await this.validarDisponibilidadLibre(crearReserva, disp);
     await this.validarDiaDeSemana(crearReserva, disp);
-    this.validarFechaReservada(crearReserva, disp);
+    this.validarFechaFutura(crearReserva, disp);
 
     return await this.repo.crearReserva({
       ...crearReserva,
@@ -190,7 +190,7 @@ export class ReservaServiceImpl implements ReservaService {
    * Lanza un error al intentar reservar en una fecha pasada (previa a la actual).
    * Pone la horaInicio de la disponibilidad como horario de la fechaReservada.
    */
-  private validarFechaReservada(res: CrearReserva, disp: Disponibilidad) {
+  private validarFechaFutura(res: CrearReserva, disp: Disponibilidad) {
     const fechaReservada = toUTC(setHora(res.fechaReservada, disp.horaInicio));
     if (fechaReservada < new Date()) {
       throw new ConflictError("No se puede reservar una fecha pasada");
