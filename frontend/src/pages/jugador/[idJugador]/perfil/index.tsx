@@ -83,9 +83,9 @@ export default function JugadorPerfilPage() {
           <Link to="editar">
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>
-          <Link to="cambiarClave">
+          {jugador.password &&  <Link to="cambiarClave">
             <Button leftIcon={<EditIcon />}>Cambiar Contraseña</Button>
-          </Link>
+          </Link>}
         </HStack>
       </CardBody>
     </Card>
