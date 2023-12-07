@@ -27,9 +27,9 @@ import { formatFecha, formatISOFecha } from "@/utils/dates";
 import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
 import { useEffect } from "react";
-import { useInformePagosPorCancha } from "@/utils/api";
+import { ReservasPorCanchaQuery, useInformePagosPorCancha } from "@/utils/api";
 import { CircleIcon } from "@/components/media-and-icons";
-
+//Quedaría agregat un total de pagos, ver el tema de que no muestras los pagos de señas
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/pagos");
   const navigate = useNavigate();
@@ -39,11 +39,13 @@ export default function EstablecimientoReservasPage() {
   const [filtroHasta, setFiltroHasta] = useState(formatFecha(new Date()));
   const [filtroEstado, setFiltroEstado] = useState("");
 
-  const { data: dataPagos } = useInformePagosPorCancha({
+  const params = {
     idEst: Number(idEst),
-    fechaDesde: String(filtroDesde),
-    fechaHasta: String(filtroHasta)
-  })
+    ...(filtroDesde && { fechaDesde: String(filtroDesde) }),
+    ...(filtroHasta && { fechaHasta: String(filtroHasta) })
+  };
+
+  const { data: dataPagos } = useInformePagosPorCancha(params as ReservasPorCanchaQuery)
   const pagos = dataPagos?.canchas?.flatMap((cancha) => {
     return cancha.pagos
   })
@@ -80,33 +82,43 @@ export default function EstablecimientoReservasPage() {
         ? a.fechaPago.localeCompare(b.fechaPago)
         : b.fechaPago.localeCompare(a.fechaPago);
     } else if (ordenColumna === "Jugador") { //Queda
-      const nombreA = `${a.reserva.jugador?.nombre} ${a.reserva.jugador?.apellido}`;
-      const nombreB = `${b.reserva.jugador?.nombre} ${b.reserva.jugador?.apellido}`;
+      const nombreA = a.reserva.jugador ? `${a.reserva.jugador.nombre} ${a.reserva.jugador.apellido}` : (a.reserva.jugadorNoRegistrado ? `${a.reserva.jugadorNoRegistrado}` : " ");
+      const nombreB = b.reserva.jugador ? `${b.reserva.jugador.nombre} ${b.reserva.jugador.apellido}` : (b.reserva.jugadorNoRegistrado ? `${b.reserva.jugadorNoRegistrado}` : " ");
       return ordenAscendente
         ? nombreA.localeCompare(nombreB)
         : nombreB.localeCompare(nombreA);
     } else if (ordenColumna === "Estado") {
-      const estadoA = (a.monto === a.reserva.precio)
-        ? "P. Total"
-        : "Seña";
+      const estadoA = (a.monto === a.reserva.senia)
+        ? "Seña"
+        : (a.monto === a.reserva.precio
+          ? "P. Total"
+          : "P. Adicional");
 
-      const estadoB = (a.monto === a.reserva.precio)
-        ? "P. Total"
-        : "Seña";
+      const estadoB = (b.monto === b.reserva.senia)
+        ? "Seña"
+        : (b.monto === b.reserva.precio
+          ? "P. Total"
+          : "P. Adicional");
 
       return ordenAscendente
         ? estadoA.localeCompare(estadoB)
         : estadoB.localeCompare(estadoA);
+    } else if (ordenColumna === "Monto") {
+      return ordenAscendente
+        ? a.monto - b.monto
+        : b.monto - a.monto;
     } else {
       return 0;
     }
   });
 
   const pagosFiltrados = pagosOrdenados.filter((p) => {
-    const nombreJugador = `${p.reserva.jugador?.nombre} ${p.reserva.jugador?.apellido}`;
-    const estado = (p.monto === p.reserva.precio)
-      ? "P. Total"
-      : "Seña";
+    const nombreJugador = p.reserva.jugador ? `${p.reserva.jugador.nombre} ${p.reserva.jugador.apellido}` : (p.reserva.jugadorNoRegistrado ? `${p.reserva.jugadorNoRegistrado}` : " ");
+    const estado = (p.monto === p.reserva.senia)
+      ? "Seña"
+      : (p.monto === p.reserva.precio
+        ? "P. Total"
+        : "P. Adicional");
 
     const nombreIncluido = nombreJugador
       .toLowerCase()
@@ -116,6 +128,8 @@ export default function EstablecimientoReservasPage() {
     if (filtroEstado === estado && estado === "P. Total") {
       estadoCoincide = true;
     } else if (filtroEstado === estado && filtroEstado === "Seña") {
+      estadoCoincide = true;
+    } else if (filtroEstado === estado && filtroEstado === "P. Adicional") {
       estadoCoincide = true;
     } else if (filtroEstado === "") {
       return nombreIncluido;
@@ -128,7 +142,7 @@ export default function EstablecimientoReservasPage() {
     <Box mr="12%" ml="12%" mb="30px" mt="0px">
       <EstablecimientoMenu />
       <Text>
-        {pagos.length > 0
+        {pagos && pagos.length > 0
           ? "Estos son los pagos para este establecimiento."
           : "Actualmente no cuenta con pagos en este establecimiento."}
       </Text>
@@ -169,7 +183,7 @@ export default function EstablecimientoReservasPage() {
             placeholder="Todos"
             onChange={(e) => setFiltroEstado(e.target.value)}
           >
-            {["Pagada", "Señada", "No Pagada"].map((pago, i) => (
+            {["P. Total", "Seña", "P. Adicional"].map((pago, i) => (
               <option key={i} value={pago}>
                 {pago}
               </option>
@@ -268,14 +282,16 @@ export default function EstablecimientoReservasPage() {
           </Thead>
           <Tbody>
             {pagosFiltrados.map((p) => {
-              const tipo = (p.monto === p.reserva.precio)
-                ? 'P. Total'
-                : 'Seña';
+              const tipo = (p.monto === p.reserva.senia)
+                ? "Seña"
+                : (p.monto === p.reserva.precio
+                  ? "P. Total"
+                  : "P. Adicional");
 
               return (
                 <Tr key={p.id}>
                   <Td textAlign="center">{formatISOFecha(p.fechaPago)}</Td>
-                  <Td textAlign="center">{ p.reserva.jugador
+                  <Td textAlign="center">{p.reserva.jugador
                     ? `${p.reserva.jugador?.nombre} ${p.reserva.jugador?.apellido}`
                     : p.reserva.jugadorNoRegistrado && `${p.reserva.jugadorNoRegistrado}*`}
                   </Td>
@@ -283,7 +299,7 @@ export default function EstablecimientoReservasPage() {
                   <Td textAlign="center">{p.monto}</Td>
                   <Td textAlign="center">
                     {tipo}{" "}
-                    <CircleIcon color={tipo === 'P. Total' ? "green" : "yellow"} verticalAlign="-0.2em" />
+                    <CircleIcon color={tipo === 'P. Total' ? "green" : (tipo === 'Seña' ? "yellow" : "orange")} verticalAlign="-0.2em" />
                   </Td>
                   <Td textAlign="center">
                     <PlusSquareIcon
@@ -299,11 +315,20 @@ export default function EstablecimientoReservasPage() {
           </Tbody>
         </Table>
       </TableContainer>
-
-      <Text>
-        * Estos jugadores fueron cargados por el administrador del
-        establecimiento, y la reserva se hizo en su nombre.
-      </Text>
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+      >
+        <FormControl variant="floating" width="auto">
+          <Input
+            type="text"
+            placeholder="total"
+            value={dataPagos?.total}
+            isDisabled
+          />
+          <FormLabel sx={{ ...floatingLabelActiveStyles }}>Total ($)</FormLabel>
+        </FormControl>
+      </Box>
     </Box>
   );
 }
