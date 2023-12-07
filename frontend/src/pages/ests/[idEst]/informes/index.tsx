@@ -79,10 +79,9 @@ export default function InformeReservasPage() {
       </HStack>
 
       <Text>
-        Se acumula el dinero que se espera recibir de todas las
-        <b> reservas a jugar</b> entre las dos fechas de filtro. Ayuda a estimar
-        cuánto dinero recibirá el establecimento en base a lo que se juega en un
-        día dado.
+       El informe muestra el dinero que se espera recibir de todas las
+        <b> reservas a jugar</b> entre las fechas indicadas. Se muestra 
+        además, lo que efectivamente se ha ringresado de ese esperado.
       </Text>
       {!informe ? (
         <LoadingSpinner />
@@ -120,7 +119,7 @@ export default function InformeReservasPage() {
             </Stat>
           </StatGroup>
 
-          <Heading size="lg" my="0.5em" ml="2em">
+          <Heading size="md" fontSize="2xl" my="0.5em" ml="2em">
             Por cancha
           </Heading>
           <HStack wrap="wrap" justify="center">
