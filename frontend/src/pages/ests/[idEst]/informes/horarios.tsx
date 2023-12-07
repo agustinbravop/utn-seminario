@@ -42,14 +42,14 @@ export default function InformeHorariosPage() {
       <EstablecimientoMenu />
       <InformesMenu informe="Horarios" />
       <Text>
-        Este informe muestra los horarios y días de semana históricamente más
+        Este informe muestra los horarios y días de la semana históricamente más
         concurridos del establecimiento, en base a todas las reservas que se
         realizaron en PlayFinder.
       </Text>
       <HStack my="1em">
         <span>Filtrar desde las</span>
         <Select
-          maxW="90px"
+          maxW="95px"
           value={desde}
           onChange={(e) => setDesde(e.target.value)}
         >
@@ -61,7 +61,7 @@ export default function InformeHorariosPage() {
         </Select>
         <span>hs hasta las</span>
         <Select
-          maxW="90px"
+          maxW="95px"
           value={hasta}
           onChange={(e) => setHasta(e.target.value)}
         >

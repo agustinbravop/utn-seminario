@@ -19,6 +19,7 @@ export type Jugador = {
   localidad?: string;
   provincia?: string;
   disciplina?: string;
+  password: boolean;
 };
 
 export type Cancha = {
