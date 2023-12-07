@@ -25,7 +25,7 @@ const titulo = {
 export default function InformesMenu({ informe }: { informe: Informe }) {
   const { idEst } = useParams();
   return (
-      <HStack my="1.5em" gap="2em">
+    <HStack my="1.5em" gap="2em">
       <HStack>
         <Heading size="lg">{titulo[informe]}</Heading>
       </HStack>

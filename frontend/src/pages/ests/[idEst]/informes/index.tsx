@@ -79,9 +79,9 @@ export default function InformeReservasPage() {
       </HStack>
 
       <Text>
-       El informe muestra el dinero que se espera recibir de todas las
-        <b> reservas a jugar</b> entre las fechas indicadas. Se muestra 
-        además, lo que efectivamente se ha ringresado de ese esperado.
+        El informe muestra el dinero que se espera recibir de todas las
+        <b> reservas a jugar</b> entre las fechas indicadas. Se muestra además,
+        lo que efectivamente se ha ingresado de ese esperado.
       </Text>
       {!informe ? (
         <LoadingSpinner />

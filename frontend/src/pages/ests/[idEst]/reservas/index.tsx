@@ -74,8 +74,16 @@ export default function EstablecimientoReservasPage() {
             a.disponibilidad.horaInicio
           );
     } else if (ordenColumna === "Jugador") {
-      const nombreA = a.jugador ? `${a.jugador?.nombre} ${a.jugador?.apellido}` : (a.jugadorNoRegistrado ? a.jugadorNoRegistrado : "");
-      const nombreB = b.jugador ? `${b.jugador?.nombre} ${b.jugador?.apellido}` : (b.jugadorNoRegistrado ? b.jugadorNoRegistrado : "");
+      const nombreA = a.jugador
+        ? `${a.jugador?.nombre} ${a.jugador?.apellido}`
+        : a.jugadorNoRegistrado
+          ? a.jugadorNoRegistrado
+          : "";
+      const nombreB = b.jugador
+        ? `${b.jugador?.nombre} ${b.jugador?.apellido}`
+        : b.jugadorNoRegistrado
+          ? b.jugadorNoRegistrado
+          : "";
       return ordenAscendente
         ? nombreA.localeCompare(nombreB)
         : nombreB.localeCompare(nombreA);
@@ -106,7 +114,11 @@ export default function EstablecimientoReservasPage() {
   const [filtroEstado, setFiltroEstado] = useState("");
 
   const reservasFiltradas = reservasOrdenadas.filter((r) => {
-    const nombreJugador = r.jugador ? `${r.jugador?.nombre} ${r.jugador?.apellido}` : (r.jugadorNoRegistrado ? r.jugadorNoRegistrado : "");
+    const nombreJugador = r.jugador
+      ? `${r.jugador?.nombre} ${r.jugador?.apellido}`
+      : r.jugadorNoRegistrado
+        ? r.jugadorNoRegistrado
+        : "";
     const estado = r.idPagoReserva
       ? "Pagada"
       : r.idPagoSenia
@@ -303,9 +315,7 @@ export default function EstablecimientoReservasPage() {
           </Thead>
           <Tbody>
             {reservasFiltradas.map((r, idx) => {
-              const bgColor = idx % 2 === 0
-                  ? "gray.100"
-                  : "white";
+              const bgColor = idx % 2 === 0 ? "gray.100" : "white";
               return (
                 <Tr key={r.id} bgColor={bgColor}>
                   <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>

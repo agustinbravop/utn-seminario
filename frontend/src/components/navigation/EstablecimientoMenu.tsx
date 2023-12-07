@@ -33,11 +33,19 @@ export default function EstablecimientoMenu() {
       </Heading>
 
       <HStack mt="0.2em" mb="0.75em" borderBottom="#E2E8F0 0.2em solid">
-        <LinkButton to={[`/ests/${est.id}`] }>Información</LinkButton>
-        <LinkButton to={[`/ests/${est.id}/canchas`] }>Canchas</LinkButton>
+        <LinkButton to={[`/ests/${est.id}`]}>Información</LinkButton>
+        <LinkButton to={[`/ests/${est.id}/canchas`]}>Canchas</LinkButton>
         <LinkButton to={[`/ests/${est.id}/reservas`]}>Reservas</LinkButton>
         <LinkButton to={[`/ests/${est.id}/pagos`]}>Pagos</LinkButton>
-        <LinkButton to={[`/ests/${est.id}/informes`, `/ests/${est.id}/informes/horarios`, `/ests/${est.id}/informes/pagos`]}>Informes</LinkButton>
+        <LinkButton
+          to={[
+            `/ests/${est.id}/informes`,
+            `/ests/${est.id}/informes/horarios`,
+            `/ests/${est.id}/informes/pagos`,
+          ]}
+        >
+          Informes
+        </LinkButton>
       </HStack>
     </>
   );
@@ -52,9 +60,10 @@ function LinkButton({ to, children }: LinkButtonProps) {
   const location = useLocation();
 
   const textDecoration = (targetPath: string[]) => {
-    return targetPath.some(path => location.pathname.endsWith(path)) ? "underline" : "none";
+    return targetPath.some((path) => location.pathname.endsWith(path))
+      ? "underline"
+      : "none";
   };
-
 
   return (
     <Link to={to[0]}>

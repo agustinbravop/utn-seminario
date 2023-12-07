@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 export default function JugadorPerfilPage() {
   const { jugador } = useCurrentJugador();
 
-  console.log(jugador)
+  console.log(jugador);
 
   return (
     <Card maxWidth="500px" m="auto" height="70%" mt="5%">
@@ -83,9 +83,11 @@ export default function JugadorPerfilPage() {
           <Link to="editar">
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>
-          {jugador.password &&  <Link to="cambiarClave">
-            <Button leftIcon={<EditIcon />}>Cambiar Contraseña</Button>
-          </Link>}
+          {jugador.password && (
+            <Link to="cambiarClave">
+              <Button leftIcon={<EditIcon />}>Cambiar Contraseña</Button>
+            </Link>
+          )}
         </HStack>
       </CardBody>
     </Card>
