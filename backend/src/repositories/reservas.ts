@@ -175,6 +175,7 @@ export class PrismaReservaRepository implements ReservaRepository {
               idEstablecimiento: filtros.idEst,
             },
           },
+          cancelada: filtros.cancelada,
         },
         include: this.include,
       });
@@ -214,6 +215,7 @@ export class PrismaReservaRepository implements ReservaRepository {
 
       return toRes(dbRes);
     } catch (e) {
+      console.error(e);
       throw new InternalServerError("No se pudo crear la reserva");
     }
   }

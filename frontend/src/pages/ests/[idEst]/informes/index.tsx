@@ -82,7 +82,7 @@ export default function InformeReservasPage() {
         Se acumula el dinero que se espera recibir de todas las
         <b> reservas a jugar</b> entre las dos fechas de filtro. Ayuda a estimar
         cuánto dinero recibirá el establecimento en base a lo que se juega en un
-        día dado.
+        día dado. No se contabilizan las reservas canceladas.
       </Text>
       {!informe ? (
         <LoadingSpinner />

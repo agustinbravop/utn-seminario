@@ -44,7 +44,7 @@ export default function InformeHorariosPage() {
       <Text>
         Este informe muestra los horarios y días de semana históricamente más
         concurridos del establecimiento, en base a todas las reservas que se
-        realizaron en PlayFinder.
+        realizaron en PlayFinder. No se contabilizan las reservas canceladas.
       </Text>
       <HStack my="1em">
         <span>Filtrar desde las</span>

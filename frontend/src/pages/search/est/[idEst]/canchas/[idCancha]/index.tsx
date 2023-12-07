@@ -144,7 +144,7 @@ export default function VistaJugadorCancha() {
                     {disponibilidades.map((d) => (
                       <Tr key={d.id}>
                         <Td>
-                          {d.horaInicio}-{d.horaFin}hs
+                          {d.horaInicio} - {d.horaFin}hs
                         </Td>
                         <Td>{d.disciplina}</Td>
                         <Td>

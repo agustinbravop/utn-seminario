@@ -71,7 +71,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             borderRadius="6px"
             textAlign="center"
           >
-            <CircleIcon verticalAlign="-0.1em" color="gray" /> Señada
+            <CircleIcon verticalAlign="-0.1em" color="orange" /> Señada
           </CardHeader>
         ) : (
           <CardHeader bgColor="red.100" borderRadius="6px" textAlign="center">
@@ -145,9 +145,25 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             colorScheme="red"
             onSubmit={() => mutate({ idReserva: reserva.id })}
             header="Cancelar reserva"
-            body="¿Está seguro de cancelar la reserva?"
+            body={
+              <>
+                <Text>¿Está seguro de cancelar la reserva?</Text>
+                {estado === EstadoReserva.NoPagada ? (
+                  <Text>
+                    Debe comunicarse personalmente con el establecimiento para
+                    ver sus términos de cancelación y coordinar una posible
+                    devolución del dinero ya pagado.
+                  </Text>
+                ) : (
+                  <Text>
+                    El horario será liberado para que pueda volver a ser
+                    reservado por otro jugador.
+                  </Text>
+                )}
+              </>
+            }
             variant="outline"
-            m="0.4em auto"
+            m="0em auto 0.8em"
             size="sm"
             width="fit-content"
           >

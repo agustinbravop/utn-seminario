@@ -23,6 +23,7 @@ export type BuscarReservaQuery = {
   fechaCreadaHasta?: Date;
   fechaReservadaDesde?: Date;
   fechaReservadaHasta?: Date;
+  cancelada?: boolean;
 };
 
 export interface ReservaService {
@@ -170,12 +171,14 @@ export class ReservaServiceImpl implements ReservaService {
       idCancha: disp.idCancha,
       fechaReservadaDesde: res.fechaReservada,
       fechaReservadaHasta: res.fechaReservada,
+      cancelada: false,
     });
     // ...para validar que ninguna de esas reservas se solape con la nueva.
     const horarioSolapado = reservasMismaFecha.some(
       (r) =>
         r.disponibilidad.horaFin > disp.horaInicio &&
-        r.disponibilidad.horaInicio < disp.horaFin
+        r.disponibilidad.horaInicio < disp.horaFin &&
+        !r.cancelada
     );
     if (horarioSolapado) {
       throw new ConflictError(

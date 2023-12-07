@@ -37,7 +37,7 @@ export default function ReservaExitosaPage() {
         <strong>{reserva.disponibilidad.horaFin}hs</strong>.
       </Text>
       <Text textAlign="center" fontSize="xl">
-        Podrás realizar el pago cuando vaya al establecimiento.
+        Podrás realizar el pago cuando vayas al establecimiento.
       </Text>
       <Image
         src={SuccessIllustrationSvg}

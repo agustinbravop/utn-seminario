@@ -84,8 +84,15 @@ export class PrismaDisponibilidadRepository
           },
           ...(filtros.fecha
             ? {
-                // Solo trae disponibilidades no reservadas en la `filtros.fecha`.
-                reservas: { none: { fechaReservada: filtros.fecha } },
+                // Solo trae disponibilidades no reservadas para el día de `filtros.fecha`.
+                reservas: {
+                  none: {
+                    AND: [
+                      { fechaReservada: filtros.fecha },
+                      { cancelada: false },
+                    ],
+                  },
+                },
                 // Solo trae disponibilidades válidas para el día de `filtros.fecha`.
                 dias: { some: { dia: getDiaDeSemana(filtros.fecha) } },
               }
@@ -93,19 +100,22 @@ export class PrismaDisponibilidadRepository
         },
         include: this.include,
       });
+
       if (filtros.fecha) {
         const reservas = await this.reservaRepository.getReservasByDate(
           filtros.fecha
         );
 
-        // Ignorar las disps cuyo horario ya fue reservado en su cancha en otra disciplina.
+        // Ignorar las disps cuyo horario ya fue reservado en su cancha pero en otra disciplina.
         disps = disps.filter(
           (d) =>
             !reservas.some(
               (res) =>
                 res.disponibilidad.idCancha === d.idCancha &&
                 res.disponibilidad.horaInicio < d.horaFin &&
-                res.disponibilidad.horaFin > d.horaInicio
+                res.disponibilidad.horaFin > d.horaInicio &&
+                // Solo importan las reservas no canceladas. Las reservas canceladas no cuentan.
+                !res.cancelada
             )
         );
       }

@@ -90,7 +90,7 @@ export default function ReservarEstablecimientoPage() {
       <TablaDisponibilidadesReservables data={dispsFiltradas} />
       {dispsFiltradas.length === 0 && (
         <QuestionAlert>
-          No hay horarios disponibles para esta fecha.
+          No hay horarios disponibles para esa fecha.
         </QuestionAlert>
       )}
     </>
