@@ -15,6 +15,7 @@ import {
   Select,
   // Tooltip,
   Box,
+  Tfoot,
 } from "@chakra-ui/react";
 import {
   TriangleUpIcon,
@@ -28,7 +29,6 @@ import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
 import { useEffect } from "react";
 import { ReservasPorCanchaQuery, useInformePagosPorCancha } from "@/utils/api";
-import { CircleIcon } from "@/components/media-and-icons";
 //Quedaría agregat un total de pagos, ver el tema de que no muestras los pagos de señas
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/pagos");
@@ -247,22 +247,6 @@ export default function EstablecimientoReservasPage() {
               </Th>
               <Th
                 textAlign="center"
-                onClick={() => handleOrdenarColumna("Monto")}
-                cursor="pointer"
-              >
-                Monto ($){" "}
-                {ordenColumna === "Monto" && (
-                  <>
-                    {ordenAscendente ? (
-                      <TriangleUpIcon color="blue.500" />
-                    ) : (
-                      <TriangleDownIcon color="blue.500" />
-                    )}
-                  </>
-                )}
-              </Th>
-              <Th
-                textAlign="center"
                 onClick={() => handleOrdenarColumna("Estado")}
                 cursor="pointer"
               >
@@ -277,30 +261,50 @@ export default function EstablecimientoReservasPage() {
                   </>
                 )}
               </Th>
+              <Th
+                textAlign="center"
+                onClick={() => handleOrdenarColumna("Monto")}
+                cursor="pointer"
+              >
+                Monto ($){" "}
+                {ordenColumna === "Monto" && (
+                  <>
+                    {ordenAscendente ? (
+                      <TriangleUpIcon color="blue.500" />
+                    ) : (
+                      <TriangleDownIcon color="blue.500" />
+                    )}
+                  </>
+                )}
+              </Th>
               <Th textAlign="center">Ver Detalle</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {pagosFiltrados.map((p) => {
+            {pagosFiltrados.map((p, idx) => {
               const tipo = (p.monto === p.reserva.senia)
                 ? "Seña"
                 : (p.monto === p.reserva.precio
                   ? "P. Total"
                   : "P. Adicional");
 
+              const bgColor = idx % 2 === 0
+                ? "gray.100"
+                : "white";
+
               return (
-                <Tr key={p.id}>
+                <Tr key={p.id} bgColor={bgColor}>
                   <Td textAlign="center">{formatISOFecha(p.fechaPago)}</Td>
                   <Td textAlign="center">{p.reserva.jugador
                     ? `${p.reserva.jugador?.nombre} ${p.reserva.jugador?.apellido}`
                     : p.reserva.jugadorNoRegistrado && `${p.reserva.jugadorNoRegistrado}*`}
                   </Td>
                   <Td textAlign="center">{p.reserva.disponibilidad.cancha.nombre}</Td>
-                  <Td textAlign="center">{p.monto}</Td>
                   <Td textAlign="center">
                     {tipo}{" "}
-                    <CircleIcon color={tipo === 'P. Total' ? "green" : (tipo === 'Seña' ? "yellow" : "orange")} verticalAlign="-0.2em" />
+                    {/* <CircleIcon color={tipo === 'P. Total' ? "green" : (tipo === 'Seña' ? "yellow" : "orange")} verticalAlign="-0.2em" /> */}
                   </Td>
+                  <Td textAlign="center">{p.monto}</Td>
                   <Td textAlign="center">
                     <PlusSquareIcon
                       w={5}
@@ -313,22 +317,20 @@ export default function EstablecimientoReservasPage() {
               );
             })}
           </Tbody>
+          <Tfoot>
+            <Tr>
+              <Td textAlign="center"></Td>
+              <Td textAlign="center"></Td>
+              <Td textAlign="center"></Td>
+              <Td textAlign="center"></Td>
+              <Td textAlign="center">
+                <strong style={{color:'#4a5568'}}>Total ($):</strong> {dataPagos?.total}
+              </Td>
+              <Td textAlign="center"></Td>
+            </Tr>
+          </Tfoot>
         </Table>
       </TableContainer>
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-      >
-        <FormControl variant="floating" width="auto">
-          <Input
-            type="text"
-            placeholder="total"
-            value={dataPagos?.total}
-            isDisabled
-          />
-          <FormLabel sx={{ ...floatingLabelActiveStyles }}>Total ($)</FormLabel>
-        </FormControl>
-      </Box>
     </Box>
   );
 }
