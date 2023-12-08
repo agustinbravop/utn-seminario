@@ -169,9 +169,9 @@ model reserva {
   disponibilidad   disponibilidad @relation(fields: [idDisponibilidad], references: [id], onDelete: NoAction, onUpdate: NoAction)
   idJugador        Int?
   jugador          jugador?       @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idPagoReserva    Int?
+  idPagoReserva    Int?           @unique
   pagoReserva      pago?          @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idPagoSenia      Int?
+  idPagoSenia      Int?           @unique
   pagoSenia        pago?          @relation("pagoSenia", fields: [idPagoSenia], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
