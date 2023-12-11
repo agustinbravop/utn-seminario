@@ -88,7 +88,7 @@ export default function FormDisp({
             {variant === "crear" ? "Agregar" : "Modificar"} disponibilidad
           </ModalHeader>
           <ModalBody>
-            <HStack width="600px" py="10px">
+            <HStack w="600px" py="10px">
               <HorarioControl
                 placeholder="Elegir horario"
                 label="Horario de Inicio"
@@ -106,7 +106,7 @@ export default function FormDisp({
                 )}
               />
             </HStack>
-            <HStack width="600px" py="10px">
+            <HStack w="600px" py="10px">
               <SelectControl
                 placeholder="Seleccionar disciplina "
                 name="disciplina"
@@ -139,11 +139,11 @@ export default function FormDisp({
                   isRequired
                   isReadOnly
                   isDisabled
-                  width="100%"
+                  w="100%"
                 />
               )}
             </HStack>
-            <HStack width="600px" py="10px">
+            <HStack w="600px" py="10px">
               <InputControl
                 placeholder=" "
                 name="precioReserva"

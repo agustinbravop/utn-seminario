@@ -67,7 +67,7 @@ export default function JugadorEditarPerfilPage() {
   }, [provincia, methods, jugador]);
 
   return (
-    <Card m="auto" maxWidth="400px" height="70%" mt="5%">
+    <Card m="auto" maxWidth="400px" h="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Editar Perfil

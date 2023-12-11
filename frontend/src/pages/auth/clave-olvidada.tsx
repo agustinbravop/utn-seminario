@@ -45,7 +45,7 @@ export default function Recuperar_psw() {
   });
 
   return (
-    <Card m="auto" maxWidth="400px" height="70%" mt="5%">
+    <Card m="auto" maxWidth="400px" h="70%" mt="5%">
       <CardHeader pb="0">
         <Heading size="lg" textAlign="center">
           Recuperar contraseña

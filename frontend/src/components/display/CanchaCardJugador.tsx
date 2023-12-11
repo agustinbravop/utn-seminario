@@ -15,36 +15,33 @@ import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 
 type CanchaCardProps = {
   cancha: Cancha;
-  date: string;
+  fecha: string;
 };
 
-export default function CanchaCardJugador({ cancha, date }: CanchaCardProps) {
+export default function CanchaCardJugador({ cancha, fecha }: CanchaCardProps) {
   return (
-    <Link to={`${cancha.id}?date=${date}`}>
+    <Link to={`${cancha.id}?fecha=${fecha}`}>
       <Card
-        width="360px"
-        height="220px"
+        w="360px"
+        h="220px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        <Box width="360px" height="125px">
+        <Box w="360px" h="125px">
           <Image
-            src={
-              !(cancha?.urlImagen === null)
-                ? cancha?.urlImagen
-                : FALLBACK_IMAGE_SRC
-            }
-            borderRadius="lg"
+            src={cancha?.urlImagen}
+            fallbackSrc={FALLBACK_IMAGE_SRC}
             alt={`Imagen del establecimiento ${cancha.nombre}`}
+            borderRadius="lg"
             objectFit="cover"
-            height="100%"
-            width="93%"
+            h="100%"
+            w="93%"
             mt="5px"
             ml="0.8rem"
           />
         </Box>
-        <CardBody height="100%">
+        <CardBody h="100%">
           <VStack spacing="0" textAlign="start">
             <Heading fontSize="15px" mb="10px">
               {cancha.nombre}

@@ -16,7 +16,7 @@ export default function MejorarSuscripcionPage() {
         <Image
           borderRadius="10"
           src="https://bedsttest.dk/wp-content/uploads/2022/02/Padel-tennis-bat-test.webp"
-          width="53%"
+          w="53%"
         />
         <Box>
           <Heading size="md">Beneficios a los que podrá acceder</Heading>

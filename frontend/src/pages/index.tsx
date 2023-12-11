@@ -30,7 +30,7 @@ export default function LandingPage() {
       </Container>
       <Stack
         display="flex"
-        justifyContent="center"
+        justify="center"
         mt="40px"
         alignItems="center"
         gap="50px"

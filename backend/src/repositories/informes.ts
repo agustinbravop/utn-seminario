@@ -48,6 +48,7 @@ export class PrismaInformeRepository implements InformeRepository {
           horaInicio: { gte: query.horaInicio },
           horaFin: { lte: query.horaFin },
         },
+        cancelada: false,
       },
       include: this.include,
     });
@@ -74,6 +75,7 @@ export class PrismaInformeRepository implements InformeRepository {
           horaInicio: { gte: query.horaInicio },
           horaFin: { lte: query.horaFin },
         },
+        cancelada: false,
       },
       include: this.include,
     });

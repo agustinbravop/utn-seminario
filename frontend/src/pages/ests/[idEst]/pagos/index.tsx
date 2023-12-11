@@ -90,13 +90,13 @@ export default function EstablecimientoReservasPage() {
       const nombreA = a.reserva.jugador
         ? `${a.reserva.jugador.nombre} ${a.reserva.jugador.apellido}`
         : a.reserva.jugadorNoRegistrado
-          ? `${a.reserva.jugadorNoRegistrado}`
-          : " ";
+        ? `${a.reserva.jugadorNoRegistrado}`
+        : " ";
       const nombreB = b.reserva.jugador
         ? `${b.reserva.jugador.nombre} ${b.reserva.jugador.apellido}`
         : b.reserva.jugadorNoRegistrado
-          ? `${b.reserva.jugadorNoRegistrado}`
-          : " ";
+        ? `${b.reserva.jugadorNoRegistrado}`
+        : " ";
       return ordenAscendente
         ? nombreA.localeCompare(nombreB)
         : nombreB.localeCompare(nombreA);
@@ -105,15 +105,15 @@ export default function EstablecimientoReservasPage() {
         a.monto === a.reserva.senia
           ? "Pago Seña"
           : a.monto === a.reserva.precio
-            ? "Pago Total"
-            : "Pago Adicional";
+          ? "Pago Total"
+          : "Pago Adicional";
 
       const estadoB =
         b.monto === b.reserva.senia
           ? "Pago Seña"
           : b.monto === b.reserva.precio
-            ? "Pago Total"
-            : "Pago Adicional";
+          ? "Pago Total"
+          : "Pago Adicional";
 
       return ordenAscendente
         ? estadoA.localeCompare(estadoB)
@@ -129,14 +129,14 @@ export default function EstablecimientoReservasPage() {
     const nombreJugador = p.reserva.jugador
       ? `${p.reserva.jugador.nombre} ${p.reserva.jugador.apellido}`
       : p.reserva.jugadorNoRegistrado
-        ? `${p.reserva.jugadorNoRegistrado}`
-        : " ";
+      ? `${p.reserva.jugadorNoRegistrado}`
+      : " ";
     const estado =
       p.monto === p.reserva.senia
         ? "Pago Seña"
         : p.monto === p.reserva.precio
-          ? "Pago Total"
-          : "Pago Adicional";
+        ? "Pago Total"
+        : "Pago Adicional";
 
     const nombreIncluido = nombreJugador
       .toLowerCase()
@@ -165,7 +165,7 @@ export default function EstablecimientoReservasPage() {
           : "Actualmente no cuenta con pagos en este establecimiento."}
       </Text>
       <HStack mb="20px" mt="20px">
-        <FormControl variant="floating" width="auto">
+        <FormControl variant="floating" w="auto">
           <Input
             type="text"
             placeholder="Nombre"
@@ -174,7 +174,7 @@ export default function EstablecimientoReservasPage() {
           />
           <FormLabel sx={{ ...floatingLabelActiveStyles }}>Jugador</FormLabel>
         </FormControl>
-        <FormControl variant="floating" width="auto">
+        <FormControl variant="floating" w="auto">
           <Input
             type="date"
             name="desde"
@@ -184,7 +184,7 @@ export default function EstablecimientoReservasPage() {
           />
           <FormLabel>Desde</FormLabel>
         </FormControl>
-        <FormControl variant="floating" width="auto">
+        <FormControl variant="floating" w="auto">
           <Input
             type="date"
             name="hasta"
@@ -195,9 +195,9 @@ export default function EstablecimientoReservasPage() {
           <FormLabel>Hasta</FormLabel>
         </FormControl>
 
-        <FormControl variant="floating" width="auto">
+        <FormControl variant="floating" w="auto">
           <Select
-            width="auto"
+            w="auto"
             placeholder="Todos"
             onChange={(e) => setFiltroEstado(e.target.value)}
           >
@@ -304,8 +304,8 @@ export default function EstablecimientoReservasPage() {
                 p.monto === p.reserva.senia
                   ? "Pago Seña"
                   : p.monto === p.reserva.precio
-                    ? "Pago Total"
-                    : "Pago Adicional";
+                  ? "Pago Total"
+                  : "Pago Adicional";
 
               const bgColor = idx % 2 === 0 ? "gray.100" : "white";
 

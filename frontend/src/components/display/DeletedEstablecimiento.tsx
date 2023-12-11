@@ -67,8 +67,8 @@ export default function DeletedEstablecimiento({
   };
 
   return (
-    <Card width="300px" height="390px">
-      <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
+    <Card w="300px" h="390px">
+      <Box w="300px" maxWidth="300px" h="200px" maxHeight="200px">
         <Image
           src={
             !(establecimiento?.urlImagen === null)
@@ -78,11 +78,11 @@ export default function DeletedEstablecimiento({
           borderTopRadius="lg"
           alt={`Imagen del establecimiento ${establecimiento.nombre}`}
           objectFit="cover"
-          height="100%"
-          width="100%"
+          h="100%"
+          w="100%"
         />
       </Box>
-      <CardBody height="300px">
+      <CardBody h="300px">
         <VStack spacing="0">
           <Heading size="md" mb="10px">
             {establecimiento.nombre}

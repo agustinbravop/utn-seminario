@@ -18,9 +18,9 @@ export default function Alerta({ mensaje, status, descripcion }: AlertaProps) {
       variant="subtle"
       flexDirection="column"
       alignItems="center"
-      justifyContent="center"
+      justify="center"
       textAlign="center"
-      height="100px"
+      h="100px"
     >
       <AlertIcon boxSize="40px" mr={0} />
       <AlertTitle mt={4} mb={1} fontSize="lg">

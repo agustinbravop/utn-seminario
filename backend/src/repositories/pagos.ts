@@ -27,6 +27,18 @@ export class PrismaPagoRepository implements PagoRepository {
         },
       },
     },
+    senias: {
+      include: {
+        jugador: { include: { localidad: true, disciplina: true } },
+        disponibilidad: {
+          include: {
+            disciplina: true,
+            dias: true,
+            cancha: { include: { establecimiento: true } },
+          },
+        },
+      },
+    },
   };
 
   constructor(prismaClient: PrismaClient) {
@@ -47,16 +59,34 @@ export class PrismaPagoRepository implements PagoRepository {
       const pagos = await this.prisma.pago.findMany({
         where: {
           fechaPago: { gte: filtros.fechaDesde, lte: filtros.fechaHasta },
-          reservas: {
-            some: {
-              disponibilidad: {
-                cancha: {
-                  id: filtros.idCancha,
-                  idEstablecimiento: filtros.idEst,
+          OR: [
+            {
+              reservas: {
+                // Hay una sola reserva asociada al pago de la reserva.
+                some: {
+                  disponibilidad: {
+                    cancha: {
+                      id: filtros.idCancha,
+                      idEstablecimiento: filtros.idEst,
+                    },
+                  },
                 },
               },
             },
-          },
+            {
+              // Lo mismo pero para pagos de señas.
+              senias: {
+                some: {
+                  disponibilidad: {
+                    cancha: {
+                      id: filtros.idCancha,
+                      idEstablecimiento: filtros.idEst,
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
         include: this.include,
       });
@@ -109,10 +139,16 @@ export function toPago(pago: PagoDB): Pago {
 
 type PagoConReservaDB = PagoDB & {
   reservas: Omit<ReservaDB, "pagoReserva" | "pagoSenia">[];
+  senias: Omit<ReservaDB, "pagoReserva" | "pagoSenia">[];
 };
 
 export function toPagoConReserva(pago: PagoConReservaDB): PagoConReserva {
-  return { ...toPago(pago), reserva: toResSinPagos(pago.reservas[0]) };
+  return {
+    ...toPago(pago),
+    reserva: toResSinPagos(
+      pago.reservas.length === 0 ? pago.senias[0] : pago.reservas[0]
+    ),
+  };
 }
 
 async function awaitQuery(

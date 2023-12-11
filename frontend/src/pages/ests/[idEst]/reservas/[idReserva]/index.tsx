@@ -87,7 +87,7 @@ export default function ReservaInfoPage() {
   }
 
   return (
-    <Card m="auto" height="60%" maxW="450px" mt="5%">
+    <Card m="auto" h="60%" maxW="450px" mt="5%">
       <CardBody m="15px">
         <Heading as="h3" size="lg" textAlign="center">
           Datos de la reserva
@@ -98,7 +98,7 @@ export default function ReservaInfoPage() {
           </Heading>
         )}
         <VStack divider={<StackDivider />} mt="20px">
-          <HStack width="100%">
+          <HStack w="100%">
             <Box flex="1">
               <Heading size="xs">Fecha reservada para jugar</Heading>
               <Text fontSize="sm">
@@ -114,7 +114,7 @@ export default function ReservaInfoPage() {
               </Text>
             </Box>
           </HStack>
-          <HStack width="100%">
+          <HStack w="100%">
             <Box flex="1">
               <Heading size="xs">Fecha de creación</Heading>
               <Text fontSize="sm">{formatISO(reserva.fechaCreada)}</Text>
@@ -130,7 +130,7 @@ export default function ReservaInfoPage() {
           Estado del pago
         </Heading>
         <VStack divider={<StackDivider />}>
-          <HStack width="100%">
+          <HStack w="100%">
             <Box flex="1">
               <Heading size="xs">Estado</Heading>
               <Text fontSize="sm">
@@ -142,7 +142,7 @@ export default function ReservaInfoPage() {
               <Text fontSize="sm">${pagoRestante(reserva)}</Text>
             </Box>
           </HStack>
-          <HStack width="100%">
+          <HStack w="100%">
             <Box flex="1">
               <Heading size="xs">Precio total</Heading>
               <Text fontSize="sm">${reserva.precio}</Text>
@@ -154,7 +154,7 @@ export default function ReservaInfoPage() {
               </Text>
             </Box>
           </HStack>
-          <HStack width="100%">
+          <HStack w="100%">
             <Box flex="1">
               <Heading size="xs">Fecha del pago</Heading>
               <Text fontSize="sm">
@@ -169,8 +169,8 @@ export default function ReservaInfoPage() {
                 {reserva.pagoSenia
                   ? formatISO(reserva.pagoSenia.fechaPago)
                   : reserva.pagoReserva
-                    ? "-"
-                    : "Falta señar"}
+                  ? "-"
+                  : "Falta señar"}
               </Text>
             </Box>
           </HStack>
@@ -232,7 +232,7 @@ export default function ReservaInfoPage() {
           </HStack>
         )}
 
-        <HStack justifyContent="center" spacing="20px" pt="30px">
+        <HStack justify="center" spacing="20px" pt="30px">
           <Button onClick={() => navigate(-1)}>Volver</Button>
           {!reserva.idPagoSenia &&
             !reserva.idPagoReserva &&

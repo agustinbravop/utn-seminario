@@ -48,7 +48,7 @@ export default function JugadorCambiarClavePage() {
   });
 
   return (
-    <Card m="auto" maxWidth="clamp(400px, 100%)" height="70%" mt="5%">
+    <Card m="auto" maxWidth="clamp(400px, 100%)" h="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Cambiar contraseña

@@ -20,8 +20,8 @@ export default function CanchaCard({ cancha }: estabProps) {
   return (
     <Link to={`${cancha.id}`}>
       <Card
-        width="300px"
-        height="370px"
+        w="300px"
+        h="370px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -36,9 +36,9 @@ export default function CanchaCard({ cancha }: estabProps) {
           objectFit="cover"
           borderTopRadius="lg"
           maxWidth="100%"
-          height="200px"
+          h="200px"
         />
-        <CardBody height="300px">
+        <CardBody h="300px">
           <VStack spacing="0">
             <Heading size="md" mb="10px">
               {cancha.nombre}

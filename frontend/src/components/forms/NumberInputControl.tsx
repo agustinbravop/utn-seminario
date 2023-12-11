@@ -40,7 +40,7 @@ export default function NumberInputControl(props: NumberInputControlProps) {
     step,
     precision,
     children,
-    width,
+    w: width,
     ...rest
   } = props;
 
@@ -67,7 +67,7 @@ export default function NumberInputControl(props: NumberInputControlProps) {
           min={min}
           step={step}
           precision={precision}
-          width={width ?? "100%"}
+          w={width ?? "100%"}
           {...restField}
         >
           <NumberInputField name={name} ref={ref} />

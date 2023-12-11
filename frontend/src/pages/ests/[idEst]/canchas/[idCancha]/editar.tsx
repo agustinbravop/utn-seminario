@@ -68,7 +68,7 @@ export default function EditCourtPage() {
         Editar Cancha
       </Heading>
       <FormProvider {...methods}>
-        <VStack as="form" spacing="24px" width="400px" m="auto">
+        <VStack as="form" spacing="24px" w="400px" m="auto">
           <InputControl
             name="nombre"
             label="Nombre de la cancha"
@@ -89,7 +89,7 @@ export default function EditCourtPage() {
           />
 
           <Container centerContent mt="10px">
-            <HStack justifyContent="flex-end" spacing={30}>
+            <HStack justify="flex-end" spacing={30}>
               <Button onClick={() => navigate(-1)}>Cancelar</Button>
               <ConfirmSubmitButton
                 isLoading={isLoading}

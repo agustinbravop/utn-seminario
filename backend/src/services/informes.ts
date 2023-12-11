@@ -99,6 +99,7 @@ export class InformeServiceImpl implements InformeService {
         fechaReservadaHasta: query.fechaHasta
           ? setMidnight(query.fechaHasta)
           : undefined,
+        cancelada: false,
       });
 
       const estimado = reservas.reduce((acum, r) => {

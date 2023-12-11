@@ -80,7 +80,7 @@ function EstablecimientosEliminadosModal({
             ) : estsEliminados.length === 0 ? (
               <Text>No hay establecimientos en la papelera</Text>
             ) : (
-              <HStack display="flex" flexWrap="wrap" justifyContent="left">
+              <HStack display="flex" flexWrap="wrap" justify="left">
                 {estsEliminados.map((est) => (
                   <DeletedEstablecimiento
                     key={est.id}
@@ -124,8 +124,8 @@ export default function EstablecimientosPage() {
       <EstablecimientoBreadcrumb ml="12%" />
       <Heading textAlign="center">Establecimientos</Heading>
       <HStack mx="12%" ml="12%" mb="50px" mt="20px" justify="space-between">
-        <FormControl variant="floating" width="max-content">
-          <InputGroup width="fit-content" m="0">
+        <FormControl variant="floating" w="max-content">
+          <InputGroup w="fit-content" m="0">
             <InputRightElement>
               <SearchIcon color="gray" />
             </InputRightElement>

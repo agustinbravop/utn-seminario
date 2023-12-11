@@ -84,7 +84,7 @@ export default function EstablecimientoEditarPage() {
         Editar Establecimiento
       </Heading>
       <FormProvider {...methods}>
-        <VStack as="form" spacing="4" width="400px" m="auto">
+        <VStack as="form" spacing="4" w="400px" m="auto">
           <InputControl
             name="nombre"
             label="Nombre del establecimiento"
@@ -135,7 +135,7 @@ export default function EstablecimientoEditarPage() {
             defaultImg={data?.urlImagen}
           />
 
-          <HStack justifyContent="flex-end" spacing={30}>
+          <HStack justify="flex-end" spacing={30}>
             <Button onClick={() => navigate(-1)}>Cancelar</Button>
             <ConfirmSubmitButton
               isLoading={isLoading}

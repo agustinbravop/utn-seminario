@@ -15,22 +15,23 @@ import { useBuscarDisponibilidades } from "@/utils/api";
 
 type EstablecimientoCardProps = {
   establecimiento: Establecimiento;
-  date: string;
+  fecha: string;
 };
 
 export default function EstablecimientoCardJugador({
   establecimiento,
-  date,
+  fecha,
 }: EstablecimientoCardProps) {
   const { data: disps } = useBuscarDisponibilidades({
     idEst: establecimiento.id,
   });
 
   return (
-    <Link to={`est/${establecimiento.id}?date=${date}`}>
+    <Link to={`est/${establecimiento.id}?fecha=${fecha}`}>
       <Card
-        maxWidth="350px"
-        height="250px"
+        maxW="350px"
+        w={["auto", "350px"]}
+        h="250px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -42,8 +43,8 @@ export default function EstablecimientoCardJugador({
             borderRadius="lg"
             alt={`${establecimiento.nombre}`}
             objectFit="cover"
-            width="100%"
-            height="50%"
+            w="100%"
+            h="50%"
             mb="1em"
           />
           <VStack spacing="0" textAlign="start">
