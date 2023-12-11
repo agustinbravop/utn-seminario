@@ -19,6 +19,7 @@ import { formatFecha, getHoraActual, horaADecimal } from "@/utils/dates";
 import { useBusqueda } from "@/hooks";
 import { BusquedaFiltros } from "@/hooks/useBusqueda";
 import { QuestionAlert } from "@/components/media-and-icons";
+import { useSearchParams } from "react-router-dom";
 
 function filtrarDisponibilidades(
   disps: BuscarDisponibilidadResult[],
@@ -34,6 +35,7 @@ function filtrarDisponibilidades(
 
 export default function ReservarEstablecimientoPage() {
   const { idEst } = useParams();
+  const [, setSearchParams] = useSearchParams();
 
   const { filtros, setFiltro } = useBusqueda();
   const { data: est } = useEstablecimientoByID(Number(idEst));
@@ -55,11 +57,11 @@ export default function ReservarEstablecimientoPage() {
       </Heading>
 
       <HStack my="20px">
-        <FormControl width="unset" variant="floating">
+        <FormControl w="unset" variant="floating">
           <Select
             placeholder="Todas"
             name="disciplina"
-            width="fit-content"
+            w="fit-content"
             value={filtros.disciplina}
             onChange={(e) => setFiltro("disciplina", e.target.value)}
           >
@@ -71,14 +73,17 @@ export default function ReservarEstablecimientoPage() {
           </Select>
           <FormLabel>Disciplina</FormLabel>
         </FormControl>
-        <FormControl width="unset" variant="floating">
+        <FormControl w="unset" variant="floating">
           <Input
             type="date"
             name="fecha"
-            value={filtros.fecha}
-            onChange={(e) => setFiltro("fecha", e.target.value)}
-            width="fit-content"
+            w="fit-content"
             min={formatFecha(new Date())}
+            value={filtros.fecha}
+            onChange={(e) => {
+              setFiltro("fecha", e.target.value);
+              setSearchParams({ fecha: e.target.value });
+            }}
           />
           <FormLabel>Fecha</FormLabel>
         </FormControl>

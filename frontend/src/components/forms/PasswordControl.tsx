@@ -13,7 +13,7 @@ export default function PasswordControl(props: InputControlProps) {
   return (
     <InputControl
       rightElement={
-        <InputRightElement width="4.5rem">
+        <InputRightElement w="4.5rem">
           <Button
             h="1.8rem"
             p="0"

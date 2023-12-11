@@ -42,7 +42,7 @@ function SuscripcionesCardList() {
     );
   }
   return (
-    <Stack justifyContent="center" direction={["column", "row"]}>
+    <Stack justify="center" direction={["column", "row"]}>
       {data
         .sort((s1, s2) => s1.costoMensual - s2.costoMensual)
         .map((s, idx) => ({ icono: ICONOS_SUSCRIPCIONES[idx], ...s }))
@@ -51,7 +51,7 @@ function SuscripcionesCardList() {
             bg="light"
             key={s.id}
             color="dark"
-            width={["100%", "14rem"]}
+            w={["100%", "14rem"]}
             margin={["auto", "1em"]}
             direction={["row", "column"]}
           >

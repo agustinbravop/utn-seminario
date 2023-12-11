@@ -113,8 +113,8 @@ export default function SubscribePage() {
           as="form"
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="4"
-          width="400px"
-          justifyContent="center"
+          w="400px"
+          justify="center"
           margin="auto"
           my="20px"
         >

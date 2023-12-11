@@ -11,9 +11,9 @@ export default function VistaJugador() {
   const { data } = useEstablecimientoByID(Number(idEst));
   const canchas = useCanchasByEstablecimientoID(Number(idEst));
 
-  const location = useLocation();
-  const dateParam = new URLSearchParams(location.search).get("date");
-  const date = formatFecha(dateParam ? new Date(dateParam) : new Date());
+  const { search } = useLocation();
+  const fecha =
+    new URLSearchParams(search).get("fecha") ?? formatFecha(new Date());
 
   return (
     <>
@@ -21,11 +21,11 @@ export default function VistaJugador() {
         Establecimiento {data?.nombre}
       </Heading>
       <Box>
-        <HStack justifyContent="center"></HStack>
+        <HStack justify="center"></HStack>
         <Heading>Canchas</Heading>
-        <HStack display="flex" flexWrap="wrap" justifyContent="center" w="330">
+        <HStack display="flex" flexWrap="wrap" justify="center" w="330">
           {canchas.data.map((c, index) => (
-            <CanchaCardJugador key={index} cancha={c} date={date} />
+            <CanchaCardJugador key={index} cancha={c} fecha={fecha} />
           ))}
         </HStack>
       </Box>

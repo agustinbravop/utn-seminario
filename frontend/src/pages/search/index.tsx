@@ -14,7 +14,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { formatFecha } from "@/utils/dates";
-import { useYupForm, useBusqueda } from "@/hooks";
+import { useYupForm, useBusqueda, useFormSearchParams } from "@/hooks";
 import { useWatch, FormProvider } from "react-hook-form";
 import { DISCIPLINAS } from "@/utils/constants";
 import { InputControl, SelectControl } from "@/components/forms";
@@ -30,12 +30,15 @@ import { QuestionAlert } from "@/components/media-and-icons";
 export default function BuscarEstablecimientosPage() {
   const { filtros, updateFiltros, setFiltro } = useBusqueda();
   const methods = useYupForm<BusquedaEstablecimientos>({
-    defaultValues: filtros,
+    defaultValues: { ...filtros, nombre: "" },
   });
   const values = useWatch({ control: methods.control });
   useEffect(() => {
     updateFiltros(values);
+    console.log(values);
   }, [values, updateFiltros]);
+  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
+
   const { data: ests, isFetched } = useBuscarEstablecimientos({
     ...values,
     disciplina: values.disciplina || undefined,
@@ -101,7 +104,7 @@ export default function BuscarEstablecimientosPage() {
             bg="white"
             borderRadius="10px"
             size="md"
-            width="100%"
+            w="100%"
             min={formatFecha(new Date())}
           />
           <InputControl
@@ -110,10 +113,10 @@ export default function BuscarEstablecimientosPage() {
             bg="white"
             borderRadius="10px"
             size="md"
-            width="100%"
+            w="100%"
             label={
               <FormLabel sx={{ ...floatingLabelActiveStyles }}>
-                Nombre del establecimiento
+                Establecimiento
               </FormLabel>
             }
             rightElement={
@@ -125,13 +128,13 @@ export default function BuscarEstablecimientosPage() {
         </VStack>
       </FormProvider>
 
-      <HStack flexWrap="wrap" justifyContent="center" pt="20px">
+      <HStack flexWrap="wrap" justify="center" pt="20px">
         {ests.length > 0 ? (
           ests.map((est) => (
             <EstablecimientoCardJugador
               key={est.id}
               establecimiento={est}
-              date={values.fecha ?? formatFecha(new Date())}
+              fecha={values.fecha ?? formatFecha(new Date())}
             />
           ))
         ) : isFetched ? (

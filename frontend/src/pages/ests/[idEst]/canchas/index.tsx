@@ -35,7 +35,7 @@ export default function EstablecimientoCanchasPage() {
     <Box mr="12%" ml="12%">
       <EstablecimientoMenu />
       <HStack mb="50px" mt="0px">
-        <InputGroup width="300px">
+        <InputGroup w="300px">
           <InputRightElement pointerEvents="none">
             <SearchIcon color="gray.300" />
           </InputRightElement>
@@ -43,7 +43,7 @@ export default function EstablecimientoCanchasPage() {
             focusBorderColor="lightblue"
             placeholder="Nombre de la cancha"
             size="md"
-            width="100%"
+            w="100%"
             onChange={(e) => setFiltro(e.target.value)}
             value={filtro}
           />
@@ -71,7 +71,7 @@ export default function EstablecimientoCanchasPage() {
             : "Este establecimiento no tiene canchas."}
         </QuestionAlert>
       ) : (
-        <HStack display="flex" flexWrap="wrap" gap={8} justifyContent="center">
+        <HStack display="flex" flexWrap="wrap" gap={8} justify="center">
           {canchas.map((cancha, index) => (
             <CanchaCard key={index} cancha={cancha} />
           ))}

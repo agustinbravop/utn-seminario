@@ -71,7 +71,7 @@ export default function SuscripcionesPage() {
         bg="light"
         key={s.id}
         color="dark"
-        width="14rem"
+        w="14rem"
         variant={esSuscripcionActual ? "filled" : "elevated"}
       >
         <CardHeader margin="auto">{s.icono}</CardHeader>
@@ -119,7 +119,7 @@ export default function SuscripcionesPage() {
           información.
         </Text>
       </Box>
-      <HStack justifyContent="center" gap="95px" my="50px" as="form">
+      <HStack justify="center" gap="95px" my="50px" as="form">
         {cards}
       </HStack>
       <Center>

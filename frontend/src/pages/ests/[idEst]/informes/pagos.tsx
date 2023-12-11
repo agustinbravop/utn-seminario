@@ -10,13 +10,10 @@ import {
   Button,
   Card,
   CardBody,
-  FormControl,
-  FormLabel,
   HStack,
   Heading,
   Icon,
   Image,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -38,44 +35,52 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { FaListUl } from "react-icons/fa";
+import { InputControl } from "@/components/forms";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { useFormSearchParams } from "@/hooks";
+
+const defaultValues = {
+  desde: formatFecha(new Date()),
+  hasta: formatFecha(new Date()),
+};
 
 export default function InformePagosPage() {
   const { idEst } = useParams();
-  const [fechaDesde, setFechaDesde] = useState<string>(formatFecha(new Date()));
-  const [fechaHasta, setFechaHasta] = useState<string>(formatFecha(new Date()));
+  const methods = useForm({ defaultValues });
+  const { desde = "", hasta = "" } = useWatch({
+    control: methods.control,
+    defaultValue: defaultValues,
+  });
+  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
 
   const { data: informe } = useInformePagosPorCancha({
     idEst: Number(idEst),
-    fechaDesde: fechaDesde,
-    fechaHasta: fechaHasta,
+    fechaDesde: desde,
+    fechaHasta: hasta,
   });
 
   return (
     <Box mr="12%" ml="12%">
       <EstablecimientoMenu />
       <InformesMenu informe="Pagos" />
-      <HStack mb="20px" mt="30px">
-        <FormControl variant="floating" width="auto">
-          <Input
+
+      <FormProvider {...methods}>
+        <HStack as="form" mb="20px" mt="30px">
+          <InputControl
+            w="auto"
+            name="desde"
             type="date"
             placeholder="Fecha desde"
-            value={fechaDesde}
-            onChange={(e) => setFechaDesde(e.target.value)}
           />
-          <FormLabel>Desde</FormLabel>
-        </FormControl>
-        <FormControl variant="floating" width="auto">
-          <Input
+          <InputControl
+            w="auto"
+            name="hasta"
             type="date"
             placeholder="Fecha hasta"
-            value={fechaHasta}
-            onChange={(e) => setFechaHasta(e.target.value)}
           />
-          <FormLabel>Hasta</FormLabel>
-        </FormControl>
-      </HStack>
+        </HStack>
+      </FormProvider>
 
       <Text>
         Se acumula el dinero cobrado de todos los<b> pagos recibidos</b> entre
@@ -85,7 +90,7 @@ export default function InformePagosPage() {
         <LoadingSpinner />
       ) : (
         <Box>
-          <StatGroup width="fit-content" gap="40px" my="20px">
+          <StatGroup w="fit-content" gap="40px" my="20px">
             <Stat>
               <StatLabel>
                 <Tooltip label="Cantidad de pagos cobrados">Pagos</Tooltip>
@@ -127,11 +132,11 @@ function InformePagosDetalleCanchaCard({
   const navigate = useNavigate();
 
   return (
-    <Card key={cancha.id} width="350px" borderRadius="10px">
+    <Card key={cancha.id} w="350px" borderRadius="10px">
       <Image
         src={cancha.urlImagen}
-        fallback={<FallbackImage height="125px" />}
-        height="125px"
+        fallback={<FallbackImage h="125px" />}
+        h="125px"
         fit="cover"
         borderRadius="10px 10px 0 0"
       />

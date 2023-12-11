@@ -67,21 +67,17 @@ export default function JugadorReservasPage() {
         <HStack
           mx="10%"
           mb="17px"
-          justifyContent="flex-start"
+          justify="flex-start"
           alignItems="center"
           display="flex"
           spacing="10px"
         >
           <Text>Ordenar por:</Text>
-          <SelectControl name="orden" label="Orden" width="fit-content">
+          <SelectControl name="orden" label="Orden" w="fit-content">
             <option value="Recientes">Recientes</option>
             <option value="Antiguas">Antiguas</option>
           </SelectControl>
-          <SelectControl
-            width="fit-content"
-            label="Disciplina"
-            name="disciplina"
-          >
+          <SelectControl w="fit-content" label="Disciplina" name="disciplina">
             <option defaultChecked value="">
               Todas
             </option>
@@ -101,7 +97,7 @@ export default function JugadorReservasPage() {
         <TabPanels>
           <TabPanel
             display="flex"
-            justifyContent="center"
+            justify="center"
             flexWrap="wrap"
             px="0"
             gap="1em"
@@ -118,7 +114,7 @@ export default function JugadorReservasPage() {
           </TabPanel>
           <TabPanel
             display="flex"
-            justifyContent="center"
+            justify="center"
             flexWrap="wrap"
             px="0"
             gap="1em"

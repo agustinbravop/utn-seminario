@@ -69,10 +69,10 @@ export default function CanchaNuevaPage() {
             });
           })}
           spacing="24px"
-          width="800px"
+          w="800px"
           m="auto"
         >
-          <VStack width="400px">
+          <VStack w="400px">
             <InputControl
               name="nombre"
               label="Nombre de la cancha"
@@ -88,7 +88,7 @@ export default function CanchaNuevaPage() {
             <ImageControl label="Imagen" name="imagen" />
           </VStack>
 
-          <HStack justifyContent="flex-end" spacing={30}>
+          <HStack justify="flex-end" spacing={30}>
             <Button onClick={() => navigate(-1)}>Cancelar</Button>
             <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
           </HStack>

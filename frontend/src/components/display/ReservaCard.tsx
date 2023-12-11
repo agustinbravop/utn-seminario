@@ -81,7 +81,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
 
         <CardBody px="0" textAlign="center">
           <Heading
-            justifyContent="center"
+            justify="center"
             display="flex"
             fontSize={{ base: "23px", md: "23px", lg: "25px" }}
             mb="5px"
@@ -120,7 +120,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             direction={{ base: "column", sm: "row" }}
             spacing={2}
             align="center"
-            justifyContent="center"
+            justify="center"
             fontSize={{ base: "15px", md: "17px", lg: "15px" }}
           >
             <Tag size="sm" variant="subtle" colorScheme="gray">
@@ -165,7 +165,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             variant="outline"
             m="0em auto 0.8em"
             size="sm"
-            width="fit-content"
+            w="fit-content"
           >
             Cancelar Reserva
           </ConfirmSubmitButton>

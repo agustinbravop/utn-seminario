@@ -55,9 +55,9 @@ export default function VistaJugadorCancha() {
       </Heading>
 
       <Card
-        justifyContent="center"
+        justify="center"
         style={{ marginTop: "10px", marginBottom: "1rem" }}
-        width="100%"
+        w="100%"
         display="flex"
         // Cambio de dirección en dispositivos móviles
         flexDirection={{ base: "column", md: "row" }}
@@ -67,7 +67,7 @@ export default function VistaJugadorCancha() {
             <Image
               src={cancha?.urlImagen}
               fallbackSrc={FALLBACK_IMAGE_SRC}
-              width="500px"
+              w="500px"
               objectFit="cover"
               borderRadius="10px"
             />
@@ -99,10 +99,10 @@ export default function VistaJugadorCancha() {
               </Text>
 
               <HStack my="20px">
-                <FormControl width="unset" variant="floating">
+                <FormControl w="unset" variant="floating">
                   <Select
                     placeholder="Todas"
-                    width="150px"
+                    w="150px"
                     fontSize="sm"
                     name="disciplina"
                     value={filtros.disciplina}
@@ -116,13 +116,13 @@ export default function VistaJugadorCancha() {
                   </Select>
                   <FormLabel>Disciplina</FormLabel>
                 </FormControl>
-                <FormControl width="unset" variant="floating">
+                <FormControl w="unset" variant="floating">
                   <Input
                     type="date"
                     name="fecha"
                     value={filtros.fecha}
                     onChange={(e) => setFiltro("fecha", e.target.value)}
-                    width="fit-content"
+                    w="fit-content"
                     min={formatFecha(new Date())}
                   />
                   <FormLabel>Fecha</FormLabel>

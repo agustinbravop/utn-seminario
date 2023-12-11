@@ -86,9 +86,9 @@ export default function RegisterPage() {
           as="form"
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="4"
-          width="-webkit-fit-content"
+          w="-webkit-fit-content"
           maxW="400px"
-          justifyContent="center"
+          justify="center"
           margin="auto"
           my="20px"
         >

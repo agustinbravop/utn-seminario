@@ -80,13 +80,13 @@ export default function Carousel({
   return (
     <Box
       position={"relative" /* para position="absolute" en CarouselButton */}
-      width={{ base: "90vw", md: "60vw" }}
+      w={{ base: "90vw", md: "60vw" }}
     >
       {images.map((imgSrc, idx) => (
         <Image
           key={idx}
-          height="420px"
-          width="100%"
+          h="420px"
+          w="100%"
           borderRadius="12px"
           objectFit="cover"
           src={imgSrc}
