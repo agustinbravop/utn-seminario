@@ -79,7 +79,7 @@ export default function InformePagosPage() {
 
       <Text>
         Se acumula el dinero cobrado de todos los<b> pagos recibidos</b> entre
-        las dos fechas de filtro.
+        las entre las fechas indicadas.
       </Text>
       {!informe ? (
         <LoadingSpinner />
@@ -104,7 +104,7 @@ export default function InformePagosPage() {
             </Stat>
           </StatGroup>
 
-          <Heading size="lg" my="0.5em" ml="2em">
+          <Heading fontSize="2xl" my="0.5em" ml="2em">
             Por cancha
           </Heading>
           <HStack wrap="wrap" justify="center">

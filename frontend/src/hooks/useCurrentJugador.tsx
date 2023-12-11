@@ -25,6 +25,7 @@ const PLACEHOLDER_JUGADOR = {
   correo: "jugador@example.com",
   telefono: "00000000",
   usuario: "usuariojugador",
+  password: true,
 };
 
 const CurrentJugadorContext = createContext<ICurrentJugadorContext | undefined>(
