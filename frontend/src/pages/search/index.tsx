@@ -33,11 +33,10 @@ export default function BuscarEstablecimientosPage() {
     defaultValues: { ...filtros, nombre: "" },
   });
   const values = useWatch({ control: methods.control });
+  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
   useEffect(() => {
     updateFiltros(values);
-    console.log(values);
   }, [values, updateFiltros]);
-  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
 
   const { data: ests, isFetched } = useBuscarEstablecimientos({
     ...values,

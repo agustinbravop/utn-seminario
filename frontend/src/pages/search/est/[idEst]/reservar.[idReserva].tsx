@@ -5,7 +5,7 @@ import { useCurrentJugador } from "@/hooks";
 import { useReservaByID } from "@/utils/api";
 import { LoadingSpinner } from "@/components/feedback";
 import { QuestionAlert } from "@/components/media-and-icons";
-import { formatISOFecha } from "@/utils/dates";
+import { formatFechaISO } from "@/utils/dates";
 
 export default function ReservaExitosaPage() {
   const { jugador } = useCurrentJugador();
@@ -32,7 +32,7 @@ export default function ReservaExitosaPage() {
       <Text textAlign="center" fontSize="xl">
         Usted juega en{" "}
         <strong>{reserva.disponibilidad.cancha.establecimiento.nombre}</strong>{" "}
-        el día <strong>{formatISOFecha(reserva.fechaReservada)}</strong> desde
+        el día <strong>{formatFechaISO(reserva.fechaReservada)}</strong> desde
         las <strong>{reserva.disponibilidad.horaInicio}hs</strong> hasta las{" "}
         <strong>{reserva.disponibilidad.horaFin}hs</strong>.
       </Text>

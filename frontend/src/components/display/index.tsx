@@ -6,3 +6,4 @@ export { default as EstablecimientoCardJugador } from "./EstablecimientoCardJuga
 export { default as ReservaEstado } from "./ReservaEstado";
 export { default as ReservaCard } from "./ReservaCard";
 export { default as TablaDisponibilidadesReservables } from "./TablaDisponibilidadesReservables";
+export { default as IndicadorOrdenColumna } from "./IndicadorOrdenColumna";

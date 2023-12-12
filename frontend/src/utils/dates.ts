@@ -62,7 +62,7 @@ export function toUTCDate(isoDate: string) {
  * Toma un string de una fecha en formato ISO y devuelve solo la fecha (sin la hora) en formato local.
  * Usar esta función para mostrar la fecha al usuario de manera amigable y localizada.
  */
-export function formatISOFecha(iso: string) {
+export function formatFechaISO(iso: string) {
   return toUTCDate(iso).toLocaleDateString("es-ar");
 }
 
@@ -74,6 +74,17 @@ export function formatISOFecha(iso: string) {
 export function formatISO(iso: string) {
   return toUTCDate(iso).toLocaleString("es-ar");
 }
+
+// /**
+//  * Toma strings de dos fechas en formato ISO y devuelve:
+//  * a) `+1` si `a > b`.
+//  * b) `-1` si `a < b`.
+//  * a) `0` si `a == b`.
+//  * Usar esta función para ordenar fechas con `sort()`.
+//  */
+// export function compararISO(isoA: string, isoB: string) {
+//   return toUTCDate(iso).toLocaleDateString("es-ar");
+// }
 
 /** `desde` y `hasta` son fechas ISO sin tiempo.
  * Devuelve `true` si `date` (otra fecha ISO) está entre ellas.

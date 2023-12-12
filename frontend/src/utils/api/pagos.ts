@@ -17,6 +17,8 @@ export function usePagoByID(
 export type BuscarPagosQuery = {
   idCancha?: number;
   idEst?: number;
+  fechaDesde?: string;
+  fechaHasta?: string;
 };
 
 export function useBuscarPagos(

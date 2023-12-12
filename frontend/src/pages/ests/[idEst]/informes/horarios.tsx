@@ -37,6 +37,7 @@ Chart.register(
 export default function InformeHorariosPage() {
   const [desde, setDesde] = useState("00:00");
   const [hasta, setHasta] = useState("23:55");
+
   return (
     <Box mx="12%">
       <EstablecimientoMenu />

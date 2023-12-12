@@ -38,7 +38,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { InputControl } from "@/components/forms";
+import { DateControl } from "@/components/forms";
 import { useFormSearchParams } from "@/hooks";
 
 const defaultValues = {
@@ -62,24 +62,14 @@ export default function InformeReservasPage() {
   });
 
   return (
-    <Box mr="12%" ml="12%">
+    <Box mx="12%">
       <EstablecimientoMenu />
       <InformesMenu informe="Reservas" />
 
       <FormProvider {...methods}>
-        <HStack as="form" mb="20px" mt="30px">
-          <InputControl
-            w="auto"
-            name="desde"
-            type="date"
-            placeholder="Fecha desde"
-          />
-          <InputControl
-            w="auto"
-            name="hasta"
-            type="date"
-            placeholder="Fecha hasta"
-          />
+        <HStack mb="20px" mt="30px">
+          <DateControl w="auto" name="desde" label="Desde" isRequired />
+          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
         </HStack>
       </FormProvider>
 

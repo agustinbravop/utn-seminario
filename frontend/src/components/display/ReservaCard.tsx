@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { EstadoReserva, Reserva } from "@/models";
 import { CircleIcon } from "../media-and-icons";
-import { formatISOFecha } from "@/utils/dates";
+import { formatFechaISO } from "@/utils/dates";
 import { useCancelarReserva } from "@/utils/api";
 import { ConfirmSubmitButton } from "../forms";
 import { estadoReserva, fechaHoraReservada } from "@/utils/reservas";
@@ -125,7 +125,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
           >
             <Tag size="sm" variant="subtle" colorScheme="gray">
               <TagLeftIcon as={CalendarIcon} boxSize={3} />
-              <TagLabel>{formatISOFecha(reserva.fechaReservada)}</TagLabel>
+              <TagLabel>{formatFechaISO(reserva.fechaReservada)}</TagLabel>
             </Tag>
             <Tag size="sm" variant="subtle" colorScheme="blue">
               <TagLeftIcon as={LuClock5} boxSize={3} />

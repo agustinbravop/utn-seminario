@@ -36,7 +36,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FaListUl } from "react-icons/fa";
-import { InputControl } from "@/components/forms";
+import { DateControl } from "@/components/forms";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useFormSearchParams } from "@/hooks";
 
@@ -61,24 +61,14 @@ export default function InformePagosPage() {
   });
 
   return (
-    <Box mr="12%" ml="12%">
+    <Box mx="12%">
       <EstablecimientoMenu />
       <InformesMenu informe="Pagos" />
 
       <FormProvider {...methods}>
         <HStack as="form" mb="20px" mt="30px">
-          <InputControl
-            w="auto"
-            name="desde"
-            type="date"
-            placeholder="Fecha desde"
-          />
-          <InputControl
-            w="auto"
-            name="hasta"
-            type="date"
-            placeholder="Fecha hasta"
-          />
+          <DateControl w="auto" name="desde" label="Desde" isRequired />
+          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
         </HStack>
       </FormProvider>
 

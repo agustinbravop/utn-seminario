@@ -11,7 +11,11 @@ export interface FormSearchParamsConfig<TFieldValues extends FieldValues> {
 /**
  * Persiste los valores de un form de `react-hook-form` como parámetros en la URL de la app.
  * Útil cuando un usuario quiere compartir una página y que los valores de los filtros se mantengan.
+ *
+ * Si se utiliza junto a `useWatch()`, llamar primero a `useWatch()` y luego a `useFormSearchParams()`
+ * para que el primer hook siempre tenga los valores actualizados.
  * Cuidado: utiliza la URL completa, no solo los parámetros que son de names de inputs del form.
+ *
  * Ref: inspirado en https://github.com/tiaanduplessis/react-hook-form-persist/blob/master/src/index.tsx
  */
 export function useFormSearchParams<TFieldValues extends FieldValues>({

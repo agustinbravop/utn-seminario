@@ -58,10 +58,7 @@ export default function EstablecimientoCanchasPage() {
         </HStack>
       </HStack>
       {isError ? (
-        <Alerta
-          mensaje="Error inesperado. No podemos listar las canchas"
-          status="error"
-        />
+        <Alerta mensaje="Error al listar las canchas" status="error" />
       ) : !isFetched ? (
         <LoadingSpinner />
       ) : canchas.length === 0 && isFetched ? (

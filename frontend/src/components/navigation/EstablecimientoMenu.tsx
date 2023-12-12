@@ -10,7 +10,6 @@ import { Breadcrumb } from ".";
 
 export default function EstablecimientoMenu() {
   const { idEst } = useParams();
-
   const {
     data: est,
     isLoading,
@@ -18,7 +17,7 @@ export default function EstablecimientoMenu() {
   } = useEstablecimientoByID(Number(idEst));
 
   if (isError) {
-    return <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />;
+    return <Alerta mensaje="Ha ocurrido un error" status="error" />;
   }
 
   if (isLoading || !est) {
@@ -56,22 +55,23 @@ interface LinkButtonProps {
   children?: React.ReactNode;
 }
 
+// Subraya solo el link que corresponde a la página actual.
+const textDecoration = (currentPath: string, targetPaths: string[]) => {
+  return targetPaths.some((path) => currentPath.endsWith(path))
+    ? "underline"
+    : "none";
+};
+
 function LinkButton({ to, children }: LinkButtonProps) {
   const location = useLocation();
 
-  const textDecoration = (targetPath: string[]) => {
-    return targetPath.some((path) => location.pathname.endsWith(path))
-      ? "underline"
-      : "none";
-  };
-
   return (
-    <Link to={to[0]}>
+    <Link to={`${to[0]}${location.search}`}>
       <Button
         variant="ghost"
-        textDecoration={textDecoration(to)}
+        textDecoration={textDecoration(location.pathname, to)}
         textDecorationThickness="0.2em"
-        textDecorationColor="black"
+        textDecorationColor="brand.500"
         textUnderlineOffset="0.85em"
       >
         {children}

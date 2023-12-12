@@ -13,7 +13,7 @@ import { useCurrentJugador, useYupForm } from "@/hooks";
 import { ReservaCard } from "@/components/display";
 import { Reserva } from "@/models";
 import { DISCIPLINAS } from "@/utils/constants";
-import { fechaHoraReservada, isReservaActiva } from "@/utils/reservas";
+import { fechaHoraReservada, esReservaActiva } from "@/utils/reservas";
 import { LoadingSpinner } from "@/components/feedback";
 import { QuestionAlert } from "@/components/media-and-icons";
 import { SelectControl } from "@/components/forms";
@@ -51,11 +51,11 @@ export default function JugadorReservasPage() {
     );
   }
   const reservasActivas = reservasFiltradas
-    .filter((reserva) => isReservaActiva(reserva))
+    .filter((reserva) => esReservaActiva(reserva))
     .filter((reserva) => !reserva.cancelada)
     .reverse();
   const historial = reservasFiltradas.filter(
-    (res) => !isReservaActiva(res) || res.cancelada
+    (res) => !esReservaActiva(res) || res.cancelada
   );
 
   return (

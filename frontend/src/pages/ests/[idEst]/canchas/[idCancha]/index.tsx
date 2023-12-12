@@ -86,7 +86,7 @@ export default function CanchaInfoPage() {
   return (
     <>
       <CanchaMenu />
-      <HStack mr="12%" ml="12%" mb="30px" mt="0px">
+      <HStack mx="12%" mb="30px" mt="0px">
         <Text>Esta es la información de su cancha.</Text>
       </HStack>
       <Card m="auto" h="75%" w="75%">

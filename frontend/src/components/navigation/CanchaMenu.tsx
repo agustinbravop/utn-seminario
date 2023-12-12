@@ -17,7 +17,7 @@ export default function CanchaMenu() {
   const { data: est } = useEstablecimientoByID(Number(idEst));
 
   if (isError) {
-    return <Alerta mensaje="Ha ocurrido un error inesperado" status="error" />;
+    return <Alerta mensaje="Ha ocurrido un error " status="error" />;
   }
 
   if (isLoading || !cancha || !est) {

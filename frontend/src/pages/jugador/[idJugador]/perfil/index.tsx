@@ -17,8 +17,6 @@ import { Link } from "react-router-dom";
 export default function JugadorPerfilPage() {
   const { jugador } = useCurrentJugador();
 
-  console.log(jugador);
-
   return (
     <Card maxWidth="500px" m="auto" h="70%" mt="5%">
       <CardHeader>

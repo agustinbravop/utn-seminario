@@ -83,7 +83,7 @@ export default function EstablecimientoInfoPage() {
   };
 
   return (
-    <Box mr="12%" ml="12%">
+    <Box mx="12%">
       <EstablecimientoMenu />
       <Text mt="0px" mb="30px">
         Esta es la información de su establecimiento.
