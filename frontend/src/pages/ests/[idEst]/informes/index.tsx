@@ -65,6 +65,12 @@ export default function InformeReservasPage() {
     <Box mx="12%">
       <EstablecimientoMenu />
       <InformesMenu informe="Reservas" />
+      <Text>
+        Se estima cuánto dinero recibirá el establecimento en base a las
+        <b> reservas</b> en un período dado, y muestra de esas reservas el monto
+        que efectivamente fue cobrado. No se contabilizan las reservas
+        canceladas.
+      </Text>
 
       <FormProvider {...methods}>
         <HStack mb="20px" mt="30px">
@@ -73,18 +79,11 @@ export default function InformeReservasPage() {
         </HStack>
       </FormProvider>
 
-      <Text>
-        Se acumula el dinero que se espera recibir de todas las
-        <b> reservas</b> entre las dos fechas de filtro. El informe estima
-        cuánto dinero recibirá el establecimento en base a lo que se juega en un
-        período dado, y muestra de esas reservas lo que efectivamente fue
-        cobrado. No se contabilizan las reservas canceladas.
-      </Text>
       {!informe ? (
         <LoadingSpinner />
       ) : (
         <Box>
-          <StatGroup w="fit-content" gap="40px" my="20px">
+          <StatGroup maxW="500px">
             <Stat>
               <StatLabel>
                 <Tooltip label="Cantidad de reservas que los jugadores del establecimiento hicieron para jugar">

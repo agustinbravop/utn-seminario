@@ -64,6 +64,10 @@ export default function InformePagosPage() {
     <Box mx="12%">
       <EstablecimientoMenu />
       <InformesMenu informe="Pagos" />
+      <Text>
+        Se acumula el dinero cobrado de todos los<b> pagos recibidos</b> entre
+        las dos fechas indicadas.
+      </Text>
 
       <FormProvider {...methods}>
         <HStack as="form" mb="20px" mt="30px">
@@ -72,15 +76,11 @@ export default function InformePagosPage() {
         </HStack>
       </FormProvider>
 
-      <Text>
-        Se acumula el dinero cobrado de todos los<b> pagos recibidos</b> entre
-        las entre las fechas indicadas.
-      </Text>
       {!informe ? (
         <LoadingSpinner />
       ) : (
         <Box>
-          <StatGroup w="fit-content" gap="40px" my="20px">
+          <StatGroup maxW="200px">
             <Stat>
               <StatLabel>
                 <Tooltip label="Cantidad de pagos cobrados">Pagos</Tooltip>

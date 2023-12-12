@@ -55,14 +55,16 @@ export function useInformePagosPorCancha(
   );
 }
 
-type DiasDeSemanaPopularesQuery = {
-  idEst?: number;
-  horaInicio: string;
-  horaFin: string;
+export type HorariosPopularesQuery = {
+  idEst: number;
+  horaInicio?: string;
+  horaFin?: string;
+  fechaDesde?: string;
+  fechaHasta?: string;
 };
 
 export function useDiasDeSemanaPopulares(
-  query: DiasDeSemanaPopularesQuery,
+  query: HorariosPopularesQuery,
   options?: UseApiQueryOptions<Record<Dia, number>>
 ) {
   return useApiQuery(
@@ -73,7 +75,7 @@ export function useDiasDeSemanaPopulares(
 }
 
 export function useHorariosPopulares(
-  query: DiasDeSemanaPopularesQuery,
+  query: HorariosPopularesQuery,
   options?: UseApiQueryOptions<Record<string, number>>
 ) {
   return useApiQuery(

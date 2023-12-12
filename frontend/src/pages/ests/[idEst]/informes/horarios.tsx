@@ -15,10 +15,18 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { useDiasDeSemanaPopulares, useHorariosPopulares } from "@/utils/api";
+import {
+  HorariosPopularesQuery,
+  useDiasDeSemanaPopulares,
+  useHorariosPopulares,
+} from "@/utils/api";
 import { LoadingSpinner } from "@/components/feedback";
 import { DIAS, HORARIOS } from "@/utils/constants";
 import InformesMenu from "@/components/navigation/InformesMenu";
+import { DateControl } from "@/components/forms";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { useFormSearchParams } from "@/hooks";
+import { formatFecha } from "@/utils/dates";
 
 const CHART_COLOR = "rgba(237, 137, 54, 0.75)";
 
@@ -34,25 +42,55 @@ Chart.register(
   Filler
 );
 
+const defaultValues = {
+  desde: formatFecha(new Date()),
+  hasta: formatFecha(new Date()),
+};
+
 export default function InformeHorariosPage() {
-  const [desde, setDesde] = useState("00:00");
-  const [hasta, setHasta] = useState("23:55");
+  const { idEst } = useParams("/ests/:idEst/informes/horarios");
+  const methods = useForm({ defaultValues });
+  const { desde = "", hasta = "" } = useWatch({
+    control: methods.control,
+    defaultValue: defaultValues,
+  });
+  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
+
+  const [horaInicio, setHoraDesde] = useState("00:00");
+  const [horaFin, setHoraHasta] = useState("23:55");
+
+  const query: HorariosPopularesQuery = {
+    idEst: Number(idEst),
+    horaInicio,
+    horaFin,
+    fechaDesde: desde,
+    fechaHasta: hasta,
+  };
 
   return (
     <Box mx="12%">
       <EstablecimientoMenu />
       <InformesMenu informe="Horarios" />
       <Text>
-        Este informe muestra los horarios y días de la semana históricamente más
-        concurridos del establecimiento, en base a todas las reservas que se
-        realizaron en PlayFinder. No se contabilizan las reservas canceladas.
+        Se calculan los horarios y los días de semana más concurridos del
+        establecimiento en base a las reservas realizadas en un período dado. No
+        se contabilizan las reservas canceladas.
       </Text>
+
+      <FormProvider {...methods}>
+        <HStack mb="20px" mt="30px">
+          <DateControl w="auto" name="desde" label="Desde" isRequired />
+          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
+        </HStack>
+      </FormProvider>
+
       <HStack my="1em">
-        <span>Filtrar desde las</span>
+        <span>Filtrar por horario desde las</span>
         <Select
           maxW="95px"
-          value={desde}
-          onChange={(e) => setDesde(e.target.value)}
+          name="horaInicio"
+          value={horaInicio}
+          onChange={(e) => setHoraDesde(e.target.value)}
         >
           {HORARIOS.map((hora) => (
             <option key={hora} value={hora}>
@@ -63,8 +101,9 @@ export default function InformeHorariosPage() {
         <span>hs hasta las</span>
         <Select
           maxW="95px"
-          value={hasta}
-          onChange={(e) => setHasta(e.target.value)}
+          name="horaFin"
+          value={horaFin}
+          onChange={(e) => setHoraHasta(e.target.value)}
         >
           {HORARIOS.map((hora) => (
             <option key={hora} value={hora}>
@@ -76,25 +115,15 @@ export default function InformeHorariosPage() {
       </HStack>
 
       <VStack gap="2em" justify="center">
-        <HorariosChart desde={desde} hasta={hasta} />
-        <DiasDeSemanaChart desde={desde} hasta={hasta} />
+        <HorariosChart {...query} />
+        <DiasDeSemanaChart {...query} />
       </VStack>
     </Box>
   );
 }
 
-interface ChartProps {
-  desde: string;
-  hasta: string;
-}
-
-function DiasDeSemanaChart({ desde, hasta }: ChartProps) {
-  const { idEst } = useParams("/ests/:idEst/informes/horarios");
-  const { data } = useDiasDeSemanaPopulares({
-    idEst: Number(idEst),
-    horaInicio: desde,
-    horaFin: hasta,
-  });
+function DiasDeSemanaChart({ ...query }: HorariosPopularesQuery) {
+  const { data } = useDiasDeSemanaPopulares(query);
 
   if (!data) {
     return <LoadingSpinner />;
@@ -132,13 +161,8 @@ function DiasDeSemanaChart({ desde, hasta }: ChartProps) {
   );
 }
 
-function HorariosChart({ desde, hasta }: ChartProps) {
-  const { idEst } = useParams("/ests/:idEst/informes/horarios");
-  const { data } = useHorariosPopulares({
-    idEst: Number(idEst),
-    horaInicio: desde,
-    horaFin: hasta,
-  });
+function HorariosChart({ ...query }: HorariosPopularesQuery) {
+  const { data } = useHorariosPopulares(query);
 
   if (!data) {
     return <LoadingSpinner />;
@@ -147,7 +171,11 @@ function HorariosChart({ desde, hasta }: ChartProps) {
   return (
     <Line
       data={{
-        labels: [...HORARIOS].filter((h) => desde <= h && h <= hasta),
+        labels: [...HORARIOS].filter(
+          (h) =>
+            (query.horaInicio ?? "00:00") <= h &&
+            h <= (query.horaFin ?? "23:55")
+        ),
         datasets: [
           {
             label: "Cantidad de reservas",

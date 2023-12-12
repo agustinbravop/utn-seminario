@@ -215,7 +215,7 @@ export default function EstablecimientoPagosPage() {
               <Tr key={p.id}>
                 <Td textAlign="center">{formatISO(p.fechaPago)}</Td>
                 <Td isNumeric px="0px">
-                  {p.monto} $
+                  ${p.monto}
                 </Td>
                 <Td textAlign="center">{tipoPago(p)}</Td>
                 <Td textAlign="center">
@@ -237,7 +237,7 @@ export default function EstablecimientoPagosPage() {
             <Tr>
               <Th textAlign="center">Total</Th>
               <Td isNumeric px="0px">
-                {pagos.reduce((acum, pago) => acum + pago.monto, 0)} $
+                ${pagos.reduce((acum, pago) => acum + pago.monto, 0)}
               </Td>
               <Td></Td>
               <Td></Td>
