@@ -44,21 +44,21 @@ export default function SelectEstablecimiento() {
     return (
       <Card
         key={e.id}
-        width="300px"
-        height="450px"
+        w="300px"
+        h="450px"
         variant={seleccionado ? "filled" : "elevated"}
       >
-        <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
+        <Box w="300px" maxWidth="300px" h="200px" maxHeight="200px">
           <Image
             src={e.urlImagen || FALLBACK_IMAGE_SRC}
             borderTopRadius="lg"
             alt={`Imagen del establecimiento ${e.nombre}`}
             objectFit="cover"
-            height="100%"
-            width="100%"
+            h="100%"
+            w="100%"
           />
         </Box>
-        <CardBody height="300px">
+        <CardBody h="300px">
           <VStack spacing="0">
             <Heading size="md" mb="10px">
               {e.nombre}
@@ -112,15 +112,11 @@ export default function SelectEstablecimiento() {
       >
         {selected.length} / {maximo}
       </Text>
-      <HStack display="flex" flexWrap="wrap" justifyContent="center">
+      <HStack display="flex" flexWrap="wrap" justify="center">
         {establecimientos}
       </HStack>
       {selected.length > 0 && selected.length < maximo + 1 && (
-        <Button
-          justifyContent="center"
-          textAlign="center"
-          onClick={handleSubmit}
-        >
+        <Button justify="center" textAlign="center" onClick={handleSubmit}>
           Continuar
         </Button>
       )}

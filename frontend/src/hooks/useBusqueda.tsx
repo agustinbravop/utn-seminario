@@ -38,9 +38,9 @@ export function BusquedaProvider({ children }: BusquedaProviderProps) {
   const { jugador } = useCurrentJugador();
   const [filtros, updateFiltros] = useState<BusquedaFiltros>({
     fecha: useMemo(() => formatFecha(new Date()), []),
-    provincia: jugador.provincia,
-    localidad: jugador.localidad,
-    disciplina: jugador.disciplina,
+    provincia: jugador.provincia ?? "",
+    localidad: jugador.localidad ?? "",
+    disciplina: jugador.disciplina ?? "",
     habilitada: true,
   });
 

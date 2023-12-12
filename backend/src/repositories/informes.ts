@@ -1,15 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { DiasDeSemanaPopularesQuery } from "../services/informes.js";
+import { HorariosPopularesQuery } from "../services/informes.js";
 import { Dia } from "../models/disponibilidad.js";
-import { getDiaDeSemana } from "../utils/dates.js";
+import { getDiaDeSemana, setMidnight } from "../utils/dates.js";
 import { HORARIOS } from "../utils/constants.js";
 
 export interface InformeRepository {
   getDiasDeSemanaPopulares(
-    query: DiasDeSemanaPopularesQuery
+    query: HorariosPopularesQuery
   ): Promise<Record<Dia, number>>;
   getHorariosPopulares(
-    query: DiasDeSemanaPopularesQuery
+    query: HorariosPopularesQuery
   ): Promise<Record<string, number>>;
 }
 
@@ -31,7 +31,7 @@ export class PrismaInformeRepository implements InformeRepository {
     this.prisma = Prisma;
   }
 
-  async getDiasDeSemanaPopulares(query: DiasDeSemanaPopularesQuery) {
+  async getDiasDeSemanaPopulares(query: HorariosPopularesQuery) {
     const diasSemana: Record<string, number> = {
       Lunes: 0,
       Martes: 0,
@@ -43,11 +43,16 @@ export class PrismaInformeRepository implements InformeRepository {
     };
     const reservas = await this.prisma.reserva.findMany({
       where: {
+        fechaReservada: {
+          gte: query.fechaDesde,
+          lte: query.fechaHasta ? setMidnight(query.fechaHasta) : undefined,
+        },
         disponibilidad: {
           cancha: { idEstablecimiento: query.idEst },
           horaInicio: { gte: query.horaInicio },
           horaFin: { lte: query.horaFin },
         },
+        cancelada: false,
       },
       include: this.include,
     });
@@ -61,19 +66,26 @@ export class PrismaInformeRepository implements InformeRepository {
     return diasSemana;
   }
 
-  async getHorariosPopulares(query: DiasDeSemanaPopularesQuery) {
+  async getHorariosPopulares(query: HorariosPopularesQuery) {
     const horarios: Record<string, number> = Object.fromEntries(
-      HORARIOS.filter((h) => query.horaInicio <= h && h <= query.horaFin).map(
-        (hora) => [hora, 0]
-      )
+      HORARIOS.filter(
+        (h) =>
+          (query.horaInicio ?? "00:00") <= h && h <= (query.horaFin ?? "23:55")
+      ).map((hora) => [hora, 0])
     );
+
     const reservas = await this.prisma.reserva.findMany({
       where: {
+        fechaReservada: {
+          gte: query.fechaDesde,
+          lte: query.fechaHasta ? setMidnight(query.fechaHasta) : undefined,
+        },
         disponibilidad: {
           cancha: { idEstablecimiento: query.idEst },
           horaInicio: { gte: query.horaInicio },
           horaFin: { lte: query.horaFin },
         },
+        cancelada: false,
       },
       include: this.include,
     });

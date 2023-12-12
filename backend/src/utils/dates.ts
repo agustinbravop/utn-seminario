@@ -65,7 +65,8 @@ export function setMidnight(date: Date) {
  * El string `hora` debe tener formato `hh:mm`.
  */
 export function setHora(date: Date, hora: string) {
-  date.setUTCHours(Number(hora.split(":")[0]), Number(hora.split(":")[1]));
+  const [hh, mm] = hora.split(":");
+  date.setUTCHours(Number(hh), Number(mm), 0, 0);
   return date;
 }
 

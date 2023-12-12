@@ -24,24 +24,24 @@ export default function EstablecimientoCard({
   return (
     <Link to={`/ests/${establecimiento.id}`}>
       <Card
-        width="300px"
-        height="370px"
+        w="300px"
+        h="370px"
         _hover={{ transform: "scale(1.01)", backgroundColor: "#f8fafd" }}
         onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.01)")}
         onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
+        <Box w="300px" maxWidth="300px" h="200px" maxHeight="200px">
           <Image
             src={establecimiento?.urlImagen}
             fallbackSrc={FALLBACK_IMAGE_SRC}
             borderTopRadius="lg"
             alt={`Imagen del establecimiento ${establecimiento.nombre}`}
             objectFit="cover"
-            height="100%"
-            width="100%"
+            h="100%"
+            w="100%"
           />
         </Box>
-        <CardBody height="300px">
+        <CardBody h="300px">
           <VStack spacing="0">
             <Heading size="md" mb="10px">
               {establecimiento.nombre}

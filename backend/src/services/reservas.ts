@@ -23,6 +23,7 @@ export type BuscarReservaQuery = {
   fechaCreadaHasta?: Date;
   fechaReservadaDesde?: Date;
   fechaReservadaHasta?: Date;
+  cancelada?: boolean;
 };
 
 export interface ReservaService {
@@ -138,7 +139,7 @@ export class ReservaServiceImpl implements ReservaService {
     );
     await this.validarDisponibilidadLibre(crearReserva, disp);
     await this.validarDiaDeSemana(crearReserva, disp);
-    this.validarFechaReservada(crearReserva, disp);
+    this.validarFechaFutura(crearReserva, disp);
 
     return await this.repo.crearReserva({
       ...crearReserva,
@@ -170,12 +171,14 @@ export class ReservaServiceImpl implements ReservaService {
       idCancha: disp.idCancha,
       fechaReservadaDesde: res.fechaReservada,
       fechaReservadaHasta: res.fechaReservada,
+      cancelada: false,
     });
     // ...para validar que ninguna de esas reservas se solape con la nueva.
     const horarioSolapado = reservasMismaFecha.some(
       (r) =>
         r.disponibilidad.horaFin > disp.horaInicio &&
-        r.disponibilidad.horaInicio < disp.horaFin
+        r.disponibilidad.horaInicio < disp.horaFin &&
+        !r.cancelada
     );
     if (horarioSolapado) {
       throw new ConflictError(
@@ -190,7 +193,7 @@ export class ReservaServiceImpl implements ReservaService {
    * Lanza un error al intentar reservar en una fecha pasada (previa a la actual).
    * Pone la horaInicio de la disponibilidad como horario de la fechaReservada.
    */
-  private validarFechaReservada(res: CrearReserva, disp: Disponibilidad) {
+  private validarFechaFutura(res: CrearReserva, disp: Disponibilidad) {
     const fechaReservada = toUTC(setHora(res.fechaReservada, disp.horaInicio));
     if (fechaReservada < new Date()) {
       throw new ConflictError("No se puede reservar una fecha pasada");

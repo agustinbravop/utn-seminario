@@ -10,10 +10,12 @@ import { PagoService } from "./pagos.js";
 import { PagoConReserva } from "../models/pago.js";
 import { Dia } from "../models/disponibilidad.js";
 
-export type DiasDeSemanaPopularesQuery = {
+export type HorariosPopularesQuery = {
   idEst: number;
-  horaInicio: string;
-  horaFin: string;
+  horaInicio?: string;
+  horaFin?: string;
+  fechaDesde?: Date;
+  fechaHasta?: Date;
 };
 
 export type ReservasPorCanchaQuery = {
@@ -50,14 +52,14 @@ export interface InformeService {
    * indica la cantidad de reservas jugadas (y por jugar) en ese día.
    */
   diasDeSemanaPopulares(
-    query: DiasDeSemanaPopularesQuery
+    query: HorariosPopularesQuery
   ): Promise<Record<Dia, number>>;
   /**
    * Devuelve un arreglo de pares `horario: cantidad` donde para cada horario (todos de
    * 00:00 a 23:55) indica la cantidad de reservas jugadas (y por jugar) en ese horario.
    */
   horariosPopulares(
-    query: DiasDeSemanaPopularesQuery
+    query: HorariosPopularesQuery
   ): Promise<Record<string, number>>;
 }
 
@@ -99,6 +101,7 @@ export class InformeServiceImpl implements InformeService {
         fechaReservadaHasta: query.fechaHasta
           ? setMidnight(query.fechaHasta)
           : undefined,
+        cancelada: false,
       });
 
       const estimado = reservas.reduce((acum, r) => {
@@ -146,11 +149,11 @@ export class InformeServiceImpl implements InformeService {
     return pagosPorCancha;
   }
 
-  async diasDeSemanaPopulares(query: DiasDeSemanaPopularesQuery) {
+  async diasDeSemanaPopulares(query: HorariosPopularesQuery) {
     return await this.informe.getDiasDeSemanaPopulares(query);
   }
 
-  async horariosPopulares(query: DiasDeSemanaPopularesQuery) {
+  async horariosPopulares(query: HorariosPopularesQuery) {
     return await this.informe.getHorariosPopulares(query);
   }
 }

@@ -20,7 +20,7 @@ export default function AdminPerfilPage() {
   const { admin } = useCurrentAdmin();
 
   return (
-    <Card boxSize="40rem" width="40%" m="auto" height="70%" mt="5%">
+    <Card boxSize="40rem" w="40%" m="auto" h="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Mi perfil
@@ -57,13 +57,7 @@ export default function AdminPerfilPage() {
             <Text fontSize="sm">{admin?.suscripcion.nombre}</Text>
           </Box>
         </Stack>
-        <HStack
-          width="100%"
-          mt="20px"
-          display="flex"
-          wrap="wrap"
-          justifyContent="center"
-        >
+        <HStack w="100%" mt="20px" display="flex" wrap="wrap" justify="center">
           <Link to="editar">
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>

@@ -17,10 +17,8 @@ import { Link } from "react-router-dom";
 export default function JugadorPerfilPage() {
   const { jugador } = useCurrentJugador();
 
-  console.log(jugador);
-
   return (
-    <Card maxWidth="500px" m="auto" height="70%" mt="5%">
+    <Card maxWidth="500px" m="auto" h="70%" mt="5%">
       <CardHeader>
         <Heading size="lg" textAlign="center">
           Mi perfil
@@ -79,7 +77,7 @@ export default function JugadorPerfilPage() {
           </Box>
           <Box></Box>
         </Stack>
-        <HStack width="100%" mt="10px" wrap="wrap" justifyContent="center">
+        <HStack w="100%" mt="10px" wrap="wrap" justify="center">
           <Link to="editar">
             <Button leftIcon={<EditIcon />}>Editar</Button>
           </Link>

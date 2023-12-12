@@ -86,15 +86,15 @@ export default function CanchaInfoPage() {
   return (
     <>
       <CanchaMenu />
-      <HStack mr="12%" ml="12%" mb="30px" mt="0px">
+      <HStack mx="12%" mb="30px" mt="0px">
         <Text>Esta es la información de su cancha.</Text>
       </HStack>
-      <Card m="auto" height="75%" width="75%">
+      <Card m="auto" h="75%" w="75%">
         <CardBody display="grid" gridTemplateColumns="1fr 1fr">
           <Image
             src={cancha?.urlImagen}
             fallbackSrc={FALLBACK_IMAGE_SRC}
-            height="100%"
+            h="100%"
             objectFit="cover"
             borderRadius="10px"
           />
@@ -106,7 +106,7 @@ export default function CanchaInfoPage() {
             h="100%"
           >
             <Box>
-              <HStack width="100%">
+              <HStack w="100%">
                 <Heading size="xs">Habilitación</Heading>
                 <Switch
                   isChecked={cancha.habilitada}
@@ -129,7 +129,7 @@ export default function CanchaInfoPage() {
               </Text>
             </Box>
 
-            <HStack justifyContent="center" mt="1em" spacing="1.5em">
+            <HStack justify="center" mt="1em" spacing="1.5em">
               <Link to="disps">
                 <Button leftIcon={<GrSchedules />}>Disponibilidades</Button>
               </Link>

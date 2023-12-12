@@ -83,22 +83,22 @@ export default function EstablecimientoInfoPage() {
   };
 
   return (
-    <Box mr="12%" ml="12%">
+    <Box mx="12%">
       <EstablecimientoMenu />
       <Text mt="0px" mb="30px">
         Esta es la información de su establecimiento.
       </Text>
-      <Card m="auto" width="85%">
+      <Card m="auto" w="85%">
         <CardBody display="grid" gridTemplateColumns="1fr 1fr">
           <Image
             src={est?.urlImagen}
             fallbackSrc={FALLBACK_IMAGE_SRC}
-            height="100%"
+            h="100%"
             objectFit="cover"
             borderRadius="10px"
           />
 
-          <Box mt="55px" ml=" 50px" height="100%">
+          <Box mt="55px" ml=" 50px" h="100%">
             <Stack divider={<StackDivider />} spacing="1" mt="-2rem">
               <Box>
                 <HStack>
@@ -129,12 +129,12 @@ export default function EstablecimientoInfoPage() {
                 <Heading size="xs">Numero de teléfono</Heading>
                 <Text fontSize="sm">{est?.telefono}</Text>
               </Box>
-              <Box height="100%">
+              <Box h="100%">
                 <Heading size="xs">Localidad</Heading>
                 <Text fontSize="sm">
                   {est?.localidad}, {est?.provincia}
                 </Text>
-                <Box pt="25%" display="flex" justifyContent="center">
+                <Box pt="25%" display="flex" justify="center">
                   <Link to="editar">
                     <Button mr="30px" leftIcon={<EditIcon />}>
                       Editar

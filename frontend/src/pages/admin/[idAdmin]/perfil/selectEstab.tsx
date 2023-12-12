@@ -76,18 +76,18 @@ export default function SelectEstablecimiento() {
     const seleccionado = selected.includes(est.id);
     return (
       <>
-        <Card width="300px" height="400px">
-          <Box width="300px" maxWidth="300px" height="200px" maxHeight="200px">
+        <Card w="300px" h="400px">
+          <Box w="300px" maxWidth="300px" h="200px" maxHeight="200px">
             <Image
               src={est.urlImagen || FALLBACK_IMAGE_SRC}
               borderTopRadius="lg"
               alt={`Imagen del establecimiento ${est.nombre}`}
               objectFit="cover"
-              height="100%"
-              width="100%"
+              h="100%"
+              w="100%"
             />
           </Box>
-          <CardBody height="300px">
+          <CardBody h="300px">
             <VStack spacing="0">
               <Heading size="md" mb="10px">
                 {est.nombre}
@@ -149,14 +149,14 @@ export default function SelectEstablecimiento() {
         </HStack>
       </Box>
       <br />
-      <HStack display="flex" flexWrap="wrap" justifyContent="center">
+      <HStack display="flex" flexWrap="wrap" justify="center">
         {EstablecimientoCardList}
       </HStack>
 
       {selected.length > 0 && selected.length < maximo + 1 && (
-        <Box width="100%" display="flex" justifyContent="center" mt="30px">
+        <Box w="100%" display="flex" justify="center" mt="30px">
           <Button
-            justifyContent="center"
+            justify="center"
             textAlign="center"
             onClick={handleSubmit}
             colorScheme="brand"

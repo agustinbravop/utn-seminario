@@ -167,9 +167,10 @@ export default function CanchaInfoPage() {
       <CanchaMenu />
       <Heading size="md">Disponibilidades de la cancha</Heading>
       <Text>
-        Las disponibilidades determinan en qué horario se pueden hacer reservas.
-        Las reservas que sus clientes vayan a realizar, ocuparán una
-        disponibilidad en la fecha reservada.
+        Las disponibilidades determinan los horarios en los que se pueden hacer
+        reservas y el precio de una reserva. Las reservas que los clientes del
+        establecimiento realizen ocuparán una disponibilidad en la fecha
+        reservada.
       </Text>
       <FormDisp
         variant="crear"

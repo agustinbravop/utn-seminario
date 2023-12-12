@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { EstadoReserva, Reserva } from "@/models";
 import { CircleIcon } from "../media-and-icons";
-import { formatISOFecha } from "@/utils/dates";
+import { formatFechaISO } from "@/utils/dates";
 import { useCancelarReserva } from "@/utils/api";
 import { ConfirmSubmitButton } from "../forms";
 import { estadoReserva, fechaHoraReservada } from "@/utils/reservas";
@@ -71,7 +71,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             borderRadius="6px"
             textAlign="center"
           >
-            <CircleIcon verticalAlign="-0.1em" color="gray" /> Señada
+            <CircleIcon verticalAlign="-0.1em" color="orange" /> Señada
           </CardHeader>
         ) : (
           <CardHeader bgColor="red.100" borderRadius="6px" textAlign="center">
@@ -81,7 +81,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
 
         <CardBody px="0" textAlign="center">
           <Heading
-            justifyContent="center"
+            justify="center"
             display="flex"
             fontSize={{ base: "23px", md: "23px", lg: "25px" }}
             mb="5px"
@@ -120,12 +120,12 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             direction={{ base: "column", sm: "row" }}
             spacing={2}
             align="center"
-            justifyContent="center"
+            justify="center"
             fontSize={{ base: "15px", md: "17px", lg: "15px" }}
           >
             <Tag size="sm" variant="subtle" colorScheme="gray">
               <TagLeftIcon as={CalendarIcon} boxSize={3} />
-              <TagLabel>{formatISOFecha(reserva.fechaReservada)}</TagLabel>
+              <TagLabel>{formatFechaISO(reserva.fechaReservada)}</TagLabel>
             </Tag>
             <Tag size="sm" variant="subtle" colorScheme="blue">
               <TagLeftIcon as={LuClock5} boxSize={3} />
@@ -145,11 +145,27 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             colorScheme="red"
             onSubmit={() => mutate({ idReserva: reserva.id })}
             header="Cancelar reserva"
-            body="¿Está seguro de cancelar la reserva?"
+            body={
+              <>
+                <Text>¿Está seguro de cancelar la reserva?</Text>
+                {estado === EstadoReserva.NoPagada ? (
+                  <Text>
+                    Debe comunicarse personalmente con el establecimiento para
+                    ver sus términos de cancelación y coordinar una posible
+                    devolución del dinero ya pagado.
+                  </Text>
+                ) : (
+                  <Text>
+                    El horario será liberado para que pueda volver a ser
+                    reservado por otro jugador.
+                  </Text>
+                )}
+              </>
+            }
             variant="outline"
-            m="0.4em auto"
+            m="0em auto 0.8em"
             size="sm"
-            width="fit-content"
+            w="fit-content"
           >
             Cancelar Reserva
           </ConfirmSubmitButton>

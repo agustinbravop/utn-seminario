@@ -21,9 +21,8 @@ import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 export default function EstablecimientoJugadorPage() {
   const { idEst } = useParams();
   const { data } = useEstablecimientoByID(Number(idEst));
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const date = searchParams.get("date");
+  const { search } = useLocation();
+  const fecha = new URLSearchParams(search).get("fecha");
 
   if (!data) {
     return <LoadingSpinner />;
@@ -45,7 +44,7 @@ export default function EstablecimientoJugadorPage() {
           <Image
             src={data.urlImagen}
             fallbackSrc={FALLBACK_IMAGE_SRC}
-            width="500px"
+            w="500px"
             objectFit="cover"
             borderRadius="8px"
             m="auto"
@@ -78,10 +77,10 @@ export default function EstablecimientoJugadorPage() {
               </Text>
             </Box>
             <HStack justify="center" direction="row" spacing={5}>
-              <Link to={`canchas?date=${date}`}>
+              <Link to={`canchas?fecha=${fecha}`}>
                 <Button colorScheme="gray">Ver canchas</Button>
               </Link>
-              <Link to={`reservar?date=${date}`}>
+              <Link to={`reservar?fecha=${fecha}`}>
                 <Button colorScheme="brand">Reservar</Button>
               </Link>
             </HStack>

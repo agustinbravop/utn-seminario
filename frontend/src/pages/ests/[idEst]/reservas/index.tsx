@@ -9,243 +9,169 @@ import {
   Th,
   Td,
   Tbody,
-  Input,
-  FormControl,
   FormLabel,
-  Select,
   Button,
   Tooltip,
   Box,
 } from "@chakra-ui/react";
-import {
-  TriangleUpIcon,
-  TriangleDownIcon,
-  PlusSquareIcon,
-} from "@chakra-ui/icons";
-import { useNavigate } from "react-router";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 import { useParams } from "@/router";
 import { useReservasByEstablecimientoID } from "@/utils/api/reservas";
-import { estaEntreFechas, formatFecha, formatISOFecha } from "@/utils/dates";
+import { estaEntreFechas, formatFecha, formatFechaISO } from "@/utils/dates";
 import { useState } from "react";
 import { floatingLabelActiveStyles } from "@/themes/components";
-import { ReservaEstado } from "@/components/display";
+import { IndicadorOrdenColumna, ReservaEstado } from "@/components/display";
 import { Link } from "react-router-dom";
+import { useFormSearchParams, useYupForm } from "@/hooks";
+import { FormProvider, useWatch } from "react-hook-form";
+import { DateControl, InputControl, SelectControl } from "@/components/forms";
+import { estadoReserva, nombreCompletoJugador } from "@/utils/reservas";
+import { Reserva } from "@/models";
+
+const ordenarReservas = (rs: Reserva[], columna: string, asc: boolean) => {
+  const reservas = rs.toSorted((a, b) => {
+    if (columna === "Cancha") {
+      return a.disponibilidad.cancha.nombre.localeCompare(
+        b.disponibilidad.cancha.nombre
+      );
+    } else if (columna === "Disciplina") {
+      return a.disponibilidad.disciplina.localeCompare(
+        b.disponibilidad.disciplina
+      );
+    } else if (columna === "Fecha") {
+      return a.fechaReservada.localeCompare(b.fechaReservada);
+    } else if (columna === "HoraInicio") {
+      return a.disponibilidad.horaInicio.localeCompare(
+        b.disponibilidad.horaInicio
+      );
+    } else if (columna === "Jugador") {
+      return nombreCompletoJugador(a).localeCompare(nombreCompletoJugador(b));
+    } else if (columna === "Estado") {
+      return estadoReserva(a).localeCompare(estadoReserva(b));
+    } else {
+      return 0;
+    }
+  });
+  if (!asc) {
+    // Invierte el orden ascendente para ordenar descendentemente.
+    reservas.reverse();
+  }
+  return reservas;
+};
+
+const filtrarReservas = (rs: Reserva[], filtros: FiltrosTablaReservas) => {
+  return rs.filter((r) => {
+    const nombreIncluido = nombreCompletoJugador(r)
+      .toLowerCase()
+      .includes(filtros.nombre?.toLowerCase() ?? "");
+    const fechaCoincide = estaEntreFechas(
+      r.fechaReservada,
+      filtros.desde,
+      filtros.hasta
+    );
+    const estadoCoincide =
+      filtros.estado === "" || filtros.estado === estadoReserva(r);
+
+    return nombreIncluido && fechaCoincide && estadoCoincide;
+  });
+};
+
+interface FiltrosTablaReservas {
+  desde?: string;
+  hasta?: string;
+  nombre?: string;
+  estado?: string;
+}
 
 export default function EstablecimientoReservasPage() {
   const { idEst } = useParams("/ests/:idEst/reservas");
-  const navigate = useNavigate();
-  const { data: reservas } = useReservasByEstablecimientoID(Number(idEst));
+  const { data } = useReservasByEstablecimientoID(Number(idEst));
 
   const [ordenColumna, setOrdenColumna] = useState("");
-  const [ordenAscendente, setOrdenAscendente] = useState(true);
+  const [ordenAscendente, setOrdenAscendente] = useState(false);
+
+  const methods = useYupForm<FiltrosTablaReservas>({
+    defaultValues: {
+      desde: formatFecha(new Date()),
+      hasta: formatFecha(new Date()),
+      estado: "",
+      nombre: "",
+    },
+  });
+  const filtros = useWatch({ control: methods.control });
+  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
+  let reservas = ordenarReservas(data, ordenColumna, ordenAscendente);
+  reservas = filtrarReservas(reservas, filtros);
 
   const handleOrdenarColumna = (nombreColumna: string) => {
     if (ordenColumna === nombreColumna) {
-      setOrdenAscendente(!ordenAscendente);
+      if (ordenAscendente) {
+        // Se estaba ordenando ASC, ahora pasa a ordenarse DESC.
+        setOrdenAscendente(false);
+      } else {
+        // Previamente se ordenó ASC y luego DESC, ahora se elimina el orden.
+        setOrdenColumna("");
+      }
     } else {
+      // Se pasa a ordenar ASC según una columna nueva.
       setOrdenColumna(nombreColumna);
       setOrdenAscendente(true);
     }
   };
 
-  const reservasOrdenadas = [...(reservas || [])].sort((a, b) => {
-    if (ordenColumna === "Cancha") {
-      return ordenAscendente
-        ? a.disponibilidad.cancha.nombre.localeCompare(
-            b.disponibilidad.cancha.nombre
-          )
-        : b.disponibilidad.cancha.nombre.localeCompare(
-            a.disponibilidad.cancha.nombre
-          );
-    } else if (ordenColumna === "Disciplina") {
-      return ordenAscendente
-        ? a.disponibilidad.disciplina.localeCompare(b.disponibilidad.disciplina)
-        : b.disponibilidad.disciplina.localeCompare(
-            a.disponibilidad.disciplina
-          );
-    } else if (ordenColumna === "Fecha") {
-      return ordenAscendente
-        ? a.fechaReservada.localeCompare(b.fechaReservada)
-        : b.fechaReservada.localeCompare(a.fechaReservada);
-    } else if (ordenColumna === "HoraInicio") {
-      return ordenAscendente
-        ? a.disponibilidad.horaInicio.localeCompare(b.disponibilidad.horaInicio)
-        : b.disponibilidad.horaInicio.localeCompare(
-            a.disponibilidad.horaInicio
-          );
-    } else if (ordenColumna === "Jugador") {
-      const nombreA = a.jugador
-        ? `${a.jugador?.nombre} ${a.jugador?.apellido}`
-        : a.jugadorNoRegistrado
-          ? a.jugadorNoRegistrado
-          : "";
-      const nombreB = b.jugador
-        ? `${b.jugador?.nombre} ${b.jugador?.apellido}`
-        : b.jugadorNoRegistrado
-          ? b.jugadorNoRegistrado
-          : "";
-      return ordenAscendente
-        ? nombreA.localeCompare(nombreB)
-        : nombreB.localeCompare(nombreA);
-    } else if (ordenColumna === "Estado") {
-      const estadoA = a.idPagoReserva
-        ? "C - Pagado"
-        : a.idPagoSenia
-          ? "B - Señado"
-          : "A - No Pagado";
-
-      const estadoB = b.idPagoReserva
-        ? "C - Pagado"
-        : b.idPagoSenia
-          ? "B - Señado"
-          : "A - No Pagado";
-
-      return ordenAscendente
-        ? estadoA.localeCompare(estadoB)
-        : estadoB.localeCompare(estadoA);
-    } else {
-      return 0;
-    }
-  });
-
-  const [filtroNombre, setFiltroNombre] = useState("");
-  const [filtroDesde, setFiltroDesde] = useState(formatFecha(new Date()));
-  const [filtroHasta, setFiltroHasta] = useState(formatFecha(new Date()));
-  const [filtroEstado, setFiltroEstado] = useState("");
-
-  const reservasFiltradas = reservasOrdenadas.filter((r) => {
-    const nombreJugador = r.jugador
-      ? `${r.jugador?.nombre} ${r.jugador?.apellido}`
-      : r.jugadorNoRegistrado
-        ? r.jugadorNoRegistrado
-        : "";
-    const estado = r.idPagoReserva
-      ? "Pagada"
-      : r.idPagoSenia
-        ? "Señada"
-        : "No Pagada";
-
-    const nombreIncluido = nombreJugador
-      .toLowerCase()
-      .includes(filtroNombre.toLowerCase());
-    const fechaCoincide = estaEntreFechas(
-      r.fechaReservada,
-      filtroDesde,
-      filtroHasta
-    );
-
-    let estadoCoincide = false;
-    if (filtroEstado === estado && estado === "Pagada") {
-      estadoCoincide = true;
-    } else if (filtroEstado === estado && filtroEstado === "No Pagada") {
-      estadoCoincide = true;
-    } else if (filtroEstado === estado && filtroEstado === "Señada") {
-      estadoCoincide = true;
-    } else if (filtroEstado === "") {
-      return nombreIncluido && fechaCoincide;
-    }
-
-    return nombreIncluido && fechaCoincide && estadoCoincide;
-  });
-
   return (
-    <Box mr="12%" ml="12%" mb="30px" mt="0px">
+    <Box mx="12%" mb="30px" mt="0px">
       <EstablecimientoMenu />
       <Text>
         {reservas.length > 0
           ? "Estas son las reservas actuales para este establecimiento."
           : "Actualmente no hay reservas para este establecimiento."}
       </Text>
-      <HStack mb="20px" mt="20px">
-        <FormControl variant="floating" width="auto">
-          <Input
-            type="text"
+      <FormProvider {...methods}>
+        <HStack
+          as="form"
+          mb="20px"
+          mt="20px"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <InputControl
+            w="auto"
+            name="nombre"
             placeholder="Nombre"
-            value={filtroNombre}
-            onChange={(e) => setFiltroNombre(e.target.value)}
+            label={
+              <FormLabel sx={{ ...floatingLabelActiveStyles }}>
+                Jugador
+              </FormLabel>
+            }
           />
-          <FormLabel sx={{ ...floatingLabelActiveStyles }}>Jugador</FormLabel>
-        </FormControl>
-        <FormControl variant="floating" width="auto">
-          <Input
-            type="date"
-            name="desde"
-            placeholder="Fecha"
-            value={filtroDesde}
-            onChange={(e) => setFiltroDesde(e.target.value)}
-          />
-          <FormLabel>Desde</FormLabel>
-        </FormControl>
-        <FormControl variant="floating" width="auto">
-          <Input
-            type="date"
-            name="hasta"
-            placeholder="Fecha"
-            value={filtroHasta}
-            onChange={(e) => setFiltroHasta(e.target.value)}
-          />
-          <FormLabel>Hasta</FormLabel>
-        </FormControl>
-
-        <FormControl variant="floating" width="auto">
-          <Select
-            width="auto"
+          <DateControl w="auto" name="desde" label="Desde" isRequired />
+          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
+          <SelectControl
+            name="estado"
             placeholder="Todos"
-            onChange={(e) => setFiltroEstado(e.target.value)}
+            label="Estado"
+            w="auto"
           >
-            {["Pagada", "Señada", "No Pagada"].map((pago, i) => (
-              <option key={i} value={pago}>
-                {pago}
+            {["Pagada", "Señada", "No pagada", "Cancelada"].map((estado, i) => (
+              <option key={i} value={estado}>
+                {estado}
               </option>
             ))}
-          </Select>
-          <FormLabel>Estado</FormLabel>
-        </FormControl>
-        <Tooltip label="Usted reserva un horario en nombre de clientes no registrados en PlayFinder">
-          <Link
-            style={{ marginLeft: "auto" }}
-            to={`/search/est/${idEst}/reservar`}
-          >
-            <Button>Reservar</Button>
-          </Link>
-        </Tooltip>
-      </HStack>
+          </SelectControl>
+          <Tooltip label="Usted reserva un horario en nombre de clientes no registrados en PlayFinder">
+            <Link
+              style={{ marginLeft: "auto" }}
+              to={`/search/est/${idEst}/reservar`}
+            >
+              <Button>Reservar</Button>
+            </Link>
+          </Tooltip>
+        </HStack>
+      </FormProvider>
       <TableContainer mt="1em" mb="1em">
-        <Table size="sm">
+        <Table size="sm" variant="striped">
           <Thead>
             <Tr>
-              <Th
-                textAlign="center"
-                onClick={() => handleOrdenarColumna("Cancha")}
-                cursor="pointer"
-              >
-                Cancha{" "}
-                {ordenColumna === "Cancha" && (
-                  <>
-                    {ordenAscendente ? (
-                      <TriangleUpIcon color="blue.500" />
-                    ) : (
-                      <TriangleDownIcon color="blue.500" />
-                    )}
-                  </>
-                )}
-              </Th>
-              <Th
-                textAlign="center"
-                onClick={() => handleOrdenarColumna("Disciplina")}
-                cursor="pointer"
-              >
-                Disciplina{" "}
-                {ordenColumna === "Disciplina" && (
-                  <>
-                    {ordenAscendente ? (
-                      <TriangleUpIcon color="blue.500" />
-                    ) : (
-                      <TriangleDownIcon color="blue.500" />
-                    )}
-                  </>
-                )}
-              </Th>
               <Th
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Fecha")}
@@ -253,13 +179,7 @@ export default function EstablecimientoReservasPage() {
               >
                 Fecha reservada{" "}
                 {ordenColumna === "Fecha" && (
-                  <>
-                    {ordenAscendente ? (
-                      <TriangleUpIcon color="blue.500" />
-                    ) : (
-                      <TriangleDownIcon color="blue.500" />
-                    )}
-                  </>
+                  <IndicadorOrdenColumna asc={ordenAscendente} />
                 )}
               </Th>
               <Th
@@ -269,13 +189,7 @@ export default function EstablecimientoReservasPage() {
               >
                 Hora inicio{" "}
                 {ordenColumna === "HoraInicio" && (
-                  <>
-                    {ordenAscendente ? (
-                      <TriangleUpIcon color="blue.500" />
-                    ) : (
-                      <TriangleDownIcon color="blue.500" />
-                    )}
-                  </>
+                  <IndicadorOrdenColumna asc={ordenAscendente} />
                 )}
               </Th>
               <Th
@@ -285,13 +199,7 @@ export default function EstablecimientoReservasPage() {
               >
                 Jugador{" "}
                 {ordenColumna === "Jugador" && (
-                  <>
-                    {ordenAscendente ? (
-                      <TriangleUpIcon color="blue.500" />
-                    ) : (
-                      <TriangleDownIcon color="blue.500" />
-                    )}
-                  </>
+                  <IndicadorOrdenColumna asc={ordenAscendente} />
                 )}
               </Th>
               <Th
@@ -301,46 +209,53 @@ export default function EstablecimientoReservasPage() {
               >
                 Estado{" "}
                 {ordenColumna === "Estado" && (
-                  <>
-                    {ordenAscendente ? (
-                      <TriangleUpIcon color="blue.500" />
-                    ) : (
-                      <TriangleDownIcon color="blue.500" />
-                    )}
-                  </>
+                  <IndicadorOrdenColumna asc={ordenAscendente} />
+                )}
+              </Th>
+              <Th
+                textAlign="center"
+                onClick={() => handleOrdenarColumna("Cancha")}
+                cursor="pointer"
+              >
+                Cancha{" "}
+                {ordenColumna === "Cancha" && (
+                  <IndicadorOrdenColumna asc={ordenAscendente} />
+                )}
+              </Th>
+              <Th
+                textAlign="center"
+                onClick={() => handleOrdenarColumna("Disciplina")}
+                cursor="pointer"
+              >
+                Disciplina{" "}
+                {ordenColumna === "Disciplina" && (
+                  <IndicadorOrdenColumna asc={ordenAscendente} />
                 )}
               </Th>
               <Th textAlign="center">Ver Detalle</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {reservasFiltradas.map((r, idx) => {
-              const bgColor = idx % 2 === 0 ? "gray.100" : "white";
-              return (
-                <Tr key={r.id} bgColor={bgColor}>
-                  <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>
-                  <Td textAlign="center">{r.disponibilidad.disciplina}</Td>
-                  <Td textAlign="center">{formatISOFecha(r.fechaReservada)}</Td>
-                  <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
-                  <Td textAlign="center">
-                    {r.jugador
-                      ? `${r.jugador.nombre} ${r.jugador.apellido}`
-                      : r.jugadorNoRegistrado && `${r.jugadorNoRegistrado}*`}
-                  </Td>
-                  <Td textAlign="center">
-                    <ReservaEstado res={r} />
-                  </Td>
-                  <Td textAlign="center">
-                    <PlusSquareIcon
-                      w={5}
-                      h={5}
-                      cursor="pointer"
-                      onClick={() => navigate(`${r.id}`)}
-                    />
-                  </Td>
-                </Tr>
-              );
-            })}
+            {reservas.map((r) => (
+              <Tr key={r.id}>
+                <Td textAlign="center">{formatFechaISO(r.fechaReservada)}</Td>
+                <Td textAlign="center">{r.disponibilidad.horaInicio}</Td>
+                <Td textAlign="center">
+                  {nombreCompletoJugador(r)}
+                  {r.jugadorNoRegistrado && "*"}
+                </Td>
+                <Td textAlign="center">
+                  <ReservaEstado res={r} />
+                </Td>
+                <Td textAlign="center">{r.disponibilidad.cancha.nombre}</Td>
+                <Td textAlign="center">{r.disponibilidad.disciplina}</Td>
+                <Td textAlign="center">
+                  <Link to={`${r.id}`}>
+                    <PlusSquareIcon w={5} h={5} />
+                  </Link>
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </TableContainer>

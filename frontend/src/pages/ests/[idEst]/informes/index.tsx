@@ -5,20 +5,16 @@ import { useParams } from "@/router";
 import { ReservasPorCancha, useInformeReservasPorCancha } from "@/utils/api";
 import { FallbackImage } from "@/utils/constants";
 import { formatFecha } from "@/utils/dates";
-import { useState } from "react";
 import { FaListUl } from "react-icons/fa";
 import {
   Box,
   Button,
   Card,
   CardBody,
-  FormControl,
-  FormLabel,
   HStack,
   Heading,
   Icon,
   Image,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -41,57 +37,57 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { DateControl } from "@/components/forms";
+import { useFormSearchParams } from "@/hooks";
+
+const defaultValues = {
+  desde: formatFecha(new Date()),
+  hasta: formatFecha(new Date()),
+};
 
 export default function InformeReservasPage() {
   const { idEst } = useParams("/ests/:idEst/informes");
-  const [fechaDesde, setFechaDesde] = useState(formatFecha(new Date()));
-  const [fechaHasta, setFechaHasta] = useState(formatFecha(new Date()));
+  const methods = useForm({ defaultValues });
+  const { desde = "", hasta = "" } = useWatch({
+    control: methods.control,
+    defaultValue: defaultValues,
+  });
+  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
 
   const { data: informe } = useInformeReservasPorCancha({
     idEst: Number(idEst),
-    fechaDesde: fechaDesde,
-    fechaHasta: fechaHasta,
+    fechaDesde: desde,
+    fechaHasta: hasta,
   });
 
   return (
-    <Box mr="12%" ml="12%">
+    <Box mx="12%">
       <EstablecimientoMenu />
       <InformesMenu informe="Reservas" />
-      <HStack mb="20px" mt="30px">
-        <FormControl variant="floating" width="auto">
-          <Input
-            type="date"
-            placeholder="Fecha desde"
-            value={fechaDesde}
-            onChange={(e) => setFechaDesde(e.target.value)}
-          />
-          <FormLabel>Desde</FormLabel>
-        </FormControl>
-        <FormControl variant="floating" width="auto">
-          <Input
-            type="date"
-            placeholder="Fecha hasta"
-            value={fechaHasta}
-            onChange={(e) => setFechaHasta(e.target.value)}
-          />
-          <FormLabel>Hasta</FormLabel>
-        </FormControl>
-      </HStack>
-
       <Text>
-        El informe muestra el dinero que se espera recibir de todas las
-        <b> reservas a jugar</b> entre las fechas indicadas. Se muestra además,
-        lo que efectivamente se ha ingresado de ese esperado.
+        Se estima cuánto dinero recibirá el establecimento en base a las
+        <b> reservas</b> en un período dado, y muestra de esas reservas el monto
+        que efectivamente fue cobrado. No se contabilizan las reservas
+        canceladas.
       </Text>
+
+      <FormProvider {...methods}>
+        <HStack mb="20px" mt="30px">
+          <DateControl w="auto" name="desde" label="Desde" isRequired />
+          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
+        </HStack>
+      </FormProvider>
+
       {!informe ? (
         <LoadingSpinner />
       ) : (
         <Box>
-          <StatGroup width="fit-content" gap="40px" my="20px">
+          <StatGroup maxW="500px">
             <Stat>
               <StatLabel>
                 <Tooltip label="Cantidad de reservas que los jugadores del establecimiento hicieron para jugar">
-                  Reservas a ser jugadas
+                  Reservas
                 </Tooltip>
               </StatLabel>
               <StatNumber>
@@ -142,11 +138,11 @@ function InformeReservasDetalleCanchaCard({
   const navigate = useNavigate();
 
   return (
-    <Card key={cancha.id} width="350px" borderRadius="10px">
+    <Card key={cancha.id} w="350px" borderRadius="10px">
       <Image
         src={cancha.urlImagen}
-        fallback={<FallbackImage height="125px" />}
-        height="125px"
+        fallback={<FallbackImage h="125px" />}
+        h="125px"
         fit="cover"
         borderRadius="10px 10px 0 0"
       />

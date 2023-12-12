@@ -64,7 +64,7 @@ export default function LoginPage() {
           as="form"
           onSubmit={methods.handleSubmit((values) => mutate(values))}
           spacing="24px"
-          width={[
+          w={[
             "-webkit-fit-content", // 0-30em || mobile
             "400px", // 62em+ || pantalla escritorio
             //No contemplo medidas intermedias de tablets
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
         <Box position="relative" maxWidth="450px" m="auto">
           <Divider />
-          <AbsoluteCenter bg="white" width="150px" textAlign="center">
+          <AbsoluteCenter bg="white" w="150px" textAlign="center">
             Con un proveedor
           </AbsoluteCenter>
         </Box>

@@ -22,7 +22,7 @@ export function LogoImage(props: ImageProps) {
       src={LOGO_IMAGE_SRC}
       alt="Play Finder"
       title="Play Finder"
-      width={177}
+      w={177}
       {...props}
     />
   );

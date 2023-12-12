@@ -121,12 +121,7 @@ export default function FormReservarDisponibilidad({
                   <Heading size="sm">Fecha a reservar</Heading>
                   <DateControl isDisabled name="fechaReservada" />
                 </Center>
-                <HStack
-                  justify="space-evenly"
-                  width="100%"
-                  flex="1"
-                  wrap="wrap"
-                >
+                <HStack justify="space-evenly" w="100%" flex="1" wrap="wrap">
                   <Box>
                     <Heading size="sm">Disciplina</Heading>
                     <Text>{disp.disciplina}</Text>

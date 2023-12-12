@@ -38,10 +38,10 @@ export default function HeaderMenu() {
   return (
     <>
       <HStack
-        justifyContent="space-between"
+        justify="space-between"
         shadow="md"
         padding="0 2rem 0 2rem"
-        height="3.6rem"
+        h="3.6rem"
         bgColor="#f8fafd"
       >
         {nav}

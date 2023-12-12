@@ -85,7 +85,7 @@ function NuevoEstablecimientoPage() {
             as="form"
             onSubmit={methods.handleSubmit((values) => mutate(values))}
             spacing="3"
-            width="400px"
+            w="400px"
             m="auto"
           >
             <InputControl
@@ -133,7 +133,7 @@ function NuevoEstablecimientoPage() {
               placeholder="8:00-12:00"
             />
             <ImageControl label="Imagen" name="imagen" />
-            <HStack justifyContent="flex-end" spacing={30}>
+            <HStack justify="flex-end" spacing={30}>
               <Button onClick={() => navigate(-1)}>Cancelar</Button>
               <SubmitButton isLoading={isLoading}>Crear</SubmitButton>
             </HStack>

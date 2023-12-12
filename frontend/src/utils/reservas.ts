@@ -29,7 +29,7 @@ export function fechaHoraFinReserva(res: Reserva) {
 }
 
 /** Devuelve `true` si el horario de fin de la reserva todavía no fue alcanzado. */
-export function isReservaActiva(reserva: Reserva) {
+export function esReservaActiva(reserva: Reserva) {
   return fechaHoraFinReserva(reserva) >= new Date();
 }
 
@@ -58,5 +58,19 @@ export function colorEstadoReserva(estadoReserva: EstadoReserva): string {
       return "green";
     case EstadoReserva.Cancelada:
       return "red";
+  }
+}
+
+/**
+ * Retorna el nombre completo del jugador si está registrado en PlayFinder
+ * o el nombre cargado por el administrador cuando hizo la reserva.
+ */
+export function nombreCompletoJugador(reserva: Reserva) {
+  if (reserva.jugador) {
+    return `${reserva.jugador?.nombre} ${reserva.jugador?.apellido}`;
+  } else if (reserva.jugadorNoRegistrado) {
+    return reserva.jugadorNoRegistrado;
+  } else {
+    return "";
   }
 }

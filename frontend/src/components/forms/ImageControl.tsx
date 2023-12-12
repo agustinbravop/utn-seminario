@@ -124,7 +124,7 @@ export default function ImageControl(props: ImageControlProps) {
 function Preview({ src }: { src: string | File }) {
   if (!src) {
     return (
-      <Container width="100px" centerContent>
+      <Container w="100px" centerContent>
         <Icon
           as={LiaFileUploadSolid}
           fontSize="50px"

@@ -157,24 +157,22 @@ model suscripcion {
 }
 
 model reserva {
-  id             Int      @id @default(autoincrement()) @map("idReserva")
-  fechaCreada    DateTime @default(now()) // Fecha en la que se creó la reserva.
-  fechaReservada DateTime @db.Date // Fecha en la que el jugador va a ocupar la disponibilidad reservada.
-  precio         Decimal  @db.Decimal
-  senia          Decimal? @db.Decimal
+  id                  Int      @id @default(autoincrement()) @map("idReserva")
+  fechaCreada         DateTime @default(now()) // Fecha en la que se creó la reserva.
+  fechaReservada      DateTime @db.Date // Fecha en la que el jugador va a ocupar la disponibilidad reservada.
+  precio              Decimal  @db.Decimal
+  senia               Decimal? @db.Decimal
+  cancelada           Boolean  @default(false) // Si es `true` se puede reservar de nuevo la disponibilidad.
+  jugadorNoRegistrado String? // Es el nombre ingresado por el administrador que hizo la reserva para el jugador.
 
-  cancelada           Boolean        @default(false)
-  idDisponibilidad    Int
-  disponibilidad      disponibilidad @relation(fields: [idDisponibilidad], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idJugador           Int?
-  jugador             jugador?       @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  jugadorNoRegistrado String?
-  idPagoReserva       Int?
-  pagoReserva         pago?          @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  idPagoSenia         Int?
-  pagoSenia           pago?          @relation("pagoSenia", fields: [idPagoSenia], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([idDisponibilidad, fechaReservada])
+  idDisponibilidad Int
+  disponibilidad   disponibilidad @relation(fields: [idDisponibilidad], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idJugador        Int?
+  jugador          jugador?       @relation(fields: [idJugador], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idPagoReserva    Int?           @unique
+  pagoReserva      pago?          @relation("pagoReserva", fields: [idPagoReserva], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  idPagoSenia      Int?           @unique
+  pagoSenia        pago?          @relation("pagoSenia", fields: [idPagoSenia], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model tarjeta {
