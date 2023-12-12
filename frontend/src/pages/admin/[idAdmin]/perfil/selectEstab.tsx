@@ -154,9 +154,9 @@ export default function SelectEstablecimiento() {
       </HStack>
 
       {selected.length > 0 && selected.length < maximo + 1 && (
-        <Box w="100%" display="flex" justify="center" mt="30px">
+        <Box w="100%" display="flex" justifyContent="center" mt="30px">
           <Button
-            justify="center"
+            justifyContent="center"
             textAlign="center"
             onClick={handleSubmit}
             colorScheme="brand"

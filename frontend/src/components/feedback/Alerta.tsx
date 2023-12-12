@@ -18,7 +18,7 @@ export default function Alerta({ mensaje, status, descripcion }: AlertaProps) {
       variant="subtle"
       flexDirection="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       textAlign="center"
       h="100px"
     >

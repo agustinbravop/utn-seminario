@@ -71,8 +71,8 @@ export default function InformePagosPage() {
 
       <FormProvider {...methods}>
         <HStack as="form" mb="20px" mt="30px">
-          <DateControl w="auto" name="desde" label="Desde" isRequired />
-          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
+          <DateControl w="auto" name="desde" label="Desde" />
+          <DateControl w="auto" name="hasta" label="Hasta" />
         </HStack>
       </FormProvider>
 

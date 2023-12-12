@@ -144,8 +144,8 @@ export default function EstablecimientoReservasPage() {
               </FormLabel>
             }
           />
-          <DateControl w="auto" name="desde" label="Desde" isRequired />
-          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
+          <DateControl w="auto" name="desde" label="Desde" />
+          <DateControl w="auto" name="hasta" label="Hasta" />
           <SelectControl
             name="estado"
             placeholder="Todos"

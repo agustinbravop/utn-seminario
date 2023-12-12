@@ -75,17 +75,6 @@ export function formatISO(iso: string) {
   return toUTCDate(iso).toLocaleString("es-ar");
 }
 
-// /**
-//  * Toma strings de dos fechas en formato ISO y devuelve:
-//  * a) `+1` si `a > b`.
-//  * b) `-1` si `a < b`.
-//  * a) `0` si `a == b`.
-//  * Usar esta función para ordenar fechas con `sort()`.
-//  */
-// export function compararISO(isoA: string, isoB: string) {
-//   return toUTCDate(iso).toLocaleDateString("es-ar");
-// }
-
 /** `desde` y `hasta` son fechas ISO sin tiempo.
  * Devuelve `true` si `date` (otra fecha ISO) está entre ellas.
  * `date` puede tener un tiempo.

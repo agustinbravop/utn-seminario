@@ -81,7 +81,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
 
         <CardBody px="0" textAlign="center">
           <Heading
-            justify="center"
+            justifyContent="center"
             display="flex"
             fontSize={{ base: "23px", md: "23px", lg: "25px" }}
             mb="5px"
@@ -94,11 +94,11 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             mb={3}
           >
             <Text>
-              <Icon as={MdPlace} boxSize={4} mr="2" alignSelf="start" />
+              <Icon as={MdPlace} boxSize={4} mr="2" verticalAlign="-0.1em" />
               {reserva.disponibilidad.cancha.establecimiento.direccion}
             </Text>
             <Text>
-              <PhoneIcon boxSize={4} mr="2" alignSelf="start" />
+              <PhoneIcon boxSize={4} mr="2" verticalAlign="-0.15em" />
               {reserva.disponibilidad.cancha.establecimiento.telefono}
             </Text>
             <Text>
