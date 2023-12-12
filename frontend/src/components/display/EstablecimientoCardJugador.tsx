@@ -44,7 +44,7 @@ export default function EstablecimientoCardJugador({
             alt={`${establecimiento.nombre}`}
             objectFit="cover"
             w="100%"
-            h="50%"
+            h="135px"
             mb="1em"
           />
           <VStack spacing="0" textAlign="start">

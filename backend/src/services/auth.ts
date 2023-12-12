@@ -225,6 +225,7 @@ export class AuthServiceImpl implements AuthService {
           usuario: data.email,
           nombre: data.given_name,
           apellido: data.family_name ?? data.given_name,
+          password: false,
         };
         const jugadorCreado = await this.registrarJugador(jugador);
         // También se le inicia sesión para devolver un token (como si sólo hubiera iniciado sesión).

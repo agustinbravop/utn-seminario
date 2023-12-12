@@ -15,5 +15,6 @@ export const jugadorSchema = z.object({
   localidad: z.string().optional(),
   provincia: z.string().optional(),
   disciplina: z.string().optional(),
-  password: z.boolean(),
+  // Indica si guardamos su clave o se autentica por OAuth2.
+  password: z.boolean().optional().default(true),
 });
