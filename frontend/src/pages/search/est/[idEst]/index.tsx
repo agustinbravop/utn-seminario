@@ -59,7 +59,7 @@ export default function EstablecimientoJugadorPage() {
               <Text fontSize="sm">{data.direccion}</Text>
             </Box>
             <Box>
-              <Heading size="xs">Horario de atención</Heading>
+              <Heading size="xs">Horarios de atención</Heading>
               <Text fontSize="sm">{data.horariosDeAtencion}</Text>
             </Box>
             <Box>

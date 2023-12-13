@@ -3,7 +3,7 @@ import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 import { Navigate, Outlet } from "react-router-dom";
 
 /** Si el usuario actual ya está logueado, se lo redirecciona a su página principal. */
-export default function YaAutenticadoLayout() {
+export default function AlreadyAuthenticatedLayout() {
   const { isAdmin } = useCurrentAdmin();
   const { isJugador } = useCurrentJugador();
 

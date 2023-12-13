@@ -23,15 +23,31 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import { useBuscarDisponibilidades, useCanchaByID } from "@/utils/api";
+import {
+  BuscarDisponibilidadResult,
+  useBuscarDisponibilidades,
+  useCanchaByID,
+} from "@/utils/api";
 import { useParams } from "@/router";
-import { DIAS_ABBR, FALLBACK_IMAGE_SRC } from "@/utils/constants";
+import { FALLBACK_IMAGE_SRC } from "@/utils/constants";
 import { useEstablecimientoByID } from "@/utils/api";
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import FormReservarDisponibilidad from "./_formReservar";
-import { ordenarDias } from "@/utils/dias";
 import { useBusqueda } from "@/hooks";
-import { formatFecha } from "@/utils/dates";
+import { formatFecha, getHoraActual, horaADecimal } from "@/utils/dates";
+import { BusquedaFiltros } from "@/hooks/useBusqueda";
+
+function filtrarDisponibilidades(
+  disps: BuscarDisponibilidadResult[],
+  filtros: BusquedaFiltros
+) {
+  if (filtros.fecha === formatFecha(new Date())) {
+    disps = disps.filter((disp) => disp.horaInicio > getHoraActual());
+  }
+  return disps.sort(
+    (a, b) => horaADecimal(a.horaInicio) - horaADecimal(b.horaInicio)
+  );
+}
 
 export default function VistaJugadorCancha() {
   const { idEst, idCancha } = useParams("/search/est/:idEst/canchas/:idCancha");
@@ -39,39 +55,42 @@ export default function VistaJugadorCancha() {
 
   const { data: cancha } = useCanchaByID(Number(idEst), Number(idCancha));
   const { data: est } = useEstablecimientoByID(Number(idEst));
-  const { data: disponibilidades } = useBuscarDisponibilidades({
+  const { data: disps } = useBuscarDisponibilidades({
     idCancha: cancha?.id,
     ...filtros,
   });
 
-  if (!cancha || !disponibilidades) {
+  if (!cancha || !disps) {
     return <LoadingSpinner />;
   }
 
+  const dispsFiltradas = filtrarDisponibilidades(disps, filtros);
+
   return (
-    <div>
-      <Heading textAlign="center" mt="40px">
-        {est?.nombre} - {cancha?.nombre}
+    <>
+      <Heading textAlign="center" my="20px">
+        {est?.nombre}: {cancha?.nombre}
       </Heading>
 
       <Card
         justify="center"
-        style={{ marginTop: "10px", marginBottom: "1rem" }}
-        w="100%"
+        maxW={{ base: "600px", lg: "1250px" }}
+        m="auto"
         display="flex"
         // Cambio de dirección en dispositivos móviles
-        flexDirection={{ base: "column", md: "row" }}
+        flexDirection={{ base: "column", lg: "row" }}
       >
         <CardHeader>
-          <Box>
-            <Image
-              src={cancha?.urlImagen}
-              fallbackSrc={FALLBACK_IMAGE_SRC}
-              w="500px"
-              objectFit="cover"
-              borderRadius="10px"
-            />
-          </Box>
+          <Image
+            src={cancha?.urlImagen}
+            fallbackSrc={FALLBACK_IMAGE_SRC}
+            maxH="400px"
+            maxW="600px"
+            minW="350px"
+            m="auto"
+            objectFit="cover"
+            borderRadius="10px"
+          />
         </CardHeader>
         <CardBody mt="0px" flex="1">
           <Stack divider={<StackDivider />} spacing="1">
@@ -128,34 +147,33 @@ export default function VistaJugadorCancha() {
                   <FormLabel>Fecha</FormLabel>
                 </FormControl>
               </HStack>
-              <TableContainer pt="15px" pb="20px">
+
+              <TableContainer>
                 <Table variant="simple" size="sm">
                   <Thead>
                     <Tr>
-                      <Th>Horario</Th>
+                      <Th>Inicio</Th>
+                      <Th>Fin</Th>
                       <Th>Disciplina</Th>
-                      <Th>Días</Th>
-                      <Th>Seña</Th>
+                      {/* <Th>Días</Th> */}
                       <Th>Precio</Th>
+                      <Th>Seña</Th>
                       <Th></Th>
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {disponibilidades.map((d) => (
+                    {dispsFiltradas.map((d) => (
                       <Tr key={d.id}>
-                        <Td>
-                          {d.horaInicio} - {d.horaFin}hs
-                        </Td>
+                        <Td>{d.horaInicio}</Td>
+                        <Td>{d.horaFin}</Td>
                         <Td>{d.disciplina}</Td>
-                        <Td>
+                        {/* <Td>
                           {ordenarDias(d.dias)
                             .map((dia) => DIAS_ABBR[dia])
                             .join(", ")}
-                        </Td>
+                        </Td> */}
                         <Td>${d.precioReserva}</Td>
-                        <Td>
-                          {d.precioSenia ? `$${d.precioSenia}` : "Sin seña"}
-                        </Td>
+                        <Td>{d.precioSenia ? `$${d.precioSenia}` : "-"}</Td>
                         <Td>
                           <FormReservarDisponibilidad disp={d} />
                         </Td>
@@ -168,6 +186,6 @@ export default function VistaJugadorCancha() {
           </Stack>
         </CardBody>
       </Card>
-    </div>
+    </>
   );
 }

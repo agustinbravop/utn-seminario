@@ -116,7 +116,11 @@ export default function SelectEstablecimiento() {
         {establecimientos}
       </HStack>
       {selected.length > 0 && selected.length < maximo + 1 && (
-        <Button justify="center" textAlign="center" onClick={handleSubmit}>
+        <Button
+          justifyContent="center"
+          textAlign="center"
+          onClick={handleSubmit}
+        >
           Continuar
         </Button>
       )}

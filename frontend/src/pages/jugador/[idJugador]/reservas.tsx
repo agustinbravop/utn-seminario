@@ -89,6 +89,7 @@ export default function JugadorReservasPage() {
           </SelectControl>
         </HStack>
       </FormProvider>
+
       <Tabs mx="5vw">
         <TabList>
           <Tab>Reservas Activas</Tab>
@@ -97,7 +98,8 @@ export default function JugadorReservasPage() {
         <TabPanels>
           <TabPanel
             display="flex"
-            justify="center"
+            justifyContent="center"
+            alignItems="center"
             flexWrap="wrap"
             px="0"
             gap="1em"
@@ -114,7 +116,7 @@ export default function JugadorReservasPage() {
           </TabPanel>
           <TabPanel
             display="flex"
-            justify="center"
+            justifyContent="center"
             flexWrap="wrap"
             px="0"
             gap="1em"

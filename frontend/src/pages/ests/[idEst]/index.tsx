@@ -134,7 +134,7 @@ export default function EstablecimientoInfoPage() {
                 <Text fontSize="sm">
                   {est?.localidad}, {est?.provincia}
                 </Text>
-                <Box pt="25%" display="flex" justify="center">
+                <Box pt="25%" display="flex" justifyContent="center">
                   <Link to="editar">
                     <Button mr="30px" leftIcon={<EditIcon />}>
                       Editar

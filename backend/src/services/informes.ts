@@ -1,7 +1,7 @@
 import { Cancha } from "../models/cancha.js";
 import { Establecimiento } from "../models/establecimiento.js";
 import { Reserva } from "../models/reserva.js";
-import { setMidnight } from "../utils/dates.js";
+import { setMaxHours } from "../utils/dates.js";
 import { CanchaService } from "./canchas.js";
 import { EstablecimientoService } from "./establecimientos.js";
 import { ReservaService } from "./reservas.js";
@@ -99,7 +99,7 @@ export class InformeServiceImpl implements InformeService {
         idCancha: c.id,
         fechaReservadaDesde: query.fechaDesde,
         fechaReservadaHasta: query.fechaHasta
-          ? setMidnight(query.fechaHasta)
+          ? setMaxHours(query.fechaHasta)
           : undefined,
         cancelada: false,
       });
@@ -136,7 +136,7 @@ export class InformeServiceImpl implements InformeService {
         idCancha: c.id,
         fechaDesde: query.fechaDesde,
         fechaHasta: query.fechaHasta
-          ? setMidnight(query.fechaHasta)
+          ? setMaxHours(query.fechaHasta)
           : undefined,
       });
 

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { HorariosPopularesQuery } from "../services/informes.js";
 import { Dia } from "../models/disponibilidad.js";
-import { getDiaDeSemana, setMidnight } from "../utils/dates.js";
+import { getDiaDeSemana, setMaxHours } from "../utils/dates.js";
 import { HORARIOS } from "../utils/constants.js";
 
 export interface InformeRepository {
@@ -45,7 +45,7 @@ export class PrismaInformeRepository implements InformeRepository {
       where: {
         fechaReservada: {
           gte: query.fechaDesde,
-          lte: query.fechaHasta ? setMidnight(query.fechaHasta) : undefined,
+          lte: query.fechaHasta ? setMaxHours(query.fechaHasta) : undefined,
         },
         disponibilidad: {
           cancha: { idEstablecimiento: query.idEst },
@@ -78,7 +78,7 @@ export class PrismaInformeRepository implements InformeRepository {
       where: {
         fechaReservada: {
           gte: query.fechaDesde,
-          lte: query.fechaHasta ? setMidnight(query.fechaHasta) : undefined,
+          lte: query.fechaHasta ? setMaxHours(query.fechaHasta) : undefined,
         },
         disponibilidad: {
           cancha: { idEstablecimiento: query.idEst },

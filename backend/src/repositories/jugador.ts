@@ -13,15 +13,13 @@ type JugadorDB = jugador & {
  * @returns un objeto Jugador del dominio.
  */
 export function toJugador({ clave, ...jugador }: JugadorDB): Jugador {
-  const password = clave !== null && clave !== "";
-
   return {
     ...jugador,
     telefono: jugador.telefono ?? undefined,
     disciplina: jugador.idDisciplina ?? undefined,
     localidad: jugador.localidad?.nombre ?? undefined,
     provincia: jugador.localidad?.idProvincia ?? undefined,
-    password,
+    password: clave !== null && clave !== "",
   };
 }
 

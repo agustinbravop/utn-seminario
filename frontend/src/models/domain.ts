@@ -19,6 +19,7 @@ export type Jugador = {
   localidad?: string;
   provincia?: string;
   disciplina?: string;
+  /** Si es `true` tenemos la clave del usuario. Si es `false` se autenticó con OAuth2. */
   password: boolean;
 };
 

@@ -140,8 +140,8 @@ export default function EstablecimientoPagosPage() {
               </FormLabel>
             }
           />
-          <DateControl w="auto" name="desde" label="Desde" isRequired />
-          <DateControl w="auto" name="hasta" label="Hasta" isRequired />
+          <DateControl w="auto" name="desde" label="Desde" />
+          <DateControl w="auto" name="hasta" label="Hasta" />
           <SelectControl name="tipo" placeholder="Todos" label="Tipo" w="auto">
             {["Total", "Seña", "Restante"].map((tipo, i) => (
               <option key={i} value={tipo}>
