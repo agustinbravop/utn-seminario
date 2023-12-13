@@ -33,10 +33,11 @@ export default function BuscarEstablecimientosPage() {
     defaultValues: { ...filtros, nombre: "" },
   });
   const values = useWatch({ control: methods.control });
-  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
   useEffect(() => {
     updateFiltros(values);
   }, [values, updateFiltros]);
+  // Si `useFormSearchParams()` va antes del `useEffect()` no se cargan las preferencias del usuario.
+  useFormSearchParams({ watch: methods.watch, setValue: methods.setValue });
 
   const { data: ests, isFetched } = useBuscarEstablecimientos({
     ...values,
@@ -127,7 +128,14 @@ export default function BuscarEstablecimientosPage() {
         </VStack>
       </FormProvider>
 
-      <HStack flexWrap="wrap" justify="center" pt="20px">
+      <HStack
+        maxW="1400px"
+        m="auto"
+        pt="20px"
+        justify="center"
+        flexWrap="wrap"
+        gap="1.5em"
+      >
         {ests.length > 0 ? (
           ests.map((est) => (
             <EstablecimientoCardJugador

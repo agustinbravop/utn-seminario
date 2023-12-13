@@ -5,8 +5,8 @@ import { z } from "zod";
 export const buscarPagosQuerySchema = z.object({
   idCancha: z.coerce.number().int().optional(),
   idEst: z.coerce.number().int().optional(),
-  fechaDesde: z.coerce.date().optional(),
-  fechaHasta: z.coerce.date().optional(),
+  fechaDesde: z.coerce.date().optional().catch(undefined),
+  fechaHasta: z.coerce.date().optional().catch(undefined),
 });
 
 export class PagoHandler {

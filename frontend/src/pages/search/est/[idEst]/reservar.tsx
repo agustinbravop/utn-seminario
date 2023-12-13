@@ -1,11 +1,12 @@
 import { useParams } from "react-router";
 import {
+  Box,
   FormControl,
   FormLabel,
-  HStack,
   Heading,
   Input,
   Select,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import {
@@ -16,10 +17,11 @@ import {
 import LoadingSpinner from "@/components/feedback/LoadingSpinner";
 import { TablaDisponibilidadesReservables } from "@/components/display";
 import { formatFecha, getHoraActual, horaADecimal } from "@/utils/dates";
-import { useBusqueda } from "@/hooks";
+import { useBusqueda, useCurrentAdmin } from "@/hooks";
 import { BusquedaFiltros } from "@/hooks/useBusqueda";
 import { QuestionAlert } from "@/components/media-and-icons";
 import { useSearchParams } from "react-router-dom";
+import { EstablecimientoBreadcrumb } from "@/components/navigation";
 
 function filtrarDisponibilidades(
   disps: BuscarDisponibilidadResult[],
@@ -35,6 +37,7 @@ function filtrarDisponibilidades(
 
 export default function ReservarEstablecimientoPage() {
   const { idEst } = useParams();
+  const { isAdmin } = useCurrentAdmin();
   const [, setSearchParams] = useSearchParams();
 
   const { filtros, setFiltro } = useBusqueda();
@@ -51,12 +54,11 @@ export default function ReservarEstablecimientoPage() {
   const dispsFiltradas = filtrarDisponibilidades(disps, filtros);
 
   return (
-    <>
-      <Heading textAlign="center" mt="40px">
-        {est?.nombre}
-      </Heading>
+    <Box mx={{ base: "2vw", lg: "12%" }}>
+      {isAdmin && <EstablecimientoBreadcrumb />}
+      <Heading textAlign="center">{est?.nombre}</Heading>
 
-      <HStack my="20px">
+      <Stack my="20px" direction={["column", "row"]}>
         <FormControl w="unset" variant="floating">
           <Select
             placeholder="Todas"
@@ -87,7 +89,7 @@ export default function ReservarEstablecimientoPage() {
           />
           <FormLabel>Fecha</FormLabel>
         </FormControl>
-      </HStack>
+      </Stack>
 
       <Heading size="md">Horarios disponibles</Heading>
       <Text mb="1em">Seleccione un horario a reservar.</Text>
@@ -98,6 +100,6 @@ export default function ReservarEstablecimientoPage() {
           No hay horarios disponibles para esa fecha.
         </QuestionAlert>
       )}
-    </>
+    </Box>
   );
 }
