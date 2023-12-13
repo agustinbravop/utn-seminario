@@ -88,12 +88,9 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
           >
             <Text>{reserva.disponibilidad.cancha.establecimiento.nombre}</Text>
           </Heading>
-          <VStack
-            fontSize={{ base: "20px", md: "17px", lg: "15px" }}
-            mr="25px"
-            mb={3}
-          >
-            <Text>
+
+          <VStack mb={3}>
+            <Text textAlign="center">
               <Icon as={MdPlace} boxSize={4} mr="2" verticalAlign="-0.1em" />
               {reserva.disponibilidad.cancha.establecimiento.direccion}
             </Text>
@@ -140,6 +137,7 @@ export default function ReservaCard({ reserva, ...props }: ReservaCardProps) {
             </Tag>
           </Stack>
         </CardBody>
+
         {diferenciaTiempo >= umbral && !reserva.cancelada && (
           <ConfirmSubmitButton
             colorScheme="red"

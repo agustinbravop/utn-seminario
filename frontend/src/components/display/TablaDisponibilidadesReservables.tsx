@@ -40,16 +40,16 @@ const columns = [
     cell: (info) => info.getValue(),
     header: "Fin",
   }),
-  columnHelper.accessor("disciplina", {
-    cell: (info) => info.getValue(),
-    header: "Disciplina",
-  }),
   columnHelper.accessor("dias", {
     cell: (info) =>
       ordenarDias(info.getValue())
         .map((dia) => DIAS_ABBR[dia])
         .join(", "),
     header: "Días",
+  }),
+  columnHelper.accessor("disciplina", {
+    cell: (info) => info.getValue(),
+    header: "Disciplina",
   }),
   columnHelper.accessor("cancha.nombre", {
     cell: (info) => info.getValue(),
@@ -80,7 +80,7 @@ export default function TablaDisponibilidadesReservables({
   });
 
   return (
-    <TableContainer pt="15px" pb="20px">
+    <TableContainer pt="15px" pb="20px" mx="auto" maxW="1000px">
       <Table variant="striped" size="sm">
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (

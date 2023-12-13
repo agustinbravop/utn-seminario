@@ -167,17 +167,6 @@ export default function EstablecimientoPagosPage() {
                 )}
               </Th>
               <Th
-                onClick={() => handleOrdenarColumna("Monto")}
-                cursor="pointer"
-                px="0px"
-                isNumeric
-              >
-                Monto ($){" "}
-                {ordenColumna === "Monto" && (
-                  <IndicadorOrdenColumna asc={ordenAscendente} />
-                )}
-              </Th>
-              <Th
                 textAlign="center"
                 onClick={() => handleOrdenarColumna("Tipo")}
                 cursor="pointer"
@@ -207,6 +196,17 @@ export default function EstablecimientoPagosPage() {
                   <IndicadorOrdenColumna asc={ordenAscendente} />
                 )}
               </Th>
+              <Th
+                onClick={() => handleOrdenarColumna("Monto")}
+                cursor="pointer"
+                px="0px"
+                isNumeric
+              >
+                Monto ($){" "}
+                {ordenColumna === "Monto" && (
+                  <IndicadorOrdenColumna asc={ordenAscendente} />
+                )}
+              </Th>
               <Th textAlign="center">Ver Reserva</Th>
             </Tr>
           </Thead>
@@ -214,9 +214,6 @@ export default function EstablecimientoPagosPage() {
             {pagos.map((p) => (
               <Tr key={p.id}>
                 <Td textAlign="center">{formatISO(p.fechaPago)}</Td>
-                <Td isNumeric px="0px">
-                  ${p.monto}
-                </Td>
                 <Td textAlign="center">{tipoPago(p)}</Td>
                 <Td textAlign="center">
                   {nombreCompletoJugador(p.reserva)}
@@ -224,6 +221,9 @@ export default function EstablecimientoPagosPage() {
                 </Td>
                 <Td textAlign="center">
                   {p.reserva.disponibilidad.cancha.nombre}
+                </Td>
+                <Td isNumeric px="0px">
+                  ${p.monto}
                 </Td>
                 <Td textAlign="center">
                   <Link to={`/ests/${idEst}/reservas/${p.reserva.id}`}>
@@ -236,12 +236,12 @@ export default function EstablecimientoPagosPage() {
           <Tfoot>
             <Tr>
               <Th textAlign="center">Total</Th>
+              <Td></Td>
+              <Td></Td>
+              <Td></Td>
               <Td isNumeric px="0px">
                 ${pagos.reduce((acum, pago) => acum + pago.monto, 0)}
               </Td>
-              <Td></Td>
-              <Td></Td>
-              <Td></Td>
               <Td></Td>
             </Tr>
           </Tfoot>

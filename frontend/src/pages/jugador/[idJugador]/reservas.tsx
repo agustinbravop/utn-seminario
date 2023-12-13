@@ -7,7 +7,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
 } from "@chakra-ui/react";
 import { useCurrentJugador, useYupForm } from "@/hooks";
 import { ReservaCard } from "@/components/display";
@@ -65,14 +64,13 @@ export default function JugadorReservasPage() {
       </Heading>
       <FormProvider {...methods}>
         <HStack
-          mx="10%"
-          mb="17px"
+          mx={["5vw", "12%"]}
+          mb="1em"
           justify="flex-start"
           alignItems="center"
           display="flex"
           spacing="10px"
         >
-          <Text>Ordenar por:</Text>
           <SelectControl name="orden" label="Orden" w="fit-content">
             <option value="Recientes">Recientes</option>
             <option value="Antiguas">Antiguas</option>
@@ -90,7 +88,7 @@ export default function JugadorReservasPage() {
         </HStack>
       </FormProvider>
 
-      <Tabs mx="5vw">
+      <Tabs mx={["3vw", "12%"]}>
         <TabList>
           <Tab>Reservas Activas</Tab>
           <Tab>Historial</Tab>
@@ -103,6 +101,8 @@ export default function JugadorReservasPage() {
             flexWrap="wrap"
             px="0"
             gap="1em"
+            maxW="800px"
+            m="auto"
           >
             {!isFetched ? (
               <LoadingSpinner />
@@ -120,6 +120,8 @@ export default function JugadorReservasPage() {
             flexWrap="wrap"
             px="0"
             gap="1em"
+            maxW="800px"
+            m="auto"
           >
             {!isFetched ? (
               <LoadingSpinner />

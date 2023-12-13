@@ -6,7 +6,7 @@ import LoadingSpinner from "../feedback/LoadingSpinner";
 import Alerta from "../feedback/Alerta";
 import { Link } from "react-router-dom";
 import React from "react";
-import { Breadcrumb } from ".";
+import { EstablecimientoBreadcrumb } from ".";
 
 export default function EstablecimientoMenu() {
   const { idEst } = useParams();
@@ -26,7 +26,7 @@ export default function EstablecimientoMenu() {
 
   return (
     <>
-      <Breadcrumb returnTo="/ests" />
+      <EstablecimientoBreadcrumb returnTo="/ests" />
       <Heading textAlign="center" pb="7">
         {est.nombre}
       </Heading>

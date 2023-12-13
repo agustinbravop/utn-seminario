@@ -35,9 +35,12 @@ export function useFormSearchParams<TFieldValues extends FieldValues>({
             .reduce((obj, [key, val]) => Object.assign(obj, { [key]: val }), {})
         : Object.assign({}, watchedValues);
 
-      Object.keys(values).forEach(
-        (key) => values[key] === undefined && delete values[key]
-      );
+      // Se eliminan de la URL los valores no definidos.
+      Object.keys(values).forEach((key) => {
+        if (values[key] === undefined) {
+          delete values[key];
+        }
+      });
 
       setSearchParams(values);
     });

@@ -89,8 +89,8 @@ export default function LoginPage() {
               {error.status === 401
                 ? "La contraseña ingresada es incorrecta."
                 : error.status === 404
-                ? "Ese correo o usuario no está registrado."
-                : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
+                  ? "Ese correo o usuario no está registrado."
+                  : error.conflictMsg("Error al iniciar. Intente de nuevo.")}
             </Alert>
           )}
         </VStack>
